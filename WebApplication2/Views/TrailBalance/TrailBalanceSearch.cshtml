@@ -1,0 +1,188 @@
+﻿@model WebApplication2.ViewModels.ChartofaccountVm
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var position = 0;
+    var bal = 0;
+    var sum_cr = 0; var sum_ccr = 0; var sum_cdr = 0; var sum_closingcr = 0; var sum_closingdr = 0;
+    var sum_dr = 0;
+    var total = 0;
+    var odr = 0;
+    var ocr = 0;
+    var cdr = 0;
+    var ccr = 0;
+    var a = 0;
+    decimal b = 0;
+    var c = 0;
+    var closing = 0;
+    var zerp = 0;
+    var new_opdr = 0;
+    var new_opcr = 0;
+
+    //DateTime s_sdate = Convert.ToDateTime(ViewBag.StartDate).ToString("dd-MM-yyyy");
+}
+<script type="text/javascript">
+    function printDiv(divName) {
+        var printContents = document.getElementById(divName).innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+
+        window.print();
+
+        document.body.innerHTML = originalContents;
+    }</script>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Trial Balance</a></li>
+            </ul>
+        </div>
+    </div>
+    <h4 class="section-subtitle"><b> Trial Balance Search </b></h4>
+    <p class="pull-right" style="color: red;margin-top:-30px">
+    </p>
+    @using (Html.BeginForm("TrailBalanceSearch", "TrailBalance", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="col-md-12">
+            <div class="form-group col-sm-3">
+                <label>Start Date </label>
+                <input type="date" name="s_date" value="@Convert.ToDateTime(ViewBag.StartDate).ToString("yyyy-MM-dd")" class="form-control" />
+            </div>
+            <div class="form-group col-sm-3">
+                <label>End Date </label>
+                <input type="date" name="e_date" value="@Convert.ToDateTime(ViewBag.EndDate).ToString("yyyy-MM-dd")" class="form-control" />
+            </div>
+            <div class="col-sm-3">
+                <button type="submit" name="submit" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Search &nbsp;&nbsp;</button>
+            </div>
+        </div>
+    }
+    <button type="button" onclick="printDiv('printableArea')" class="btn btn-info pull-right"><i class="fa fa-print"></i> Print</button>
+    <div class="row" id="printableArea">
+        <div class="col-sm-12">
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="table-responsive">
+                        <center>
+                            <br />
+                            Trial Balance</br/>
+                            <b><u>@Session["BusinessUnitName"]</u></b>
+                            <br />@Convert.ToDateTime(ViewBag.StartDate).ToString("dd-MM-yyyy") To @Convert.ToDateTime(ViewBag.EndDate).ToString("dd-MM-yyyy")</br/></br/></br/>
+                        </center>
+                        <table id="table-example" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th colspan="2" style="border-left: 1px solid #000;"><center>Opening Balance</center></th>
+                                    <th colspan="2" style="border-left: 1px solid #000;"><center>Running Balance</center></th>
+                                    <th colspan="2" style="border-left: 1px solid #000;"><center>Final Balance</center></th>
+                                </tr>
+                                <tr>
+                                    <th>Account No.</th>
+                                    <th>Name</th>
+                                    <th style="border-left: 1px solid #000;">DEBIT</th>
+                                    <th>CREDIT</th>
+                                    <th style="border-left: 1px solid #000;">DEBIT</th>
+                                    <th>CREDIT</th>
+                                    <th style="border-left: 1px solid #000;">DEBIT</th>
+                                    <th>CREDIT</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Ac_head)
+                                {
+                                    <tr style="background-color:grey;color:white;font-size:15px">
+                                        <td colspan="8"><b>@item.ac_h_name</b></td>
+                                    </tr>
+                                    foreach (var item2 in Model.trans.Where(z => z.AccountHeadId == item.Id))
+                                    {
+
+                                        //if (item2.AccountHeadId == 1 || item2.AccountHeadId == 5)
+                                        //{
+                                        new_opdr = (item2.dr + (Convert.ToInt32(item2.odr)));
+                                        //}
+                                        //    else
+                                        //{
+                                        new_opcr = ((item2.cr) + (Convert.ToInt32(item2.ocr)));
+                                        //}
+                                        a = (Convert.ToInt32(item2.cdr) + new_opdr);
+                                        b = (Convert.ToInt32(item2.ccr) + new_opcr);
+                                        c = (Convert.ToInt32(a) - Convert.ToInt32(b));
+
+                                        sum_dr += new_opdr;
+                                        sum_cr += new_opcr;
+                                        sum_cdr += Convert.ToInt32(item2.cdr);
+                                        sum_ccr += Convert.ToInt32(item2.ccr);
+                                        sum_closingdr += Convert.ToInt32(a);
+                                        sum_closingcr += Convert.ToInt32(b);
+                                        //if (c > 0)
+                                        //{
+                                        //    sum_closingdr += c;
+                                        //}
+                                        //if (c < 0)
+                                        //{
+                                        //    sum_closingcr += c;
+                                        //}
+
+                                        <tr>
+                                            <td> @item2.AccountNo</td>
+                                            <td> @item2.AccountTitleName</td>
+                                            <td style="border-left: 1px solid #000;"> @String.Format("{0:N}", new_opdr)</td>
+                                            <td> @String.Format("{0:N}", new_opcr)</td>
+                                            <td style="border-left: 1px solid #000;"> @String.Format("{0:N}", item2.cdr)</td>
+                                            <td> @String.Format("{0:N}", item2.ccr)</td>
+                                            <td style="border-left: 1px solid #000;">
+                                                @if (item2.AccountHeadId == 1 || item2.AccountHeadId == 5)
+                                                {
+                                                    @String.Format("{0:N}", (a - b))
+                                                }
+                                                else
+                                                {
+                                                    @String.Format("{0:N}", zerp)
+                                                }
+                                            </td>
+
+
+                                            <td style="border-left: 1px solid #000;">
+                                                @if (item2.AccountHeadId == 3 || item2.AccountHeadId == 2 || item2.AccountHeadId == 4)
+                                                {
+                                                    @String.Format("{0:N}", (b - a))
+                                                }
+                                                else
+                                                {
+                                                    @String.Format("{0:N}", zerp)
+                                                }
+                                            </td>
+
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th style="border-left: 1px solid #000;">
+                                        <button class="btn btn-warning">@String.Format("{0:N}", sum_dr)</button>
+                                    </th>
+                                    <th>
+                                        <button class="btn btn-danger">@String.Format("{0:N}", sum_cr)</button>
+                                    </th>
+                                    <th style="border-left: 1px solid #000;"><button class="btn btn-primary">@String.Format("{0:N}", sum_cdr)</button></th>
+                                    <th><button class="btn btn-info">@String.Format("{0:N}", sum_ccr)</button></th>
+                                    <th style="border-left: 1px solid #000;"><button class="btn btn-success">@String.Format("{0:N}", sum_closingdr)</button></th>
+                                    <th><button class="btn" style="background-color:#2C3E50;color:white">@String.Format("{0:N}", sum_closingcr)</button></th>
+                                </tr>
+
+                            </tfoot>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,125 @@
+﻿@model IEnumerable<WebApplication1.QueryViewModel.SaleReturnQuery>
+@{
+    ViewBag.Title = "Index";
+}
+<script>
+    $('#searchable').DataTable({
+        buttons: [
+            'copy', 'excel', 'pdf'
+        ]
+    });
+</script>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Tax Sale</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <h4 class="section-subtitle"><b> Sale  Invoice</b></h4>
+
+        @using (Html.BeginForm("Index", "TaxSaleInvoice", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div class="form-group col-sm-3">
+                <label>Start Date</label>
+                <input type="date" name="s_date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
+            </div>
+            <div class="form-group col-sm-3">
+                <label>End Date </label>
+                <input type="date" name="e_date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
+            </div>
+            <div class="col-sm-3">
+                <button type="submit" name="submit" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Search &nbsp;&nbsp;</button>
+            </div>
+        }
+
+        @if (Session["SubSaleInvoiceTaxA"].ToString() != "0")
+        {
+            <a href="@Url.Action("Create", "TaxSaleInvoice")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  Creat New</a>
+        }
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+          
+             <div class="panel">
+                <div class="panel-content">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th>InvID</th>
+                                    <th>Date</th>
+                                    <th>Customer</th>
+                                    <th>Total</th>
+                                    <th>Net Total</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="abc">
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.OrderID</td>
+                                        <td>@item.date.ToString("dd-MM-yyyy")</td>
+                                        <td>@item.custname</td>
+                                        <td>@item.total</td>
+                                        <td>@item.ntotal</td>
+                                        <td>@item.title</td>
+                                        <td>
+                                            @if (Session["SubSaleInvoiceTaxU"].ToString() != "0")
+                                            {
+                                                <a href="@Url.Action("Edit", new { ID = item.OrderID })" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="label label-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
+                                            }
+                                            else
+                                            {
+                                                if (item.req_status == "Request")
+                                                {
+                                                    <a href="@Url.Action("statusrequest", new { ID = item.OrderID })" new { onclick="return confirm('Are you sure you want to Send Edit Request for this Sale Invoice?');" class="label label-default shiny input-xs"><i class="fa fa-key"></i></a>
+                                                }
+                                                else if (item.req_status == "Pending")
+                                                {
+                                                    <a new { onclick="return confirm('your already Send Edit Request for this Sale Invoice ?');" class="label label-warning shiny input-xs"><i class="fa fa-key"></i></a>
+
+                                                }
+                                                else
+                                                {
+                                                    <a href="@Url.Action("Edit", new { ID = item.OrderID })" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="label label-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
+
+                                                }
+                                            }
+
+                                            @*<a href="@Url.Action("Delete", new { ID= item.invid } )" new { onclick="return confirm('Are you sure you want to delete this record?');" class="label label-danger shiny input-xs"><i class="fa fa-trash-o"></i></a>*@
+                                            @*<a href="@Url.Action("InvoiceReport", new { ID= item.OrderID } )" class="label label-success shiny input-xs"><i class="fa fa-print"></i></a>*@
+                                            @if (Session["SubSaleInvoiceTaxV"].ToString() != "0")
+                                            {<a href="@Url.Action("InvoiceReport", new { ID = item.OrderID, type = "pdf" })" class="label label-success shiny input-xs"><i class="fa fa-print"></i></a>
+                                                <a href="@Url.Action("InvoiceReport", new { ID = item.OrderID, type = "show" })" class="label label-primary shiny input-xs" target="_blank"><i class="fa fa-print"></i></a>
+                                                <a href="@Url.Action("InvoiceReport", new { ID = item.OrderID, type = "Delivery" })" class="label label-default shiny input-xs" target="_blank"><i class="fa fa-print"></i></a>
+                                                <a href="@Url.Action("InvoiceReport", new { ID = item.OrderID, type = "Delivery1" })" class="label label-default shiny input-xs" target="_blank"><i class="fa fa-print"></i></a>
+
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

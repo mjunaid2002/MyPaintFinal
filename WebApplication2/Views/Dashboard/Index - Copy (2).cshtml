@@ -1,0 +1,2154 @@
+﻿@model WebApplication1.ViewModels.PurInvoiceVM
+@{
+    ViewBag.Title = "Index";
+    int sr = 0;
+
+}
+<script>
+    window.onload = function () {
+        var chart = new CanvasJS.Chart("chartContainer", {
+            animationEnabled: true,
+            theme: "light2", // "light1", "light2", "dark1", "dark2"
+            title: {
+                text: "Monthly  Sale"
+            },
+            axisY: {
+                title: "Total Amount (Rs)"
+            },
+            data: [{
+                type: "column",
+                showInLegend: true,
+                legendMarkerColor: "grey",
+                legendText: "Sale Graph",
+                dataPoints: [
+
+                    @foreach (var item in Model.sale_list)
+                    {
+                        @:{ y: @(item.total), label: '@(Convert.ToDateTime(item.Date).ToString("dd-MM-yyyy"))' },
+                   }
+
+                ]
+            }]
+        });
+        var chartsale = new CanvasJS.Chart("chartContainersale", {
+            animationEnabled: true,
+            theme: "light2", // "light1", "light2", "dark1", "dark2"
+            title: {
+                text: "Monthly  Sale"
+            },
+            axisY: {
+                title: "Total Amount (Rs)"
+            },
+            data: [{
+                type: "column",
+                showInLegend: true,
+                legendMarkerColor: "grey",
+                legendText: "Sale Graph",
+                dataPoints: [
+
+                    @foreach (var item in Model.sale_list)
+                    {
+                        @:{ y: @(item.total), label: '@(Convert.ToDateTime(item.Date).ToString("dd-MM-yyyy"))' },
+                   }
+
+                ]
+            }]
+        });
+        var chart1 = new CanvasJS.Chart("chartContainer1", {
+            animationEnabled: true,
+            theme: "light2", // "light1", "light2", "dark1", "dark2"
+            title: {
+                text: "Monthly Purchase"
+            },
+            axisY: {
+                title: "Total Amount (Rs)"
+            },
+            data: [{
+                type: "column",
+                showInLegend: true,
+                legendMarkerColor: "grey",
+                legendText: "Purchase Graph",
+                dataPoints: [
+                     @foreach (var item1 in Model.pur_dash)
+                    {
+                        @:{ y: @(item1.total), label: '@(Convert.ToDateTime(item1.Date).ToString("dd-MM-yyyy"))' },
+                   }
+
+                ]
+            }]
+        });
+        chart.render();
+        chart1.render();
+        chartsale.render();
+        var chart2 = new CanvasJS.Chart("chartContainer2", {
+            animationEnabled: true,
+            theme: "light2",
+            title: {
+                text: "Sale Summmary"
+            },
+
+
+            data: [{
+                type: "line",
+                showInLegend: true,
+                //name: "Total Visit",
+                markerType: "square",
+                //xValueFormatString: "DD MMM, YYYY",
+                color: "#F08080",
+                dataPoints: [
+                    @foreach (var item in Model.sale_list)
+                    {
+                        @:{ x: new Date('@(Convert.ToDateTime(item.Date).Year)', '@(Convert.ToDateTime(item.Date).Month)', '@(Convert.ToDateTime(item.Date).Day)'), y: @(item.total) },
+                   }
+
+                ]
+            },
+            {
+                type: "line",
+                showInLegend: true,
+                name: "Unique Visit",
+                lineDashType: "dash",
+                dataPoints: [
+
+                ]
+            }]
+        });
+        chart2.render();
+        function toogleDataSeries(e) {
+            if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                e.dataSeries.visible = false;
+            } else {
+                e.dataSeries.visible = true;
+            }
+            chart.render();
+        chart1.render();
+        chartsale.render();
+        }
+
+
+    }
+
+</script>
+<style>
+    .nav-tabs > li.active > a {
+        background-color: #189279 !important;
+        border: medium none;
+        border-radius: 0;
+    }
+</style>
+<script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/themes/material.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+<!-- Chart code -->
+<script>
+    am4core.ready(function () {
+
+        // Themes begin
+        am4core.useTheme(am4themes_material);
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+
+        // Create chart instance
+        var chart = am4core.create("chartdivdonut1", am4charts.PieChart);
+
+        // Add and configure Series
+        var pieSeries = chart.series.push(new am4charts.PieSeries());
+        pieSeries.dataFields.value = "litres";
+        pieSeries.dataFields.category = "country";
+
+        // Let's cut a hole in our Pie chart the size of 30% the radius
+        chart.innerRadius = am4core.percent(30);
+
+        // Put a thick white border around each Slice
+        pieSeries.slices.template.stroke = am4core.color("#fff");
+        pieSeries.slices.template.strokeWidth = 2;
+        pieSeries.slices.template.strokeOpacity = 1;
+        pieSeries.slices.template
+            // change the cursor on hover to make it apparent the object can be interacted with
+            .cursorOverStyle = [
+                {
+                    "property": "cursor",
+                    "value": "pointer"
+                }
+            ];
+
+        pieSeries.alignLabels = false;
+        pieSeries.labels.template.bent = true;
+        pieSeries.labels.template.radius = 3;
+        pieSeries.labels.template.padding(0, 0, 0, 0);
+
+        pieSeries.ticks.template.disabled = true;
+
+        // Create a base filter effect (as if it's not there) for the hover to return to
+        var shadow = pieSeries.slices.template.filters.push(new am4core.DropShadowFilter);
+        shadow.opacity = 0;
+
+        // Create hover state
+        var hoverState = pieSeries.slices.template.states.getKey("hover"); // normally we have to create the hover state, in this case it already exists
+
+        // Slightly shift the shadow and make it more prominent on hover
+        var hoverShadow = hoverState.filters.push(new am4core.DropShadowFilter);
+        hoverShadow.opacity = 0.7;
+        hoverShadow.blur = 5;
+
+        // Add a legend
+
+        chart.data = [
+             @foreach (var item in Model.cus_bal)
+                 {
+                     @:{ "litres": @(item.total +item.op) },
+                 }
+                 ];
+
+             }); // end am4core.ready()
+</script>
+<script>
+    am4core.ready(function () {
+
+        // Themes begin
+        am4core.useTheme(am4themes_material);
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+
+        // Create chart instance
+        var chart = am4core.create("chartdivdonut2", am4charts.PieChart);
+
+        // Add and configure Series
+        var pieSeries = chart.series.push(new am4charts.PieSeries());
+        pieSeries.dataFields.value = "litres";
+        pieSeries.dataFields.category = "country";
+
+        // Let's cut a hole in our Pie chart the size of 30% the radius
+        chart.innerRadius = am4core.percent(30);
+
+        // Put a thick white border around each Slice
+        pieSeries.slices.template.stroke = am4core.color("#fff");
+        pieSeries.slices.template.strokeWidth = 2;
+        pieSeries.slices.template.strokeOpacity = 1;
+        pieSeries.slices.template
+            // change the cursor on hover to make it apparent the object can be interacted with
+            .cursorOverStyle = [
+                {
+                    "property": "cursor",
+                    "value": "pointer"
+                }
+            ];
+
+        pieSeries.alignLabels = false;
+        pieSeries.labels.template.bent = true;
+        pieSeries.labels.template.radius = 3;
+        pieSeries.labels.template.padding(0, 0, 0, 0);
+
+        pieSeries.ticks.template.disabled = true;
+
+        // Create a base filter effect (as if it's not there) for the hover to return to
+        var shadow = pieSeries.slices.template.filters.push(new am4core.DropShadowFilter);
+        shadow.opacity = 0;
+
+        // Create hover state
+        var hoverState = pieSeries.slices.template.states.getKey("hover"); // normally we have to create the hover state, in this case it already exists
+
+        // Slightly shift the shadow and make it more prominent on hover
+        var hoverShadow = hoverState.filters.push(new am4core.DropShadowFilter);
+        hoverShadow.opacity = 0.7;
+        hoverShadow.blur = 5;
+
+        // Add a legend
+
+        chart.data = [
+             @foreach (var item in Model.sup_bal)
+                 {
+                     @:{ "litres": @(item.total + item.op) },
+                 }
+                 ];
+
+    }); // end am4core.ready()
+</script>
+<script>
+    am4core.ready(function () {
+
+        // Themes begin
+        am4core.useTheme(am4themes_material);
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+
+        // Create chart instance
+        var chart = am4core.create("chartdivdonut3", am4charts.PieChart);
+
+        // Add and configure Series
+        var pieSeries = chart.series.push(new am4charts.PieSeries());
+        pieSeries.dataFields.value = "litres";
+        pieSeries.dataFields.category = "country";
+
+        // Let's cut a hole in our Pie chart the size of 30% the radius
+        chart.innerRadius = am4core.percent(30);
+
+        // Put a thick white border around each Slice
+        pieSeries.slices.template.stroke = am4core.color("#fff");
+        pieSeries.slices.template.strokeWidth = 2;
+        pieSeries.slices.template.strokeOpacity = 1;
+        pieSeries.slices.template
+            // change the cursor on hover to make it apparent the object can be interacted with
+            .cursorOverStyle = [
+                {
+                    "property": "cursor",
+                    "value": "pointer"
+                }
+            ];
+
+        pieSeries.alignLabels = false;
+        pieSeries.labels.template.bent = true;
+        pieSeries.labels.template.radius = 3;
+        pieSeries.labels.template.padding(0, 0, 0, 0);
+
+        pieSeries.ticks.template.disabled = true;
+
+        // Create a base filter effect (as if it's not there) for the hover to return to
+        var shadow = pieSeries.slices.template.filters.push(new am4core.DropShadowFilter);
+        shadow.opacity = 0;
+
+        // Create hover state
+        var hoverState = pieSeries.slices.template.states.getKey("hover"); // normally we have to create the hover state, in this case it already exists
+
+        // Slightly shift the shadow and make it more prominent on hover
+        var hoverShadow = hoverState.filters.push(new am4core.DropShadowFilter);
+        hoverShadow.opacity = 0.7;
+        hoverShadow.blur = 5;
+
+        // Add a legend
+
+        chart.data = [
+             @foreach (var item in Model.cus_aging)
+                 {
+                     @:{ "litres": @(item.total) },
+                 }
+                 ];
+
+    }); // end am4core.ready()
+</script>
+<script>
+    am4core.ready(function () {
+
+        // Themes begin
+        am4core.useTheme(am4themes_material);
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+
+        // Create chart instance
+        var chart = am4core.create("chartdivdonut4", am4charts.PieChart);
+
+        // Add and configure Series
+        var pieSeries = chart.series.push(new am4charts.PieSeries());
+        pieSeries.dataFields.value = "litres";
+        pieSeries.dataFields.category = "country";
+
+        // Let's cut a hole in our Pie chart the size of 30% the radius
+        chart.innerRadius = am4core.percent(30);
+
+        // Put a thick white border around each Slice
+        pieSeries.slices.template.stroke = am4core.color("#fff");
+        pieSeries.slices.template.strokeWidth = 2;
+        pieSeries.slices.template.strokeOpacity = 1;
+        pieSeries.slices.template
+            // change the cursor on hover to make it apparent the object can be interacted with
+            .cursorOverStyle = [
+                {
+                    "property": "cursor",
+                    "value": "pointer"
+                }
+            ];
+
+        pieSeries.alignLabels = false;
+        pieSeries.labels.template.bent = true;
+        pieSeries.labels.template.radius = 3;
+        pieSeries.labels.template.padding(0, 0, 0, 0);
+
+        pieSeries.ticks.template.disabled = true;
+
+        // Create a base filter effect (as if it's not there) for the hover to return to
+        var shadow = pieSeries.slices.template.filters.push(new am4core.DropShadowFilter);
+        shadow.opacity = 0;
+
+        // Create hover state
+        var hoverState = pieSeries.slices.template.states.getKey("hover"); // normally we have to create the hover state, in this case it already exists
+
+        // Slightly shift the shadow and make it more prominent on hover
+        var hoverShadow = hoverState.filters.push(new am4core.DropShadowFilter);
+        hoverShadow.opacity = 0.7;
+        hoverShadow.blur = 5;
+
+        // Add a legend
+
+       chart.data = [
+             @foreach (var item in Model.bank_cash)
+                 {
+                     @:{ "litres": @(item.Total) },
+                 }
+                 ];
+
+    }); // end am4core.ready()
+</script>
+<script>
+    am4core.ready(function () {
+
+        // Themes begin
+        am4core.useTheme(am4themes_material);
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+
+        // Create chart instance
+        var chart = am4core.create("chartdivdonut5", am4charts.PieChart);
+
+        // Add and configure Series
+        var pieSeries = chart.series.push(new am4charts.PieSeries());
+        pieSeries.dataFields.value = "litres";
+        pieSeries.dataFields.category = "country";
+
+        // Let's cut a hole in our Pie chart the size of 30% the radius
+        chart.innerRadius = am4core.percent(30);
+
+        // Put a thick white border around each Slice
+        pieSeries.slices.template.stroke = am4core.color("#fff");
+        pieSeries.slices.template.strokeWidth = 2;
+        pieSeries.slices.template.strokeOpacity = 1;
+        pieSeries.slices.template
+            // change the cursor on hover to make it apparent the object can be interacted with
+            .cursorOverStyle = [
+                {
+                    "property": "cursor",
+                    "value": "pointer"
+                }
+            ];
+
+        pieSeries.alignLabels = false;
+        pieSeries.labels.template.bent = true;
+        pieSeries.labels.template.radius = 3;
+        pieSeries.labels.template.padding(0, 0, 0, 0);
+
+        pieSeries.ticks.template.disabled = true;
+
+        // Create a base filter effect (as if it's not there) for the hover to return to
+        var shadow = pieSeries.slices.template.filters.push(new am4core.DropShadowFilter);
+        shadow.opacity = 0;
+
+        // Create hover state
+        var hoverState = pieSeries.slices.template.states.getKey("hover"); // normally we have to create the hover state, in this case it already exists
+
+        // Slightly shift the shadow and make it more prominent on hover
+        var hoverShadow = hoverState.filters.push(new am4core.DropShadowFilter);
+        hoverShadow.opacity = 0.7;
+        hoverShadow.blur = 5;
+        // Add a legend
+         chart.data = [
+             @foreach (var item in Model.sale_list_woc)
+                 {
+                     @:{ "litres": @(item.GrandTotal) },
+                 }
+                 ];
+             });
+</script>
+<script>
+    am4core.ready(function () {
+
+        // Themes begin
+        am4core.useTheme(am4themes_material);
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+
+        // Create chart instance
+        var chart = am4core.create("chartdivdonut6", am4charts.PieChart);
+
+        // Add and configure Series
+        var pieSeries = chart.series.push(new am4charts.PieSeries());
+        pieSeries.dataFields.value = "litres";
+        pieSeries.dataFields.category = "country";
+
+        // Let's cut a hole in our Pie chart the size of 30% the radius
+        chart.innerRadius = am4core.percent(30);
+
+        // Put a thick white border around each Slice
+        pieSeries.slices.template.stroke = am4core.color("#fff");
+        pieSeries.slices.template.strokeWidth = 2;
+        pieSeries.slices.template.strokeOpacity = 1;
+        pieSeries.slices.template
+            // change the cursor on hover to make it apparent the object can be interacted with
+            .cursorOverStyle = [
+                {
+                    "property": "cursor",
+                    "value": "pointer"
+                }
+            ];
+
+        pieSeries.alignLabels = false;
+        pieSeries.labels.template.bent = true;
+        pieSeries.labels.template.radius = 3;
+        pieSeries.labels.template.padding(0, 0, 0, 0);
+
+        pieSeries.ticks.template.disabled = true;
+
+        // Create a base filter effect (as if it's not there) for the hover to return to
+        var shadow = pieSeries.slices.template.filters.push(new am4core.DropShadowFilter);
+        shadow.opacity = 0;
+
+        // Create hover state
+        var hoverState = pieSeries.slices.template.states.getKey("hover"); // normally we have to create the hover state, in this case it already exists
+
+        // Slightly shift the shadow and make it more prominent on hover
+        var hoverShadow = hoverState.filters.push(new am4core.DropShadowFilter);
+        hoverShadow.opacity = 0.7;
+        hoverShadow.blur = 5;
+
+        // Add a legend
+
+        chart.data = [
+             @foreach (var item in Model.salereturn_list_woc)
+                 {
+                     @:{ "litres": @(item.GrandTotal) },
+                 }
+                 ];
+
+    }); // end am4core.ready()
+</script>
+<script>
+    am4core.ready(function () {
+
+        // Themes begin
+        am4core.useTheme(am4themes_material);
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+
+        // Create chart instance
+        var chart = am4core.create("chartdivdonut7", am4charts.PieChart);
+
+        // Add and configure Series
+        var pieSeries = chart.series.push(new am4charts.PieSeries());
+        pieSeries.dataFields.value = "litres";
+        pieSeries.dataFields.category = "country";
+
+        // Let's cut a hole in our Pie chart the size of 30% the radius
+        chart.innerRadius = am4core.percent(30);
+
+        // Put a thick white border around each Slice
+        pieSeries.slices.template.stroke = am4core.color("#fff");
+        pieSeries.slices.template.strokeWidth = 2;
+        pieSeries.slices.template.strokeOpacity = 1;
+        pieSeries.slices.template
+            // change the cursor on hover to make it apparent the object can be interacted with
+            .cursorOverStyle = [
+                {
+                    "property": "cursor",
+                    "value": "pointer"
+                }
+            ];
+
+        pieSeries.alignLabels = false;
+        pieSeries.labels.template.bent = true;
+        pieSeries.labels.template.radius = 3;
+        pieSeries.labels.template.padding(0, 0, 0, 0);
+
+        pieSeries.ticks.template.disabled = true;
+
+        // Create a base filter effect (as if it's not there) for the hover to return to
+        var shadow = pieSeries.slices.template.filters.push(new am4core.DropShadowFilter);
+        shadow.opacity = 0;
+
+        // Create hover state
+        var hoverState = pieSeries.slices.template.states.getKey("hover"); // normally we have to create the hover state, in this case it already exists
+
+        // Slightly shift the shadow and make it more prominent on hover
+        var hoverShadow = hoverState.filters.push(new am4core.DropShadowFilter);
+        hoverShadow.opacity = 0.7;
+        hoverShadow.blur = 5;
+
+        // Add a legend
+
+        chart.data = [
+             @foreach (var item in Model.top_customers_sale)
+                 {
+                     @:{ "litres": @(item.GrandTotal) },
+                 }
+                 ];
+
+    }); // end am4core.ready()
+</script>
+<script>
+    am4core.ready(function () {
+
+        // Themes begin
+        am4core.useTheme(am4themes_material);
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+
+        // Create chart instance
+        var chart = am4core.create("chartdivdonut9", am4charts.PieChart);
+
+        // Add and configure Series
+        var pieSeries = chart.series.push(new am4charts.PieSeries());
+        pieSeries.dataFields.value = "litres";
+        pieSeries.dataFields.category = "country";
+
+        // Let's cut a hole in our Pie chart the size of 30% the radius
+        chart.innerRadius = am4core.percent(30);
+
+        // Put a thick white border around each Slice
+        pieSeries.slices.template.stroke = am4core.color("#fff");
+        pieSeries.slices.template.strokeWidth = 2;
+        pieSeries.slices.template.strokeOpacity = 1;
+        pieSeries.slices.template
+            // change the cursor on hover to make it apparent the object can be interacted with
+            .cursorOverStyle = [
+                {
+                    "property": "cursor",
+                    "value": "pointer"
+                }
+            ];
+
+        pieSeries.alignLabels = false;
+        pieSeries.labels.template.bent = true;
+        pieSeries.labels.template.radius = 3;
+        pieSeries.labels.template.padding(0, 0, 0, 0);
+
+        pieSeries.ticks.template.disabled = true;
+
+        // Create a base filter effect (as if it's not there) for the hover to return to
+        var shadow = pieSeries.slices.template.filters.push(new am4core.DropShadowFilter);
+        shadow.opacity = 0;
+
+        // Create hover state
+        var hoverState = pieSeries.slices.template.states.getKey("hover"); // normally we have to create the hover state, in this case it already exists
+
+        // Slightly shift the shadow and make it more prominent on hover
+        var hoverShadow = hoverState.filters.push(new am4core.DropShadowFilter);
+        hoverShadow.opacity = 0.7;
+        hoverShadow.blur = 5;
+
+        // Add a legend
+
+         chart.data = [
+             @foreach (var item in Model.pur_list_woc)
+                 {
+                     @:{ "litres": @(item.GrandTotal) },
+                 }
+                 ];
+
+    }); // end am4core.ready()
+</script>
+<script>
+    am4core.ready(function () {
+
+        // Themes begin
+        am4core.useTheme(am4themes_material);
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+
+        // Create chart instance
+        var chart = am4core.create("chartdivdonut10", am4charts.PieChart);
+
+        // Add and configure Series
+        var pieSeries = chart.series.push(new am4charts.PieSeries());
+        pieSeries.dataFields.value = "litres";
+        pieSeries.dataFields.category = "country";
+
+        // Let's cut a hole in our Pie chart the size of 30% the radius
+        chart.innerRadius = am4core.percent(30);
+
+        // Put a thick white border around each Slice
+        pieSeries.slices.template.stroke = am4core.color("#fff");
+        pieSeries.slices.template.strokeWidth = 2;
+        pieSeries.slices.template.strokeOpacity = 1;
+        pieSeries.slices.template
+            // change the cursor on hover to make it apparent the object can be interacted with
+            .cursorOverStyle = [
+                {
+                    "property": "cursor",
+                    "value": "pointer"
+                }
+            ];
+
+        pieSeries.alignLabels = false;
+        pieSeries.labels.template.bent = true;
+        pieSeries.labels.template.radius = 3;
+        pieSeries.labels.template.padding(0, 0, 0, 0);
+
+        pieSeries.ticks.template.disabled = true;
+
+        // Create a base filter effect (as if it's not there) for the hover to return to
+        var shadow = pieSeries.slices.template.filters.push(new am4core.DropShadowFilter);
+        shadow.opacity = 0;
+
+        // Create hover state
+        var hoverState = pieSeries.slices.template.states.getKey("hover"); // normally we have to create the hover state, in this case it already exists
+
+        // Slightly shift the shadow and make it more prominent on hover
+        var hoverShadow = hoverState.filters.push(new am4core.DropShadowFilter);
+        hoverShadow.opacity = 0.7;
+        hoverShadow.blur = 5;
+
+        // Add a legend
+
+       chart.data = [
+             @foreach (var item in Model.purreturn_list_woc)
+                 {
+                     @:{ "litres": @(item.GrandTotal) },
+                 }
+                 ];
+
+    }); // end am4core.ready()
+</script>
+<script>
+    am4core.ready(function () {
+
+        // Themes begin
+        am4core.useTheme(am4themes_material);
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+
+        // Create chart instance
+        var chart = am4core.create("chartdivdonut11", am4charts.PieChart);
+
+        // Add and configure Series
+        var pieSeries = chart.series.push(new am4charts.PieSeries());
+        pieSeries.dataFields.value = "litres";
+        pieSeries.dataFields.category = "country";
+
+        // Let's cut a hole in our Pie chart the size of 30% the radius
+        chart.innerRadius = am4core.percent(30);
+
+        // Put a thick white border around each Slice
+        pieSeries.slices.template.stroke = am4core.color("#fff");
+        pieSeries.slices.template.strokeWidth = 2;
+        pieSeries.slices.template.strokeOpacity = 1;
+        pieSeries.slices.template
+            // change the cursor on hover to make it apparent the object can be interacted with
+            .cursorOverStyle = [
+                {
+                    "property": "cursor",
+                    "value": "pointer"
+                }
+            ];
+
+        pieSeries.alignLabels = false;
+        pieSeries.labels.template.bent = true;
+        pieSeries.labels.template.radius = 3;
+        pieSeries.labels.template.padding(0, 0, 0, 0);
+
+        pieSeries.ticks.template.disabled = true;
+
+        // Create a base filter effect (as if it's not there) for the hover to return to
+        var shadow = pieSeries.slices.template.filters.push(new am4core.DropShadowFilter);
+        shadow.opacity = 0;
+
+        // Create hover state
+        var hoverState = pieSeries.slices.template.states.getKey("hover"); // normally we have to create the hover state, in this case it already exists
+
+        // Slightly shift the shadow and make it more prominent on hover
+        var hoverShadow = hoverState.filters.push(new am4core.DropShadowFilter);
+        hoverShadow.opacity = 0.7;
+        hoverShadow.blur = 5;
+
+        // Add a legend
+
+        chart.data = [
+             @foreach (var item in Model.top_supp_pur)
+                 {
+                     @:{ "litres": @(item.GrandTotal) },
+                 }
+                 ];
+
+    }); // end am4core.ready()
+</script>
+<script>
+    am4core.ready(function () {
+
+        // Themes begin
+        am4core.useTheme(am4themes_material);
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+
+        // Create chart instance
+        var chart = am4core.create("chartdivdonut8", am4charts.PieChart);
+
+        // Add and configure Series
+        var pieSeries = chart.series.push(new am4charts.PieSeries());
+        pieSeries.dataFields.value = "litres";
+        pieSeries.dataFields.category = "country";
+
+        // Let's cut a hole in our Pie chart the size of 30% the radius
+        chart.innerRadius = am4core.percent(30);
+
+        // Put a thick white border around each Slice
+        pieSeries.slices.template.stroke = am4core.color("#fff");
+        pieSeries.slices.template.strokeWidth = 2;
+        pieSeries.slices.template.strokeOpacity = 1;
+        pieSeries.slices.template
+            // change the cursor on hover to make it apparent the object can be interacted with
+            .cursorOverStyle = [
+                {
+                    "property": "cursor",
+                    "value": "pointer"
+                }
+            ];
+
+        pieSeries.alignLabels = false;
+        pieSeries.labels.template.bent = true;
+        pieSeries.labels.template.radius = 3;
+        pieSeries.labels.template.padding(0, 0, 0, 0);
+
+        pieSeries.ticks.template.disabled = true;
+
+        // Create a base filter effect (as if it's not there) for the hover to return to
+        var shadow = pieSeries.slices.template.filters.push(new am4core.DropShadowFilter);
+        shadow.opacity = 0;
+
+        // Create hover state
+        var hoverState = pieSeries.slices.template.states.getKey("hover"); // normally we have to create the hover state, in this case it already exists
+
+        // Slightly shift the shadow and make it more prominent on hover
+        var hoverShadow = hoverState.filters.push(new am4core.DropShadowFilter);
+        hoverShadow.opacity = 0.7;
+        hoverShadow.blur = 5;
+
+        // Add a legend
+
+       chart.data = [
+             @foreach (var item in Model.cus_re)
+                 {
+                     @:{ "litres": @(item.Total) },
+                 }
+            @foreach (var item in Model.cus_short)
+                 {
+                     @:{ "litres": @(item.Total) },
+                 }
+                 ];
+
+    }); // end am4core.ready()
+</script>
+<script>
+    am4core.ready(function () {
+
+        // Themes begin
+        am4core.useTheme(am4themes_material);
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+
+        // Create chart instance
+        var chart = am4core.create("chartdivdonut12", am4charts.PieChart);
+
+        // Add and configure Series
+        var pieSeries = chart.series.push(new am4charts.PieSeries());
+        pieSeries.dataFields.value = "litres";
+        pieSeries.dataFields.category = "country";
+
+        // Let's cut a hole in our Pie chart the size of 30% the radius
+        chart.innerRadius = am4core.percent(30);
+
+        // Put a thick white border around each Slice
+        pieSeries.slices.template.stroke = am4core.color("#fff");
+        pieSeries.slices.template.strokeWidth = 2;
+        pieSeries.slices.template.strokeOpacity = 1;
+        pieSeries.slices.template
+            // change the cursor on hover to make it apparent the object can be interacted with
+            .cursorOverStyle = [
+                {
+                    "property": "cursor",
+                    "value": "pointer"
+                }
+            ];
+
+        pieSeries.alignLabels = false;
+        pieSeries.labels.template.bent = true;
+        pieSeries.labels.template.radius = 3;
+        pieSeries.labels.template.padding(0, 0, 0, 0);
+
+        pieSeries.ticks.template.disabled = true;
+
+        // Create a base filter effect (as if it's not there) for the hover to return to
+        var shadow = pieSeries.slices.template.filters.push(new am4core.DropShadowFilter);
+        shadow.opacity = 0;
+
+        // Create hover state
+        var hoverState = pieSeries.slices.template.states.getKey("hover"); // normally we have to create the hover state, in this case it already exists
+
+        // Slightly shift the shadow and make it more prominent on hover
+        var hoverShadow = hoverState.filters.push(new am4core.DropShadowFilter);
+        hoverShadow.opacity = 0.7;
+        hoverShadow.blur = 5;
+
+        // Add a legend
+
+       chart.data = [
+             @foreach (var item in Model.supp_re)
+                 {
+                     @:{ "litres": @(item.Total) },
+                 }
+            @foreach (var item in Model.supp_short)
+                 {
+                     @:{ "litres": @(item.Total) },
+                 }
+                 ];
+
+    }); // end am4core.ready()
+</script>
+<script>
+    am4core.ready(function () {
+
+        // Themes begin
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+
+        // Create chart instance
+        var chart = am4core.create("chartdivexpense", am4charts.XYChart);
+
+        // Add data
+        chart.data = [
+            @foreach (var item in Model.list_new.Where(c=>c.Type== "Expense"))
+            {
+                    @: { "year": "@(Convert.ToDateTime(item.Date).ToString("yyyy-MM-dd"))","Expense": @(item.Bal)},
+            }
+            ];
+
+        var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+        categoryAxis.dataFields.category = "year";
+        categoryAxis.renderer.opposite = true;
+
+        // Create value axis
+        var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+        valueAxis.renderer.inversed = true;
+        valueAxis.title.text = "Place taken";
+        valueAxis.renderer.minLabelPosition = 0.01;
+
+        // Create series
+        var series1 = chart.series.push(new am4charts.LineSeries());
+        series1.dataFields.valueY = "Expense";
+        series1.dataFields.categoryX = "year";
+        series1.name = "Expense";
+        series1.bullets.push(new am4charts.CircleBullet());
+        //series1.tooltipText = "Place taken by {name} in {categoryX}: {valueY}";
+        //series1.legendSettings.valueText = "{valueY}";
+        series1.visible = false;
+
+        var series2 = chart.series.push(new am4charts.LineSeries());
+        series2.dataFields.valueY = "Sale";
+        series2.dataFields.categoryX = "year";
+        series2.name = 'Sale';
+        series2.bullets.push(new am4charts.CircleBullet());
+        //series2.tooltipText = "Place taken by {name} in {categoryX}: {valueY}";
+        //series2.legendSettings.valueText = "{valueY}";
+
+        //var series3 = chart.series.push(new am4charts.LineSeries());
+        //series3.dataFields.valueY = "uk";
+        //series3.dataFields.categoryX = "year";
+        //series3.name = 'United Kingdom';
+        //series3.bullets.push(new am4charts.CircleBullet());
+        //series3.tooltipText = "Place taken by {name} in {categoryX}: {valueY}";
+        //series3.legendSettings.valueText = "{valueY}";
+
+        // Add chart cursor
+        chart.cursor = new am4charts.XYCursor();
+        chart.cursor.behavior = "zoomY";
+
+
+        let hs1 = series1.segments.template.states.create("hover")
+        hs1.properties.strokeWidth = 5;
+        series1.segments.template.strokeWidth = 1;
+
+        let hs2 = series2.segments.template.states.create("hover")
+        hs2.properties.strokeWidth = 5;
+        series2.segments.template.strokeWidth = 1;
+
+        //let hs3 = series3.segments.template.states.create("hover")
+        //hs3.properties.strokeWidth = 5;
+        //series3.segments.template.strokeWidth = 1;
+
+        // Add legend
+        chart.legend = new am4charts.Legend();
+        chart.legend.itemContainers.template.events.on("over", function (event) {
+            var segments = event.target.dataItem.dataContext.segments;
+            segments.each(function (segment) {
+                segment.isHover = true;
+            })
+        })
+
+        chart.legend.itemContainers.template.events.on("out", function (event) {
+            var segments = event.target.dataItem.dataContext.segments;
+            segments.each(function (segment) {
+                segment.isHover = false;
+            })
+        })
+
+
+    }); // end am4core.ready()
+</script>
+<style>
+    #chartdivdonut1 {
+        width: 100%;
+        height: 300px;
+    }
+</style>
+<style>
+    #chartdivdonut2 {
+        width: 100%;
+        height: 300px;
+    }
+</style>
+<style>
+    #chartdivdonut3 {
+        width: 100%;
+        height: 300px;
+    }
+
+    #chartdivdonut4 {
+        width: 100%;
+        height: 300px;
+    }
+</style>
+<style>
+    #chartdivdonut5 {
+        width: 100%;
+        height: 300px;
+    }
+
+    #chartdivdonut6 {
+        width: 100%;
+        height: 300px;
+    }
+
+    #chartdivdonut7 {
+        width: 100%;
+        height: 300px;
+    }
+
+    #chartdivdonut8 {
+        width: 100%;
+        height: 300px;
+    }
+
+    #chartdivdonut9 {
+        width: 100%;
+        height: 300px;
+    }
+
+    #chartdivdonut10 {
+        width: 100%;
+        height: 300px;
+    }
+
+    #chartdivdonut11 {
+        width: 100%;
+        height: 300px;
+    }
+
+    #chartdivdonut12 {
+        width: 100%;
+        height: 300px;
+    }
+</style>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Dashboard </a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading" role="tab" id="headingOne" style="background-color:#189279;color:white">
+                                        <h4 class="panel-title">
+                                            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                <i class="more-less glyphicon glyphicon-plus" style="color:white"></i>
+                                                Corporate Summary
+                                            </a>
+                                        </h4>
+                                    </div>
+                                    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                        <div class="panel-body">
+                                            <div class="panel widgetbox wbox-2 bg-lighter-1 color-light col-md-2" style="width:260px">
+                                                <div class="panel-content">
+                                                    <div class="row">
+                                                        <div class="col-xs-2">
+                                                            @if ((Convert.ToInt32(Session["curr_mon_rev"]) < 0))
+                                                            {
+                                                                <span class="icon fa fa-arrow-down color-light" style="margin-left:-10px;margin-top:10px"></span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="icon fa fa-arrow-up color-light" style="margin-left:-10px;margin-top:10px"></span>
+                                                            }
+                                                        </div>
+                                                        <div class="col-xs-10">
+                                                            <p class="title " style="color:white;font-size:12px">Current Month Revenue</p>
+                                                            <p class="title " style="color:white;font-size:14px;margin-top:-10px">@String.Format("{0:N}", Session["curr_mon_rev"])</p>
+                                                            <h4 class="subtitle " style="color:white">Previous Month: @String.Format("{0:N}", Session["prev_mon_rev"])</h4>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel widgetbox wbox-2 bg-danger color-light col-md-2" style="width:260px;margin-top:-0px;margin-left:10px">
+                                                <div class="panel-content">
+                                                    <div class="row">
+                                                        <div class="col-xs-2">
+                                                            @if ((Convert.ToInt32(Session["t_exp_currmonth"]) < 0))
+                                                            {
+                                                                <span class="icon fa fa-arrow-down color-light" style="margin-left:-10px;margin-top:10px"></span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="icon fa fa-arrow-up color-light" style="margin-left:-10px;margin-top:10px"></span>
+                                                            }
+                                                        </div>
+                                                        <div class="col-xs-10">
+                                                            <p class="title " style="color:white;font-size:12px">Current Month Expense</p>
+                                                            <p class="title " style="color:white;font-size:14px;margin-top:-10px">@String.Format("{0:N}", Session["t_exp_currmonth"])</p>
+                                                            <h4 class="subtitle " style="color:white">Previous Month: @String.Format("{0:N}", Session["t_exp_prevmonth"])</h4>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel widgetbox wbox-2 bg-warning color-light col-md-2" style="width:230px;margin-top:-0px;margin-left:10px">
+                                                <div class="panel-content">
+                                                    <div class="row">
+                                                        <div class="col-xs-2">
+                                                            @if ((Convert.ToInt32(Session["net_currmonth"]) < 0))
+                                                            {
+                                                                <span class="icon fa fa-arrow-down color-light" style="margin-left:-10px;margin-top:10px"></span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="icon fa fa-arrow-up color-light" style="margin-left:-10px;margin-top:10px"></span>
+                                                            }
+                                                        </div>
+                                                        <div class="col-xs-10">
+                                                            <p class="title " style="color:white;font-size:12px">Net Profit</p>
+                                                            <p class="title " style="color:white;font-size:14px;margin-top:-10px">@String.Format("{0:N}", Session["net_currmonth"]) </p>
+                                                            <h4 class="subtitle " style="color:white">Previous Month: @String.Format("{0:N}", Session["net_prevmonth"])</h4>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel widgetbox wbox-2 bg-success color-light col-md-2" style="width:230px;margin-top:-0px;margin-left:10px">
+                                                <div class="panel-content">
+                                                    <div class="row">
+                                                        <div class="col-xs-2">
+                                                            @if ((Convert.ToInt32(Session["t_cap_currmonth"]) < 0))
+                                                            {
+                                                                <span class="icon fa fa-arrow-down color-light" style="margin-left:-10px;margin-top:10px"></span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="icon fa fa-arrow-up color-light" style="margin-left:-10px;margin-top:10px"></span>
+                                                            }
+                                                        </div>
+                                                        <div class="col-xs-10">
+                                                            <p class="title " style="color:white;font-size:12px">Capital</p>
+                                                            <p class="title " style="color:white;font-size:14px;margin-top:-10px">@String.Format("{0:N}", Session["t_cap_currmonth"]) </p>
+                                                            <h4 class="subtitle " style="color:white">Previous Month: @String.Format("{0:N}", Session["t_cap_prevmonth"])</h4>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <br />
+                                            <br />
+                                            <div class="panel widgetbox wbox-2 bg-darker-2 color-light col-md-2" style="width:260px;margin-top:20px">
+                                                <div class="panel-content">
+                                                    <div class="row">
+                                                        <div class="col-xs-2">
+                                                            @if ((Convert.ToInt32(Session["t_rec_currmonth"]) < 0))
+                                                            {
+                                                                <span class="icon fa fa-arrow-down color-light" style="margin-left:-10px;margin-top:10px"></span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="icon fa fa-arrow-up color-light" style="margin-left:-10px;margin-top:10px"></span>
+                                                            }
+                                                        </div>
+                                                        <div class="col-xs-10">
+                                                            <p class="title " style="color:white;font-size:12px">Current Month Recovery</p>
+                                                            <p class="title " style="color:white;font-size:14px;margin-top:-10px">@String.Format("{0:N}", Session["t_rec_currmonth"])</p>
+                                                            <h4 class="subtitle " style="color:white">Previous Month: @String.Format("{0:N}", Session["t_rec_prevmonth"])</h4>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel widgetbox wbox-2 bg-lighter-1 color-light col-md-2" style="width:260px;margin-top:20px;margin-left:10px">
+                                                <div class="panel-content">
+                                                    <div class="row">
+                                                        <div class="col-xs-2">
+                                                            @if ((Convert.ToInt32(Session["cashbankcurr"]) < 0))
+                                                            {
+                                                                <span class="icon fa fa-arrow-down color-light" style="margin-left:-10px;margin-top:10px"></span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="icon fa fa-arrow-up color-light" style="margin-left:-10px;margin-top:10px"></span>
+                                                            }
+
+                                                        </div>
+                                                        <div class="col-xs-10">
+                                                            <p class="title " style="color:white;font-size:12px">Cash/Bank Balance</p>
+                                                            <p class="title " style="color:white;font-size:14px;margin-top:-10px">@String.Format("{0:N}", Session["cashbankcurr"]) </p>
+                                                            <h4 class="subtitle " style="color:white">Previous Month: @String.Format("{0:N}", Session["cashbankprev"])</h4>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel widgetbox wbox-2 bg-success color-light col-md-2" style="width:230px;margin-top:20px;margin-left:10px">
+                                                <div class="panel-content">
+                                                    <div class="row">
+                                                        <div class="col-xs-2">
+                                                            @if ((Convert.ToInt32(Session["t_recv_currmonth"]) < 0))
+                                                            {
+                                                                <span class="icon fa fa-arrow-down color-light" style="margin-left:-10px;margin-top:10px"></span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="icon fa fa-arrow-up color-light" style="margin-left:-10px;margin-top:10px"></span>
+                                                            }
+                                                        </div>
+                                                        <div class="col-xs-10">
+                                                            <p class="title " style="color:white;font-size:12px">Total Receivable</p>
+                                                            <p class="title " style="color:white;font-size:14px;margin-top:-10px">@String.Format("{0:N}", Session["t_recv_currmonth"]) </p>
+                                                            <h4 class="subtitle " style="color:white">Previous Month: @String.Format("{0:N}", Session["t_recv_prevmonth"])</h4>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="panel widgetbox wbox-2 bg-danger color-light col-md-2" style="width:230px;margin-top:20px;margin-left:10px">
+                                                <div class="panel-content">
+                                                    <div class="row">
+                                                        <div class="col-xs-2">
+                                                            @if ((Convert.ToInt32(Session["t_pay_currmonth"]) < 0))
+                                                            {
+                                                                <span class="icon fa fa-arrow-down color-light" style="margin-left:-10px;margin-top:10px"></span>
+                                                            }
+                                                            else
+                                                            {
+                                                                <span class="icon fa fa-arrow-up color-light" style="margin-left:-10px;margin-top:10px"></span>
+                                                            }
+                                                        </div>
+                                                        <div class="col-xs-10">
+                                                            <p class="title " style="color:white;font-size:12px">Total Payable</p>
+                                                            <p class="title " style="color:white;font-size:14px;margin-top:-10px">@String.Format("{0:N}", Session["t_pay_currmonth"]) </p>
+                                                            <h4 class="subtitle " style="color:white">Previous Month: @String.Format("{0:N}", Session["t_pay_prevmonth"])</h4>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!--BOX Style 3-->
+                        <h4 style="margin-left:10px"><b>Today</b></h4>
+                        <div class="col-sm-2 col-sm-2">
+                            <div class="panel widgetbox wbox-3 bg-lighter-1" style="width:150px;height:80px !important">
+                                <div class="col-md-12">
+                                    <div class="col-md-1">
+                                        <span class="icon fa fa-line-chart" style="font-size:22px;margin-top:25px;color:white;margin-left:-10px"></span>
+                                    </div>
+                                    <div class="col-md-9" style="margin-left:-20px">
+                                        <a href="#">
+                                            <div class="panel-content">
+                                                <p class="title" style="font-size:18px">Sales</p>
+                                                <p class="subtitle">@String.Format("{0:N}", Session["dal_sale"])</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-sm-2" style="margin-left:-25px">
+                            <div class="panel widgetbox wbox-3 bg-darker-2" style="width:150px;height:80px !important">
+                                <div class="col-md-12">
+                                    <div class="col-md-1">
+                                        <span class="icon fa fa-shopping-cart" style="font-size:22px;margin-top:25px;color:white;margin-left:-10px"></span>
+                                    </div>
+                                    <div class="col-md-9" style="margin-left:-20px">
+                                        <a href="#">
+                                            <div class="panel-content">
+                                                <p class="title" style="font-size:18px">Purchases</p>
+                                                <p class="subtitle">@String.Format("{0:N}", Session["dal_pur"])</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-sm-2" style="margin-left:-25px">
+                            <div class="panel widgetbox wbox-3 bg-success" style="width:150px;height:80px !important">
+                                <div class="col-md-12">
+                                    <div class="col-md-1">
+                                        <span class="icon fa fa-refresh" style="font-size:22px;margin-top:25px;color:white;margin-left:-10px"></span>
+                                    </div>
+                                    <div class="col-md-9" style="margin-left:-20px">
+                                        <a href="#">
+                                            <div class="panel-content">
+                                                <p class="title" style="font-size:18px">Recovery</p>
+                                                <p class="subtitle">@String.Format("{0:N}", Session["dal_rec"])</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-sm-2" style="margin-left:-25px">
+                            <div class="panel widgetbox wbox-3 bg-warning" style="width:150px;height:80px !important">
+                                <div class="col-md-12">
+                                    <div class="col-md-1">
+                                        <span class="icon fa fa-calculator" style="font-size:22px;margin-top:25px;color:white;margin-left:-10px"></span>
+                                    </div>
+                                    <div class="col-md-9" style="margin-left:-20px">
+                                        <a href="#">
+                                            <div class="panel-content">
+                                                <p class="title" style="font-size:18px">Payment</p>
+                                                <p class="subtitle">@String.Format("{0:N}", Session["dal_payment"])</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-sm-2" style="margin-left:-25px">
+                            <div class="panel widgetbox wbox-3 bg-primary" style="width:150px;height:80px !important">
+                                <div class="col-md-12">
+                                    <div class="col-md-1">
+                                        <span class="icon fa fa-graph" style="font-size:22px;margin-top:25px;color:white;margin-left:-10px"></span>
+                                    </div>
+                                    <div class="col-md-9" style="margin-left:-20px">
+                                        <a href="#">
+                                            <div class="panel-content">
+                                                <p class="title" style="font-size:15px">Production</p>
+                                                <p class="subtitle">@String.Format("{0:N}", Session["dal_pro"])</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-sm-2" style="margin-left:-25px">
+                            <div class="panel widgetbox wbox-3 bg-danger" style="width:140px;height:80px !important;background-color:#DD4B39">
+                                <div class="col-md-12">
+                                    <div class="col-md-1">
+                                        <span class="icon fa fa-tasks" style="font-size:22px;margin-top:25px;color:white;margin-left:-10px"></span>
+                                    </div>
+                                    <div class="col-md-9" style="margin-left:-20px">
+                                        <a href="#">
+                                            <div class="panel-content">
+                                                <p class="title" style="font-size:14px">InwardGP</p>
+                                                <p class="subtitle">@String.Format("{0:N}", Session["dal_igp"])</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel widgetbox wbox-3 bg-danger" style="width:135px;height:80px !important;margin-top:-100px;margin-left:145px">
+                                <div class="col-md-12">
+                                    <div class="col-md-1">
+                                        <span class="icon fa fa-tasks" style="font-size:22px;margin-top:25px;color:white;margin-left:-10px"></span>
+                                    </div>
+                                    <div class="col-md-9" style="margin-left:-20px">
+                                        <a href="#">
+                                            <div class="panel-content">
+                                                <p class="title" style="font-size:14px">OutwardGp</p>
+                                                <p class="subtitle">@String.Format("{0:N}", Session["dal_ogp"])</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <!--BOX Style 3-->
+                        <h4 style="margin-left:10px"><b>This Month</b></h4>
+                        <div class="col-sm-2 col-sm-2">
+                            <div class="panel widgetbox wbox-3 bg-lighter-1" style="width:150px;height:80px !important">
+                                <div class="col-md-12">
+                                    <div class="col-md-1">
+                                        <span class="icon fa fa-line-chart" style="font-size:22px;margin-top:25px;color:white;margin-left:-10px"></span>
+                                    </div>
+                                    <div class="col-md-9" style="margin-left:-20px">
+                                        <a href="#">
+                                            <div class="panel-content">
+                                                <p class="title" style="font-size:18px">Sales</p>
+                                                <p class="subtitle">@String.Format("{0:N}", Session["mon_sale"])</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-sm-2" style="margin-left:-25px">
+                            <div class="panel widgetbox wbox-3 bg-darker-2" style="width:150px;height:80px !important">
+                                <div class="col-md-12">
+                                    <div class="col-md-1">
+                                        <span class="icon fa fa-shopping-cart" style="font-size:22px;margin-top:25px;color:white;margin-left:-10px"></span>
+                                    </div>
+                                    <div class="col-md-9" style="margin-left:-20px">
+                                        <a href="#">
+                                            <div class="panel-content">
+                                                <p class="title" style="font-size:18px">Purchases</p>
+                                                <p class="subtitle">@String.Format("{0:N}", Session["mon_pur"])</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-sm-2" style="margin-left:-25px">
+                            <div class="panel widgetbox wbox-3 bg-success" style="width:150px;height:80px !important">
+                                <div class="col-md-12">
+                                    <div class="col-md-1">
+                                        <span class="icon fa fa-refresh" style="font-size:22px;margin-top:25px;color:white;margin-left:-10px"></span>
+                                    </div>
+                                    <div class="col-md-9" style="margin-left:-20px">
+                                        <a href="#">
+                                            <div class="panel-content">
+                                                <p class="title" style="font-size:18px">Recovery</p>
+                                                <p class="subtitle">@String.Format("{0:N}", Session["mon_rec"])</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-sm-2" style="margin-left:-25px">
+                            <div class="panel widgetbox wbox-3 bg-warning" style="width:150px;height:80px !important">
+                                <div class="col-md-12">
+                                    <div class="col-md-1">
+                                        <span class="icon fa fa-calculator" style="font-size:22px;margin-top:25px;color:white;margin-left:-10px"></span>
+                                    </div>
+                                    <div class="col-md-9" style="margin-left:-20px">
+                                        <a href="#">
+                                            <div class="panel-content">
+                                                <p class="title" style="font-size:18px">Payment</p>
+                                                <p class="subtitle">@String.Format("{0:N}", Session["mon_pay"])</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-sm-2" style="margin-left:-25px">
+                            <div class="panel widgetbox wbox-3 bg-primary" style="width:150px;height:80px !important">
+                                <div class="col-md-12">
+                                    <div class="col-md-1">
+                                        <span class="icon fa fa-graph" style="font-size:22px;margin-top:25px;color:white;margin-left:-10px"></span>
+                                    </div>
+                                    <div class="col-md-9" style="margin-left:-20px">
+                                        <a href="#">
+                                            <div class="panel-content">
+                                                <p class="title" style="font-size:15px">Production</p>
+                                                <p class="subtitle">@String.Format("{0:N}", Session["dal_pro"])</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 col-sm-2" style="margin-left:-25px">
+                            <div class="panel widgetbox wbox-3 bg-danger" style="width:140px;height:80px !important">
+                                <div class="col-md-12">
+                                    <div class="col-md-1">
+                                        <span class="icon fa fa-tasks" style="font-size:22px;margin-top:25px;color:white;margin-left:-10px"></span>
+                                    </div>
+                                    <div class="col-md-9" style="margin-left:-20px">
+                                        <a href="#">
+                                            <div class="panel-content">
+                                                <p class="title" style="font-size:14px">InwardGP</p>
+                                                <p class="subtitle">@String.Format("{0:N}", Session["mon_igp"])</p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel widgetbox wbox-3 bg-danger" style="width:135px;height:80px !important;margin-top:-100px;margin-left:145px">
+                                <div class="col-md-12">
+                                    <div class="col-md-1">
+                                        <span class="icon fa fa-tasks" style="font-size:22px;margin-top:25px;color:white;margin-left:-10px"></span>
+                                    </div>
+                                    <div class="col-md-9" style="margin-left:-20px">
+                                        <a href="#">
+                                            <div class="panel-content">
+                                                <p class="title" style="font-size:14px">OutwardGp</p>
+                                                <p class="subtitle">@String.Format("{0:N}", Session["dal_ogp"]) </p>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="tabs mt-none">
+                            <!-- Tabs Header -->
+                            <ul class="nav nav-tabs nav-justified">
+                                <li class="active" style="border-right:-10px"><a href="#home" data-toggle="tab"><b>Summery</b></a></li>
+                                <li><a href="#profile" data-toggle="tab"><b>Sale</b></a></li>
+                                <li><a href="#pur" data-toggle="tab"><b>Purchase</b></a></li>
+                                <li><a href="#acc" data-toggle="tab"><b>Accounts</b></a></li>
+                                <li><a href="#pro" data-toggle="tab"><b>Production</b></a></li>
+                            </ul>
+                            <!-- Tabs Content -->
+                            <div class="tab-content">
+                                <div class="tab-pane fade in active" id="home">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-3" style="border:1px solid #CCCCCC;padding:5px;">
+                                                <p><b>Customer Balances</b></p>
+                                                <div id="chartdivdonut1" style="margin-top: -20px"></div>
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Name</th>
+                                                            <th style="text-align:right">Balances</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var item in Model.cus_bal)
+                                                        {
+                                                            <tr>
+                                                                <td>@item.Name</td>
+                                                                <td style="text-align:right">@String.Format("{0:N}", item.total + item.op)</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-md-3" style="border:1px solid #CCCCCC;padding:5px;">
+                                                <p><b>Supplier Balances</b></p>
+                                                <div id="chartdivdonut2" style="margin-top: -20px"></div>
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Name</th>
+                                                            <th style="text-align:right">Balances</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var item in Model.sup_bal)
+                                                        {
+                                                            <tr>
+                                                                <td>@item.Name</td>
+                                                                <td style="text-align:right">@String.Format("{0:N}", item.total + item.op)</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-md-3" style="border:1px solid #CCCCCC;padding:5px;">
+                                                <p><b>Customer Aging Report</b></p>
+                                                <div id="chartdivdonut3" style="margin-top: -20px"></div>
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Name</th>
+                                                            <th style="text-align:right">Balances</th>
+                                                            <th style="text-align:right">days</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var item in Model.cus_aging)
+                                                        {
+                                                            <tr>
+                                                                <td>@item.Name</td>
+                                                                <td style="text-align:right">@String.Format("{0:N}", item.total)</td>
+                                                                <td style="text-align:right">@item.days</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-md-3" style="border:1px solid #CCCCCC;padding:5px;">
+                                                <p><b>Bank & Cash Status</b></p>
+                                                <div id="chartdivdonut4" style="margin-top: -20px"></div>
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Name</th>
+                                                            <th style="text-align:right">Balances</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var item in Model.bank_cash)
+                                                        {
+                                                            <tr>
+                                                                <td>@item.CustomerName</td>
+                                                                <td style="text-align:right">@String.Format("{0:N}", item.Total)</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+
+                                        </div>
+
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <br />
+                                            <p><b>Top 10 Purchase Aging Report</b></p>
+                                            <a href="@Url.Action("GatepassIndex", "Purchase")" class="btn btn-sm btn-info pull-right" style="margin-top:-35px">Place New Purchase</a>
+                                            <br />
+                                            <div class="table-responsive" style="margin-top:-12px">
+                                                <table class="table table-bordered table-hover table-striped table-success">
+                                                    <thead class="bordered-darkorange">
+                                                        <tr>
+                                                            <th>Sr#</th>
+                                                            <th>Invid</th>
+                                                            <th>Date</th>
+                                                            <th>Supplier</th>
+                                                            <th>Total</th>
+                                                            <th>Days</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody class="abc">
+                                                        @foreach (var item in Model.pur_list_woc)
+                                                        {
+                                                            sr += 1;
+                                                            <tr>
+                                                                <td>@sr</td>
+                                                                <td>@item.InvID</td>
+                                                                <td>@item.Date</td>
+                                                                <td>@item.SupplierName</td>
+                                                                <td>@String.Format("{0:N}", item.GrandTotal)</td>
+                                                                <td>@(item.days+1)</td>
+                                                            </tr>
+                                                        }
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <br />
+                                            <a href="@Url.Action("Index", "Purchase")" class="btn btn-sm btn-primary pull-right" style="margin-top:-35px">View All</a>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <br />
+                                            <p><b>Top 10 Sale Aging Report</b></p>
+                                            <a href="@Url.Action("Index", "Sale")" class="btn btn-sm btn-info pull-right" style="margin-top:-35px">Place New Sale</a>
+                                            <br />
+                                            <div class="table-responsive" style="margin-top:-12px">
+                                                <table class="table table-bordered table-hover table-striped table-success">
+                                                    <thead class="bordered-darkorange">
+                                                        <tr>
+                                                            <th>Sr#</th>
+                                                            <th>Invid</th>
+                                                            <th>Date</th>
+                                                            <th>Client</th>
+                                                            <th>Total</th>
+                                                            <th>Days</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody class="abc">
+                                                        @foreach (var item in Model.sale_list_woc)
+                                                        {
+                                                            sr += 1;
+                                                            <tr>
+                                                                <td>@sr</td>
+                                                                <td>@item.InvID</td>
+                                                                <td>@item.Date</td>
+                                                                <td>@item.CustomerName</td>
+                                                                <td>@String.Format("{0:N}", item.GrandTotal)</td>
+                                                                <td>@(item.days+1)</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <br />
+                                            <a href="@Url.Action("Sale", "Report")" class="btn btn-sm btn-primary pull-right" style="margin-top:-35px">View All</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="profile">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-3" style="border:1px solid #CCCCCC;padding:5px;">
+                                                <p><b>Overall Sales</b></p>
+                                                <div id="chartdivdonut5" style="margin-top: -20px"></div>
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Name</th>
+                                                            <th style="text-align:right">Balances</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var item in Model.sale_list_woc)
+                                                        {
+                                                            <tr>
+                                                                <td>@item.CustomerName</td>
+                                                                <td style="text-align:right">@String.Format("{0:N}", item.GrandTotal)</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-md-3" style="border:1px solid #CCCCCC;padding:5px;">
+                                                <p><b>Overall Sales Return</b></p>
+                                                <div id="chartdivdonut6" style="margin-top: -20px"></div>
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Name</th>
+                                                            <th style="text-align:right">Balances</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var item in Model.salereturn_list_woc)
+                                                        {
+                                                            <tr>
+                                                                <td>@item.CustomerName</td>
+                                                                <td style="text-align:right">@String.Format("{0:N}", item.GrandTotal)</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-md-3" style="border:1px solid #CCCCCC;padding:5px;">
+                                                <p><b>Top 10 Customers Sales</b></p>
+                                                <div id="chartdivdonut7" style="margin-top: -20px"></div>
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Name</th>
+                                                            <th style="text-align:right">Balances</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var item in Model.top_customers_sale)
+                                                        {
+                                                            <tr>
+                                                                <td>@item.CustomerName</td>
+                                                                <td style="text-align:right">@item.GrandTotal</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-md-3" style="border:1px solid #CCCCCC;padding:5px;">
+                                                <p><b>Recovery &Aacute; Shortfall</b></p>
+                                                <div id="chartdivdonut8" style="margin-top: -20px"></div>
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Name</th>
+                                                            <th style="text-align:right">Balances</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var item in Model.cus_re)
+                                                        {
+                                                            <tr>
+                                                                <td>@item.CustomerName</td>
+                                                                <td style="text-align:right">@String.Format("{0:N}", item.Total)</td>
+                                                            </tr>
+                                                        }
+                                                        @foreach (var item in Model.cus_short)
+                                                        {
+                                                            <tr>
+                                                                <td>@item.CustomerName</td>
+                                                                <td style="text-align:right">@String.Format("{0:N}", item.Total)</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <br />
+                                            <p><b>Last 10 Sale Invoices</b></p>
+                                            <a href="@Url.Action("Index", "Sale")" class="btn btn-sm btn-info pull-right" style="margin-top:-35px">Place New Sale</a>
+                                            <br />
+                                            <div class="table-responsive" style="margin-top:-12px">
+                                                <table class="table table-bordered table-hover table-striped table-success">
+                                                    <thead class="bordered-darkorange">
+                                                        <tr>
+                                                            <th>Sr#</th>
+                                                            <th>Invid</th>
+                                                            <th>Customer</th>
+                                                            <th>Date</th>
+                                                            <th>NetTotal</th>
+                                                            <th>Discount</th>
+                                                            <th>GrandTotal</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody class="abc">
+                                                        @foreach (var item in Model.sale_list_woc)
+                                                        {
+                                                            sr += 1;
+                                                            <tr>
+                                                                <td>@sr</td>
+                                                                <td>@item.InvID</td>
+                                                                <td>@item.CustomerName</td>
+                                                                <td>@item.Date</td>
+                                                                <td>@String.Format("{0:N}", item.NetAmount)</td>
+                                                                <td>@String.Format("{0:N}", item.DiscountAmount)</td>
+                                                                <td>@String.Format("{0:N}", item.GrandTotal)</td>
+                                                            </tr>
+                                                        }
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <br />
+                                            <a href="@Url.Action("Sale", "Report")" class="btn btn-sm btn-primary pull-right" style="margin-top:-35px">View All</a>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <br />
+                                            <p><b>Last 10 Sale Return Report</b></p>
+                                            <a href="@Url.Action("Index", "SaleReturn")" class="btn btn-sm btn-info pull-right" style="margin-top:-35px">Place New Sale Return</a>
+                                            <br />
+                                            <div class="table-responsive" style="margin-top:-12px">
+                                                <table class="table table-bordered table-hover table-striped table-success">
+                                                    <thead class="bordered-darkorange">
+                                                        <tr>
+                                                            <th>Sr#</th>
+                                                            <th>InvID</th>
+                                                            <th>Customer</th>
+                                                            <th>Date</th>
+                                                            <th>NetTotal</th>
+                                                            <th>Discount</th>
+                                                            <th>GrandTotal</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody class="abc">
+                                                        @foreach (var item in Model.salereturn_list_woc)
+                                                        {
+                                                            sr += 1;
+                                                            <tr>
+                                                                <td>@sr</td>
+                                                                <td>@item.InvID</td>
+                                                                <td>@item.CustomerName</td>
+                                                                <td>@item.Date</td>
+                                                                <td>@String.Format("{0:N}", item.NetAmount)</td>
+                                                                <td>@String.Format("{0:N}", item.DiscountAmount)</td>
+                                                                <td>@String.Format("{0:N}", item.GrandTotal)</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <br />
+                                            <a href="@Url.Action("SaleReturnList", "SaleReturn")" class="btn btn-sm btn-primary pull-right" style="margin-top:-35px">View All</a>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="tab-pane fade" id="pur">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-3" style="border:1px solid #CCCCCC;padding:5px;">
+                                                <p><b>Overall Purchase</b></p>
+                                                <div id="chartdivdonut9" style="margin-top: -20px"></div>
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Name</th>
+                                                            <th style="text-align:right">Balances</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var item in Model.pur_list_woc)
+                                                        {
+                                                            <tr>
+                                                                <td>@item.SupplierName</td>
+                                                                <td style="text-align:right">@String.Format("{0:N}", item.GrandTotal)</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-md-3" style="border:1px solid #CCCCCC;padding:5px;">
+                                                <p><b>Overall Purchase Return</b></p>
+                                                <div id="chartdivdonut10" style="margin-top: -20px"></div>
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Name</th>
+                                                            <th style="text-align:right">Balances</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var item in Model.purreturn_list_woc)
+                                                        {
+                                                            <tr>
+                                                                <td>@item.SupplierName</td>
+                                                                <td style="text-align:right">@String.Format("{0:N}", item.GrandTotal)</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-md-3" style="border:1px solid #CCCCCC;padding:5px;">
+                                                <p><b>Top 10 Suppliers Purchases </b></p>
+                                                <div id="chartdivdonut11" style="margin-top: -20px"></div>
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Name</th>
+                                                            <th style="text-align:right">Balances</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var item in Model.top_supp_pur)
+                                                        {
+                                                            <tr>
+                                                                <td>@item.SupplierName</td>
+                                                                <td style="text-align:right">@String.Format("{0:N}", item.GrandTotal)</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-md-3" style="border:1px solid #CCCCCC;padding:5px;">
+                                                <p><b>Recovery & Shortfalll</b></p>
+                                                <div id="chartdivdonut12" style="margin-top: -20px"></div>
+                                                <table class="table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col">Name</th>
+                                                            <th style="text-align:right">Balances</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var item in Model.supp_re)
+                                                        {
+                                                            <tr>
+                                                                <td>@item.CustomerName</td>
+                                                                <td style="text-align:right">@String.Format("{0:N}", item.Total)</td>
+                                                            </tr>
+                                                        }
+                                                        @foreach (var item in Model.supp_short)
+                                                        {
+                                                            <tr>
+                                                                <td>@item.CustomerName</td>
+                                                                <td style="text-align:right">@String.Format("{0:N}", item.Total)</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <br />
+                                            <p><b>Last 10 Purchase Invoices</b></p>
+                                            <a href="@Url.Action("GatepassIndex", "Purchase")" class="btn btn-sm btn-info pull-right" style="margin-top:-35px">Place New Sale</a>
+                                            <br />
+                                            <div class="table-responsive" style="margin-top:-12px">
+                                                <table class="table table-bordered table-hover table-striped table-success">
+                                                    <thead class="bordered-darkorange">
+                                                        <tr>
+                                                            <th>Sr#</th>
+                                                            <th>Invid</th>
+                                                            <th>Customer</th>
+                                                            <th>Date</th>
+                                                            <th>NetTotal</th>
+                                                            <th>Discount</th>
+                                                            <th>GrandTotal</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody class="abc">
+                                                        @foreach (var item in Model.pur_list_woc)
+                                                        {
+                                                            sr += 1;
+                                                            <tr>
+                                                                <td>@sr</td>
+                                                                <td>@item.InvID</td>
+                                                                <td>@item.SupplierName</td>
+                                                                <td>@item.Date</td>
+                                                                <td>@String.Format("{0:N}", item.NetAmount)</td>
+                                                                <td>@String.Format("{0:N}", item.DiscountAmount)</td>
+                                                                <td>@String.Format("{0:N}", item.GrandTotal)</td>
+                                                            </tr>
+                                                        }
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <br />
+                                            <a href="@Url.Action("Purchase", "Report")" class="btn btn-sm btn-primary pull-right" style="margin-top:-35px">View All</a>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <br />
+                                            <p><b>Last 10 Purchase Return Report</b></p>
+                                            <a href="@Url.Action("Index", "PurchaseReturn")" class="btn btn-sm btn-info pull-right" style="margin-top:-35px">Place New Sale Return</a>
+                                            <br />
+                                            <div class="table-responsive" style="margin-top:-12px">
+                                                <table class="table table-bordered table-hover table-striped table-success">
+                                                    <thead class="bordered-darkorange">
+                                                        <tr>
+                                                            <th>Sr#</th>
+                                                            <th>InvID</th>
+                                                            <th>Customer</th>
+                                                            <th>Date</th>
+                                                            <th>NetTotal</th>
+                                                            <th>Discount</th>
+                                                            <th>GrandTotal</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody class="abc">
+                                                        @foreach (var item in Model.purreturn_list_woc)
+                                                        {
+                                                            sr += 1;
+                                                            <tr>
+                                                                <td>@sr</td>
+                                                                <td>@item.InvID</td>
+                                                                <td>@item.SupplierName</td>
+                                                                <td>@item.Date</td>
+                                                                <td>@String.Format("{0:N}", item.NetAmount)</td>
+                                                                <td>@String.Format("{0:N}", item.DiscountAmount)</td>
+                                                                <td>@String.Format("{0:N}", item.GrandTotal)</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <br />
+                                            <a href="@Url.Action("PurchaseReturnList", "PurchaseReturn")" class="btn btn-sm btn-primary pull-right" style="margin-top:-35px">View All</a>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="tab-pane fade" id="acc">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-6" style="border: 1px solid #CCCCCC;padding: 2px">
+                                                <center>
+                                                    <p><b>Payables</b></p>
+                                                </center>
+                                                <table class="table table-bordered table-hover table-striped table-success">
+                                                    <thead class="bordered-darkorange" style="background-color:#189279;color:white">
+                                                        <tr>
+                                                            <th>Suppliers Name</th>
+                                                            <th>Balance</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="abc">
+                                                        @foreach (var item in Model.payables)
+                                                        {
+                                                            <tr>
+                                                                <td>@item.SupplierName</td>
+                                                                <td>@String.Format("{0:N}", item.Bal + item.op)</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-md-6" style="border: 1px solid #CCCCCC;padding: 2px">
+                                                <center><p><b>Receivables</b></p></center>
+                                                <table class="table table-bordered table-hover table-striped table-success">
+                                                    <thead class="bordered-darkorange" style="background-color:#189279;color:white">
+                                                        <tr>
+                                                            <th>Customer Name</th>
+                                                            <th>Balance</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="abc">
+                                                        @foreach (var item in Model.rec)
+                                                        {
+                                                            <tr>
+                                                                <td>@item.SupplierName</td>
+                                                                <td>@String.Format("{0:N}", item.Bal + item.op)</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12" style="margin-top: 20px;border: 1px solid #CCCCCC;padding: 2px">
+                                            <div id="chartdivexpense" style="height: 300px; width: 1020px; margin: 0px auto;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @*<div class="tab-pane fade" id="pro">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered table-hover table-striped table-success">
+                                                    <thead class="bordered-darkorange">
+                                                        <tr style="background-color:#189279;color:white">
+                                                            <th>Batch#</th>
+                                                            <th>Start Date</th>
+                                                            <th>End Date</th>
+                                                            <th>Invoice Cost</th>
+                                                            <th>Labour</th>
+                                                            <th>Other</th>
+                                                            <th>Total Cost</th>
+                                                            <th>Net Total</th>
+                                                            <th>Gorss Profit</th>
+                                                            <th>Yelid</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody class="abc">
+                                                        @foreach (var item in Model.list)
+                                                        {
+                                                            <tr>
+
+                                                                <td>@item.BatchNo</td>
+                                                                <td>@item.Date</td>
+                                                                <td>@item.Phone</td>
+                                                                <td>@(item.Total - (item.DiscountAmount + item.CargoCharges))</td>
+                                                                <td>@item.CargoCharges</td>
+                                                                <td>@String.Format("{0:N}", item.DiscountAmount)</td>
+                                                                <td>@String.Format("{0:N}", item.Total)</td>
+                                                                <td>@String.Format("{0:N}", item.BTotal)</td>
+                                                                <td>@String.Format("{0:N}", item.GrandTotal)</td>
+                                                                <td>@String.Format("{0:N}", item.yelid)</td>
+                                                                <td>
+                                                                    <a href="@Url.Action("Edit","ProcductionNew", new { ID=Convert.ToInt32(item.Rtotal) } )" class="badge badge-xs x-primary b-rounded"><i class="fa fa-pencil"></i></a>
+                                                                </td>
+                                                            </tr>
+
+                                                        }
+                                                    </tbody>
+
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>*@
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

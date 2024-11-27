@@ -1,0 +1,129 @@
+﻿@model WebApplication1.ViewModels.SaleInvVM
+@{
+    ViewData["Title"] = "Create";
+}
+<script>
+    function add() {
+        var disc = document.getElementById("disc").value;
+        var selObj = document.getElementById("cus");
+        var cus_name = selObj.options[selObj.selectedIndex].text;
+        var cus_value = selObj.options[selObj.selectedIndex].value;
+        var selObj1 = document.getElementById("cat");
+        var cat_name = selObj1.options[selObj1.selectedIndex].text;
+        var cat_value = selObj1.options[selObj1.selectedIndex].value;
+            var htmlRows = '';
+            htmlRows += '<tr>';
+            htmlRows += '<td style="width:80px !important"><a class="badge badge-xs x-danger b-rounded" onclick="return deleteRow(this)" ><i class="fa fa-trash-o"></i></a></td>';
+            htmlRows += '<td><input type="text"  name="cus_name[]"  value="' + cus_name + '" readonly class="form-control" autocomplete="off"></td>';
+            htmlRows += '<td><input type="text"  name="cat_name[]"  value="' + cat_name + ' "   readonly class="form-control" autocomplete="off"></td>';
+            htmlRows += '<td><input type="text"  name="disc[]"  value="' + disc + '"  readonly class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td style="display:none"><input type="text"  name="cus_value[]"  value="' + cus_value + '"  readonly class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td style="display:none" ><input type="text"  name="cat_value[]"  value="' + cat_value + '"  readonly class="form-control" autocomplete="off"></td>';
+         
+            $('#invoiceItem').append(htmlRows);
+            $('#disc').val('0');
+    }
+    function deleteRow(btn) {
+        if (confirm("Are you sure want to delete the row?"))
+            $(btn).closest("tr").remove();
+        var table = document.getElementById("invoiceItem"), sumVal = 0;
+
+        for (var i = 1; i < table.rows.length; i++) {
+            sumVal = sumVal + parseInt(table.rows[i].cells[10].innerHTML);
+        }
+        document.getElementById("net_final").value = parseFloat(sumVal);
+        document.getElementById("total").value = parseFloat(sumVal);
+        document.getElementById("g_total").value = parseFloat(sumVal);
+        $('#d_amount').val('0');
+        $('#cgo_charges').val('0');
+        qty123();
+    }
+</script>
+<style>
+    hr {
+        height: 1px;
+        background: black;
+        border: none;
+        outline: none;
+        margin: 3em 3em 5em;
+        position: relative;
+    }
+
+
+        hr#eight {
+            background: transparent;
+            border-bottom: 2px dashed #189279;
+            width: 100%;
+            margin: 0 auto;
+            &:before
+
+    {
+        top: 3px;
+        left: 0;
+        padding-right: 2em;
+    }
+    }
+</style>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-print" aria-hidden="true"></i> Customer Item Discount</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b>Customer Item Discount </b></h4>
+
+            <a href="@Url.Action("Index", "CustomerDiscount")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  List</a>
+            <div class="panel">
+                <form asp-action="Create" id="invoice-form" method="post" enctype="multipart/form-data" onsubmit="return confirm('Are you sure you want to Continue ?');">
+                    <div class="panel-content">
+                        <div class="row">
+                            <div class="form-group col-sm-3">
+                                <label>Select Customer</label>
+                                @Html.DropDownListFor(m => m.customerDiscount.customername, new SelectList(Model.Cus_list, "customerid", "Name"), "Select Customer", htmlAttributes: new { @class = "chosen-select form-control", required = "required", id = "cus" })
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label>Select Category</label>
+                                @Html.DropDownListFor(m => m.customerDiscount.CategoryID, new SelectList(Model.cat_list, "CategoryID", "CategoryName"), "Select Category", htmlAttributes: new { @class = "chosen-select form-control", required = "required", id = "cat" })
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label>Disc</label>
+                                @Html.TextBoxFor(m => m.customerDiscount.disc, new { @class = "form-control input-xs", id = "disc" })
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <a class="btn btn-wide btn-warning pull-left" onclick='return add()' style="margin-right:-130px;width:25px;margin-top:20px"> <i class="fa fa-plus"></i> Add</a> &nbsp;&nbsp;
+                            </div>
+                        </div>
+                        <hr id="eight" data-symbol="✂" style="margin-top:5px"><br />
+                         <div class="row">
+                            <div class="col-sm-12" style="margin-top:-15px">
+                                <div class="table-responsive">
+                                    <table id="invoiceItem" class="table table-bordered table-hover table-striped table-success">
+                                        <thead class="bordered-darkorange">
+                                            <tr style="background-color: #3498DB; color: white;border:1px solid white">
+                                                <th>Action</th>
+                                                <th>CustomerName</th>
+                                                <th>Category</th>
+                                                <th>Disc</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <button type="submit" class="btn btn-primary col-sm-4 col-sm-offset-4" style="margin-top: 10px; background-color: #3498DB !important; border: 1px solid #3498DB "><i class="fa fa-save"></i> &nbsp; Save Invoice</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

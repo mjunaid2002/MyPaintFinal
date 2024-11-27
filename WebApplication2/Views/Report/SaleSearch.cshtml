@@ -1,0 +1,126 @@
+﻿@model IEnumerable<WebApplication1.QueryViewModel.SaleReportQuery>
+
+@{
+    ViewBag.Title = "Index";
+    var tex = @TempData["Tex"] as string;
+    var sr = 0;
+}
+<script>
+    $('#searchable').DataTable({
+        buttons: [
+            'copy', 'excel', 'pdf'
+        ]
+    });
+</script>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Reports</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b>Sale Report</b></h4>
+            @*<a href="@Url.Action("Create", "Category")"  class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  Creat New</a>*@
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th>Sr</th>
+                                    <th>Date</th>
+                                    <th>Inv #</th>
+                                    <th>Customer Name</th>
+                                    <th>Category</th>
+                                    <th>Item</th>
+                                    <th>packing</th>
+                                    <th>Qty</th>
+                                    <th>Retail Price</th>
+                                    @if (tex == "Tex")
+                                    {
+                                        <th>Sales Tax</th>
+                                    }
+                                    <th>Discount</th>
+                                    @if (tex == "Tex")
+                                    {
+                                        <th>WHT</th>
+                                    }
+                                    <th>Net Total</th>
+                                </tr>
+                            </thead>
+                            <tbody class="abc">
+                                @if (!Model.Any())
+                                {
+
+                                }
+                                else
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@{sr++;}@sr</td>
+                                            <td>@item.date.ToString("dd/MM/yyyy")</td>
+                                            <td>@item.OrderID</td>
+                                            <td>@item.custname</td>
+                                            <td>@item.maincataname</td>
+                                            <td>@item.prname</td>
+                                            <td>@item.packing</td>
+                                            <td>@item.qty</td>
+                                            <td>@item.sp</td>
+
+                                            @if (tex == "Tex")
+                                            {
+                                                <td>@item.ext1</td>
+                                                <td>@item.total_after</td>
+                                                <td>@item.wht</td>
+                                                <td>@item.dsicval</td>
+                                            }
+
+                                            else
+                                            {
+                                                <td>@item.dsicval</td>
+                                                <td>@item.total_after</td>
+
+
+                                            }
+
+
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    @if (tex == "Tex")
+                                    {
+                                        <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    }
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    @if (tex == "Tex")
+                                    {
+                                        <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    }
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

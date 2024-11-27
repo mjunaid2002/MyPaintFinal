@@ -1,0 +1,53 @@
+﻿@model WebApplication2.ViewModels.UserMan
+@{
+    ViewBag.Title = "Index";
+}
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> User Management</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b>Assign Role</b></h4>
+            <a href="@Url.Action("Create", "UserMan")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  Creat New</a>
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Role</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="abc">
+                                @foreach (var item in Model.role_list)
+                                {
+                                    <tr>
+                                        <td>@item.Id</td>
+                                        <td>@item.name</td>
+                                        <td>
+                                            <a href="@Url.Action("Edits", new { ID= item.Id } )" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="btn btn-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

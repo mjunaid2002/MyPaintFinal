@@ -1,0 +1,66 @@
+﻿@model IEnumerable<WebApplication1.QueryViewModel.AcMain>
+@{
+    ViewBag.Title = "Index";
+    var sr = 0;
+}
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-dollar" aria-hidden="true"></i>Accounts </a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b>First Level Accounts List</b></h4>
+           
+                <a href="@Url.Action("Create", "FirstLevel")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  Creat New Account</a>
+              <div class="panel">
+                <div class="panel-content">
+                    <div class="table-responsive">
+                       
+                            <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                                <thead class="bordered-darkorange">
+                                    <tr>
+                                        <th>Sr</th>
+                                        <th>Account Head </th>
+                                        <th>Sub Head </th>
+                                        <th>Account Main ID </th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody class="abc">
+                                    @foreach (var item in Model)
+                                    {
+                                        sr += 1;
+                                        <tr>
+
+                                            <td>@sr</td>
+                                            <td>@item.Headname</td>
+                                            <td>@item.a_title</td>
+                                            <td>@item.a_main_id</td>
+
+                                            <td>
+                                           <a href="@Url.Action("Edit", new { ID= item.ID } )" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="btn btn-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
+                                        </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                        <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                        <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                        <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

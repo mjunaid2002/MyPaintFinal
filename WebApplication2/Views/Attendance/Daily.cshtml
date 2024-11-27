@@ -1,0 +1,105 @@
+﻿@model WebApplication2.ViewModels.VoucherVM
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Attendance</a></li>
+            </ul>
+        </div>
+    </div>
+    <h4 class="section-subtitle"><b>Daily Attendance </b></h4>
+
+    @using (Html.BeginForm("DailyAttensearch", "Attendance", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {<div class="col-md-12">
+            <div class="form-group col-sm-3">
+                <label>Select Employee</label>
+                @Html.DropDownListFor(m => m.attendance.EmpId, new SelectList(Model.emp_list, "Id", "Name"), "Select Employee", htmlAttributes: new { @class = "chosen-select form-control" })
+            </div>
+            <div class="form-group col-sm-3">
+                <label>Select Date </label>
+                @Html.TextBoxFor(m => m.attendance.checkin_datetime, new { @class = "form-control input-xs", @type = "date", @required = "required" })
+            </div>
+           
+
+            <div class="col-sm-3">
+                <button type="submit" name="submit" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Search &nbsp;&nbsp;</button>
+            </div>
+        </div>
+    }
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel">
+
+                <div class="panel-content">
+                    <div class="table-responsive">
+
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th>Emp Name</th>
+                                    <th>Check In details</th>
+                                    <th>Check Out details</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+
+                            <tbody class="abc">
+                                @foreach (var item in Model.atte_list)
+                                {
+                                    <tr>
+                                        <td>@item.EmpName</td>
+                                        @if (item.Status == 1)
+                                        {
+                                            <td>@item.checkin_datetime</td>
+                                            <td>NUll</td>
+                                        }
+                                        else if (item.Status == 2)
+                                        {
+                                            <td>NUll</td>
+                                            <td>@item.checkout_datetime</td>
+                                        }
+                                        else
+                                        {
+                                            <td>@item.checkin_datetime</td>
+                                            <td>@item.checkout_datetime</td>
+                                        }
+
+                                        @if (@item.Status == 1)
+                                        {
+                                            <td>Check In</td>
+                                        }
+                                        else if (@item.Status == 2)
+                                        {
+                                            <td>Check Out</td>
+                                        }
+                                        else
+                                        {
+                                            <td>Both</td>
+                                        }
+
+
+
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

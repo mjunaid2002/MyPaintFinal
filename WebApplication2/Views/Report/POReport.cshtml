@@ -1,0 +1,152 @@
+﻿@model WebApplication1.ViewModels.PurInvoiceVM
+
+@{
+    ViewBag.Title = "POReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    decimal Srn = 1;
+    string strcomb = "";
+}
+
+<script>
+    $('#searchable').DataTable({
+        buttons: [
+            'copy', 'excel', 'pdf'
+        ]
+    });
+
+    function showcol(code) {
+        var v = code;
+        $('#searchable tr > *:nth-child(' + v + ')').toggle();
+    }
+    function showcolcheck(code) {
+        var v = code;
+        $('#searchable tr > *:nth-child(' + v + ')').toggle();
+    }
+</script>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i>Purchase Order</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b>Purchase Order</b></h4>
+            <div class="panel">
+                <div class="panel-content">
+                    <div>
+                        
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked1" onclick="showcolcheck(1)" checked>
+                        <label class="form-check-label" for="flexCheckChecked1">
+                            Sr
+                        </label>
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked2" onclick="showcolcheck(2)" checked>
+                        <label class="form-check-label" for="flexCheckChecked2">
+                            Product Name
+                        </label>
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked3" onclick="showcolcheck(3)" checked>
+                        <label class="form-check-label" for="flexCheckChecked3">
+                            Category
+                        </label>
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked4" onclick="showcolcheck(4)" checked>
+                        <label class="form-check-label" for="flexCheckChecked4">
+                            Quality
+                        </label>
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked5" onclick="showcolcheck(5)" checked>
+                        <label class="form-check-label" for="flexCheckChecked5">
+                            Min Level
+                        </label>
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked6" onclick="showcolcheck(6)" checked>
+                        <label class="form-check-label" for="flexCheckChecked6">
+                            Max Level
+                        </label>
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked7" onclick="showcolcheck(7)" checked>
+                        <label class="form-check-label" for="flexCheckChecked7">
+                            Current Stock
+                        </label>
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked8" onclick="showcolcheck(8)" checked>
+                        <label class="form-check-label" for="flexCheckChecked8">
+                            Demand
+                        </label>
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked9" onclick="showcolcheck(9)" checked>
+                        <label class="form-check-label" for="flexCheckChecked9">
+                            Supplier
+                        </label>
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked10" onclick="showcolcheck(10)" checked>
+                        <label class="form-check-label" for="flexCheckChecked10">
+                            PriceStatus
+                        </label>
+                        <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked10" onclick="showcolcheck(11)" checked>
+                        <label class="form-check-label" for="flexCheckChecked11">
+                            Status
+                        </label>
+                    </div>                    
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th>Sr.</th>
+                                    <th style="width:300px;">Product Name</th>
+                                    <th>Category</th>
+                                    <th>Quality Category</th>
+                                    <th>Min. Level</th>
+                                    <th>Max Level</th>
+                                    <th>Current Stock</th>
+                                    <th>Demand / Order Quantity</th>
+                                    <th>Supplier Name</th>
+                                    <th>Price</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+
+                            <tbody class="abc">
+                                @foreach (var item in Model.PORawMaterialReportQuery)
+                                {
+                                    @(strcomb= "")
+                                <tr>
+                                    @foreach (var item1 in Model.POpurchasedetail.Where(x=>x.itemid == item.ProductID).OrderByDescending(x => x.invid).Take(10))
+                                    {
+                                        strcomb = strcomb + item1.SupplierName + "-" + item1.total + " , ";
+                                    }
+
+                                    @*<td id="1stcol">@(Srn++)</td>*@
+                                    <td style="width:50px;">@(Srn++)</td>
+                                    <td style="width:200px;">@item.pname</td>
+                                    <td>@item.CategoryName</td>
+                                    <td>@item.QualityCategoriesitem</td>
+                                    <td>@item.ReorderLevel</td>
+                                    <td>@item.MaxLevelRaw</td>
+                                    <td>@item.Qtybal</td>
+                                    <td>@item.POQty</td>
+                                    <td>@(strcomb)</td>
+                                    <td style="width:100px;">@item.PurchaseCost</td>
+                                    <td style="width:100px;">@item.QTYStatus</td>
+                                </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

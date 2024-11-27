@@ -1,0 +1,109 @@
+﻿@model IEnumerable<WebApplication1.QueryViewModel.MianCategories>
+@using WebApplication1.QueryViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Reports</a></li>
+            </ul>
+        </div>
+    </div>
+    <h4 class="section-subtitle"><b>Batch Sheet Summary </b></h4>
+    @using (Html.BeginForm("BatchSheetSummarySearch", "Report", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="panel">
+            <div class="panel-content">
+                <div class="col-md-12">
+                    <div class="form-group col-sm-3">
+                        <label>Select Region</label>
+                        <select id="RegionId" name="RegionId" class="form-control">
+                            <option value="0">Select Region</option>
+
+                            @foreach (var item in ViewData["list1"] as List<Region>)
+                            {
+                                <option value="@item.id">@item.name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label>Select Quality</label>
+                        <select id="optquality" name="qualityname" class="form-control" onChange="OneSelect(this.value)">
+                            <option value="0">Select Quality</option>
+                            @foreach (var item in Model)
+                            {
+                                <option value="@item.MainCategoryID">@item.MainCategoryName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label>Select Product</label>
+                        <select id="Catid" name="second_id" class="form-control" onChange="SecondSelect(this.value)">
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label>Select Color</label>
+                        <select id="Prdid" name="third_id" class="form-control">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group col-sm-3">
+                        <label>Start Date</label>
+                        <input type="date" name="s_date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label>End Date </label>
+                        <input type="date" name="e_date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
+                    </div>
+                    <div class="col-sm-3">
+                        @*<button type="submit" name="submit" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Search &nbsp;&nbsp;</button>*@
+
+                        <button type="submit" name="submit1" value="pdf" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Pdf &nbsp;&nbsp;</button>
+                        <button type="submit" name="submit1" value="show" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Show &nbsp;&nbsp;</button>
+                    </div>
+                </div>
+                <br /><br /><br />
+                <br /><br /><br />
+            </div>
+
+        </div>
+
+    }
+</div>
+<script>
+    function OneSelect(code) {
+        // alert(code);
+        $.ajax({
+            type: "GET",
+            url: "/Report/GetCategoryData?message=" + code,
+            data: "{}",
+            success: function (data) {
+                var s = '<option value="-1">Select Item</option>';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].CategoryID + '">' + data[i].CategoryName + '</option>';
+                }
+                $('#Catid').html(s);
+            }
+        });
+    }
+
+    function SecondSelect(code) {
+        // alert(code);
+        $.ajax({
+            type: "GET",
+            url: "/Report/GetColorsData?message=" + code,
+            data: "{}",
+            success: function (data) {
+                var s = '<option value="-1">Select Item</option>';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].ProductID + '">' + data[i].ProductName + '</option>';
+                }
+                $('#Prdid').html(s);
+            }
+        });
+    }
+</script>

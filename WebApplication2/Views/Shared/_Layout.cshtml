@@ -1,0 +1,667 @@
+﻿
+<!doctype html>
+<html lang="en" class="fixed">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>My Paints</title>
+    <link rel="apple-touch-icon" sizes="120x120" href="~/Content/favicon/apple-icon-120x120.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="~/Content/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="~/Content/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="~/Content/favicon/favicon-16x16.png">
+    <script src="~/Content/vendor/pace/pace.min.js"></script>
+    <link href="~/Content/vendor/pace/pace-theme-minimal.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Content/vendor/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="~/Content/vendor/font-awesome/css/font-awesome.css">
+    <link rel="stylesheet" href="~/Content/vendor/animate.css/animate.css">
+    <link rel="stylesheet" href="~/Content/vendor/toastr/toastr.min.css">
+    <link rel="stylesheet" href="~/Content/vendor/magnific-popup/magnific-popup.css">
+    <link rel="stylesheet" href="~/Content/stylesheets/css/style.css">
+    <link rel="stylesheet" href="~/Content/vendor/data-table/media/css/dataTables.bootstrap.min.css">
+
+    @*<link href="~/Content/Datatable/dataTables.bootstrap.css" rel="stylesheet" />*@
+    <link rel="stylesheet" href="~/Content/choosen/chosen.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/Datatable1/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/Datatable1/css/buttons.dataTables.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    @*  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>*@
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <style>
+        .abc {
+            display: table-footer-group;
+            vertical-align: middle;
+            border-color: inherit;
+        }
+
+            .abc tr td {
+                font-size: 11px;
+            }
+
+        .form-control {
+            height: 30px;
+            padding: 5px 10px;
+            font-size: 12px;
+            line-height: 1.5;
+            border-radius: 3px;
+        }
+
+        .chosen-container {
+            height: 27px;
+            font-size: 12px;
+            line-height: 1.5;
+            border-radius: 3px;
+        }
+
+        /*/*modal-backdrop {
+            display: none;
+        }
+
+        .modal-backdrop.in {
+            filter: alpha(opacity=50);
+            opacity: .5;
+        }
+        .modal {
+            text-align: center;
+        }
+
+            .modal:before {
+                display: inline-block;
+                vertical-align: middle;
+                content: " ";
+                height: 100%;
+            }
+
+        .modal-dialog {
+            display: inline-block;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .modal-dialog {
+            width: auto;
+        }*/
+    </style>
+    <script>
+        function PageLoad() {
+            tota2();
+        }
+        window.onload = PageLoad;
+    </script>
+    <style>
+        #main-nav li {
+            background-color: #2C3E50 !important;
+            border: 1px solid #2C3E50;
+        }
+
+            #main-nav li a {
+                color: white !important;
+            }
+
+                #main-nav li a:hover {
+                    background-color: black !important;
+                    border: 1px solid black;
+                }
+
+            #main-nav li:active {
+                background-color: black !important;
+                border: 1px solid black;
+            }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="page-header" style="background-color: #3498DB">
+            <div class="leftside-header">
+                <div class="logo">
+                    <a href="@Url.Action("Index", "Dashboard")" class="on-click">
+                        <center>
+                            <h2 style="color:white;margin-top:10px;">
+                                My Paints
+                            </h2>
+                        </center>
+                    </a>
+                </div>
+                <div id="menu-toggle" class="visible-xs toggle-left-sidebar" data-toggle-class="left-sidebar-open" data-target="html">
+                    <i class="fa fa-bars" aria-label="Toggle sidebar"></i>
+                </div>
+            </div>
+
+            <div class="rightside-header">
+                <div class="header-middle"></div>
+                <div class="header-section" id="search-headerbox">
+                    <h5 class="pull-right"><b> Admin</b></h5>
+                    <input type="text" name="search" id="search" placeholder="Search...">
+                    <i class="fa fa-search search" id="search-icon" aria-hidden="true"></i>
+                    <div class="header-separator"></div>
+                </div>
+                <div class="header-section">
+                    <a href="@Url.Action("Logout", "Home")" data-toggle="tooltip" data-placement="left" title="Logout"><i class="fa fa-sign-out log-out" aria-hidden="true"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="page-body">
+            <div class="left-sidebar" style="background-color:#FFFFFF !important;border-right:1px solid grey">
+                <div class="left-sidebar-header" style="background-color: #2C3E50 !important">
+                    <div class="left-sidebar-title"><h5 style="margin-top:2px;color:#2C3E50"><b></b></h5> </div>
+                    <div class="left-sidebar-toggle c-hamburger c-hamburger--htla hidden-xs" data-toggle-class="left-sidebar-collapsed" data-target="html" style="background-color: #2C3E50 !important">
+                        <span></span>
+                    </div>
+                </div>
+                <div id="left-nav" class="nano" style="background-color: #2C3E50 !important;">
+                    <div class="nano-content">
+                        <nav>
+                            <ul class="nav" id="main-nav" style="border: 1px solid #2C3E50; background-color: #2C3E50 !important;">
+                                <li style="border: 1px solid #2C3E50; background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "Dashboard")"><i class="fa fa-home"></i> &nbsp; <span style="color:white">Dashboard</span></a></li>
+                                @if (Session["MenuRegistartion"].ToString() != "0")
+                                {
+                                    <li class="has-child-item close-item" style="border:1px solid #2C3E50">
+                                        <a><i class="fa fa-plus"></i> &nbsp; <span>  Registration  </span></a>
+                                        <ul class="nav child-nav level-1" style="background-color: #2C3E50 !important;">
+                                            @if (Session["SubMainCategory"].ToString() != "0")
+                                            {
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "Category")"> Main Categories</a></li>
+                                            }
+                                            @if (Session["SubCategory"].ToString() != "0")
+                                            {
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "MainCategory")">  Categories</a></li>
+                                            }
+                                            @if (Session["SubQualityCategory"].ToString() != "0")
+                                            {
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "QualityCategory")"> Quality Category</a></li>
+                                            }
+                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "Region")"> Region</a></li>
+                                            @if (Session["SubRawProduct"].ToString() != "0")
+                                            {
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "RawProducts")"> Raw Product</a></li>
+                                            }
+                                            @if (Session["SubFinishedProduct"].ToString() != "0")
+                                            {
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "FinishedProducts")"> Finished Product</a></li>
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "FinishTransfer")"> Finished Transfer</a></li>
+                                            }
+                                            @if (Session["SubEmployee"].ToString() != "0")
+                                            {
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "Emp_Department")"> Emp_Department</a></li>
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "Employee")"> Employee</a></li>
+                                            }
+                                            @if (Session["SubCustomers"].ToString() != "0")
+                                            {
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "Customer")"> Customers</a></li>
+                                            }
+                                            @if (Session["SubSuppliers"].ToString() != "0")
+                                            {
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "Supplier")"> Suppliers</a></li>
+                                            }
+                                            @if (Session["SubCargo"].ToString() != "0")
+                                            {
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "Cargo")"> Cargo</a></li>
+                                            }
+                                            @if (Session["SubProductPricing"].ToString() != "0")
+                                            {
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "ProductPricing")"> Product Pricing</a></li>
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("IndexRegion", "ProductPricing")"> Product Pricing Region</a></li>
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("IndexFinishRegion", "ProductPricing")"> Finished Product Region</a></li>
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                                @*@if (Session["CurrentUserName"].ToString() == "Super Admin")
+        {
+            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Indexstatus", "Batch")"><i class="fa fa-list"></i> &nbsp; <span style="color:white">Batch Status</span></a></li>
+
+        }*@
+                                @Html.Action("GetBatchCount", "Batch")
+                                @Html.Action("GetFillingBatchCount", "BatchFilling")
+                                @Html.Action("GetSaleCount", "StockInward")
+                                @Html.Action("GetSaleCount", "SaleInvoiceNew")
+                                @Html.Action("GetLabCount", "LabEntries")
+                                @*@Html.Action("GetBatchCount")*@
+
+                                <script type="text/javascript">
+                                    $(document).ready(function () {
+                                      function updateBatchCount() {
+                                         $.ajax({
+                                                   url: '@Url.Action("GetLabCountJson", "LabEntries")',
+                                                   type: 'GET',
+                                                   success: function (data) {
+                                                       $('#LabCount').text(data.batchCount);
+                                                  }
+                                                });
+                                        }
+
+                                     // Initial call to set the batch count
+                                     updateBatchCount();
+
+                                        // Set interval to update batch count every 5 minutes (300000 milliseconds)
+                                      setInterval(updateBatchCount, 300000);
+                                 });
+                                </script>
+                                <script type="text/javascript">
+                                    $(document).ready(function () {
+                                      function updateBatchCount() {
+                                         $.ajax({
+                                                   url: '@Url.Action("GetBatchCountJson", "Batch")',
+                                                   type: 'GET',
+                                                   success: function (data) {
+                                                      $('#batchCount').text(data.batchCount);
+                                                  }
+                                                });
+                                        }
+
+                                     // Initial call to set the batch count
+                                     updateBatchCount();
+
+                                        // Set interval to update batch count every 5 minutes (300000 milliseconds)
+                                      setInterval(updateBatchCount, 300000);
+                                 });
+                                </script>
+                                <script type="text/javascript">
+                                    $(document).ready(function () {
+                                      function updateBatchFillingCount() {
+                                         $.ajax({
+                                                   url: '@Url.Action("GetFillingBatchCountJson", "BatchFilling")',
+                                                   type: 'GET',
+                                                   success: function (data) {
+                                                      $('#batchCount1').text(data.batchCount);
+                                                  }
+                                                });
+                                        }
+
+                                     // Initial call to set the batch count
+                                        updateBatchFillingCount();
+
+                                        // Set interval to update batch count every 5 minutes (300000 milliseconds)
+                                        setInterval(updateBatchFillingCount, 300000);
+                                 });
+                                </script>
+                                <script type="text/javascript">
+                                    $(document).ready(function () {
+                                      function updateSaleCount() {
+                                         $.ajax({
+                                                   url: '@Url.Action("GetSaleCountJson", "StockInward")',
+                                                   type: 'GET',
+                                                   success: function (data) {
+                                                      $('#SaleCount').text(data.batchCount);
+                                                  }
+                                                });
+                                        }
+
+                                     // Initial call to set the batch count
+                                        updateSaleCount();
+
+                                        // Set interval to update batch count every 5 minutes (300000 milliseconds)
+                                        setInterval(updateSaleCount, 300000);
+                                 });
+                                </script>
+                                <script type="text/javascript">
+                                    $(document).ready(function () {
+                                      function updateSaleCount1() {
+                                         $.ajax({
+                                                   url: '@Url.Action("GetSaleCountJson", "SaleInvoiceNew")',
+                                                   type: 'GET',
+                                                   success: function (data) {
+                                                      $('#SaleCount1').text(data.batchCount);
+                                                  }
+                                                });
+                                        }
+
+                                     // Initial call to set the batch count
+                                        updateSaleCount1();
+
+                                        // Set interval to update batch count every 5 minutes (300000 milliseconds)
+                                        setInterval(updateSaleCount1, 300000);
+                                 });
+                                </script>
+                                @if (Session["MenuAccounts"].ToString() != "0")
+                                {
+                                    <li class="has-child-item close-item" style="border:1px solid #2C3E50">
+                                        <a><i class="fa fa-bar-chart"></i> &nbsp;  <span>Accounts </span></a>
+                                        <ul class="nav child-nav level-1">
+                                            @if (Session["SubRegistration"].ToString() != "0")
+                                            {
+                                                <li class="has-child-item close-item">
+                                                    <a>Registration</a>
+                                                    <ul class="nav child-nav level-2 ">
+                                                        <li><a href="@Url.Action("Index", "FirstLevel")">First Level</a></li>
+                                                        <li><a href="@Url.Action("Index", "SecondLevelAccount")">Second Level</a></li>
+                                                        <li><a href="@Url.Action("Index", "ThirdLevelAccount")">Third Level</a></li>
+                                                    </ul>
+                                                </li>
+                                            }
+                                            @if (Session["SubVouchers"].ToString() != "0")
+                                            {
+                                                <li class="has-child-item close-item">
+                                                    <a>Vouchers</a>
+                                                    <ul class="nav child-nav level-2 ">
+                                                        <li><a href="@Url.Action("Index", "CashPayment")"> Cash Payment </a></li>
+                                                        <li><a href="@Url.Action("Index", "CashReceipt")"> Cash Receipt </a></li>
+                                                        <li><a href="@Url.Action("Index", "BankPayment")"> Bank Payment </a></li>
+                                                        <li><a href="@Url.Action("Index", "BankReceipt")"> Bank Receipt </a></li>
+                                                        <li><a href="@Url.Action("Index", "JournalVoucher")"> Journal </a></li>
+                                                    </ul>
+                                                </li>
+                                            }
+                                            @if (Session["SubLedgers"].ToString() != "0")
+                                            {
+                                                <li class="has-child-item close-item">
+                                                    <a><i class="fa fa-tasks" aria-hidden="true"></i><span>Ledgers</span></a>
+                                                    <ul class="nav child-nav level-2">
+                                                        <li><a href="@Url.Action("Index", "Ledger")">Ledger </a></li>
+                                                    </ul>
+                                                </li>
+                                            }
+                                            @if (Session["SubOpeningBalance"].ToString() != "0")
+                                            {
+                                                <li class="has-child-item close-item">
+                                                    <a><i class="fa fa-tasks" aria-hidden="true"></i><span>Opening Balance</span></a>
+                                                    <ul class="nav child-nav level-2">
+                                                        <li><a href="@Url.Action("Index", "OpeningBalance")">Opening Balance </a></li>
+                                                    </ul>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                                @if (Session["MenuPurchase"].ToString() != "0")
+                                {
+                                    <li class="has-child-item close-item">
+                                        <a><i class="fa fa-cart-plus"></i>  &nbsp; <span>Purchase</span></a>
+                                        <ul class="nav child-nav level-1">
+                                            @if (Session["PurchaseStandardInvoice"].ToString() != "0")
+                                            {
+                                                <li class="has-child-item close-item">
+                                                    <a> Standard Invoice</a>
+                                                    <ul class="nav child-nav level-2 ">
+
+                                                        @if (Session["SubStockInward"].ToString() != "0")
+                                                        {
+                                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "StockInward")"> Stock Inward</a></li>
+                                                        }
+                                                        @if (Session["SubPurchaseOrder"].ToString() != "0")
+                                                        {
+                                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "PurchaseOrder")"> Purchase Order</a></li>
+                                                        }
+                                                        @if (Session["SubPurchaseInvoice"].ToString() != "0")
+                                                        {
+                                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "PurchaseInvoice")"> Purchae invoice</a></li>
+                                                        }
+                                                        @if (Session["SubPurchaseReturn"].ToString() != "0")
+                                                        {
+                                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "PuchaseReturns")"> Purchase Return</a></li>
+                                                        }
+                                                    </ul>
+                                                </li>
+                                            }
+                                            @if (Session["PurchaseTaxInvoice"].ToString() != "0")
+                                            {
+                                                <li class="has-child-item close-item">
+                                                    <a> Tax Invoice</a>
+                                                    <ul class="nav child-nav level-2 ">
+
+                                                        @if (Session["SubPurchaseTaxOrder"].ToString() != "0")
+                                                        {
+                                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "TaxPurchaseOrder")"> Purchase Order</a></li>
+                                                        }
+                                                        @if (Session["SubPurchaseTaxInvoice"].ToString() != "0")
+                                                        {
+                                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "TaxPurchaseInvoice")"> Purchae invoice</a></li>
+
+                                                        }
+                                                        @if (Session["SubPurchaseTaxReturn"].ToString() != "0")
+                                                        {
+                                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "TaxPuchaseReturns")"> Purchase Return</a></li>
+                                                        }
+                                                    </ul>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                                @if (Session["MenuSale"].ToString() != "0")
+                                {
+                                    <li class="has-child-item close-item">
+                                        <a><i class="fa fa-cart-plus"></i>  &nbsp; <span>Sale</span></a>
+                                        <ul class="nav child-nav level-1">
+                                            @if (Session["SaleStandardInvoice"].ToString() != "0")
+                                            {
+                                                <li class="has-child-item close-item">
+                                                    <a> Standard Invoice</a>
+                                                    <ul class="nav child-nav level-2 ">
+                                                        @if (Session["SubSaleInvoice"].ToString() != "0")
+                                                        {
+                                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "SaleInvoiceNew")"> Sale Invoice</a></li>
+                                                        }
+                                                        @if (Session["SubSaleReturn"].ToString() != "0")
+                                                        {
+                                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "SaleReturns")"> Sale Return</a></li>
+                                                        }
+                                                        @if (Session["SubSaleInvoiceForRaw"].ToString() != "0")
+                                                        {
+                                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "SaleInvoice")"> Sale Invoice For Raw</a></li>
+                                                        }
+                                                        @if (Session["SubSaleOrderForRaw"].ToString() != "0")
+                                                        {
+                                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "SaleOrder")"> Sale Order For Raw</a></li>
+                                                        }
+                                                    </ul>
+                                                </li>
+                                            }
+                                            @if (Session["SaleTaxInvoice"].ToString() != "0")
+                                            {
+                                                <li class="has-child-item close-item">
+                                                    <a> Tax Invoice</a>
+                                                    <ul class="nav child-nav level-2 ">
+                                                        @if (Session["SubSaleInvoiceTax"].ToString() != "0")
+                                                        {
+                                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "TaxSaleInvoice")"> Sale Invoice</a></li>
+                                                        }
+                                                        @if (Session["SubSaleInvoiceWHT"].ToString() != "0")
+                                                        {
+                                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "WHTSaleInvoice")"> Sale Invoice  WHT</a></li>
+                                                        }
+                                                        @if (Session["SubSaleReturnTax"].ToString() != "0")
+                                                        {
+                                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "TaxSaleReturns")"> Sale Return</a></li>
+                                                        }
+                                                        @if (Session["SubSaleOrderTax"].ToString() != "0")
+                                                        {
+                                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "TaxSaleOrder")"> Sale Order</a></li>
+                                                        }
+                                                    </ul>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                                @if (Session["MenuBatchProcessing"].ToString() != "0")
+                                {
+                                    <li class="has-child-item close-item" style="border:1px solid #2C3E50">
+                                        <a><i class="fa fa-list"></i> &nbsp; <span>  Batch Processing  </span></a>
+                                        <ul class="nav child-nav level-1" style="background-color: #2C3E50 !important;">
+                                            @if (Session["SubBatchFormulation"].ToString() != "0")
+                                            {
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "BatchMaster")">Batch Master</a></li>
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "Batch")">Batch Formulation</a></li>
+                                            }
+                                            @if (Session["SubBatchTransfer"].ToString() != "0")
+                                            {
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "BatchTransfer")">Batch Transfer_Receive</a></li>
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                                @if (Session["MenuFillingDepartment"].ToString() != "0")
+                                {
+                                    <li class="has-child-item close-item" style="border:1px solid #2C3E50">
+                                        <a><i class="fa fa-list"></i> &nbsp; <span>  Filling Department  </span></a>
+                                        <ul class="nav child-nav level-1" style="background-color: #2C3E50 !important;">
+                                            @if (Session["SubBatchReceiving"].ToString() != "0")
+                                            {
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "BatchReturn")">Batch Receiving Return</a></li>
+                                            }
+                                            @if (Session["SubBatchFilling"].ToString() != "0")
+                                            {
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "BatchFilling")">Batch Filling</a></li>
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                                @if (Session["MenuLab"].ToString() != "0")
+                                {
+                                    <li class="has-child-item close-item" style="border:1px solid #2C3E50">
+                                        <a><i class="fa fa-list"></i> &nbsp; <span>  Lab  </span></a>
+                                        <ul class="nav child-nav level-1" style="background-color: #2C3E50 !important;">
+                                            @if (Session["SubLab"].ToString() != "0")
+                                            {
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "LabEntries")">Lab Entries</a></li>
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                                @if (Session["MenuWastage"].ToString() != "0")
+                                {
+                                    <li class="has-child-item close-item" style="border:1px solid #2C3E50">
+                                        <a><i class="fa fa-recycle"></i> &nbsp; <span>  Wastage and Damage  </span></a>
+                                        <ul class="nav child-nav level-1" style="background-color: #2C3E50 !important;">
+                                            @if (Session["SubForRaw"].ToString() != "0")
+                                            {
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "RawWastage")">For Raw</a></li>
+                                            } @if (Session["SubForFinished"].ToString() != "0")
+                                            {
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "FinishedWastage")">For Finished</a></li>
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                                @if (Session["MenuCustomerItemDiscount"].ToString() != "0")
+                                {
+                                    <li style="border: 1px solid #2C3E50; background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "CustomerDiscount")"><i class="fa fa-list"></i> &nbsp; <span style="color:white">Customer Item Discount</span></a></li>
+                                    <li style="border: 1px solid #2C3E50; background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "ProductionOrder")"><i class="fa fa-list"></i> &nbsp; <span style="color:white">Production Order</span></a></li>
+                                    <li style="border: 1px solid #2C3E50; background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "StockDistribution")"><i class="fa fa-list"></i> &nbsp; <span style="color:white">Stock Distribution</span></a></li>
+                                }
+                                @if (Session["MenuReports"].ToString() != "0")
+                                {
+                                    <li class="has-child-item close-item" style="border:1px solid #2C3E50">
+                                        <a><i class="fa fa-file"></i> &nbsp; <span>  Reports  </span></a>
+                                        <ul class="nav child-nav level-1" style="background-color: #2C3E50 !important;">
+                                            @if (Session["SubRptRawMaterial"].ToString() != "0")
+                                            {
+                                                <li class="has-child-item close-item" style="background-color: #2C3E50 !important;">
+                                                    <a>Raw Material</a>
+                                                    <ul class="nav child-nav level-2" style="background-color: #2C3E50 !important;">
+                                                        <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("ItemLedgerIndex", "Report")">Item Ledger</a></li>
+                                                        <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("RawMaterialIndex", "Report")">Stock Report</a></li>
+                                                        <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("PurchaseORderReport", "Report")">Purchase Order</a></li>
+                                                    </ul>
+                                                </li>
+                                            }
+                                            @if (Session["SubRptFinishedItems"].ToString() != "0")
+                                            {
+                                                <li class="has-child-item close-item" style="background-color: #2C3E50 !important;">
+                                                    <a>Finished Items</a>
+                                                    <ul class="nav child-nav level-2" style="background-color: #2C3E50 !important;">
+                                                        <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("PackingItemLedgerIndex", "Report")">Pkg Item Ledger  </a></li>
+                                                        <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("FinishedItemLedgerIndex", "Report")">Fd Item Ledger  </a></li>
+                                                        <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("FinishedGoodsIndex", "Report")">Fd Goods Report  </a></li>
+                                                        <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("FinishedGoodsPO", "Report")">Fd Goods PO Report  </a></li>
+                                                        <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("FillingIndex", "Report")">Filling Complete Report  </a></li>
+                                                    </ul>
+                                                </li>
+                                            }
+                                            @if (Session["SubRptBatchBalance"].ToString() != "0")
+                                            {
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("BatchBalance", "Report")">Batch Balance Report</a></li>
+                                            }
+                                            @if (Session["SubRptPurchaseReport"].ToString() != "0")
+                                            {
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("PurchaseeIndex", "Report")">Purchase Report</a></li>
+                                            }
+                                            @if (Session["SubRptSaleReport"].ToString() != "0")
+                                            {
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("SaleIndex", "Report")">Sale Report</a></li>
+                                            }
+                                            @if (Session["SubRptBatchSheetSummery"].ToString() != "0")
+                                            {
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("BatchSheetSummary", "Report")">Batch Sheet Summary </a></li>
+                                            }
+                                            @if (Session["SubRptLabSheetSummery"].ToString() != "0")
+                                            {
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("LabSheetSummary", "Report")">Lab Sheet Summary </a></li>
+                                            }
+                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("FillingReport", "Report")">Filling Report </a></li>
+                                        </ul>
+                                    </li>
+                                }
+                                @if (Session["MenuUserManagement"].ToString() != "0")
+                                {
+                                    <li class="has-child-item close-item" style="border:1px solid #2C3E50">
+                                        <a><i class="fa fa-list"></i> &nbsp; <span> User Management</span></a>
+                                        <ul class="nav child-nav level-1" style="background-color: #2C3E50 !important;">
+                                            @if (Session["SubCreateRole"].ToString() != "0")
+                                            {
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("AssignRole", "UserMan")"> Creat User</a></li>
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("UserLogHistory", "UserMan")"> User Log</a></li>
+                                            }
+                                            @if (Session["SubAssignRole"].ToString() != "0")
+                                            {
+                                                <li style="background-color: #2c3e50 !important;"><a href="@Url.Action("roleindex", "userman")">Role</a></li>
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "UserMan")">Assign Role</a></li>
+                                            }
+                                            @if (Session["SubCreateUser"].ToString() != "0")
+                                            {
+                                                @*<li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Create", "UserMan")"> Access Role</a></li>*@
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            @RenderBody()
+            <a href="#" class="scroll-to-top"><i class="fa fa-angle-double-up"></i></a>
+        </div>
+    </div>
+                                <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+                                <script src="~/Content/js/ckeditor/ckeditor.js"></script>
+                                <script src="~/Content/choosen/jquery-3.2.1.min.js" type="text/javascript"></script>
+                                <script src="~/Content/choosen/chosen.jquery.js" type="text/javascript"></script>
+                                <script src="~/Content/choosen/prism.js" type="text/javascript" charset="utf-8"></script>
+                                <script src="~/Content/choosen/init.js" type="text/javascript" charset="utf-8"></script>
+                                <script src="~/Content/vendor/jquery/jquery-1.12.3.min.js"></script>
+                                <script src="~/Content/vendor/bootstrap/js/bootstrap.min.js"></script>
+                                <script src="~/Content/vendor/nano-scroller/nano-scroller.js"></script>
+                                <script src="~/Content/javascripts/template-script.min.js"></script>
+                                <script src="~/Content/javascripts/template-init.min.js"></script>
+                                <script src="~/Content/vendor/data-table/media/js/jquery.dataTables.min.js"></script>
+                                <script src="~/Content/vendor/data-table/media/js/dataTables.bootstrap.min.js"></script>
+                                <script src="~/Content/javascripts/examples/tables/data-tables.js"></script>
+                                <script src="~/Content/javascripts/examples/ui-elements/buttons.js"></script>
+                                @*<script src="~/Content/Datatable/jquery.min.js"></script>
+        <script src="~/Content/Datatable/jquery.dataTables.min.js"></script>
+        <script src="~/Content/Datatable/dataTables.tableTools.min.js"></script>
+        <script src="~/Content/Datatable/dataTables.bootstrap.min.js"></script>
+        <script src="~/Content/Datatable/datatables-init.js"></script>*@
+                                <script src="~/Content/Datatable1/js/jquery.dataTables.min.js"></script>
+                                <script src="~/Content/Datatable1/js/dataTables.buttons.min.js"></script>
+                                <script src="~/Content/Datatable1/js/jszip.min.js"></script>
+                                <script src="~/Content/Datatable1/js/pdfmake.min.js"></script>
+                                <script src="~/Content/Datatable1/js/vfs_fonts.js"></script>
+                                <script src="~/Content/Datatable1/js/buttons.print.min.js"></script>
+                                <script src="~/Content/Datatable1/js/buttons.html5.min.js"></script>
+                                <script src="~/Content/Datatable1/js/dataTables.bootstrap4.min.js"></script>
+                                <script src="~/Content/Datatable1/js/dataTables.responsive.min.js"></script>
+                                <script src="~/Content/Datatable1/js/responsive.bootstrap4.min.js"></script>
+                                <script src="~/Content/Datatable1/js/data-table.js"></script>
+
+                                <script src="~/Content/javascripts/examples/ui-elements/alerts.js"></script>
+                                <script>
+                                    InitiateSimpleDataTable.init();
+                                    InitiateEditableDataTable.init();
+                                    InitiateExpandableDataTable.init();
+                                    InitiateSearchableDataTable.init();
+                                </script>
+
+</body>
+</html>

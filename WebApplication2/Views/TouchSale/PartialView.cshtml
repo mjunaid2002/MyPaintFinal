@@ -1,0 +1,97 @@
+﻿@model WebApplication2.ViewModels.partialViewmodel
+@{
+    ViewBag.Title = "Index";
+}
+
+    <script>
+
+
+
+        function Data(a, b, rate) {
+
+            alert(a);
+            // alert(a);
+            //alert(b);
+            // var name = document.getElementById("name").value;
+            //alert(name);
+            // var ids = [];
+            // ids = a;
+            var qty = 1;
+
+            var htmlRows = '';
+            htmlRows += '<tr>';
+            htmlRows += '<td style="width:10px !important"><a class="label label-danger" onclick="return deleteRow(this)" ><i class="fa fa-trash-o"></i></a></td>';
+            htmlRows += '<td><input type="text"  name="id"  value="' + b + '" required class="form-control" readonly autocomplete="off"></td>';
+            htmlRows += '<td><input type="text" id="rate" name="rate[]"  value="' + rate + '" required class="form-control" readonly autocomplete="off"></td>';
+            htmlRows += '<td><input type="text"  id="qty" name="qty[]"  value="' + qty + '" onKeyUp="qty(); "required onfocus class="form-control"  autocomplete="off"></td>';
+            htmlRows += '<td><input type="text" id="total"  name="total[]"   required class="form-control" readonly autocomplete="off"></td>';
+            htmlRows += '<td style="display:none">"' + a + '"</td>';
+            htmlRows += '<td style="display:none">"' + qty + '"</td>';
+            htmlRows += '<td style="display:none">"' + rate + '"</td>';
+            $('#invoiceItem').append(htmlRows);
+            var el = document.getElementById("qty");
+            el.focus();
+            el.disable();
+        }
+
+   
+
+        function qty() {
+        //alert("dsa");
+         var grandTotal = 0;
+        $("input[name='qty[]']").each(function (index) {
+            var qty = $("input[name='qty[]']").eq(index).val();
+            var price = $("input[name='rate[]']").eq(index).val();
+            var output = parseInt(qty) * parseInt(price);
+
+            if (!isNaN(output)) {
+                $("input[name='total[]']").eq(index).val(output);
+                grandTotal = parseInt(grandTotal) + parseInt(output);
+                $('#gtotal').val(grandTotal);
+            }
+        });
+            }
+        function button(btn) {
+            alert(btn);
+           
+          //  document.getElementById("qty").value += btn;
+            $("input[name='qty[]']").each(function (index) {
+                $("input[name='qty[]']").eq(index).val() += btn;                
+            });
+        }
+
+
+        function deleteRow(btn) {
+            if (confirm("Are you sure want to delete the row?"))
+                $(btn).closest("tr").remove();
+            //  var table = document.getElementById("invoiceItem"), sumVal = 0;
+
+            //for (var i = 1; i < table.rows.length; i++) {
+            //    sumVal = sumVal + parseFloat(table.rows[i].cells[12].innerHTML);
+            //}
+            ////alert(sumVal);
+            //document.getElementById("net_final").value = sumVal;
+            //document.getElementById("g_total").value = sumVal;
+            //document.getElementById("r_total").value = sumVal;
+            //$('#d_amount').val('0');
+            //$('#g_total').val('0');
+            //$('#cgo_charges').val('0');
+            //$('#total').val('0');
+            //$('#cus_pay').val('0');
+            //$('#rem_bal').val('0');
+        }
+
+
+    </script>
+
+@foreach (var item in Model.pro_list)
+{
+    <div class="col-md-2" >
+        <input type="text" id="name" class="myClass" value="@item.Name"/>
+        <a href="#" onclick="Data('@item.ID','@item.Name','@item.SalePrice')" class="btnSelect btn btn-info">Click to Add</a>
+    </div>
+}
+
+<div id="grand">
+    Grand Total:<input type="text" name="gran" id="gran">
+</div>

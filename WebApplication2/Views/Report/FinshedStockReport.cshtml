@@ -1,0 +1,65 @@
+﻿@model WebApplication1.ViewModels.ProductVM
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int final_qpqty = 0;
+    int Bal1 = 0;
+    int Bal = 0;
+    DateTime date = Convert.ToDateTime(ViewBag.StartDate);
+}
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Daily Finsihed Stock Report</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="table-responsive">
+                        <center>
+                            <br />
+                            Daily Finsihed Report</br/>
+                            <b><u>@Session["BusinessUnitName"]</u></b>
+                            <br /> @date.ToString("dd-MM-yyyy") </br/>
+                        </center></br/>
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th>Item Name</th>
+                                    <th>Opening Qty </th>
+                                    <th>D-PROD Qty</th>
+                                    <th>Sale Qty</th>
+                                    <th>Sale Return</th>
+                                    <th>Closing Qty</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item1 in Model.cat_list)
+                                {
+                                <tr>
+                                    <td colspan="6"><b>@item1.Name</b></td>
+                                </tr>
+                                    foreach (var item in Model.list.Where(z => z.Brandid == item1.Name))
+                                    {
+                                        <tr>
+                                            <td>@item.Name</td>
+                                            <td>@item.ope</td>
+                                            <td>@item.pro</td>
+                                            <td>@item.sale</td>
+                                            <td>@item.saleRtn</td>
+                                            <td>@(item.ope + item.pro - (item.sale - item.saleRtn))</td>
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

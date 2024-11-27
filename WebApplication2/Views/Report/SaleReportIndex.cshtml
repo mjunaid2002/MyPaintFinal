@@ -1,0 +1,173 @@
+﻿@model WebApplication1.ViewModels.SaleInvVM
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-print" aria-hidden="true"></i> Invoices</a></li>
+            </ul>
+        </div>
+    </div>
+    @using (Html.BeginForm("SaleSearch", "Report", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="col-md-12">
+
+            <div class="form-group col-sm-3">
+                <label>Start Date </label>
+                <input type="date" name="s_date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" />
+            </div>
+            <div class="form-group col-sm-3">
+                <label>End Date </label>
+                <input type="date" name="e_date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" />
+            </div>
+            <div class="col-sm-3">
+                <button type="submit" name="submit" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Search &nbsp;&nbsp;</button>
+            </div>
+        </div>
+    }
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b>Sale Invoices List</b></h4>
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-striped table-success">
+                            <thead class="bordered-darkorange">
+                                <tr style="background-color:grey;color:white">
+                                    <th>#</th>
+                                    <th>Inv Id</th>
+                                    <th>Customer</th>
+                                    <th>Cargo Name</th>
+                                    <th>Date</th>
+                                    <th>Net Total</th>
+                                    <th>Discount</th>
+                                    <th>Grand Total</th>
+                                    <th>Received</th>
+                                    <th>Action</th>
+                                    @*<th>D.Note</th>*@
+                                </tr>
+                            </thead>
+
+                            <tbody class="abc">
+                                @foreach (var item in Model.list)
+                                {
+                                    <tr>
+                                        @*<td><a href="#" data-toggle="modal" data-target="#@item.InvID" style="text-decoration:underline" class="btn btn-xs btn-info"><i class="fa fa-plus"></i></a></td>*@
+                                        <td>
+                                            <a class="accordion-msg badge badge-success" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo-@item.InvID" aria-expanded="false" aria-controls="collapseTwo">
+                                                <i onclick="myFunction(this)" class="fa fa-plus"></i>
+                                            </a>
+                                        </td>
+                                        <td>@item.InvID</td>
+                                        <td>@item.CustomerName</td>
+                                        <td>@item.CargoName</td>
+                                        <td>@item.Date</td>
+                                        <td>@item.NetAmount</td>
+                                        <td>@item.DiscountAmount</td>
+                                        <td>@item.GrandTotal</td>
+                                        <td>@item.Rtotal</td>
+
+                                        <td>
+                                            @*<a href="@Url.Action("Delete", new { ID= item.InvID } )" class="badge badge-xs x-danger b-rounded"><i class="fa fa-trash-o"></i></a>*@
+                                            <a href="@Url.Action("Edit","Simplepurchase", new { ID= item.InvID } )" class="badge badge-xs x-primary b-rounded"><i class="fa fa-pencil"></i></a>
+                                            <a href="@Url.Action("SINVWOCTNReport","Simplepurchase", new { ID= item.InvID } )" target="_blank" class="badge badge-xs x-warning b-rounded"><i class="fa fa-print"></i></a>
+                                            <a href="@Url.Action("SaleGstReport","Simplepurchase", new { ID= item.InvID } )" target="_blank" class="badge badge-xs x-warning b-rounded">Gst</a>
+                                        </td>
+                                        @*<div class="modal fade" id="@item.InvID" aria-labelledby="modal-large-label" style="margin-top:-100px">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header state modal-primary">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="modal-large-label">Sale Details</h4>
+                                </div>
+                                <div class="modal-body" style="height:200px">
+                                    <div class="col-md-12" style="background-color:grey;color:white;padding:5px">
+                                        <div class="col-md-4"><b>Description of goods</b></div>
+                                        <div class="col-md-2"><b> QTY</b></div>
+                                        <div class="col-md-2"><b> UMO</b> </div>
+                                        <div class="col-md-2"><b>Rate</b></div>
+                                        <div class="col-md-2"><b>Total</b></div>
+                                    </div>
+                                    <div class="col-md-12" >
+                                        @foreach (var item1 in Model.s_detail.Where(x => x.InvId == item.InvID))
+                                        {
+                                            <div class="col-md-4">@item1.ItemName</div>
+                                            <div class="col-md-2">@item1.Qty</div>
+                                            <div class="col-md-2">  @item1.Munit</div>
+                                            <div class="col-md-2">@item1.SP</div>
+                                            <div class="col-md-2">@String.Format("{0:N}", item1.NetTotal) </div>
+                                        }
+                                    </div>
+                                </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>*@
+
+                                    </tr>
+                                    <tr>
+                                        <td colspan="10">
+                                            <div id="collapseTwo-@item.InvID" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                                <div class="accordion-content accordion-desc">
+
+                                                    <table class="table dt-responsive table-striped table-bordered nowrap">
+                                                        <thead class="bordered-darkorange">
+                                                            <tr style="background-color: #1ABC9C; color: white" >
+                                                                <th>Sr No</th>
+                                                                <th><i class="fa fa-shopping-basket"></i>Item Name</th>
+                                                                <th>SP</th>
+                                                                <th>CTN</th>
+                                                                <th>Qty</th>
+                                                                <th>Net Total</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @{ int i = 1; }
+                                                            @foreach (var item1 in Model.s_detail.Where(x => x.InvId == item.InvID))
+                                                            {
+                                                                <tr>
+                                                                    <td> @i</td>
+                                                                    @{ i++; }
+                                                                    <td>@item1.ItemName</td>
+                                                                    <td>@item1.SP.ToString("#,##0")</td>
+                                                                    <td>@Convert.ToInt32(item1.Ctn)</td>
+                                                                    <td>@Convert.ToInt32(item1.Qty)</td>
+                                                                    <td>@item1.NetTotal.ToString("#,##0")</td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                                <!--<tfoot>
+                                    <tr>
+
+                                        <th style="width:60px"></th>
+                                        <th style="width:60px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:80px"></th>
+                                        <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                        <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                        <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                        <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                        <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                        <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                        <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>-->
+                                        @*<th></th>*@
+                                        <!--<th></th>
+                                    </tr>
+                                </tfoot>-->
+                                </table>
+                            </div>
+                        </div>
+                        </div>
+                        </div>
+                        </div>
+                        </div>

@@ -1,0 +1,124 @@
+﻿@model CRM.Models.Employee
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Registration</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-sm-12 col-md-12">
+            <h4 class="section-subtitle"><b>Employee Registration</b></h4>
+            <a href="@Url.Action("Index", "Employee")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-list"></i> Employee List</a>
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <form asp-action="Create" method="post" enctype="multipart/form-data" onsubmit="return confirm('Are you sure you want to Register ?');">
+                                <div class="row">
+                                    <div class="form-group col-sm-1" style="display:none">
+                                        <label>ID</label>
+                                        @Html.TextBoxFor(m => m.ID, new { @class = "form-control input-xs", @readonly = "readonly" })
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Detarment</label>
+                                        @Html.DropDownListFor(m => m.dep_id, new SelectList(Model.departmentlist, "ID", "Name"), "Select Department", htmlAttributes: new { @class = "chosen-select form-control", required = "required" })
+
+
+                                        @*<select class="form-control chosen-select" required name="dep_id">
+                <option value="">Select Department</option>
+                @foreach (var item in Model.departmentlist)
+                {
+                    <option value="@item.ID">@item.Name</option>
+                }
+            </select>*@
+                                    </div>
+
+                                    <div class="form-group col-sm-3">
+                                        <label>Team Lead</label>
+                                        @Html.DropDownListFor(m => m.emp_id, new SelectList(Model.Employeelist, "ID", "Name"), "Select Team Lead", htmlAttributes: new { @class = "chosen-select form-control", required = "required" })
+
+                                        @*<select class="form-control chosen-select" required name="emp_id">
+                <option value="">Select Team Lead</option>
+                @foreach (var item in Model.Employeelist)
+                {
+                    <option value="@item.ID">@item.Name</option>
+                }
+            </select>*@
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Employee Name</label>
+                                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control input-xs", @required = "required" })
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Employee Email</label>
+                                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control input-xs" })
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Employee Phone</label>
+                                        @Html.TextBoxFor(m => m.Phone, new { @class = "form-control input-xs" })
+                                    </div>
+
+                                    <div class="form-group col-sm-3">
+                                        <label>CNIC</label>
+                                        @Html.TextBoxFor(m => m.cnic, new { @class = "form-control input-xs" })
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Monthly Salary</label>
+                                        @Html.TextBoxFor(m => m.mon_sal, new { @class = "form-control input-xs" })
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Daily Salary</label>
+                                        @Html.TextBoxFor(m => m.dal_sal, new { @class = "form-control input-xs" })
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Joining Date</label>
+                                        @Html.TextBoxFor(m => m.joiningdate, "{0:yyyy-MM-dd}", new { @class = "form-control input-xs", type = "date", @required = "required" })
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Daily Incentive</label>
+                                        @Html.TextBoxFor(m => m.dai_insentive, new { @class = "form-control input-xs" })
+                                    </div>
+                                    <div class="Monthly-group col-sm-3">
+                                        <label>Monthly Incentive</label>
+                                        @Html.TextBoxFor(m => m.mon_insentive, new { @class = "form-control input-xs" })
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Employee Address</label>
+                                        @Html.TextAreaFor(m => m.Address, new { @class = "form-control input-xs", style = " rows=50, columns=40" })
+                                    </div>
+                                    <script>
+                                        var loadFile = function (event) {
+                                            var output = document.getElementById('output');
+                                            output.src = URL.createObjectURL(event.target.files[0]);
+                                        };
+                                    </script>
+                                    <div class="form-group col-sm-3">
+                                        <label>Choose Image</label>
+                                        <input type="file" name="file" onchange="loadFile(event)" class="form-control" />
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <img id="output" style="width:140px;margin-top:10px" />
+                                    </div>
+
+                                    <div class="col-sm-12">
+                                        <button type="submit" class="btn btn-primary" style="margin-top:10px"><i class="fa fa-save"></i> Save</button>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

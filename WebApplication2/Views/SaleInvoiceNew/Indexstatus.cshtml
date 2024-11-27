@@ -1,0 +1,110 @@
+﻿@model IEnumerable<CRM.Models.tbl_BatchRequest>
+@{
+    ViewBag.Title = "Index";
+}
+<script>
+    $('#searchable').DataTable({
+        buttons: [
+            'copy', 'excel', 'pdf'
+        ]
+    });
+</script>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i>Sale Department</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b> Sale Request List</b></h4>
+
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th>Invid ID</th>
+
+                                    <th>User Name</th>
+                                    <th>Sale</th>
+                                    <th>Department</th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody class="abc">
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+
+                                        <td>@item.orderid </td>
+                                        <td>
+                                            @item.username
+                                            @if (item.batchno == "SaleInvoiceNew")
+                                            {
+                                                <a href="@Url.Action("Updatestatus", new { ID = item.orderid,status="Approved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to Approved this Sale Invoice Request?');" class="label label-success shiny input-xs"><i class="fa fa-check"></i></a>
+                                                <a href="@Url.Action("Updatestatus", new { ID = item.orderid,status="DisApproved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to DisApproved this Sale Invoice Request?');" class="label label-danger shiny input-xs"><i class="fa fa-times"></i></a>
+                                            }
+                                            else if (item.batchno == "SaleReturns")
+                                            {
+                                                <a href="@Url.Action("Updatestatus","SaleReturns", new { ID = item.orderid,status="Approved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to Approved this Sale Returns Request?');" class="label label-success shiny input-xs"><i class="fa fa-check"></i></a>
+                                                <a href="@Url.Action("Updatestatus","SaleReturns", new { ID = item.orderid,status="DisApproved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to DisApproved this Sale Returns Request?');" class="label label-danger shiny input-xs"><i class="fa fa-times"></i></a>
+                                            }
+                                            else if (item.batchno == "SaleInvoice")
+                                            {
+                                                <a href="@Url.Action("Updatestatus","SaleInvoice", new { ID = item.orderid,status="Approved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to Approved this Sale Invoice Request?');" class="label label-success shiny input-xs"><i class="fa fa-check"></i></a>
+                                                <a href="@Url.Action("Updatestatus","SaleInvoice", new { ID = item.orderid,status="DisApproved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to DisApproved this Sale Invoice Request?');" class="label label-danger shiny input-xs"><i class="fa fa-times"></i></a>
+                                            }
+                                            else if (item.batchno == "SaleOrder")
+                                            {
+                                                <a href="@Url.Action("Updatestatus","SaleOrder", new { ID = item.orderid,status="Approved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to Approved this Sale Order Request?');" class="label label-success shiny input-xs"><i class="fa fa-check"></i></a>
+                                                <a href="@Url.Action("Updatestatus","SaleOrder", new { ID = item.orderid,status="DisApproved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to DisApproved this Sale Order Request?');" class="label label-danger shiny input-xs"><i class="fa fa-times"></i></a>
+                                            }
+                                            else if (item.batchno == "TaxSaleInvoice")
+                                            {
+                                                <a href="@Url.Action("Updatestatus","TaxSaleInvoice", new { ID = item.orderid,status="Approved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to Approved this Tax Sale Invoice Request?');" class="label label-success shiny input-xs"><i class="fa fa-check"></i></a>
+                                                <a href="@Url.Action("Updatestatus","TaxSaleInvoice", new { ID = item.orderid,status="DisApproved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to DisApproved this Tax Sale Invoice Request?');" class="label label-danger shiny input-xs"><i class="fa fa-times"></i></a>
+                                            }
+                                            else if (item.batchno == "WHTSaleInvoice")
+                                            {
+                                                <a href="@Url.Action("Updatestatus","WHTSaleInvoice", new { ID = item.orderid,status="Approved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to Approved this WHT Sale Invoice Request?');" class="label label-success shiny input-xs"><i class="fa fa-check"></i></a>
+                                                <a href="@Url.Action("Updatestatus","WHTSaleInvoice", new { ID = item.orderid,status="DisApproved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to DisApproved this WHT Sale Invoice Request?');" class="label label-danger shiny input-xs"><i class="fa fa-times"></i></a>
+                                            }
+                                            else if (item.batchno == "TaxSaleReturns")
+                                            {
+                                                <a href="@Url.Action("Updatestatus","TaxSaleReturns", new { ID = item.orderid,status="Approved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to Approved this Tax Sale Returns Request?');" class="label label-success shiny input-xs"><i class="fa fa-check"></i></a>
+                                                <a href="@Url.Action("Updatestatus","TaxSaleReturns", new { ID = item.orderid,status="DisApproved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to DisApproved this Tax Sale Returns Request?');" class="label label-danger shiny input-xs"><i class="fa fa-times"></i></a>
+                                            }
+                                            else if (item.batchno == "TaxSaleOrder")
+                                            {
+                                                <a href="@Url.Action("Updatestatus","TaxSaleOrder", new { ID = item.orderid,status="Approved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to Approved this Tax Sale Order Request?');" class="label label-success shiny input-xs"><i class="fa fa-check"></i></a>
+                                                <a href="@Url.Action("Updatestatus","TaxSaleOrder", new { ID = item.orderid,status="DisApproved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to DisApproved this Tax Sale Order Request?');" class="label label-danger shiny input-xs"><i class="fa fa-times"></i></a>
+                                            }
+                                        </td>
+                                        <td>@item.batchno</td>
+                                        <td>@item.department</td>
+
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

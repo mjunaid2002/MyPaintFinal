@@ -1,0 +1,39 @@
+﻿@model WebApplication1.ViewModels.PurInvoiceVM
+
+@{
+    ViewBag.Title = "Purchase Order OReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i>Purchase Order</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="panel">
+        <div class="panel-content">
+            <div class="row">
+                @using (Html.BeginForm("POReport", "Report", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="col-sm-12">
+                        <h4 class="section-subtitle"><b>Purchase Order Selection</b></h4>
+                        <div class="form-group col-sm-6">
+                            <input class="form-check-input" type="radio" name="POSeletion" id="inlineRadio1" value="RawItems" checked />
+                            <label class="form-check-label" for="inlineRadio1">Raw Items</label>
+
+                            <input class="form-check-input" type="radio" name="POSeletion" id="inlineRadio2" value="PackingMaterial" />
+                            <label class="form-check-label" for="inlineRadio2">Packing Material</label>
+                        </div>
+                        <div class="col-sm-3">
+                            <button type="submit" name="submit" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Search &nbsp;&nbsp;</button>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+

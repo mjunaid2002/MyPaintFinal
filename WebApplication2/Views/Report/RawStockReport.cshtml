@@ -1,0 +1,71 @@
+﻿@model IEnumerable<WebApplication1.QueryViewModel.stockquery>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int final_qpqty = 0;
+    int Bal1 = 0;
+    int Bal = 0;
+    DateTime date =Convert.ToDateTime(ViewBag.StartDate);
+
+}
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Daily Raw Stock Report</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="table-responsive">
+                        <center>
+                            <br />
+                            Daily Raw Stock Report</br/>
+                            <b><u>@Session["BusinessUnitName"]</u></b>
+                            <br /> @date.ToString("dd-MM-yyyy") </br/>
+                        </center></br/>
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th>Supplier Name</th>
+                                    <th>Item Name</th>
+                                    <th>Opening Qty No</th>
+                                    <th>Opening Qty Hanks</th>
+                                    <th>Purchase Qty No</th>
+                                    <th>Purchase Qty Hanks</th>
+                                    <th>Consume Qty No</th>
+                                    <th>Consume Qty Hanks</th>
+                                    <th>Closing Qty No</th>
+                                    <th>Closing Qty Hanks</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    //final_qpqty = item.QTYPurOpening - item.QtyConsumeOpening;
+                                    //Bal = final_qpqty + item.QTYPur;
+                                    //Bal1 = Bal - item.QtyConsume;
+                                    <tr>
+                                        <td>@item.Name</td>
+                                        <td>@item.ItemName</td>
+                                        <td>@item.openingno</td>
+                                        <td>@item.openinghanks</td>
+                                        <td>@item.stockinno</td>
+                                        <td>@item.stockouthanks</td>
+                                        <td>@item.stockoutno</td>
+                                        <td>@item.stockouthanks</td>
+                                        <td>@item.balanceno</td>
+                                        <td>@item.balancehanks</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

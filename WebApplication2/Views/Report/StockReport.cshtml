@@ -1,0 +1,101 @@
+﻿@model IEnumerable<WebApplication1.QueryViewModel.stockquery>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    decimal t_op = 0;
+    decimal pp = 0;
+}
+
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Inventory Report</a></li>
+            </ul>
+        </div>
+    </div>
+    @*<h4 class="section-subtitle"><b> Select Parameters </b></h4>
+        @using (Html.BeginForm("StockReport", "Report", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="col-md-12">
+
+                        <div class="form-group col-sm-3">
+                            <label>Select Date </label>
+                            <input type="date" name="s_date" class="form-control" required />
+                        </div>
+                        <div class="form-group col-sm-4">
+                            <label>Select Type</label>
+                            <select class="form-control" required name="type">
+                                <option value="">Select Type</option>
+                                <option value="1">Raw Product</option>
+                                <option value="2">Finisihed Product</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-3">
+                            <button type="submit" name="submit" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Search &nbsp;&nbsp;</button>
+                        </div>
+                    </div>
+                    <br /><br /><br />
+                </div>
+
+            </div>
+
+        }*@
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel">
+
+                <div class="panel-content">
+                    <div class="table-responsive">
+                        <center>
+                            <br />
+                            Inventory Report</br/>
+                            <b><u>@Session["BusinessUnitName"]</u></b>
+                            <br />@ViewBag.StartDate</br/>
+                        </center></br/>
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th>Item Name</th>
+                                    <th>Opening Qty</th>
+                                    <th>
+                                        Stock In
+                                    </th>
+                                    <th>
+                                        Stock Out 
+                                    </th>
+                                    <th>
+                                        Balance Stock
+                                    </th>
+                                    @*<th>Price</th>
+        <th>
+            Total
+        </th>*@
+
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    pp = Convert.ToDecimal(item.OpeningStock);
+                                    t_op = pp + (item.openingnopur - item.openingno);
+                                <tr>
+                                    <td>@item.item_name</td>
+                                    <td>@t_op</td>
+                                    <td>@item.QTYIN</td>
+                                    <td>@item.QTYOUT</td>
+                                    <td>@((t_op + item.QTYIN) - item.QTYOUT)</td>
+                                </tr>
+                                }
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

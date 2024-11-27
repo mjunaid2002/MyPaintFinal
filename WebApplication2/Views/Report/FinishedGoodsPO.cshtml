@@ -1,0 +1,108 @@
+﻿@model IEnumerable<WebApplication1.QueryViewModel.FinishedGoodsQuery2>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int sr = 1;
+}
+<script type="text/javascript">
+    function printDiv(divName) {
+        var printContents = document.getElementById(divName).innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+
+        window.print();
+
+        document.body.innerHTML = originalContents;
+    }</script>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Finished Goods Production Order</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row" id="printableArea">
+        <div class="col-sm-12">
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th colspan="4"><center>Min Level</center></th>
+                                    <th colspan="4"><center>Max Level</center></th>
+                                    <th colspan="4"><center>Current Stock</center></th>
+                                    <th colspan="4"><center>Production QTY Needs to be Produced</center></th>
+                                </tr>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Category</th>
+                                    <th>Color</th>
+
+                                    <th>Dubbi</th>
+                                    <th>Quarter</th>
+                                    <th>Gallon</th>
+                                    <th>Drum</th>
+
+                                    <th>Dubbi</th>
+                                    <th>Quarter</th>
+                                    <th>Gallon</th>
+                                    <th>Drum</th>
+
+                                    <th>Dubbi</th>
+                                    <th>Quarter</th>
+                                    <th>Gallon</th>
+                                    <th>Drum</th>
+
+                                    <th>Dubbi</th>
+                                    <th>Quarter</th>
+                                    <th>Gallon</th>
+                                    <th>Drum</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <span style="color:white"></span>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@sr- @(item.Category)</td>
+                                        <td>@item.Product</td>
+                                        <td>@item.Color</td>
+
+                                        <td>@String.Format("{0:N}", item.ReorderDubbi)</td>
+                                        <td>@String.Format("{0:N}", item.ReorderQuarter)</td>
+                                        <td>@String.Format("{0:N}", item.ReorderGallon)</td>
+                                        <td>@String.Format("{0:N}", item.ReorderDrum)</td>
+
+                                        <td>@String.Format("{0:N}", item.MaxDubbi)</td>
+                                        <td>@String.Format("{0:N}", item.MaxQuarter)</td>
+                                        <td>@String.Format("{0:N}", item.MaxGallon)</td>
+                                        <td>@String.Format("{0:N}", item.MaxDrum)</td>
+
+                                        <td style="background-color:greenyellow">@String.Format("{0:N}", item.StkDubbi)</td>
+                                        <td style="background-color:greenyellow">@String.Format("{0:N}", item.StkQuarter)</td>
+                                        <td style="background-color:greenyellow">@String.Format("{0:N}", item.StkGallon)</td>
+                                        <td style="background-color:greenyellow">@String.Format("{0:N}", item.StkDrum)</td>
+
+                                        <td>@String.Format("{0:N}", item.PODubbi)</td>
+                                        <td>@String.Format("{0:N}", item.POQuarter)</td>
+                                        <td>@String.Format("{0:N}", item.POGallon)</td>
+                                        <td>@String.Format("{0:N}", item.PODrum)</td>
+                                    </tr>
+                                    <span style="visibility:hidden">@(sr++)</span>
+                                    
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

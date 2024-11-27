@@ -1,0 +1,10 @@
+﻿@if (Session["CurrentUserName"]?.ToString() == "Super Admin")
+{
+    <li style="background-color: #2C3E50 !important;" id="Lab-status">
+        <a href="@Url.Action("Indexstatus", "LabEntries")">
+            <i class="fa fa-list"></i> &nbsp;
+            <span style="color:white">Lab Requests</span>
+            <span class="badge badge-light" id="LabCount">0</span>
+        </a>
+    </li>
+}

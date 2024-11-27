@@ -1,0 +1,103 @@
+﻿@model IEnumerable<WebApplication1.QueryViewModel.BatchFillingMasterQUery>
+@{
+    ViewBag.Title = "Index";
+}
+<script>
+    $('#searchable').DataTable({
+        buttons: [
+            'copy', 'excel', 'pdf'
+        ]
+    });
+</script>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i>Filling Department</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b> Batch Filling List</b></h4>
+            @if (Session["SubBatchFillingAdd"].ToString() != "0")
+            {
+                <a href="@Url.Action("Create", "BatchFilling")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  Creat New</a>
+            }
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th>Sr</th>
+                                    <th>Date</th>
+                                    <th>User Name</th>
+                                    <th>Batch No</th>
+                                    <th>Color Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody class="abc">
+                                @foreach (var item in Model)
+                                {
+                                <tr>
+                                    <td>@item.Id</td>
+                                    <td>@item.Fillingdate.ToString("dd-MM-yyyy") </td>
+                                    <td>
+                                        @item.username
+                                        <a href="@Url.Action("Updatestatus", new { ID = item.Id,status="Approved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to Approved this Batch Request?');" class="label label-success shiny input-xs"><i class="fa fa-check"></i></a>
+                                        <a href="@Url.Action("Updatestatus", new { ID = item.Id,status="DisApproved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to DisApproved this Batch Request?');" class="label label-danger shiny input-xs"><i class="fa fa-times"></i></a>
+                                    </td>
+                                    <td>@item.batchn</td>
+                                    <td>@item.ColorName</td>
+                                    <td>
+                                        @if (Session["SubBatchFillingUpdate"].ToString() != "0")
+                                        {
+
+                                            <a href="@Url.Action("Edit", new { ID = item.Id })" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="label label-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
+                                        }
+                                        else
+                                        {
+                                            if (item.status == "Request")
+                                            {
+                                                <a href="@Url.Action("statusrequest", new { ID = item.Id,batchno=item.batchn })" new { onclick="return confirm('Are you sure you want to Send Edit Request for this Filling Batch?');" class="label label-default shiny input-xs"><i class="fa fa-key"></i></a>
+                                            }
+                                            else if (item.status == "Pending")
+                                            {
+                                                <a @*href="@Url.Action("statusrequest", new { ID = item.Id })"*@ new { onclick="return confirm('your already Send Edit Request for this Filling Batch?');" class="label label-warning shiny input-xs"><i class="fa fa-key"></i></a>
+
+                                            }
+                                            else
+                                            {
+                                                <a href="@Url.Action("Edit", new { ID = item.Id })" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="label label-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
+
+                                            }
+                                        }
+
+
+                                        <a href="@Url.Action("ViewBatch", new { ID= item.Id } )" new { onclick="return confirm('Are you sure you want to view this record?');" class="label label-primary shiny input-xs"><i class="fa fa-print"></i></a>
+
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

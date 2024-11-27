@@ -1,0 +1,82 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Reports</a></li>
+            </ul>
+        </div>
+    </div>
+    <h4 class="section-subtitle"><b>Raw Material Report </b></h4>
+    @using (Html.BeginForm("RawMaterialSearch", "Report", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="panel"> 
+            <div class="panel-content">
+                <div class="row">
+                    <div class="form-group col-sm-3">
+                        <label>Select Category</label>
+                        <select id="opt" name="opt" class="form-control" onChange="Second(this.value)">
+                            <option value="0">Select Category</option>
+                            <option value="43">Packing</option>
+                            <option value="1">Raw Material</option>
+                            <option value="38">Semi Finished</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label>Select Item</label>
+                        <select id="prdid" name="second_id" class="form-control"></select>
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label>Search Item Text</label>
+                        <input type="text" name="prdsearchtext" class="form-control" />
+                    </div>
+                </div>
+                <div class="row">
+                        <div class="form-group col-sm-3">
+                            <label>Start Date</label>
+                            <input type="date" name="s_date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
+                        </div>
+                        <div class="form-group col-sm-3">
+                            <label>End Date </label>
+                            <input type="date" name="e_date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
+                        </div>
+                 </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <input class="form-check-input" type="radio" name="RawReport" id="inlineRadio1" value="GReport" checked/>
+                        <label class="form-check-label" for="inlineRadio1">Report Print</label>
+                        
+                        <input class="form-check-input" type="radio" name="RawReport" id="inlineRadio2" value="CReport" />
+                        <label class="form-check-label" for="inlineRadio2">Excel Report</label>
+                    </div>
+                        <div class="col-sm-3">
+                            <button type="submit" name="submit" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Search &nbsp;&nbsp;</button>
+                        </div>
+                 </div>
+                    <br /><br /><br />
+                </div>
+
+            </div>
+
+    }
+</div>
+<script>
+    function Second(code) {
+        // alert(code);
+        $.ajax({
+            type: "GET",
+            url: "/Report/GetItemsData?message=" + code,
+            data: "{}",
+            success: function (data) {
+                var s = '<option value="-1">Select Item</option>';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].ProductID + '">' + data[i].ProductName + '</option>';
+                }
+                $('#prdid').html(s);
+            }
+        });
+    }
+</script>

@@ -1,0 +1,70 @@
+﻿
+@model IEnumerable<WebApplication1.QueryViewModel.Products>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var regions = ViewBag.Region as List<WebApplication1.QueryViewModel.Region>;
+}
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Finished Item Ledger</a></li>
+            </ul>
+        </div>
+    </div>
+    <h4 class="section-subtitle"><b>Finished Item Ledger </b></h4>
+    @using (Html.BeginForm("FinishedItemLedgerSearch", "Report", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="panel">
+            <div class="panel-content">
+                <div class="col-md-3">
+                    <label>Select Item</label>
+                    <select name="item" class="chosen-select form-control" required>
+                        <option value="">Select Item</option>
+                        @foreach (var item in Model)
+                        {
+                            <option value="@item.ProductID">@item.ProductName</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label>Size</label>
+                    <select name="itemsize" class="chosen-select form-control" required>
+                        <option value="">Select Size</option>
+                        <option value="1">Dubbi</option>
+                        <option value="2">Quarter</option>
+                        <option value="3">Gallon</option>
+                        <option value="4">Drum</option>
+                    </select>
+                </div>
+                <div class="form-group col-sm-2">
+                    <label>Select Region</label>
+                    <select name="region" class="form-control">
+                        <option value="0">Select Region</option>
+                        @foreach (var list in regions)
+                        {
+
+                            <option value="@list.id">@list.name</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group col-sm-2">
+                    <label>Start Date</label>
+                    <input type="date" name="s_date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
+                </div>
+                <div class="form-group col-sm-2">
+                    <label>End Date </label>
+                    <input type="date" name="e_date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
+                </div>
+                <br /><br />
+                <br />
+                <div class="col-sm-12">
+                    <button type="submit" name="submit" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Search &nbsp;&nbsp;</button>
+                </div>
+            </div>
+            <br /><br /><br />
+        </div>
+
+    }
+</div>

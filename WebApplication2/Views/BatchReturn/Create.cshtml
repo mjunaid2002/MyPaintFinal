@@ -1,0 +1,112 @@
+﻿@model WebApplication1.ViewModels.SaleInvVM
+@{
+    ViewBag.Title = "Creat";
+}
+<script>
+    function Action1(code) {
+        //  alert(code);
+        $.ajax({
+            type: "GET",
+            url: "/BatchReturn/GetProd?value=" + code,
+            data: "{}",
+            success: function (data) {
+               //    alert(data);
+                var s = '<option value="">Select Batch</option>';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].BatchNo + '" data-weight="' + data[i].totalweight + '">' + data[i].BatchNo + '</option>';
+                }
+                $('#b').html(s);
+            }
+        });
+    }
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var selectElement = document.getElementById('b');
+        var weightInput = document.getElementById('totalweight');
+
+        selectElement.addEventListener('change', function () {
+            var selectedOption = this.options[this.selectedIndex];
+            var weight = selectedOption.getAttribute('data-weight');
+            weightInput.value = weight;
+        });
+    });
+</script>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i>  Batch Procesing</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-sm-12 col-md-12">
+            <h4 class="section-subtitle"><b>Batch Receiving Return</b></h4>
+            <a href="@Url.Action("Index","BatchReturn")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-list"></i> Batch Transfer List</a>
+            @if (Convert.ToString(TempData["succ"]) != "")
+            {
+                <p class="alert alert-success" style="width:400px;height:50px"><b>@TempData["succ"]</b></p>
+            }
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <form action="Create" method="post" enctype="multipart/form-data" onsubmit="return confirm('Are you sure you want to Register ?');">
+                                <div class="row">
+                                    <div class="form-group col-sm-1">
+                                        <label>ID</label>
+                                        @Html.TextBoxFor(m => m.batchReceivingQuery.Id, new { @class = "form-control input-xs", @readonly = "readonly", @required = "required" })
+                                    </div>
+                                    <div class="form-group col-sm-2">
+                                        <label>Date</label>
+                                        @Html.TextBoxFor(m => m.batchReceivingQuery.date, new { @class = "form-control input-xs", @type = "date" })
+                                    </div>
+                                    <div class="form-group col-sm-2">
+                                        <label>Receiving Date</label>
+                                        @Html.TextBoxFor(m => m.batchReceivingQuery.daterec, new { @class = "form-control input-xs", @type = "date" })
+                                    </div>
+                                    <div class="form-group col-sm-2">
+                                        <label>Color Name</label>
+                                        @Html.DropDownListFor(m => m.batchReceivingQuery.color, new SelectList(Model.batchTransferQuerylist, "color", "color"), "Select Color", htmlAttributes: new { @class = "chosen-select form-control", @required = "true", @onChange = "Action1(this.value)" })
+                                    </div>
+                                    <div class="form-group col-sm-2">
+                                        <label>Select Region</label>
+                                        @Html.DropDownListFor(m => m.batchReceivingQuery.RegionId, new SelectList(Model.Region_list, "Id", "Name"), "Select Region", htmlAttributes: new { @class = "chosen-select form-control", @required = "true" })
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Select Batch</label>
+                                        <select id="b" class="form-control" name="batch" required></select>
+                                    </div>
+                                    <div class="form-group col-sm-2">
+                                        <label>Total Weight</label>
+                                        @*@Html.TextBoxFor(m => m.batchTransferQuery.totalweight, new { @class = "form-control input-xs", @readonly = "readonly", @id = "totalweight" })*@
+                                        <input type="text" id="totalweight" name="totalweight" value="0" class = "form-control" readonly />
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Weight</label>
+                                        @Html.TextBoxFor(m => m.batchReceivingQuery.weight, new { @class = "form-control input-xs" })
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Select Option</label></br>
+                                        <input type="radio" name="opt" value="Receiving" /> Receiving
+                                        <input type="radio" name="opt" value="Return" /> Return
+                                    </div>
+                                    <div class="col-sm-12">
+                                        @if (Session["SubBatchReceivingAdd"].ToString() != "0")
+                                        {
+                                            <button type="submit" class="btn btn-primary" style="margin-top:10px"><i class="fa fa-save"></i> Save</button>
+                                        }
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

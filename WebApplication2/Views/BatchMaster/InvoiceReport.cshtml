@@ -1,0 +1,346 @@
+﻿@model IEnumerable<WebApplication1.QueryViewModel.ProductIngrDetailQuery>
+@{
+    ViewBag.Title = "Print";
+    Layout = null;
+    var sr = 0;
+    bool check = false;
+    bool bf = false;
+    bool AI = false;
+    var tweight_bf = Model.Where(x => x.name == "Basic Formula").Sum(x => x.weight);
+    var tper_bf = Model.Where(x => x.name == "Basic Formula").Sum(x => x.percentage);
+    var trate_bf = Model.Where(x => x.name == "Basic Formula").Sum(x => x.Rate);
+    var tcost_bf = Model.Where(x => x.name == "Basic Formula").Sum(x => x.Cost);
+
+    var tweight_AI = Model.Where(x => x.name == "Additional Item").Sum(x => x.weight);
+    var tper_AI = Model.Where(x => x.name == "Additional Item").Sum(x => x.percentage);
+    var trate_AI = Model.Where(x => x.name == "Additional Item").Sum(x => x.Rate);
+    var tcost_AI = Model.Where(x => x.name == "Additional Item").Sum(x => x.Cost);
+
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Batch Sheet</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <style>
+
+        .page-break {
+            page-break-before: always;
+        }
+
+
+        @@media print {
+
+            body {
+                font-size: 10pt;
+            }
+
+            th [colspan="2"] {
+                text-align: center;
+            }
+
+            @@page {
+                size: A4;
+                margin: 1cm;
+
+                @@top-left {
+                    content: "Your Header";
+                }
+
+                @@bottom-center {
+                    content: counter(page);
+                }
+            }
+        }
+    </style>
+    <style>
+
+        .head1 {
+            font: bold;
+            font-size: 15px;
+        }
+
+        /*.underline1 {
+            text-decoration: underline;
+            color: #747474;
+            text-align: left;
+        }*/
+    </style>
+
+    <style media="print">
+
+        .hide-in-print {
+            display: none;
+        }
+    </style>
+
+
+
+</head>
+<body>
+    <div class="container text-center ">
+        <table class="table ">
+            <thead class="hide-in-print">
+                <tr>
+                    <th colspan="8" style="color:blue;font:bold;text-align:center;font-size:20px"><u>Batch Sheet</u></th>
+                    <th colspan="4">@DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt ")</th>
+                </tr>
+                <tr>
+                    <th class="head1" colspan="1">Invoice No :</th>
+                    <th class="head1" colspan="2"><span class="underline1">@Model.FirstOrDefault().OrderId</span></th>
+                    <th class="head1" colspan="1">Region : </th>
+                    <th class="head1" colspan="2"><span class="underline1"> @ViewData["Region"]</span></th>
+                    <th colspan="3" class="text-right"><span class="underline1">@ViewData["date"]</span></th>
+
+                </tr>
+                <tr>
+                    <th class="head1" colspan="1">Colour Name :</th>
+                    <th class="head1" colspan="2"><span class="underline1">@ViewData["ColorName"]</span></th>
+                    <th class="head1" colspan="1">Colour No : </th>
+                    <th class="head1" colspan="1"><span class="underline1"> @ViewData["ColorNo"]</span></th>
+                    <th class="head1" colspan="1">Quality : </th>
+                    <th class="head1" colspan="1"><span class="underline1"> @ViewData["Quality"]</span></th>
+                </tr>
+                <tr>
+                    <th class="head1" colspan="1">Batch No :</th>
+                    <th class="head1" colspan="2"><span class="underline1"> @ViewData["BatchNo"]</span></th>
+                    <th class="head1" colspan="1"> Product Name : </th>
+                    <th class="head1" colspan="2"> <span class="underline1"> @ViewData["ProductName"]</span>  </th>
+                </tr>
+
+
+            </thead>
+
+
+            <thead class="hide-in-html" style="display:none" id="printHeader">
+                <tr>
+                    <th colspan="6" style="color:blue;font:bold;text-align:center;font-size:20px"><u>Batch Sheet</u></th>
+                    <th colspan="4">@DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt ")</th>
+                </tr>
+                <tr>
+                    <th class="head1" colspan="2">Invoice No :</th>
+                    <th class="head1" colspan="2"><span class="underline1">@Model.FirstOrDefault().OrderId</span></th>
+
+
+                    <th colspan="2" class="text-right"><span class="underline1">@ViewData["date"]</span></th>
+
+                </tr>
+                <tr>
+                    <th class="head1" colspan="1">Region : </th>
+                    <th class="head1" colspan="2"><span class="underline1"> @ViewData["Region"]</span></th>
+                    <th class="head1" colspan="1">Colour No :</th>
+                    <th class="head1" colspan="2"> <span class="underline1"> @ViewData["ColorNo"]</span></th>
+                </tr>
+
+                <tr>
+                    <th class="head1" colspan="1">Colour Name :</th>
+                    <th class="head1" colspan="4"><span class="underline1">@ViewData["ColorName"]</span></th>
+
+                    <th class="head1" colspan="1">Quality :</th>
+                    <th class="head1" colspan="1"> <span class="underline1"> @ViewData["Quality"]</span></th>
+                </tr>
+                <tr>
+                    <th class="head1" colspan="1">Batch No :</th>
+                    <th class="head1" colspan="3"><span class="underline1"> @ViewData["BatchNo"]</span></th>
+                    <th class="head1" colspan="2"> Product Name : </th>
+                    <th class="head1" colspan="4"> <span class="underline1"> @ViewData["ProductName"]</span>  </th>
+                </tr>
+
+
+            </thead>
+
+        </table>
+
+        <table class="table">
+            <thead>
+                <tr class="text-center" style="background-color: #8686df">
+                    <th width="10px">Sr</th>
+                    <th colspan="5"> Item Name</th>
+                    <th>Weight / QTY</th>
+                    <th>Percentage </th>
+                    <th>Rate </th>
+                    <th>Total Cost</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any()) { }
+                else
+                {
+
+                    foreach (var lst in Model)
+                    {
+                        if (lst.name == "Basic Formula" && bf == false)
+                        {
+                            <tr class="head1">
+                                <td colspan="3" class="text-left" style="text-decoration:underline ; font-weight:bold">Basic Formula</td>
+                            </tr>
+                            bf = true;
+                        }
+                        else if (lst.name == "Additional Item" && AI == false)
+                        {
+                            <tr style="font-weight: bold">
+                                <td class="text-left" colspan="6"></td>
+                                <td class="text-right">@tweight_bf</td>
+                                <td class="text-right">@tper_bf</td>
+                                <td class="text-right">@trate_bf</td>
+                                <td class="text-right">@tcost_bf</td>
+                            </tr>
+                            <tr class="head1">
+                                <td colspan="3" class="text-left" style="text-decoration:underline ; font-weight:bold">Additional Item</td>
+                            </tr>
+                            AI = true;
+                            check = true;
+                        }
+                        <tr>
+                            <td class="text-left">@{sr++;}@sr</td>
+                            <td class="text-left" colspan="5">@lst.ItemName</td>
+                            <td class="text-right">@lst.weight</td>
+                            <td class="text-right">@lst.percentage</td>
+                            <td class="text-right">@lst.Rate</td>
+                            <td class="text-right">@lst.Cost</td>
+
+                        </tr>
+
+                    }
+                    if (check == true)
+                    {
+                        <tr style="font-weight: bold">
+                            <td class="text-left" colspan="6"></td>
+                            <td class="text-right">@tweight_AI</td>
+                            <td class="text-right">@tper_AI</td>
+                            <td class="text-right">@trate_AI</td>
+                            <td class="text-right">@tcost_AI</td>
+                        </tr>
+
+                    }
+                    else
+                    {
+
+                        <tr style="font-weight: bold">
+                            <td class="text-left" colspan="6"></td>
+                            <td class="text-right">@tweight_bf</td>
+                            <td class="text-right">@tper_bf</td>
+                            <td class="text-right">@trate_bf</td>
+                            <td class="text-right">@tcost_bf</td>
+                        </tr>
+
+                    }
+                }
+
+
+
+            </tbody>
+
+        </table>
+        <table class="table">
+            <tfoot class="text-left" style="font-weight:bold">
+                <tr>
+                    <td class="text-left" style="font-weight:bold">Summary</td>
+                </tr>
+                <tr>
+                    <td colspan="1"> </td>
+                    <td colspan="1">Nos </td>
+                    <td colspan="1">Total Kgs </td>
+                    <td colspan="1">Batch Cost </td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="text-end"></td>
+                    <td colspan="7">1 KG Cost : <span class="underline1"> @ViewData["kgcoast"]</span></td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="text-end">Drum :</td>
+                    <td colspan="7">1 Ltr Cost : <span class="underline1"> @ViewData["ltrcoast"]</span></td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="text-end">Gallon :</td>
+                    <td colspan="7">Viscocity : <span class="underline1"> @ViewData["viscosity"]</span></td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="text-end">Quarter :</td>
+                    <td colspan="7">Weight / Ltr:  <span class="underline1"> @ViewData["whc"]</span></td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="text-end">Dubbi :</td>
+                    <td colspan="7">
+                        Yield % <span class="underline1"> @ViewData["yield"]</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5" class="text-end">Sample :</td>
+                    <td colspan="7">PH : <span class="underline1"> @ViewData["ph"]</span></td>
+                </tr>
+                <tr></tr>
+
+                <tr>
+                    <td colspan="1">Total Weight : </td>
+                    <td colspan="2"><span class="underline1"> @ViewData["totalweight"]</span></td>
+                    <td colspan="5">Note :   @ViewData["note"]</td>
+                </tr>
+                <tr>
+                    <td colspan="1">Total Filled Cost : </td>
+                    <td colspan="1"><span class="underline1"> </span></td>
+
+                </tr>
+                <tr>
+                    <td colspan="1">Total Packing Cost : </td>
+                    <td colspan="1"><span class="underline1"> </span></td>
+
+                </tr>
+                <tr>
+                    <td colspan="1">Total CostCost : </td>
+                    <td colspan="1"><span class="underline1"> </span></td>
+
+                </tr>
+            </tfoot>
+        </table>
+        <br>
+        <div style="display: flex; justify-content: space-between;">
+            <div>
+
+                <div> @ViewData["op1"]</div>
+                <div>____________________</div>
+                <div style="font-weight:bold">Machine Operator 1</div>
+            </div>
+            <div>
+                <div> @ViewData["op2"]</div>
+                <div>____________________</div>
+                <div style="font-weight:bold">Assistant / Helper</div>
+
+            </div>
+            <div>
+                <div> @ViewData["testby"]</div>
+                <div>____________________</div>
+                <div style="font-weight:bold">Test By</div>
+
+            </div>
+            <div>
+                <div> @ViewData["filledby"]</div>
+                <div>____________________</div>
+                <div style="font-weight:bold"> Transfered By</div>
+
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
+    <br>
+
+    <script>
+        // JavaScript to toggle visibility
+        window.onbeforeprint = function () {
+            document.getElementById("printHeader").style.display = "block";
+        };
+
+        window.onafterprint = function () {
+            document.getElementById("printHeader").style.display = "none";
+        };
+    </script>
+</body>
+</html>
+
+
+

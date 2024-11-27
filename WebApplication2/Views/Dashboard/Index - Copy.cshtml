@@ -1,0 +1,838 @@
+﻿@model WebApplication1.ViewModels.PurInvoiceVM
+@{
+    ViewBag.Title = "Index";
+}
+<script>
+    window.onload = function () {
+        var chart = new CanvasJS.Chart("chartContainer", {
+            animationEnabled: true,
+            theme: "light2", // "light1", "light2", "dark1", "dark2"
+            title: {
+                text: "Monthly  Sale"
+            },
+            axisY: {
+                title: "Total Amount (Rs)"
+            },
+            data: [{
+                type: "column",
+                showInLegend: true,
+                legendMarkerColor: "grey",
+                legendText: "Sale Graph",
+                dataPoints: [
+
+                    @foreach (var item in Model.sale_list)
+                    {
+                        @:{ y: @(item.total), label: '@(Convert.ToDateTime(item.Date).ToString("dd-MM-yyyy"))' },
+                   }
+
+                ]
+            }]
+        });
+        var chartsale = new CanvasJS.Chart("chartContainersale", {
+            animationEnabled: true,
+            theme: "light2", // "light1", "light2", "dark1", "dark2"
+            title: {
+                text: "Monthly  Sale"
+            },
+            axisY: {
+                title: "Total Amount (Rs)"
+            },
+            data: [{
+                type: "column",
+                showInLegend: true,
+                legendMarkerColor: "grey",
+                legendText: "Sale Graph",
+                dataPoints: [
+
+                    @foreach (var item in Model.sale_list)
+                    {
+                        @:{ y: @(item.total), label: '@(Convert.ToDateTime(item.Date).ToString("dd-MM-yyyy"))' },
+                   }
+
+                ]
+            }]
+        });
+        var chart1 = new CanvasJS.Chart("chartContainer1", {
+            animationEnabled: true,
+            theme: "light2", // "light1", "light2", "dark1", "dark2"
+            title: {
+                text: "Monthly Purchase"
+            },
+            axisY: {
+                title: "Total Amount (Rs)"
+            },
+            data: [{
+                type: "column",
+                showInLegend: true,
+                legendMarkerColor: "grey",
+                legendText: "Purchase Graph",
+                dataPoints: [
+                     @foreach (var item1 in Model.pur_dash)
+                    {
+                        @:{ y: @(item1.total), label: '@(Convert.ToDateTime(item1.Date).ToString("dd-MM-yyyy"))' },
+                   }
+
+                ]
+            }]
+        });
+        chart.render();
+        chart1.render();
+        chartsale.render();
+        var chart2 = new CanvasJS.Chart("chartContainer2", {
+            animationEnabled: true,
+            theme: "light2",
+            title: {
+                text: "Sale Summmary"
+            },
+
+
+            data: [{
+                type: "line",
+                showInLegend: true,
+                //name: "Total Visit",
+                markerType: "square",
+                //xValueFormatString: "DD MMM, YYYY",
+                color: "#F08080",
+                dataPoints: [
+                    @foreach (var item in Model.sale_list)
+                    {
+                        @:{ x: new Date('@(Convert.ToDateTime(item.Date).Year)', '@(Convert.ToDateTime(item.Date).Month)', '@(Convert.ToDateTime(item.Date).Day)'), y: @(item.total) },
+                   }
+
+                ]
+            },
+            {
+                type: "line",
+                showInLegend: true,
+                name: "Unique Visit",
+                lineDashType: "dash",
+                dataPoints: [
+
+                ]
+            }]
+        });
+        chart2.render();
+        function toogleDataSeries(e) {
+            if (typeof (e.dataSeries.visible) === "undefined" || e.dataSeries.visible) {
+                e.dataSeries.visible = false;
+            } else {
+                e.dataSeries.visible = true;
+            }
+            chart.render();
+        chart1.render();
+        chartsale.render();
+        }
+
+
+    }
+
+</script>
+<style>
+    .nav-tabs > li.active > a {
+        background-color: #189279 !important;
+        border: medium none;
+        border-radius: 0;
+    }
+   
+</style>
+<script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+<!-- Chart code -->
+<script>
+    am4core.ready(function () {
+
+        // Themes begin
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+
+
+
+        // Create chart instance
+        var chart = am4core.create("chartdiv", am4charts.XYChart);
+
+        // Add data
+        chart.data = [
+            @foreach (var item in Model.sale_list)
+                {
+                    @: { "date": "@(Convert.ToDateTime(item.Date).ToString("yyyy-MM-dd"))","price": @(item.total)},
+                }
+        ];
+
+                // Create axes
+                var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+                dateAxis.renderer.grid.template.location = 0;
+                dateAxis.renderer.minGridDistance = 50;
+
+                var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+                valueAxis.logarithmic = true;
+                valueAxis.renderer.minGridDistance = 20;
+
+                // Create series
+                var series = chart.series.push(new am4charts.LineSeries());
+                series.dataFields.valueY = "price";
+                series.dataFields.dateX = "date";
+                series.tensionX = 0.8;
+                series.strokeWidth = 3;
+
+                var bullet = series.bullets.push(new am4charts.CircleBullet());
+                bullet.circle.fill = am4core.color("#fff");
+                bullet.circle.strokeWidth = 3;
+
+                // Add cursor
+                chart.cursor = new am4charts.XYCursor();
+                chart.cursor.fullWidthLineX = true;
+                chart.cursor.xAxis = dateAxis;
+                chart.cursor.lineX.strokeWidth = 0;
+                chart.cursor.lineX.fill = am4core.color("#000");
+                chart.cursor.lineX.fillOpacity = 0.1;
+
+                // Add scrollbar
+                chart.scrollbarX = new am4core.Scrollbar();
+
+                // Add a guide
+                let range = valueAxis.axisRanges.create();
+                range.value = 90.4;
+                range.grid.stroke = am4core.color("#396478");
+                range.grid.strokeWidth = 1;
+                range.grid.strokeOpacity = 1;
+                range.grid.strokeDasharray = "3,3";
+                range.label.inside = true;
+                range.label.text = "Average";
+                range.label.fill = range.grid.stroke;
+                range.label.verticalCenter = "bottom";
+
+            }); // end am4core.ready()
+</script>
+<script>
+    am4core.ready(function () {
+
+        // Themes begin
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+
+
+
+        // Create chart instance
+        var chart = am4core.create("chartdivs", am4charts.XYChart);
+
+        // Add data
+        chart.data = [
+            @foreach (var item in Model.sale_list)
+                {
+                    @: { "date": "@(Convert.ToDateTime(item.Date).ToString("yyyy-MM-dd"))","price": @(item.total)},
+                }
+        ];
+
+                // Create axes
+                var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+                dateAxis.renderer.grid.template.location = 0;
+                dateAxis.renderer.minGridDistance = 50;
+
+                var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+                valueAxis.logarithmic = true;
+                valueAxis.renderer.minGridDistance = 20;
+
+                // Create series
+                var series = chart.series.push(new am4charts.LineSeries());
+                series.dataFields.valueY = "price";
+                series.dataFields.dateX = "date";
+                series.tensionX = 0.8;
+                series.strokeWidth = 3;
+
+                var bullet = series.bullets.push(new am4charts.CircleBullet());
+                bullet.circle.fill = am4core.color("#fff");
+                bullet.circle.strokeWidth = 3;
+
+                // Add cursor
+                chart.cursor = new am4charts.XYCursor();
+                chart.cursor.fullWidthLineX = true;
+                chart.cursor.xAxis = dateAxis;
+                chart.cursor.lineX.strokeWidth = 0;
+                chart.cursor.lineX.fill = am4core.color("#000");
+                chart.cursor.lineX.fillOpacity = 0.1;
+
+                // Add scrollbar
+                chart.scrollbarX = new am4core.Scrollbar();
+
+                // Add a guide
+                let range = valueAxis.axisRanges.create();
+                range.value = 90.4;
+                range.grid.stroke = am4core.color("#396478");
+                range.grid.strokeWidth = 1;
+                range.grid.strokeOpacity = 1;
+                range.grid.strokeDasharray = "3,3";
+                range.label.inside = true;
+                range.label.text = "Average";
+                range.label.fill = range.grid.stroke;
+                range.label.verticalCenter = "bottom";
+
+            }); // end am4core.ready()
+</script>
+<script>
+    am4core.ready(function () {
+
+        // Themes begin
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+
+
+
+        // Create chart instance
+        var chart = am4core.create("chartdivspur", am4charts.XYChart);
+
+        // Add data
+        chart.data = [
+            @foreach (var item in Model.pur_dash)
+                {
+                    @: { "date": "@(Convert.ToDateTime(item.Date).ToString("yyyy-MM-dd"))","price": @(item.total)},
+                }
+        ];
+
+                // Create axes
+                var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+                dateAxis.renderer.grid.template.location = 0;
+                dateAxis.renderer.minGridDistance = 50;
+
+                var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+                valueAxis.logarithmic = true;
+                valueAxis.renderer.minGridDistance = 20;
+
+                // Create series
+                var series = chart.series.push(new am4charts.LineSeries());
+                series.dataFields.valueY = "price";
+                series.dataFields.dateX = "date";
+                series.tensionX = 0.8;
+                series.strokeWidth = 3;
+
+                var bullet = series.bullets.push(new am4charts.CircleBullet());
+                bullet.circle.fill = am4core.color("#fff");
+                bullet.circle.strokeWidth = 3;
+
+                // Add cursor
+                chart.cursor = new am4charts.XYCursor();
+                chart.cursor.fullWidthLineX = true;
+                chart.cursor.xAxis = dateAxis;
+                chart.cursor.lineX.strokeWidth = 0;
+                chart.cursor.lineX.fill = am4core.color("#000");
+                chart.cursor.lineX.fillOpacity = 0.1;
+
+                // Add scrollbar
+                chart.scrollbarX = new am4core.Scrollbar();
+
+                // Add a guide
+                let range = valueAxis.axisRanges.create();
+                range.value = 90.4;
+                range.grid.stroke = am4core.color("#396478");
+                range.grid.strokeWidth = 1;
+                range.grid.strokeOpacity = 1;
+                range.grid.strokeDasharray = "3,3";
+                range.label.inside = true;
+                range.label.text = "Average";
+                range.label.fill = range.grid.stroke;
+                range.label.verticalCenter = "bottom";
+
+            }); // end am4core.ready()
+</script>
+<script>
+    am4core.ready(function () {
+
+        // Themes begin
+        am4core.useTheme(am4themes_animated);
+        // Themes end
+
+        // Create chart instance
+        var chart = am4core.create("chartdivexpense", am4charts.XYChart);
+
+        // Add data
+        chart.data = [
+            @foreach (var item in Model.list_new.Where(c=>c.Type== "Expense"))
+            {
+                    @: { "year": "@(Convert.ToDateTime(item.Date).ToString("yyyy-MM-dd"))","Expense": @(item.Bal)},
+            }
+            ];
+
+        var categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
+        categoryAxis.dataFields.category = "year";
+        categoryAxis.renderer.opposite = true;
+
+        // Create value axis
+        var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+        valueAxis.renderer.inversed = true;
+        valueAxis.title.text = "Place taken";
+        valueAxis.renderer.minLabelPosition = 0.01;
+
+        // Create series
+        var series1 = chart.series.push(new am4charts.LineSeries());
+        series1.dataFields.valueY = "Expense";
+        series1.dataFields.categoryX = "year";
+        series1.name = "Expense";
+        series1.bullets.push(new am4charts.CircleBullet());
+        //series1.tooltipText = "Place taken by {name} in {categoryX}: {valueY}";
+        //series1.legendSettings.valueText = "{valueY}";
+        series1.visible = false;
+
+        var series2 = chart.series.push(new am4charts.LineSeries());
+        series2.dataFields.valueY = "Sale";
+        series2.dataFields.categoryX = "year";
+        series2.name = 'Sale';
+        series2.bullets.push(new am4charts.CircleBullet());
+        //series2.tooltipText = "Place taken by {name} in {categoryX}: {valueY}";
+        //series2.legendSettings.valueText = "{valueY}";
+
+        //var series3 = chart.series.push(new am4charts.LineSeries());
+        //series3.dataFields.valueY = "uk";
+        //series3.dataFields.categoryX = "year";
+        //series3.name = 'United Kingdom';
+        //series3.bullets.push(new am4charts.CircleBullet());
+        //series3.tooltipText = "Place taken by {name} in {categoryX}: {valueY}";
+        //series3.legendSettings.valueText = "{valueY}";
+
+        // Add chart cursor
+        chart.cursor = new am4charts.XYCursor();
+        chart.cursor.behavior = "zoomY";
+
+
+        let hs1 = series1.segments.template.states.create("hover")
+        hs1.properties.strokeWidth = 5;
+        series1.segments.template.strokeWidth = 1;
+
+        let hs2 = series2.segments.template.states.create("hover")
+        hs2.properties.strokeWidth = 5;
+        series2.segments.template.strokeWidth = 1;
+
+        //let hs3 = series3.segments.template.states.create("hover")
+        //hs3.properties.strokeWidth = 5;
+        //series3.segments.template.strokeWidth = 1;
+
+        // Add legend
+        chart.legend = new am4charts.Legend();
+        chart.legend.itemContainers.template.events.on("over", function (event) {
+            var segments = event.target.dataItem.dataContext.segments;
+            segments.each(function (segment) {
+                segment.isHover = true;
+            })
+        })
+
+        chart.legend.itemContainers.template.events.on("out", function (event) {
+            var segments = event.target.dataItem.dataContext.segments;
+            segments.each(function (segment) {
+                segment.isHover = false;
+            })
+        })
+
+
+    }); // end am4core.ready()
+</script>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Dashboard </a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="row">
+                        <div class="tabs mt-none">
+                            <!-- Tabs Header -->
+                            <ul class="nav nav-tabs nav-justified">
+                                <li class="active"><a href="#home" data-toggle="tab" ><b>Dashboard</b></a></li>
+                                <li><a href="#profile" data-toggle="tab"><b>Sale</b></a></li>
+                                <li><a href="#pur" data-toggle="tab"><b>Purchase</b></a></li>
+                                <li><a href="#acc" data-toggle="tab"><b>Accounts</b></a></li>
+                                <li><a href="#pro" data-toggle="tab"><b>Production</b></a></li>
+                            </ul>
+                            <!-- Tabs Content -->
+                            <div class="tab-content">
+                                <div class="tab-pane fade in active" id="home">
+                                    <div class="row">
+                                        <div class="col-sm-12 ">
+
+                                            <div class="panel widgetbox wbox-2 bg-darker-2 color-light col-md-3" style="width:260px;margin-left:5px">
+                                                <a href=" @Url.Action("Index", "Customer") ">
+                                                    <div class="panel-content">
+                                                        <div class="row">
+                                                            <div class="col-xs-4">
+                                                                <span class="icon fa fa-users color-darker-1"></span>
+                                                            </div>
+                                                            <div class="col-xs-8">
+                                                                <h3 class="title " style="color:white">@Session["tot_cus"]</h3>
+                                                                <p class="title " style="color:white;font-size:16px">Total Customers </p>
+
+                                                                <a href="@Url.Action("Index", "Customer")"><h4 class="subtitle " style="color:white">View All</h4></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div class="panel widgetbox wbox-2 bg-darker-2 color-light col-md-3" style="width:260px;margin-left:5px">
+                                                <a href=" @Url.Action("Index", "Supplier")">
+                                                    <div class="panel-content">
+                                                        <div class="row">
+                                                            <div class="col-xs-4">
+                                                                <span class="icon fa fa-users color-darker-1"></span>
+                                                            </div>
+                                                            <div class="col-xs-8">
+                                                                <h3 class="title " style="color:white">@Session["tot_supp"]</h3>
+                                                                <p class="title " style="color:white;font-size:16px">Total Suppliers </p>
+
+                                                                <a href="@Url.Action("Index", "Customer")"><h4 class="subtitle " style="color:white">View All</h4></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div class="panel widgetbox wbox-2 bg-darker-2 color-light col-md-3" style="width:250px;margin-left:5px">
+                                                <a href=" @Url.Action("Index", "Product")">
+                                                    <div class="panel-content">
+                                                        <div class="row">
+                                                            <div class="col-xs-4">
+                                                                <span class="icon fa fa-tasks color-darker-1"></span>
+                                                            </div>
+                                                            <div class="col-xs-8">
+                                                                <h3 class="title " style="color:white">@Session["tot_pro"]</h3>
+                                                                <p class="title " style="color:white;font-size:16px">Total Products </p>
+
+                                                                <a href="@Url.Action("Index", "Product")"><h4 class="subtitle " style="color:white">View All</h4></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            <div class="panel widgetbox wbox-2 bg-darker-2 color-light col-md-3" style="width:240px;margin-left:5px">
+                                                <a href=" @Url.Action("Index", "Store")">
+                                                    <div class="panel-content">
+                                                        <div class="row">
+                                                            <div class="col-xs-4">
+                                                                <span class="icon fa fa-tasks color-darker-1"></span>
+                                                            </div>
+                                                            <div class="col-xs-8">
+                                                                <h3 class="title " style="color:white">@Session["tot_bu"]</h3>
+                                                                <p class="title " style="color:white;font-size:16px">Total Stores </p>
+
+                                                                <a href="@Url.Action("Index", "Store")"><h4 class="subtitle " style="color:white">View All</h4></a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-12" style="margin-top:20px">
+                                            <div class="col-md-6" style="border:1px solid #CCCCCC;padding:5px">
+                                                <div id="chartContainer" style="height: 300px; width: 420px; margin: 0px auto;"></div>
+                                            </div>
+                                            <div class="col-md-6" style="border:1px solid #CCCCCC;padding:5px">
+                                                <div id="chartContainer1" style="height: 300px; width: 420px; margin: 0px auto;"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12" style="margin-top: 20px;border: 1px solid #CCCCCC;padding: 2px">
+                                            <div id="chartdiv" style="height: 300px; width: 1020px; margin: 0px auto;"></div>
+                                            @*<div id="chartContainer2" style="height: 300px; max-width: 920px; margin: 0px auto;"></div>*@
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="profile">
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-12">
+                                                <div class="panel widgetbox wbox-2 bg-darker-2 color-light col-md-3" style="margin-left:5px">
+                                                    <div class="panel-content">
+                                                        <div class="row">
+                                                            <div class="col-xs-4">
+                                                                <span class="icon fa fa-money color-darker-1"></span>
+                                                            </div>
+                                                            <div class="col-xs-8">
+                                                                <h3 class="title " style="color:white">@Session["year_sale"]</h3>
+                                                                <p class="title " style="color:white;font-size:16px">Total Sale </p>
+                                                                <p class="title " style="color:white;font-size:12px">This Year</p>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="panel widgetbox wbox-2 bg-darker-2 color-light col-md-3" style="margin-left:5px">
+                                                    <div class="panel-content">
+                                                        <div class="row">
+                                                            <div class="col-xs-4">
+                                                                <span class="icon fa fa-money color-darker-1"></span>
+                                                            </div>
+                                                            <div class="col-xs-8">
+                                                                <h3 class="title " style="color:white">@Session["mon_sale"]</h3>
+                                                                <p class="title " style="color:white;font-size:16px">Total Sale </p>
+                                                                <p class="title " style="color:white;font-size:12px">This Month</p>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-1"></div>
+
+                                            </div>
+                                            <div class="col-md-6" style="margin-top: 20px;border: 1px solid #CCCCCC;padding: 2px">
+                                                <table class="table table-bordered table-hover table-striped table-success">
+                                                    <thead class="bordered-darkorange" style="background-color:#189279;color:white">
+                                                        <tr>
+                                                            <th>Customer</th>
+                                                            <th>Date</th>
+                                                            <th>Net Total</th>
+                                                            <th>Discount</th>
+                                                            <th>Grand Total</th>
+                                                            <th>Received</th>
+                                                            <th>Action</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="abc">
+                                                        @foreach (var item in Model.sale_list_woc)
+                                                        {
+                                                            <tr>
+                                                                <td>@item.CustomerName</td>
+                                                                <td>@item.Date</td>
+                                                                <td>@item.NetAmount</td>
+                                                                <td>@item.DiscountAmount</td>
+                                                                <td>@item.GrandTotal</td>
+                                                                <td>@item.Rtotal</td>
+                                                                <td>
+                                                                    <a href="@Url.Action("Edit", new { ID= item.InvID } )" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="badge badge-xs x-warning b-rounded"><i class="fa fa-pencil"></i></a>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-md-6" style="margin-top: 20px;border: 1px solid #CCCCCC;padding: 2px">
+                                                <div id="chartdivs" style="height: 300px; width: 520px; margin: 0px auto;"></div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="pur">
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-12">
+                                                <div class="panel widgetbox wbox-2 bg-darker-2 color-light col-md-3" style="margin-left:5px">
+                                                    <div class="panel-content">
+                                                        <div class="row">
+                                                            <div class="col-xs-4">
+                                                                <span class="icon fa fa-money color-darker-1"></span>
+                                                            </div>
+                                                            <div class="col-xs-8">
+                                                                <h3 class="title " style="color:white">@Session["year_pur"]</h3>
+                                                                <p class="title " style="color:white;font-size:16px">Total Purchase </p>
+                                                                <p class="title " style="color:white;font-size:12px">This Year</p>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="panel widgetbox wbox-2 bg-darker-2 color-light col-md-3" style="margin-left:5px">
+                                                    <div class="panel-content">
+                                                        <div class="row">
+                                                            <div class="col-xs-4">
+                                                                <span class="icon fa fa-money color-darker-1"></span>
+                                                            </div>
+                                                            <div class="col-xs-8">
+                                                                <h3 class="title " style="color:white">@Session["mon_pur"]</h3>
+                                                                <p class="title " style="color:white;font-size:16px">Total Purchase </p>
+                                                                <p class="title " style="color:white;font-size:12px">This Month</p>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                @*<div class="panel widgetbox wbox-2 bg-darker-2 color-light col-md-3" style="margin-left:5px">
+                                                        <div class="panel-content">
+                                                            <div class="row">
+                                                                <div class="col-xs-4">
+                                                                    <span class="icon fa fa-money color-darker-1"></span>
+                                                                </div>
+                                                                <div class="col-xs-8">
+                                                                    <h3 class="title " style="color:white">@Session["mon_pur"]</h3>
+                                                                    <p class="title " style="color:white;font-size:16px">Total Expense </p>
+                                                                    <p class="title " style="color:white;font-size:12px">This Month</p>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="panel widgetbox wbox-2 bg-darker-2 color-light col-md-3" style="margin-left:5px">
+                                                        <div class="panel-content">
+                                                            <div class="row">
+                                                                <div class="col-xs-4">
+                                                                    <span class="icon fa fa-money color-darker-1"></span>
+                                                                </div>
+                                                                <div class="col-xs-8">
+                                                                    <h3 class="title " style="color:white">@Session["mon_pur"]</h3>
+                                                                    <p class="title " style="color:white;font-size:16px">Total Expense </p>
+                                                                    <p class="title " style="color:white;font-size:12px">This Year</p>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>*@
+
+                                                <div class="col-md-6" style="margin-top: 20px;border: 1px solid #CCCCCC;padding: 2px">
+                                                    <table class="table table-bordered table-hover table-striped table-success">
+                                                        <thead class="bordered-darkorange" style="background-color:#189279;color:white">
+                                                            <tr>
+                                                                <th>Supplier</th>
+                                                                <th>Date</th>
+                                                                <th>Net Total</th>
+                                                                <th>Discount</th>
+                                                                <th>Grand Total</th>
+                                                                <th>Batch #</th>
+                                                                <th>Action</th>
+
+                                                            </tr>
+                                                        </thead>
+
+                                                        <tbody class="abc">
+                                                            @foreach (var item in Model.pur_list_woc)
+                                                            {
+                                                                <tr>
+
+                                                                    <td>@item.SupplierName</td>
+                                                                    <td>@item.Date</td>
+                                                                    <td>@item.NetAmount</td>
+                                                                    <td>@item.DiscountAmount</td>
+                                                                    <td>@item.GrandTotal</td>
+                                                                    <td>@item.Rtotal</td>
+
+                                                                    <td>
+                                                                        <a href="@Url.Action("Edit", new { ID= item.InvID } )" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="badge badge-xs x-warning b-rounded"><i class="fa fa-pencil"></i></a>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="col-md-6" style="margin-top: 20px;border: 1px solid #CCCCCC;padding: 2px">
+                                                    <div id="chartdivspur" style="height: 300px; width: 520px; margin: 0px auto;"></div>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="acc">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="col-md-6" style="border: 1px solid #CCCCCC;padding: 2px">
+                                                <center>
+                                                    <p><b>Payables</b></p>
+                                                </center>
+                                                <table class="table table-bordered table-hover table-striped table-success">
+                                                    <thead class="bordered-darkorange" style="background-color:#189279;color:white">
+                                                        <tr>
+                                                            <th>Suppliers Name</th>
+                                                            <th>Balance</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="abc">
+                                                        @foreach (var item in Model.payables)
+                                                        {
+                                                            <tr>
+                                                                <td>@item.SupplierName</td>
+                                                                <td>@item.Bal</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="col-md-6" style="border: 1px solid #CCCCCC;padding: 2px">
+                                                <center><p><b>Receivables</b></p></center>
+                                                <table class="table table-bordered table-hover table-striped table-success">
+                                                    <thead class="bordered-darkorange" style="background-color:#189279;color:white">
+                                                        <tr>
+                                                            <th>Customer Name</th>
+                                                            <th>Balance</th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody class="abc">
+                                                        @foreach (var item in Model.rec)
+                                                        {
+                                                            <tr>
+                                                                <td>@item.SupplierName</td>
+                                                                <td>@item.Bal</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12" style="margin-top: 20px;border: 1px solid #CCCCCC;padding: 2px">
+                                            <div id="chartdivexpense" style="height: 300px; width: 1020px; margin: 0px auto;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="pro">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered table-hover table-striped table-success">
+                                                    <thead class="bordered-darkorange">
+                                                        <tr style="background-color:#189279;color:white">
+                                                            <th>Batch#</th>
+                                                            <th>Start Date</th>
+                                                            <th>End Date</th>
+                                                            <th>Invoice Cost</th>
+                                                            <th>Labour</th>
+                                                            <th>Other</th>
+                                                            <th>Total Cost</th>
+                                                            <th>Net Total</th>
+                                                            <th>Gorss Profit</th>
+                                                            <th>Yelid</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+
+                                                    <tbody class="abc">
+                                                        @foreach (var item in Model.list)
+                                                        {
+                                                            <tr>
+
+                                                                <td>@item.BatchNo</td>
+                                                                <td>@item.Date</td>
+                                                                <td>@item.Phone</td>
+                                                                <td>@(item.Total - (item.DiscountAmount + item.CargoCharges))</td>
+                                                                <td>@item.CargoCharges</td>
+                                                                <td>@item.DiscountAmount</td>
+                                                                <td>@item.Total</td>
+                                                                <td>@item.BTotal</td>
+                                                                <td>@item.GrandTotal</td>
+                                                                <td>@item.yelid</td>
+                                                                <td>
+                                                                    <a href="@Url.Action("Edit", new { ID=Convert.ToInt32(item.Rtotal) } )" class="badge badge-xs x-primary b-rounded"><i class="fa fa-pencil"></i></a>
+                                                                </td>
+                                                            </tr>
+
+                                                        }
+                                                    </tbody>
+
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

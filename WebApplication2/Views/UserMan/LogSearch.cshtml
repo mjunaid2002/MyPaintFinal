@@ -1,0 +1,124 @@
+﻿@model WebApplication2.ViewModels.UserMan
+@{
+    ViewBag.Title = "LogSearch";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script>
+    $('#searchable').DataTable({
+        buttons: [
+            'copy', 'excel', 'pdf'
+        ]
+    });
+</script>
+<style>
+    .test {
+        width: 15px;
+        height: 15px;
+        background-color: green;
+        border-radius: 20px;
+    }
+
+    .test1 {
+        width: 15px;
+        height: 15px;
+        background-color: red;
+        border-radius: 20px;
+    }
+</style>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> User Log History</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <h4 class="section-subtitle"><b> User Log History</b></h4>
+        @using (Html.BeginForm("LogSearch", "UserMan", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div class="form-group col-sm-3">
+                <label>Employee</label>
+                <select name="empid" class="chosen-select form-control">
+                    <option value="">Select Employee</option>
+                    @foreach (var item in Model.emp_list)
+                    {
+                        <option value="@item.ID">@item.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group col-sm-3">
+                <label>Start Date</label>
+                <input type="date" name="log_s_date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
+            </div>
+            <div class="form-group col-sm-3">
+                <label>End Date </label>
+                <input type="date" name="log_e_date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
+            </div>
+            <div class="col-sm-3">
+                <button type="submit" name="submit" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Search &nbsp;&nbsp;</button>
+            </div>
+        }
+
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th>
+                                            Date
+                                    </th>
+                                    <th>Form</th>
+                                    <th>Action</th>
+                                    <th>User</th>
+                                    <th>Bill/Batch</th>
+                                    <th>Detail</th>
+                                </tr>
+                            </thead>
+
+                            <tbody class="abc">
+                                @foreach (var item in Model.userLogHistories)
+                                {
+                                    <tr>
+                                        <td>
+                                                @item.datetime.ToString("dd-MM-yyyy HH:mm:ss")
+                                        </td>
+                                        <td>@item.ActivityForm</td>
+                                        <td>@item.ActionTaken</td>
+                                        <td>@item.CurrentUser</td>
+                                        <td>@item.BillNo</td>
+                                        <td>
+                                            <div style="width:500px;">
+                                                @item.detail
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

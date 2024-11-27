@@ -1,0 +1,200 @@
+﻿@model WebApplication1.ViewModels.ProductVM
+
+@{
+
+    ViewBag.Title = "Create";
+}
+<style>
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+        width: 900px;
+    }
+        table td, th {
+            display: inline-block;
+            width: 160px !important;
+        }
+</style>
+<script>
+    function date() {
+        var d = new Date();
+
+        function twoDigitDate(d) {
+            return ((d.getDate()).toString().length == 1) ? "0" + (d.getDate()).toString() : (d.getDate()).toString();
+        };
+
+        function twoDigitMonth(d) {
+            return ((d.getMonth() + 1).toString().length == 1) ? "0" + (d.getMonth() + 1).toString() : (d.getMonth() + 1).toString();
+        };
+
+        var today_ISO_date = d.getFullYear() + "-" + twoDigitMonth(d) + "-" + twoDigitDate(d); // in yyyy-mm-dd format
+        document.getElementById('datepicker').setAttribute("value", today_ISO_date);
+
+    }
+    var count = $(".itemRow").length;
+    $(document).on('click', '#addRows', function () {
+
+        var d = new Date();
+
+        function twoDigitDate(d) {
+            return ((d.getDate()).toString().length == 1) ? "0" + (d.getDate()).toString() : (d.getDate()).toString();
+        };
+
+        function twoDigitMonth(d) {
+            return ((d.getMonth() + 1).toString().length == 1) ? "0" + (d.getMonth() + 1).toString() : (d.getMonth() + 1).toString();
+        };
+
+        var today_ISO_date = d.getFullYear() + "-" + twoDigitMonth(d) + "-" + twoDigitDate(d); // in yyyy-mm-dd format
+        document.getElementById('datepicker').setAttribute("value", today_ISO_date);
+
+
+        //var new1 = '@Html.Raw(Model.Product.Image)';
+
+        count++;
+        var htmlRows = '';
+        htmlRows += '<tr>';
+        htmlRows += '<td style="width:60px !important"><button class="btn btn-danger" onclick="deleteRow(this)"><i class="fa fa-trash-o"></i></button></td>';
+        htmlRows += '<td><input type="file"  name="file"  class="form-control" /></td>';
+        htmlRows += '<td><input type="text"   name="name" required class="form-control" autocomplete="off"></td>';
+       /* htmlRows += '<td><input type="text"   name="des" required class="form-control" autocomplete="off"></td>';*/
+        htmlRows += '<td><input type="text" name="cost_price" value="0" class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td><input type="text" name="sale_price" value="0" required  class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td><input type="text" name="sale_price_euro" value="0" required  class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td><input type="text" name="least_price" value="0" class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td> <select class="form-control" required name="m_unit"> @foreach(var item in Model.MeasuringUnit) { <option value="@item.Name">@item.Name</option> } </select></td>';
+        //htmlRows += '<td> <select class="form-control" required name="m_unit"><option value = "No" > No</option ><option value = "Kgs" > Kgs</option ><option value = "Ltr" > Ltr </option ></select ></td>';
+        htmlRows += '<td><input type="number" name="pieces_boc" value="0" class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td><input type="number" name="op_stock" value="0" class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td><input type="text" name="re_level" value="0" class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td style="width:180px !important"><input type="date" value="' + today_ISO_date+'" name="stock_date" class="form-control" ></td>';
+        htmlRows += '<td><input type="text" name="bar_code" value="0" onkeypress="return (event.charCode > 47 && event.charCode < 58)" class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td><input type="text" name="wat" value="0" class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td><input type="text" name="brand" value="0" class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td><input type="number" name="shelf_number" value="0" class="form-control" autocomplete="off"></td>';
+        htmlRows += '</tr>';
+        $('#invoiceItem').append(htmlRows);
+    });
+    function deleteRow(btn) {
+        if (confirm("Are you sure want to delete the row?"))
+            $(btn).closest("tr").remove();
+    }
+
+</script>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Registration</a></li>
+
+            </ul>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-sm-12 col-md-12">
+            <h4 class="section-subtitle"><b>Product Registration</b></h4>
+            <a href="@Url.Action("Index", "Product")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-list"></i> Product List</a>
+            @if (Convert.ToString(TempData["succ"]) != "")
+            {
+                <p class="alert alert-success" style="width:400px;height:50px"><b>@TempData["succ"]</b></p>
+            }
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="row" id="wrapper">
+                        <div class="col-md-12">
+
+                            <form action="Create" id="invoice-form" method="post" enctype="multipart/form-data" onsubmit="return confirm('Are you sure you want to Register ?');">
+                                <div class="row">
+                                    <div class="form-group col-sm-4">
+                                        <label>Select Category</label>
+                                        @Html.DropDownListFor(m => m.Product.CatID, new SelectList(Model.cat_list, "Name", "Name"), "Select Category", htmlAttributes: new { @class = "chosen-select form-control", @required = "required" })
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        <label>Select Brand</label>
+                                        @Html.DropDownListFor(m => m.Product.BrandID, new SelectList(Model.br_list, "Name", "Name"), "Select Brand", htmlAttributes: new { @class = "chosen-select form-control", @required = "required" })
+                                    </div>
+                                    @*<div class="form-group col-sm-4">
+                                    <label>Family Type</label>
+                                    <select class="form-control" required name="type">
+                                        <option value="">Family Type</option>
+                                        <option value="1">Raw Product</option>
+                                        <option value="2">Finisihed Product</option>
+                                        <option value="3">Semi Finisihed Product</option>
+                                    </select>
+                                </div>*@
+                                    <br />
+                                    <table class="table table-bordered table-hover table-striped" id="invoiceItem" cellspacing="0">
+                                        <tr>
+                                            <th style="width:60px !important">Action</th>
+                                            <th>Image</th>
+                                            <th>Item Name</th>
+                                            @*<th>Description</th>*@
+                                            <th>Cost Price</th>
+                                            <th>Sale Price Pkr</th>
+                                            <th>Least Price</th>
+                                            <th>WholeSale Price</th>
+                                            <th>Measuring Unit</th>
+                                            <th>P/Box</th>
+                                            <th>Opening Stock</th>
+                                            <th>Reorder Level</th>
+                                            <th style="width:180px !important">Stock Opening Date</th>
+                                            <th>Barcode</th>
+                                            <th>Vat %</th>
+                                            <th>Brand %</th>
+                                            <th>Shelf Number</th>
+                                        </tr>
+                                        <tr>
+                                            <td style="width:60px !important"><button class="btn btn-danger" onclick="deleteRow(this)"><i class="fa fa-trash-o"></i></button></td>
+                                            <td><input type="file" name="file" class="form-control"></td>
+                                            <td><input type="text" name="name" required class="form-control" autocomplete="off"></td>
+                                            @*<td><input type="text" name="des" value="0" class="form-control" autocomplete="off"></td>*@
+                                            <td><input type="text" name="cost_price" required class="form-control" autocomplete="off"></td>
+                                            <td><input type="text" name="sale_price" required class="form-control" autocomplete="off"></td>
+                                            <td><input type="text" name="sale_price_euro" value="0" required class="form-control" autocomplete="off"></td>
+                                            <td><input type="text" name="least_price" value="0" class="form-control" autocomplete="off"></td>
+
+                                            <td>
+                                                <select class="form-control" required name="m_unit">
+                                                    <option value="">Select Unit</option>
+                                                    @foreach (var item in Model.MeasuringUnit)
+                                                    {
+                                                        <option value="@item.Name">@item.Name</option>
+                                                    }
+                                                </select>
+                                                @*<select class="form-control" required name="m_unit">
+                                                <option value="Ltr">Ltr</option>
+                                                <option value="No">No</option>
+                                                <option value="Kgs">Kgs</option>
+                                            </select>*@
+                                                @*<input type="text" name="m_unit" value="No" class="form-control" autocomplete="off">*@
+                                            </td>
+                                            <td><input type="text" name="pieces_boc" value="1" class="form-control" autocomplete="off"></td>
+                                            <td><input type="number" name="op_stock" value="0" class="form-control" autocomplete="off"></td>
+                                            <td><input type="text" name="re_level" value="0" class="form-control" autocomplete="off"></td>
+                                            <td style="width:180px !important"><input type="date" name="stock_date" id="datepicker" class="form-control" autocomplete="off"></td>
+                                            <td><input type="text" name="bar_code" value="0" onkeypress="return (event.charCode > 47 && event.charCode < 58)" class="form-control" autocomplete="off"></td>
+                                            <td><input type="text" name="wat" value="0" class="form-control" autocomplete="off"></td>
+                                            <td><input type="text" name="brand" value="0" class="form-control" autocomplete="off"></td>
+                                            <td><input type="number" name="shelf_number" value="0" class="form-control" autocomplete="off"></td>
+                                        </tr>
+
+                                    </table>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                                        @*<button class="btn btn-success" id="addRows" type="button">+ Add More</button>*@
+                                        <a class="btn btn-success" id="addRows">+ Add More</a>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12">
+                                    <button type="submit" class="btn btn-primary" style="margin-top:10px"><i class="fa fa-save"></i> Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

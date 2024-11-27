@@ -1,0 +1,112 @@
+﻿@model WebApplication1.ViewModels.PurInvoiceVM
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-print" aria-hidden="true"></i> Invoices</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b>Purchase Invoices List</b></h4>
+            @*<a href="@Url.Action("Create", "Purchase")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  Creat New Invoice</a>*@
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th>Inv Id</th>
+                                    <th>Supplier</th>
+                                    <th>Cargo Name</th>
+                                    <th>Date</th>
+                                    <th>Net Total</th>
+                                    <th>Discount</th>
+                                    <th>Grand Total</th>
+                                    <th>Batch no</th>
+                                    @*<td>Images</td>*@
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody class="abc">
+                                @foreach (var item in Model.list)
+                                {
+                                    <tr>
+
+                                        <td>@item.InvID</td>
+                                        <td>@item.SupplierName</td>
+                                        <td>@item.CargoName</td>
+                                        <td>@item.Date</td>
+                                        <td>@item.NetAmount</td>
+                                        <td>@item.DiscountAmount</td>
+                                        <td>@item.GrandTotal</td>
+                                        <td>@item.Rtotal</td>
+                                        @*<td>
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#@item.InvID">
+                                                Images
+                                            </button>
+                                        </td>*@
+                                        <td>
+                                            @*<a href="@Url.Action("PurReportView", new { ID= item.InvID } )" class="badge badge-xs x-warning b-rounded"><i class="fa fa-print"></i></a>*@
+                                            @*<a href="@Url.Action("Edit", new { ID= item.InvID } )" class="badge badge-xs x-primary b-rounded"><i class="fa fa-pencil"></i></a>*@
+                                            <a href="@Url.Action("PINVWOCTNReport","Purchase", new { ID= item.InvID } )" target="_blank" class="badge badge-xs x-warning b-rounded"><i class="fa fa-print"></i></a>
+
+                                        </td>
+                                    </tr>
+                                    <div class="modal fade" id="@item.InvID" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="margin-top:-200px">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Images</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body" style="height:300px">
+                                                    <div class="col-md-12">
+                                                        @foreach (var item1 in Model.img_list.Where(z => z.Tid == item.InvID))
+                                                        {
+                                                            <div class="col-md-4">
+                                                                <img src="~/Uploads/@item1.Images" width="120px" />
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                    <br />
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <button type="button" class="btn btn-primary">Save changes</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th style="width:60px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:80px"></th>
+                                    <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                    <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                    <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                    <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                    <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                    <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                    <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,39 @@
+﻿@model CRM.Models.AccountTitle
+@{
+    ViewBag.Title = "Create";
+}
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-dollar" aria-hidden="true"></i>Accounts </a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-sm-12 col-md-12">
+            <h4 class="section-subtitle"><b>Third Level Accounts Registrations</b></h4>
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            @using (Html.BeginForm("Edit", "ThirdLevelAccount", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                            {<div class="row">
+                                    <div class="form-group col-sm-5">
+                                        <label>Account Name</label>
+                                        @Html.TextBoxFor(m => m.AccountTitleName, new { @class = "form-control input-xs" })
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <button type="submit" class="btn btn-primary" style="margin-top:10px"><i class="fa fa-check"></i> Save</button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

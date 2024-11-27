@@ -1,0 +1,984 @@
+﻿@model WebApplication1.ViewModels.SaleInvVM
+@{
+    ViewBag.Title = "Index";
+    var costVisible = Session["SubBatchFillingCostvisible"]?.ToString();
+    var isHidden = costVisible == "0" ? "hidden" : "";
+}
+<style>
+    .chosen-container {
+        width: 100% !important;
+    }
+</style>
+<script>
+    function Action(code) {
+        //alert(code);
+        $.ajax({
+            /**/
+            url: '@Url.Action("Action", "Batch")',
+            /**/
+            type: "POST",
+            data: { "code": code },
+
+            "success": function (data) {
+                if (data != null) {
+                    var vdata = data;
+                    $("#rate1").val(vdata[0].UnitPrice);
+                }
+            }
+        });
+    }
+    function Action1(code) {
+        $.ajax({
+            /**/
+            url: '@Url.Action("Action", "Batch")',
+            /**/
+            type: "POST",
+            data: { "code": code },
+
+            "success": function (data) {
+                if (data != null) {
+                    var vdata = data;
+                    $("#rate2").val(vdata[0].UnitPrice);
+                    $("#id2").val(vdata[0].ProductID);
+                }
+            }
+        });
+    }
+    function Action2(code) {
+        //alert(code);
+        $.ajax({
+            /**/
+            url: '@Url.Action("Action1", "Batch")',
+            /**/
+            type: "POST",
+            data: { "code": code },
+
+            "success": function (data) {
+                if (data != null) {
+                    var vdata = data;
+           //         alert(vdata);
+                    $("#itmdisc").val(vdata[0].itmdisc);
+                }
+            }
+        });
+    }
+    function Action7(code) {
+        var item = document.getElementById("a").value;
+        $.ajax({
+            /**/
+            url: '@Url.Action("Action7", "BatchFilling")',
+            /**/
+            type: "POST",
+            data: { "code": code, "code1": item },
+            "success": function (data) {
+                if (data != null) {
+                    var vdata = data;
+                    $("#cost").val(vdata[0].cost);
+                }
+            }
+        });
+    }
+
+
+    function tota() {
+        var weight1 = document.getElementById("weight1").value;
+        var rate1 = document.getElementById("rate1").value;
+        var totl;
+        totl = weight1 * rate1;
+        document.getElementById("cost1").value = totl;
+
+        var table = document.getElementById("invoiceItem"), sumVal = 0;
+        for (var i = 1; i < table.rows.length; i++) {
+            sumVal = sumVal + parseInt(table.rows[i].cells[9].innerHTML);
+        }
+        document.getElementById("weight1tot").value = parseFloat(sumVal);
+       // alert(sumVal);
+        if (sumVal != 0) {
+           // alert("first");
+            var new_weight = (sumVal * weight1) / 100;
+            document.getElementById("per1").value = parseFloat(new_weight);
+        }
+        else {
+           // alert("second");
+            var new_weight = (weight1 * weight1) / 100;
+            document.getElementById("per1").value = parseFloat(new_weight);
+        }
+    }
+    function add() {
+        var selObj = document.getElementById("a");
+        var batch = selObj.options[selObj.selectedIndex].text;
+        var f_qty = document.getElementById("f_qty").value;
+        var w_qty = document.getElementById("w_qty").value;
+        var cost = document.getElementById("cost").value;
+
+        var htmlRows = '';
+        htmlRows += '<tr>';
+        htmlRows += '<td style="width:70px !important"><a class="badge badge-xs x-danger b-rounded" onclick="return deleteRow(this)" ><i class="fa fa-trash-o"></i></a></td>';
+        htmlRows += '<td><input type="text"  name="batch[]"  value="' + batch + '" required class="form-control" readonly autocomplete="off"></td>';
+        htmlRows += '<td><input type="text"  name="f_qty[]"  value="' + f_qty + '" readonly class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td><input type="text"  name="w_qty[]"  value="' + w_qty + ' "   readonly class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td><input type="text"  name="cost[]"  value="' + cost + '"  readonly class="form-control @isHidden" autocomplete="off"></td>';
+        htmlRows += '<td style="display:none">' + f_qty + '</td>';
+
+        $('#invoiceItem').append(htmlRows);
+        $('#f_qty').val('');
+        $('#w_qty').val('');
+        $('#cost').val('0');
+
+        var table = document.getElementById("invoiceItem"), sumVal = 0;
+        for (var i = 1; i < table.rows.length; i++) {
+            sumVal = sumVal + parseFloat(table.rows[i].cells[5].innerHTML);
+        }
+        document.getElementById("total_f_qty").value = sumVal;
+
+            //var tax_per = document.getElementById("tax_per").value;
+            //var tax_amount = (sumVal * tax_per) / 100;
+            //document.getElementById("net_final").value = parseFloat(sumVal);
+            //document.getElementById("tax").value = parseFloat(tax_amount);
+            //document.getElementById("inc_tax").value = parseFloat(sumVal) + parseFloat(tax_amount);
+    }
+    function tota1() {
+        //  alert("text");
+        var weight1 = document.getElementById("weight2").value;
+       /* var rate1 = document.getElementById("rate1").value;*/
+        var selObj = document.getElementById("rate1drop");
+        var rate1 = selObj.options[selObj.selectedIndex].value;
+        var totl;
+        totl = weight1 * rate1;
+        document.getElementById("cost2").value = totl;
+    }
+    function add1() {
+        var selObj1 = document.getElementById("item_name2");
+        var item_name2 = selObj1.options[selObj1.selectedIndex].text;
+        var selObj = document.getElementById("packing");
+        var packing = selObj.options[selObj.selectedIndex].text;
+        var weight2 = document.getElementById("weight2").value;
+        var rem1 = document.getElementById("rem1").value;
+        /*var rate1 = document.getElementById("rate1").value;*/
+        var selObj1 = document.getElementById("rate1drop");
+        var rate1 = selObj1.options[selObj1.selectedIndex].value;
+        var cost2 = document.getElementById("cost2").value;
+        if (rem1 == null || rem1 == '') {
+            rem1 = 0;
+            document.getElementById("rem1").value = 0;
+        }
+        if (parseFloat(weight2) > parseFloat(rem1)) {
+            alert("Stock is Not Available");
+        }
+        else {
+        var htmlRows = '';
+        htmlRows += '<tr>';
+        htmlRows += '<td style="width:70px !important"><a class="badge badge-xs x-danger b-rounded" onclick="return deleteRow1(this)" ><i class="fa fa-trash-o"></i></a></td>';
+        htmlRows += '<td><input type="text"  name="item_name2[]"  value="' + item_name2 + '" required class="form-control" readonly autocomplete="off"></td>';
+        htmlRows += '<td><input type="text"  name="packing[]"  value="' + packing + '" required class="form-control" readonly autocomplete="off"></td>';
+        htmlRows += '<td><input type="text"  name="weight2[]"  value="' + weight2 + '" required class="form-control" readonly autocomplete="off"></td>';
+        htmlRows += '<td><input type="text"  name="rate1[]"  value="' + rate1 + '" readonly class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td><input type="text"  name="cost2[]"  value="' + cost2 + ' "   readonly class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td style="display:none">' + cost2 + '</td>';
+        htmlRows += '<td style="display:none">' + packing + '</td>';
+        $('#invoiceItem1').append(htmlRows);
+        //$('#packing').val('');
+        $('#weight2').val('');
+        $('#rate1').val('0');
+        $('#cost2').val('0');
+        $('#rate1drop').val('');
+        $('#rem1').val('0');
+
+
+        var table = document.getElementById("invoiceItem1"), sumVal = 0;
+        for (var i = 1; i < table.rows.length; i++) {
+            sumVal = sumVal + parseFloat(table.rows[i].cells[6].innerHTML);
+        }
+        document.getElementById("total_filling_raw").value = sumVal;
+        document.getElementById("total_packing_cost").value = sumVal;
+
+        //var dubbi = 0;
+        //if (packing == 'Dubbi') {
+        //    dubbi = cost2;
+        //}
+        //alert(dubbi);
+        //var quarter = 0;
+        //if (packing == 'Quarter') {
+        //    quarter = cost2;
+        //}
+        //alert(quarter);
+
+        var table1 = document.getElementById("invoiceItem1"), sumVal0 = 0, sumVal2 = 0, sumVal3 = 0, sumVal4 = 0, sumVal5 = 0;
+        for (var i = 1; i < table.rows.length; i++) {
+            if (table1.rows[i].cells[7].innerHTML == 'Dubbi') {
+                sumVal0 = sumVal0 + parseFloat(table1.rows[i].cells[6].innerHTML);
+                document.getElementById("total_packing_dubbi").value = sumVal0;
+            }
+            if (table1.rows[i].cells[7].innerHTML == 'Quarter') {
+                sumVal2 = sumVal2 + parseFloat(table1.rows[i].cells[6].innerHTML);
+                document.getElementById("total_packing_quarter").value = sumVal2;
+            }
+            if (table1.rows[i].cells[7].innerHTML == 'Drum') {
+                sumVal3 = sumVal3 + parseFloat(table1.rows[i].cells[6].innerHTML);
+                document.getElementById("total_packing_drum").value = sumVal3;
+            }
+            if (table1.rows[i].cells[7].innerHTML == 'Gallon') {
+                sumVal4 = sumVal4 + parseFloat(table1.rows[i].cells[6].innerHTML);
+                document.getElementById("total_packing_gallon").value = sumVal4;
+            }
+        }
+    }
+        //var total_batch_cost_dabbi = document.getElementById("total_batch_cost_dabbi").value;
+        //var total_batch_cost_quarter = document.getElementById("total_batch_cost_quarter").value;
+        //var total_batch_cost_gallon = document.getElementById("total_batch_cost_gallon").value;
+        //var total_batch_cost_drum = document.getElementById("total_batch_cost_drum").value;
+
+
+
+        //var total_packing_dubbi = document.getElementById("total_packing_dubbi").value;
+        //var total_packing_quarter = document.getElementById("total_packing_dubbi").value;
+        //var total_packing_gallon = document.getElementById("total_packing_dubbi").value;
+        //var total_packing_drum = document.getElementById("total_packing_dubbi").value;
+
+        //alert(total_batch_cost_dabbi);
+        //alert(total_packing_dubbi);
+
+        //document.getElementById("total_batch_packing_dabbi").value = parseFloat(total_batch_cost_dabbi) + parseFloat(total_packing_dubbi);
+        //document.getElementById("total_batch_packing_quarter").value = parseFloat(total_batch_cost_quarter) + parseFloat(total_packing_quarter);
+        //document.getElementById("total_batch_packing_gallon").value = parseFloat(total_batch_cost_gallon) + parseFloat(total_packing_gallon);
+        //document.getElementById("total_batch_packing_drum").value = parseFloat(total_batch_cost_drum) + parseFloat(total_packing_drum);
+
+        //tota2();
+
+    }
+    function deleteRow(btn) {
+        if (confirm("Are you sure want to delete the row?"))
+            $(btn).closest("tr").remove();
+        var table = document.getElementById("invoiceItem1"), sumVal = 0;
+        for (var i = 1; i < table.rows.length; i++) {
+            sumVal = sumVal + parseFloat(table.rows[i].cells[6].innerHTML);
+        }
+        document.getElementById("total_filling_raw").value = sumVal;
+        document.getElementById("total_packing_cost").value = sumVal;
+
+        //for (var i = 1; i < table.rows.length; i++) {
+        //    sumVal = sumVal + parseInt(table.rows[i].cells[10].innerHTML);
+        //}
+
+        //document.getElementById("net_final").value = parseFloat(sumVal);
+        //document.getElementById("total").value = parseFloat(sumVal);
+        //document.getElementById("g_total").value = parseFloat(sumVal);
+        //$('#d_amount').val('0');
+        //$('#cgo_charges').val('0');
+        //qty123();
+    }
+    function deleteRow1(btn) {
+        if (confirm("Are you sure want to delete the row?"))
+            $(btn).closest("tr").remove();
+        var table = document.getElementById("invoiceItem1"), sumVal = 0;
+
+        //for (var i = 1; i < table.rows.length; i++) {
+        //    sumVal = sumVal + parseInt(table.rows[i].cells[10].innerHTML);
+        //}
+
+        //document.getElementById("net_final").value = parseFloat(sumVal);
+        //document.getElementById("total").value = parseFloat(sumVal);
+        //document.getElementById("g_total").value = parseFloat(sumVal);
+        //$('#d_amount').val('0');
+        //$('#cgo_charges').val('0');
+        //qty123();
+    }
+    function Action3(code) {
+      //  alert(code);
+        $.ajax({
+            type: "GET",
+            url: "/BatchFilling/GetCat?value=" + code,
+            data: "{}",
+            success: function (data) {
+              // alert(data);
+                var s = '<option value="0">Select Batch</option>';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].batch + '">' + data[i].batch + '</option>';
+                }
+                $('#a').html(s);
+                if (data != null) {
+                    var vdata = data;
+                   // alert(vdata);
+                    $("#Dubi").val(vdata[0].dubbi);
+                    $("#Quarter").val(vdata[0].quarter);
+                    $("#Gallon").val(vdata[0].Gallon);
+                    $("#Drum").val(vdata[0].Drum);
+                    $("#total_cost").val(vdata[0].cost);
+                    $("#cost").val(vdata[0].cost);
+                }
+            }
+        });
+    }
+    function Action4(code) {
+      //  alert(code);
+        $.ajax({
+            type: "GET",
+            url: "/Batch/GetProd?value=" + code,
+            data: "{}",
+            success: function (data) {
+             //   alert(data);
+                var s = '<option value="-1">Select Item</option>';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].ProductName + '">' + data[i].ProductName + '</option>';
+                }
+                $('#b').html(s);
+            }
+        });
+    }
+    function tota() {
+        //  alert("text");
+        var Dubi = document.getElementById("Dubi").value;
+        var Quarter = document.getElementById("Quarter").value;
+        var Gallon = document.getElementById("Gallon").value;
+        var Drum = document.getElementById("Drum").value;
+        var Dubi_nos = document.getElementById("Dubi_nos").value;
+        var Quarter_nos = document.getElementById("Quarter_nos").value;
+        var Gallon_nos = document.getElementById("Gallon_nos").value;
+        var Drum_nos = document.getElementById("Drum_nos").value;
+        document.getElementById("Dubi_tot").value = Dubi * Dubi_nos;
+        document.getElementById("Quarter_tot").value = Quarter * Quarter_nos ;
+        document.getElementById("Gallon_tot").value = Gallon * Gallon_nos ;
+        document.getElementById("Drum_tot").value = Drum * Drum_nos;
+
+        tota2();
+
+    }
+    function tota2() {
+        //  alert("text");
+        var Dubi_fill = document.getElementById("Dubi_fill").value;
+        var Quarter_fill = document.getElementById("Quarter_fill").value;
+        var Gallon_fill = document.getElementById("Gallon_fill").value;
+        var Drum_fill = document.getElementById("Drum_fill").value;
+        var Dubi_nos = document.getElementById("Dubi_nos").value;
+        var Quarter_nos = document.getElementById("Quarter_nos").value;
+        var Gallon_nos = document.getElementById("Gallon_nos").value;
+        var Drum_nos = document.getElementById("Drum_nos").value;
+
+
+
+        document.getElementById("Dubi_we").value = Dubi_fill * Dubi_nos;
+        document.getElementById("Quarter_we").value = Quarter_fill * Quarter_nos;
+        document.getElementById("Gallon_we").value = Gallon_fill * Gallon_nos;
+        document.getElementById("Drum_we").value = Drum_fill * Drum_nos;
+
+        var Dubi_tot = document.getElementById("Dubi_tot").value;
+        var Quarter_tot = document.getElementById("Quarter_tot").value;
+        var Gallon_tot = document.getElementById("Gallon_tot").value;
+        var Drum_tot = document.getElementById("Drum_tot").value;
+        var Dubi_we = document.getElementById("Dubi_we").value;
+        var Quarter_we = document.getElementById("Quarter_we").value;
+        var Gallon_we = document.getElementById("Gallon_we").value;
+        var Drum_we = document.getElementById("Drum_we").value;
+
+
+
+        document.getElementById("Dubi_diff").value = Dubi_tot - Dubi_we;
+        document.getElementById("Quarter_diff").value = Quarter_tot - Quarter_we;
+        document.getElementById("Gallon_diff").value = Gallon_tot - Gallon_we;
+        document.getElementById("Drum_diff").value = Drum_tot - Drum_we;
+
+
+
+        var total_bat_cost = document.getElementById("total_cost").value;
+
+        document.getElementById("total_batch_cost_dabbi").value = Dubi_we * total_bat_cost;
+        document.getElementById("total_batch_cost_quarter").value = Quarter_we * total_bat_cost;
+        document.getElementById("total_batch_cost_gallon").value = Gallon_we * total_bat_cost;
+        document.getElementById("total_batch_cost_drum").value = Drum_we * total_bat_cost;
+
+        var total_batch_cost_dabbi = document.getElementById("total_batch_cost_dabbi").value;
+        var total_batch_cost_quarter = document.getElementById("total_batch_cost_quarter").value;
+        var total_batch_cost_gallon = document.getElementById("total_batch_cost_gallon").value;
+        var total_batch_cost_drum = document.getElementById("total_batch_cost_drum").value;
+
+
+
+        var total_packing_dubbi = document.getElementById("total_packing_dubbi").value;
+        var total_packing_quarter = document.getElementById("total_packing_quarter").value;
+        var total_packing_gallon = document.getElementById("total_packing_gallon").value;
+        var total_packing_drum = document.getElementById("total_packing_drum").value;
+
+
+        document.getElementById("total_batch_packing_dabbi").value = parseFloat(total_batch_cost_dabbi) + parseFloat(total_packing_dubbi);
+        document.getElementById("total_batch_packing_quarter").value = parseFloat(total_batch_cost_quarter) + parseFloat(total_packing_quarter);
+        document.getElementById("total_batch_packing_gallon").value = parseFloat(total_batch_cost_gallon) + parseFloat(total_packing_gallon);
+        document.getElementById("total_batch_packing_drum").value = parseFloat(total_batch_cost_drum) + parseFloat(total_packing_drum);
+
+
+        var total_batch_packing_dabbi = document.getElementById("total_batch_packing_dabbi").value;
+        var total_batch_packing_quarter =  document.getElementById("total_batch_packing_quarter").value;
+        var total_batch_packing_gallon =  document.getElementById("total_batch_packing_gallon").value;
+        var total_batch_packing_drum = document.getElementById("total_batch_packing_drum").value;
+
+        var sample_dubbi = document.getElementById("sample_dubbi").value;
+        var sample_quarter = document.getElementById("sample_quarter").value;
+        var sample_gallon = document.getElementById("sample_gallon").value;
+        var sample_drum = document.getElementById("sample_drum").value;
+
+        document.getElementById("per_unit_dubbi").value = parseFloat(total_batch_packing_dabbi) / parseFloat(Dubi_nos);
+        document.getElementById("per_unit_quarter").value = parseFloat(total_batch_packing_quarter) / parseFloat(Quarter_nos);
+        document.getElementById("per_unit_gallon").value = parseFloat(total_batch_packing_gallon) / parseFloat(Gallon_nos);
+        document.getElementById("per_unit_drum").value = parseFloat(total_batch_packing_drum) / parseFloat(Drum_nos);
+
+
+        document.getElementById("total_filling_weight").value = parseFloat(sample_dubbi) + parseFloat(sample_quarter) + parseFloat(sample_gallon) + parseFloat(sample_drum) +parseFloat(Dubi_we) + parseFloat(Gallon_we) + parseFloat(Drum_we) + parseFloat(Quarter_we);
+
+
+        document.getElementById("total_batch_cost").value = parseFloat(total_batch_cost_dabbi) + parseFloat(total_batch_cost_quarter) + parseFloat(total_batch_cost_gallon) + parseFloat(total_batch_cost_drum);
+
+
+        document.getElementById("total_final_cost").value = parseFloat(total_batch_packing_dabbi) + parseFloat(total_batch_packing_quarter) + parseFloat(total_batch_packing_gallon) + parseFloat(total_batch_packing_drum);
+
+        var total_filling_weight = document.getElementById("total_filling_weight").value;
+        var total_f_qty = document.getElementById("total_f_qty").value;
+        document.getElementById("yeild").value = parseFloat(total_filling_weight) / parseFloat(total_f_qty) *100;
+    }
+
+    function tota3() {
+        //  alert("text");
+        var sample_dubbi = document.getElementById("sample_dubbi").value;
+        var sample_quarter = document.getElementById("sample_quarter").value;
+        var sample_gallon = document.getElementById("sample_gallon").value;
+        var sample_drum = document.getElementById("sample_drum").value;
+        var Dubi_we = document.getElementById("Dubi_we").value;
+        var Quarter_we = document.getElementById("Quarter_we").value;
+        var Gallon_we = document.getElementById("Gallon_we").value;
+        var Drum_we = document.getElementById("Drum_we").value;
+        document.getElementById("total_filling_weight").value = parseFloat(sample_dubbi) + parseFloat(sample_quarter) + parseFloat(sample_gallon) + parseFloat(sample_drum) + parseFloat(Dubi_we) + parseFloat(Gallon_we) + parseFloat(Drum_we) + parseFloat(Quarter_we);
+
+    }
+    function Action5(code) {
+        $('#pid').val(code);
+        $.ajax({
+            type: "GET",
+            url: "/Batch/GetstockValue?value=" + code,
+            data: "{}",
+            success: function (data) {
+               //alert(data);
+                var s = '<option value="-1">Select Rate</option>';
+
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].cp + '">' + data[i].cp + '</option>';
+                }
+                $('#rate1drop').html(s);
+            }
+        });
+    }
+    function Action6(code) {
+          var selObj = document.getElementById("item_name2");
+          var rate = selObj.options[selObj.selectedIndex].value;
+        $.ajax({
+            /**/
+            url: '@Url.Action("GetRemqty", "Batch")',
+    /**/
+    type: "POST",
+            data: { "code": code, "rate": rate },
+
+    "success": function (data) {
+        if (data != null) {
+            var vdata = data;
+            //alert(vdata);
+            $("#rem1").val(vdata[0].op + vdata[0].qty - vdata[0].qty1 - vdata[0].qtylab - vdata[0].qtybatchfilling - vdata[0].qtyreturn);
+        }
+    }
+});
+    }
+
+    function Action66(code) {
+        var selObj = document.getElementById("item_name2");
+        var itemId = selObj.options[selObj.selectedIndex].value;
+        selObj = document.getElementById("packing");
+        var itemPacking = selObj.options[selObj.selectedIndex].value;
+
+          $.ajax({
+
+            url: '@Url.Action("GetRemqtyTotal", "BatchFilling")',
+            type: "POST",
+            data: { "itemId": itemId, "itemPacking": itemPacking},
+
+            "success": function (data) {
+                if (data != null) {
+                    var vdata = data;
+
+                    $("#rem1").val(vdata[0].qty);
+                    }
+                }
+            });
+    }
+
+</script>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Filling Department</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b>  Batch Filling </b></h4>
+            <a href="@Url.Action("Index", "BatchFilling")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  Batch Filling  List</a>
+            <div class="panel">
+                <form asp-action="Create" method="post" enctype="multipart/form-data" onsubmit="return confirm('Are you sure you want to Continue ?');">
+                    <div class="panel-content">
+                        <div class="row">
+                            <div class="form-group col-sm-1">
+                                <label>Order Id</label>
+                                @Html.TextBoxFor(m => m.batchFillingMasterQUery.Id, new { @class = "form-control input-xs", @readonly = "readonly" })
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label>Filling Date</label>
+                                @Html.TextBoxFor(m => m.batchFillingMasterQUery.Fillingdate, new { @class = "form-control input-xs", @type = "date", @Value = DateTime.Now.ToString("yyyy-MM-dd"), @readonly = "readonly" })
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label>Select Color Name</label>
+                                @Html.DropDownListFor(m => m.batchFillingMasterQUery.ColorName, new SelectList(Model.color, "ProductName", "ProductName"), "Select Color", htmlAttributes: new { @class = "chosen-select form-control", @required = "true", @onChange = "Action3(this.value)" })
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label>Select Region</label>
+                                @Html.DropDownListFor(m => m.batchFillingMasterQUery.RegionId, new SelectList(Model.Region_list, "Id", "Name"), "Select Region", htmlAttributes: new { @class = "chosen-select form-control", @required = "true" })
+                            </div>
+                            <div class="col-sm-12 col-md-12">
+                                <div class="tabs mt-none">
+                                    <!-- Tabs Header -->
+                                    <ul class="nav nav-tabs nav-justified">
+                                        <li class="active"><a href="#home" data-toggle="tab">General Info</a></li>
+                                        <li><a href="#profile" data-toggle="tab">Filling Raw Material</a></li>
+                                        <li><a href="#st" data-toggle="tab">Material Costing</a></li>
+                                    </ul>
+                                    <!-- Tabs Content -->
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade in active " id="home">
+                                            <div clas="row" style="margin-top:10px;">
+                                                <div clas="col-md-12">
+                                                    <div class="form-group col-sm-3">
+                                                        <label>Batch No</label>
+                                                        <select id="a" class="form-control" name="batchno" onChange="Action7(this.value)"></select>
+                                                    </div>
+                                                    <div class="form-group col-sm-2" style="margin-left:-20px;width:150px">
+                                                        <label>Filling Qty</label>
+                                                        <input type="text" id="f_qty" onKeyUp="tota();" class="form-control" />
+                                                    </div>
+                                                    <div class="form-group col-sm-2" style="margin-left:-20px;width:150px">
+                                                        <label>Waste Qty</label>
+                                                        <input type="text" id="w_qty" onKeyUp="tota();" class="form-control" />
+                                                    </div>
+                                                    <div class="form-group col-sm-2 @isHidden" style="margin-left:-20px;width:150px">
+                                                        <label>Cost</label>
+                                                        <input type="text" id="cost" class="form-control" readonly />
+                                                    </div>
+                                                    <div class="form-group col-sm-1" style="margin-top:10px">
+                                                        <br />
+                                                        <br />
+                                                        <a class="btn btn-wide btn-warning pull-left" onclick='return add()' style="margin-right:-130px;width:25px !important;margin-top:-32px"> <i class="fa fa-plus"></i> Add</a> &nbsp;&nbsp;
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-12" style="margin-top:-15px">
+                                                    <div class="table-responsive">
+                                                        <table id="invoiceItem" class="table table-bordered table-hover table-striped table-success">
+                                                            <thead class="bordered-darkorange">
+                                                                <tr style="background-color:#189279;color:white">
+                                                                    <th>Action</th>
+                                                                    <th>Batch no</th>
+                                                                    <th>Filling Qty</th>
+                                                                    <th>Waste Qty</th>
+                                                                    <th class="@isHidden">Cost</th>
+                                                                </tr>
+                                                            </thead>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="profile">
+                                            <div clas="row" style="margin-top:10px;">
+                                                <div clas="col-md-12">
+                                                    <div class="form-group col-sm-3">
+                                                        <label>Select Product</label>
+                                                        <input type="text" id="pid">
+                                                        @*@Html.DropDownListFor(m => m.productIngrMasterQuery.ColorName, new SelectList(Model.color1, "ProductID", "ProductName"), "Select Product", htmlAttributes: new { @class = "chosen-select form-control", onChange = "Action(this.value)", @style = "margin-left:-20px", id = "item_name2" })*@
+                                                        @Html.DropDownListFor(m => m.productIngrMasterQuery.ColorName, new SelectList(Model.color1, "ProductID", "ProductName"), "Select Product", htmlAttributes: new { @class = "chosen-select form-control", onChange = "Action5(this.value)", @style = "margin-left:-20px", id = "item_name2" })
+                                                    </div>
+                                                    <div class="form-group col-sm-2" style="margin-left:-20px;width:150px">
+                                                        <label>Packing</label>
+                                                        <select id="packing" class="form-control">
+                                                            <option>-Select Packing-</option>
+                                                            <option value="Dubbi">Dubbi</option>
+                                                            <option value="Quarter">Quarter</option>
+                                                            <option value="Drum">Drum</option>
+                                                            <option value="Gallon">Gallon</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group col-sm-2" style="margin-left:-20px;width:150px">
+                                                        <label>Select Rate</label>
+                                                        <select id="rate1drop" class="form-control" onChange="Action66(this.value)"></select>
+                                                    </div>
+                                                    <div class="form-group col-sm-2" style="margin-left:-20px;width:150px">
+                                                        <label>Rem-Weight</label>
+                                                        <input type="text" id="rem1" readonly class="form-control" />
+                                                    </div>
+                                                    <div class="form-group col-sm-2" style="margin-left:-20px;width:150px">
+                                                        <label>Qty</label>
+                                                        <input type="text" id="weight2" onKeyUp="tota1(); " class="form-control" />
+                                                    </div>
+                                                    @*<div class="form-group col-sm-2" style="margin-left:-20px;width:150px">
+                                                            <label>Rate</label>
+                                                            <input type="text" id="rate1" onKeyUp="tota1(); " class="form-control" />
+                                                        </div>*@
+                                                    <div class="form-group col-sm-2" style="margin-left:-20px;width:150px">
+                                                        <label>Total</label>
+                                                        <input type="text" id="cost2" readonly class="form-control" />
+                                                    </div>
+                                                    <div class="form-group col-sm-1" style="margin-top:10px">
+                                                        <br />
+                                                        <br />
+                                                        <a class="btn btn-wide btn-warning pull-left" onclick='return add1()' style="margin-right:-130px;width:25px !important;margin-top:-32px"> <i class="fa fa-plus"></i> Add</a> &nbsp;&nbsp;
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-12" style="margin-top:-15px">
+                                                    <div class="table-responsive">
+                                                        <table id="invoiceItem1" class="table table-bordered table-hover table-striped table-success">
+                                                            <thead class="bordered-darkorange">
+                                                                <tr style="background-color:#189279;color:white">
+                                                                    <th>Action</th>
+                                                                    <th>Product</th>
+                                                                    <th>Packing</th>
+                                                                    <th>Qty</th>
+                                                                    <th>Rate</th>
+                                                                    <th>Total</th>
+                                                                </tr>
+                                                            </thead>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-sm-4 pull-right">
+                                                <label>Total</label>
+                                                <input type="text" id="total_filling_raw" readonly class="form-control" />
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="st">
+                                            <div class="row">
+                                                <div class="col-md-1" style="width: 70px !important; margin-top: 45px">
+                                                    <label style="margin-top:35px">Dubi</label>
+                                                    <label style="margin-top:20px">Quarter</label>
+                                                    <label style="margin-top:20px">Gallon</label>
+                                                    <label style="margin-top:20px">Drum</label>
+                                                </div>
+                                                <div class="col-md-1" style="margin-left: -10px; width: 90px !important; margin-top: 45px">
+                                                    <center>
+                                                        <p style="font-size:11px"><b>Capacity</b></p>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorID, new { @class = "form-control input-xs", style = "background-color:#8BE78B;color:black", @readonly = "readonly", @id = "Dubi", value = "0" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorID, new { @class = "form-control input-xs", style = "background-color:#8BE78B;color:black", @readonly = "readonly", @id = "Quarter", value = "0" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorID, new { @class = "form-control input-xs", style = "background-color:#8BE78B;color:black", @readonly = "readonly", @id = "Gallon", value = "0" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorID, new { @class = "form-control input-xs", style = "background-color:#8BE78B;color:black", @readonly = "readonly", @id = "Drum", value = "0" })
+                                                        </div>
+                                                    </center>
+                                                </div>
+                                                <div class="col-md-1" style="margin-left: -10px; width: 90px !important; margin-top: 45px ">
+                                                    <center>
+                                                        <p style="font-size:11px"><b>Nos</b></p>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.FilledDubbiQTY, new { @class = "form-control input-xs", @id = "Dubi_nos", @onKeyUp = "tota();", value = "0" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.FilledQuarterQTY, new { @class = "form-control input-xs", @id = "Quarter_nos", @onKeyUp = "tota();", value = "0" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.FilledGallonQTY, new { @class = "form-control input-xs", @id = "Gallon_nos", @onKeyUp = "tota();", value = "0" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.FilledDrumQTY, new { @class = "form-control input-xs", @id = "Drum_nos", @onKeyUp = "tota();", value = "0" })
+                                                        </div>
+                                                    </center>
+                                                </div>
+                                                <div class="col-md-1" style="margin-left: -10px; width: 90px !important">
+                                                    <center>
+                                                        <p style="font-size:11px"><b>Total Projected Capacity</b></p>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorID, new { @class = "form-control input-xs", style = "background-color:#8BE78B;color:black", @readonly = "readonly", @id = "Dubi_tot", value = "0" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorID, new { @class = "form-control input-xs", style = "background-color:#8BE78B;color:black", @readonly = "readonly", @id = "Quarter_tot", value = "0" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorID, new { @class = "form-control input-xs", style = "background-color:#8BE78B;color:black", @readonly = "readonly", @id = "Gallon_tot", value = "0" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorID, new { @class = "form-control input-xs", style = "background-color:#8BE78B;color:black", @readonly = "readonly", @id = "Drum_tot", value = "0" })
+                                                        </div>
+                                                    </center>
+                                                </div>
+                                                <div class="col-md-1" style="margin-left: -10px; width: 90px !important">
+                                                    <center>
+                                                        <p style="font-size:10px"><b>Actual Filled per/PC Capacity</b></p>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.FilledDubbiWeight, new { @class = "form-control input-xs", @id = "Dubi_fill", @onKeyUp = "tota2();", value = "0" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.FilledQuarterWeight, new { @class = "form-control input-xs", @id = "Quarter_fill", @onKeyUp = "tota2();", value = "0" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.FilledGallonWeight, new { @class = "form-control input-xs", @id = "Gallon_fill", @onKeyUp = "tota2();", value = "0" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.FilledDrumWeight, new { @class = "form-control input-xs", @id = "Drum_fill", @onKeyUp = "tota2();", value = "0" })
+                                                        </div>
+                                                    </center>
+                                                </div>
+                                                <div class="col-md-1" style="margin-left: -10px; width: 90px !important">
+                                                    <center>
+                                                        <p style="font-size:10px"><b>Total Actual Filled (Weight)</b></p>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorName, new { @class = "form-control input-xs", style = "background-color:#F7F7A2;color:black", @readonly = "readonly", @id = "Dubi_we", value = "0" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorName, new { @class = "form-control input-xs", style = "background-color:#F7F7A2;color:black", @readonly = "readonly", @id = "Quarter_we", value = "0" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorName, new { @class = "form-control input-xs", style = "background-color:#F7F7A2;color:black", @readonly = "readonly", @id = "Gallon_we", value = "0" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorName, new { @class = "form-control input-xs", style = "background-color:#F7F7A2;color:black", @readonly = "readonly", @id = "Drum_we", value = "0" })
+                                                        </div>
+                                                    </center>
+                                                </div>
+                                                <div class="col-md-1" style="margin-left: -10px; width: 90px !important;margin-top:45px">
+                                                    <center>
+                                                        <p style="font-size:11px"><b>Difference</b></p>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorName, new { @class = "form-control input-xs", @readonly = "readonly", @id = "Dubi_diff", value = "0" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorName, new { @class = "form-control input-xs", @readonly = "readonly", @id = "Quarter_diff", value = "0" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorName, new { @class = "form-control input-xs", @readonly = "readonly", @id = "Gallon_diff", value = "0" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorName, new { @class = "form-control input-xs", @readonly = "readonly", @id = "Drum_diff", value = "0" })
+                                                        </div>
+                                                    </center>
+                                                </div>
+                                                <div class="col-md-1" style="margin-left: -10px; width: 90px !important">
+                                                    <center>
+                                                        <p style="font-size:11px"><b>Total Packing Cost</b></p>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorName, new { @class = "form-control input-xs", @readonly = "readonly", id = "total_packing_dubbi", value = "0" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorName, new { @class = "form-control input-xs", @readonly = "readonly", id = "total_packing_quarter", value = "0" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorName, new { @class = "form-control input-xs", @readonly = "readonly", id = "total_packing_gallon", value = "0" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorName, new { @class = "form-control input-xs", @readonly = "readonly", id = "total_packing_drum", value = "0" })
+                                                        </div>
+                                                    </center>
+                                                </div>
+                                                <div class="col-md-1 @isHidden" style="margin-left: -10px; width: 90px !important;margin-top:22px">
+                                                    <center>
+                                                        <p style="font-size:11px"><b>Total Batch Cost</b></p>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorName, new { @class = "form-control input-xs", @readonly = "readonly", value = "0", id = "total_batch_cost_dabbi" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorName, new { @class = "form-control input-xs", @readonly = "readonly", value = "0", id = "total_batch_cost_quarter" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorName, new { @class = "form-control input-xs", @readonly = "readonly", value = "0", id = "total_batch_cost_gallon" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorName, new { @class = "form-control input-xs", @readonly = "readonly", value = "0", id = "total_batch_cost_drum" })
+                                                        </div>
+                                                    </center>
+                                                </div>
+                                                <div class="col-md-1 @isHidden" style="margin-left: -10px; width: 90px !important">
+                                                    <center>
+                                                        <p style="font-size:10px"><b>Total Batch and packing Cost</b></p>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorName, new { @class = "form-control input-xs", style = "background-color:#F7F7A2;color:black", @readonly = "readonly", value = "0", id = "total_batch_packing_dabbi" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorName, new { @class = "form-control input-xs", style = "background-color:#F7F7A2;color:black", @readonly = "readonly", value = "0", id = "total_batch_packing_quarter" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorName, new { @class = "form-control input-xs", style = "background-color:#F7F7A2;color:black", @readonly = "readonly", value = "0", id = "total_batch_packing_gallon" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorName, new { @class = "form-control input-xs", style = "background-color:#F7F7A2;color:black", @readonly = "readonly", value = "0", id = "total_batch_packing_drum" })
+                                                        </div>
+                                                    </center>
+                                                </div>
+                                                <div class="col-md-1 @isHidden" style="margin-left: -10px; width: 90px !important;margin-top:23px">
+                                                    <center>
+                                                        <p style="font-size:11px"><b>Per Unit Cost</b></p>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorName, new { @class = "form-control input-xs", @readonly = "readonly", value = "0", id = "per_unit_dubbi" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorName, new { @class = "form-control input-xs", @readonly = "readonly", value = "0", id = "per_unit_quarter" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorName, new { @class = "form-control input-xs", @readonly = "readonly", value = "0", id = "per_unit_gallon" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.ColorName, new { @class = "form-control input-xs", @readonly = "readonly", value = "0", id = "per_unit_drum" })
+                                                        </div>
+                                                    </center>
+                                                </div>
+                                                <div class="col-md-1" style="margin-left:-10px;width:140px !important;margin-top:12px">
+                                                    <p style="font-size:11px;margin-left:50px"><b>Sample</b></p>
+                                                    <center>
+                                                        <p style="font-size:11px"><b>Qty</b></p>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.SampleDubbiQTY, new { @class = "form-control input-xs", style = "background-color:#00CCFE;color:black", value = "0" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.SampleQuarterQTY, new { @class = "form-control input-xs", style = "background-color:#00CCFE;color:black", value = "0" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.SampleGallonQTY, new { @class = "form-control input-xs", style = "background-color:#00CCFE;color:black", value = "0" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.SampleDrumQTY, new { @class = "form-control input-xs", style = "background-color:#00CCFE;color:black", value = "0" })
+                                                        </div>
+                                                    </center>
+                                                    <center style="margin-top:-197px;margin-left:100px">
+                                                        <p style="font-size:11px"><b>Weight</b></p>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.SampleDubbiWeight, new { @class = "form-control input-xs", style = "background-color:#00CCFE;color:black", value = "0", id = "sample_dubbi", @onKeyUp = "tota3();" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.SampleQuarterWeight, new { @class = "form-control input-xs", style = "background-color:#00CCFE;color:black", value = "0", id = "sample_quarter", @onKeyUp = "tota3();" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.SampleGallonWeight, new { @class = "form-control input-xs", style = "background-color:#00CCFE;color:black", value = "0", id = "sample_gallon", @onKeyUp = "tota3();" })
+                                                        </div>
+                                                        <div class="form-group" style="margin-left:-10px;width:70px !important">
+                                                            @Html.TextBoxFor(m => m.batchFillingMasterQUery.SampleDrumWeight, new { @class = "form-control input-xs", style = "background-color:#00CCFE;color:black", value = "0", id = "sample_drum", @onKeyUp = "tota3();" })
+                                                        </div>
+                                                    </center>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                </br>
+                                                <div class="form-group col-sm-3">
+                                                    <label>Total Filling Weight</label>
+                                                    @Html.TextBoxFor(m => m.batchFillingMasterQUery.totalfillweight, new { @class = "form-control input-xs", id = "total_filling_weight" })
+                                                </div>
+                                                <div class="form-group col-sm-3">
+                                                    <label>Yield</label>
+                                                    <input type="hidden" id="total_f_qty" class="form-control" />
+                                                    @Html.TextBoxFor(m => m.batchFillingMasterQUery.yeild, new { @class = "form-control input-xs", id = "yeild" })
+                                                </div>
+                                                <div class="form-group col-sm-3 @isHidden">
+                                                    <label>Batches Per KG Cost</label>
+                                                    @Html.TextBoxFor(m => m.batchFillingMasterQUery.batchespercost, new { @class = "form-control input-xs", id = "total_cost" })
+                                                </div>
+                                                <div class="form-group col-sm-3">
+                                                    <label>Total Paking Cost</label>
+                                                    @Html.TextBoxFor(m => m.batchFillingMasterQUery.packingcost, new { @class = "form-control input-xs", id = "total_packing_cost" })
+                                                </div>
+                                                <div class="form-group col-sm-3 @isHidden">
+                                                    <label>Total Batch Cost</label>
+                                                    @Html.TextBoxFor(m => m.batchFillingMasterQUery.batchcost, new { @class = "form-control input-xs", id = "total_batch_cost" })
+                                                </div>
+                                                <div class="form-group col-sm-3 @isHidden">
+                                                    <label>Total Cost</label>
+                                                    @Html.TextBoxFor(m => m.batchFillingMasterQUery.totalcost, new { @class = "form-control input-xs", id = "total_final_cost" })
+                                                </div>
+                                                <div class="form-group col-sm-3">
+                                                    <label>Supervised By</label>
+                                                    @Html.TextBoxFor(m => m.batchFillingMasterQUery.supervisedby, new { @class = "form-control input-xs" })
+                                                </div>
+                                                <div class="form-group col-sm-3">
+                                                    <label>Filling 1 By</label>
+                                                    @Html.TextBoxFor(m => m.batchFillingMasterQUery.filledby, new { @class = "form-control input-xs" })
+                                                </div>
+                                                <div class="form-group col-sm-3">
+                                                    <label>Filling 2 By</label>
+                                                    @Html.TextBoxFor(m => m.batchFillingMasterQUery.filledby1, new { @class = "form-control input-xs" })
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-12">
+                                        @if (Session["SubBatchFillingAdd"].ToString() != "0")
+                                        {
+                                            <button type="submit" class="btn btn-primary col-sm-4 col-sm-offset-4" style="margin-top:10px"><i class="fa fa-save"></i> &nbsp; Save Data</button>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="lg-modal" aria-labelledby="modal-large-label" style="margin-top:-180px">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header state modal-primary" style="background-color: #3498DB !important">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="modal-large-label">Product Details</h4>
+            </div>
+            <div class="modal-body">
+                <div style="width: 100%; height:480px;overflow-y: scroll;">
+                    <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                        <thead class="bordered-darkorange">
+                            <tr>
+                                <th>ID</th>
+                                <th>Product Name</th>
+                                <th>Unit Price</th>
+                                <th>Action</th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody class="abc" id="myTable">
+                            @foreach (var item in Model.color)
+                            {
+                                <tr>
+                                    <td>@item.ProductID</td>
+                                    <td>@item.ProductName</td>
+                                    <td>@item.UnitPrice</td>
+                                    <td><button class="btnSelect btn btn-danger" data-dismiss="modal"><i class="fa fa-check"></i></button></td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th style="width:60px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:70px"></th>
+                                <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,73 @@
+﻿@model IEnumerable<WebApplication1.QueryViewModel.Salequery>
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-print" aria-hidden="true"></i>Sale Invoices</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b>Quotations List</b></h4>
+            <a href="@Url.Action("Create", "Quotations")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  Creat New Invoice</a>
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th>Inv Id</th>
+                                    <th>Customer</th>
+                                    <th>Date</th>
+                                    <th>Net Total</th>
+                                    <th>Discount</th>
+                                    <th>Grand Total</th>
+                                    <th>Received</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody class="abc">
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+
+                                        <td>@item.InvID</td>
+                                        <td>@item.CustomerName</td>
+                                        <td>@item.Date</td>
+                                        <td>@item.NetAmount</td>
+                                        <td>@item.DiscountAmount</td>
+                                        <td>@item.GrandTotal</td>
+                                        <td>@item.Rtotal</td>
+
+                                        <td>
+                                            <a href="@Url.Action("Edit", new { ID= item.InvID } )" class="badge badge-xs x-primary b-rounded"><i class="fa fa-pencil"></i></a>
+                                            <a href="@Url.Action("SINVWCTNReport", new { ID= item.InvID } )" target="_blank" class="badge badge-xs x-warning b-rounded"><i class="fa fa-print"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th style="width:60px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:80px"></th>
+                                    <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                    <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                    <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                    <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                    <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                    <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

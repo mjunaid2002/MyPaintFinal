@@ -1,0 +1,117 @@
+﻿@model IEnumerable<WebApplication1.QueryViewModel.RawMaterialReportQuery>
+@{
+    ViewBag.Title = "Index";
+}
+<script>
+    $('#searchable').DataTable({
+        buttons: [
+            'copy', 'excel', 'pdf'
+        ]
+    });
+</script>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Raw Material Report</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b> Raw Material Report</b></h4>
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+
+
+                                    <th>Category</th>
+                                    <th>Item</th>
+                                    <th>Open QTY</th>
+                                    <th>Purch QTY</th>
+                                    <th>Lab QTY</th>
+                                    <th>Stock Return</th>
+                                    <th>Purchase Return</th>
+                                    <th>Batch QTY</th>
+                                    <th>Lab QTY</th>
+                                    <th>Sold</th>
+                                    <th>Filling</th>
+                                    <th>DMG/Waste</th>
+                                    <th>Bal QTY</th>
+                                    <th>Cost</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+
+                            <tbody class="abc">
+                                @foreach (var item in Model)
+                                {
+                                <tr>
+                                    <td>@item.CategoryName</td>
+                                    <td>@item.pname</td>
+                                    <td style="background-color:palegreen">@item.vattax</td>
+                                    <td style="background-color:palegreen">@item.QTYin</td>
+                                    <td style="background-color:palegreen">@item.QTYLabin</td>
+                                    <td style="background-color:palegreen">@item.QTYrtnIn</td>
+                                    <td style="background-color:peachpuff">@item.qtyoutprd</td>
+                                    <td style="background-color:peachpuff">@item.qtyout</td>
+                                    <td style="background-color:peachpuff">@item.qtyoutlab</td>
+                                    <td style="background-color:peachpuff">@item.QTYSaleOut</td>
+                                    <td style="background-color:peachpuff">@item.batch_filling</td>
+
+                                    <td style="background-color:peachpuff">@item.qtyoutwast</td>
+                                    <td>@item.Qtybal</td>
+                                    <td>@item.cost</td>
+                                    <td>@item.ext1</td>
+                                </tr>
+                                }
+                            <tr>
+                                <th ></th>
+                                <th >Grand Total</th>
+                                <th>@Model.Sum(x => x.vattax)</th>
+                                <th>@Model.Sum(x => x.QTYin)</th>
+
+                                <th>@Model.Sum(x => x.QTYLabin)</th>
+                                <th>@Model.Sum(x => x.QTYrtnIn)</th>
+                                <th>@Model.Sum(x => x.qtyoutprd)</th>
+                                <th>@Model.Sum(x => x.qtyout)</th>
+
+                                <th>@Model.Sum(x => x.qtyoutlab)</th>
+                                <th>@Model.Sum(x => x.QTYSaleOut)</th>
+                                <th>@Model.Sum(x => x.batch_filling)</th>
+                                <th>@Model.Sum(x => x.qtyoutwast)</th>
+                                <th>@Model.Sum(x => x.Qtybal)</th>
+                                <th>@Model.Sum(x => x.cost)</th>
+                                <th>@Model.Sum(x => x.ext1)</th>
+                            </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

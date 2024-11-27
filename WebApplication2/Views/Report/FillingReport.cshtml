@@ -1,0 +1,53 @@
+﻿
+@model WebApplication1.ViewModels.SaleInvVM
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Reports</a></li>
+            </ul>
+        </div>
+    </div>
+    <h4 class="section-subtitle"><b>Filling Report </b></h4>
+    @using (Html.BeginForm("FillingReportSearch", "Report", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="panel">
+            <div class="panel-content">
+                <div class="row">
+                    <div class="form-group col-sm-3">
+                        <label>Start Date</label>
+                        <input type="date" name="s_date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label>End Date </label>
+                        <input type="date" name="e_date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
+                    </div>
+                    <div class="col-md-3">
+                        <label>Select Region</label>
+                        <select name="rid" class="form-control">
+                            <option value="0">Select Region</option>
+                            @foreach (var item in Model.Region_list)
+                            {
+                                <option value="@item.id">@item.name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <br /><br />
+                <br />
+                <div class="col-sm-3">
+                    @*<button type="submit" name="submit1" value="pdf" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Pdf &nbsp;&nbsp;</button>*@
+                    <button type="submit" name="submit1" value="show" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Show &nbsp;&nbsp;</button>
+                </div>
+            </div>
+            <br /><br /><br />
+        </div>
+
+    }
+</div>

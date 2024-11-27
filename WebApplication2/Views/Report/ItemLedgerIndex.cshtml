@@ -1,0 +1,55 @@
+﻿@model IEnumerable<WebApplication1.QueryViewModel.Products>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Raw Item Ledger</a></li>
+            </ul>
+        </div>
+    </div>
+    <h4 class="section-subtitle"><b>Raw Item Ledger </b></h4>
+    @using (Html.BeginForm("ItemLedgerSearch_Date", "Report", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="panel">
+            <div class="panel-content">
+                <div class="col-md-3">
+                    <label>Select Item</label>
+                    <select name="item" class="chosen-select form-control" required>
+                        <option value="">Select Item</option>
+                        @foreach (var item in Model)
+                        {
+                            <option value="@item.ProductID">@item.ProductName</option>
+                        }
+                    </select>
+                </div>
+                @*<div class="col-md-3">
+                    <label>Size</label>
+                    <select name="ledgertype" class="chosen-select form-control" required>
+                        <option value="">Select Type</option>
+                        <option value="1">General</option>
+                        <option value="2">Date Wise</option>
+                    </select>
+                </div>*@
+                <div class="form-group col-sm-3">
+                    <label>Start Date</label>
+                    <input type="date" name="s_date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
+                </div>
+                <div class="form-group col-sm-3">
+                    <label>End Date </label>
+                    <input type="date" name="e_date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
+                </div>
+                <br /><br />
+                <br />
+                <div class="col-sm-12">
+                    <button type="submit" name="submit" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Search &nbsp;&nbsp;</button>
+                </div>
+            </div>
+            <br /><br /><br />
+        </div>
+
+    }
+</div>

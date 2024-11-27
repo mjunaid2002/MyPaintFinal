@@ -1,0 +1,114 @@
+﻿@model WebApplication2.ViewModels.ChartofaccountVm
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var position = 0;
+    decimal bal = 0;
+    var sum_cr = 0;
+    var sum_dr = 0;
+    var total = 0;
+    var sr = 0;
+    decimal op = 0;
+
+}
+
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Item Ledger</a></li>
+            </ul>
+        </div>
+    </div>
+    <h4 class="section-subtitle"><b>Ledger Search </b></h4>
+    @using (Html.BeginForm("LedgerSearch", "ItemLedger", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="col-md-12">
+            <div class="form-group col-sm-3">
+                <label>Select Item</label>
+                <select class="chosen-select form-control" required name="item_id">
+                    <option value="0"> Select  Item</option>
+                    @foreach (var lst_dept in Model.item_list)
+                    {
+                        <option value="@lst_dept.ID"> @lst_dept.Name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group col-sm-3">
+                <label>Start Date </label>
+                <input type="date" required name="s_date" class="form-control" />
+            </div>
+            <div class="form-group col-sm-3">
+                <label>End Date </label>
+                <input type="date" required name="e_date" class="form-control" />
+            </div>
+            <div class="col-sm-3">
+                <button type="submit" name="submit" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Search &nbsp;&nbsp;</button>
+            </div>
+        </div>
+    }
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="table-responsive">
+                        <center>
+                            <b>Item Ledger</b></br/>
+                            <b><u>@Session["BusinessUnitName"]</u></b>
+                            <br />@ViewBag.StartDate To @ViewBag.EndDate</br/></br/></br/>
+                        </center>
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th colspan="3">( Opening Balance Pkr  <u> @(bal=ViewBag.Opening) )</u></th>
+                                </tr>
+                                <tr>
+                                    <th>Sr #</th>
+                                    <th> Date </th>
+                                    <th>Description</th>
+                                    <th>Purchase</th>
+                                    <th>Sales Return </th>
+                                    <th>Sales</th>
+                                    <th>Purchase Return</th>
+                                    <th> Balance</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var item in Model.pro_listsss)
+                                {
+                                    sr += 1;
+                                    bal = ((item.pdetail + item.srdetail) - item.sdetail - item.prdetail);
+                                    <tr>
+                                        <td>@sr</td>
+                                        <td>@item.Date</td>
+                                        <td>@item.Detail</td>
+                                        <td>@item.pdetail</td>
+                                        <td>@item.srdetail</td>
+                                        <td>@item.sdetail</td>
+                                        <td>@item.prdetail</td>
+                                        <td>@bal</td>
+                                    </tr>
+                                }
+                            </tbody>
+                            @*<tfoot>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th>Grand Total</th>
+                                        <th>@bal</th>
+                                    </tr>
+                                </tfoot>*@
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

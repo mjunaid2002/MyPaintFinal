@@ -1,0 +1,277 @@
+﻿@model WebApplication1.ViewModels.SaleInvVM
+@{
+    ViewData["Title"] = "Create";
+    var sr = 0;
+}
+<script>
+    $(document).ready(function () {
+        // code to read selected table row cell data (values).
+        $("#searchable").on("click", ".btnSelect", function () {
+            var currentRow = $(this).closest("tr");
+            var col1 = currentRow.find("td:eq(0)").html();
+            var col3 = currentRow.find("td:eq(1)").html();
+            document.getElementById("id").value = col1;
+            document.getElementById("item_name").value = col3;
+        });
+    });
+    function add() {
+        var id = document.getElementById("id").value;
+        var item_name = document.getElementById("item_name").value;
+        var qty = document.getElementById("qty").value;
+        /* var item_iden = document.getElementById("item_iden").value;*/
+        // alert(id);
+        if (id == "" || id == 0) {
+            alert("Please Select Item");
+        }
+        else if (qty == "" || qty == 0) {
+
+            alert("Please Enter Quantity");
+        }
+        else {
+            var htmlRows = '';
+            htmlRows += '<tr>';
+            htmlRows += '<td style="width:80px !important"><a class="badge badge-xs x-danger b-rounded" onclick="return deleteRow(this)" ><i class="fa fa-trash-o"></i></a></td>';
+            htmlRows += '<td style="width:80px !important"><input type="text"  name="id"  value="' + id + '" required class="form-control" readonly autocomplete="off" style="width:80px !important"></td>';
+            htmlRows += '<td><input type="text"  name="item_name"  value="' + item_name + '" readonly class="form-control" autocomplete="off"></td>';
+            //htmlRows += '<td><input type="text"  name="item_iden"  value="' + item_iden + '" readonly class="form-control" autocomplete="off"></td>';
+            htmlRows += '<td><input type="text"  name="qty"  value="' + qty + '" readonly class="form-control" autocomplete="off"></td>';
+            htmlRows += '<td style="display:none">' + id + '</td>';
+            htmlRows += '<td style="display:none">' + item_name + '</td>';
+            htmlRows += '<td style="display:none">' + qty + '</td>';
+
+            $('#invoiceItem').append(htmlRows);
+            $('#id').val('');
+            $('#item_name').val('');
+            $('#qty').val('0');
+
+        }
+    }
+    function deleteRow(btn) {
+        if (confirm("Are you sure want to delete the row?"))
+            $(btn).closest("tr").remove();
+    }
+</script>
+<script type="text/javascript">
+    function Action(code) {
+        //  alert(code);
+        $.ajax({
+            /**/
+            url: "Action/PurInvWoctn?message=" + code,
+            method: "GET",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                var address = data.value1;
+                document.getElementById("address").value = address
+            }
+        });
+    }
+</script>
+
+
+<style>
+    hr {
+        height: 1px;
+        background: black;
+        border: none;
+        outline: none;
+        margin: 3em 3em 5em;
+        position: relative;
+    }
+
+        hr#eight {
+            background: transparent;
+            border-bottom: 2px dashed #189279;
+            width: 100%;
+            margin: 0 auto;
+            &:before
+
+    {
+        top: 3px;
+        left: 0;
+        padding-right: 2em;
+    }
+    }
+</style>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-print" aria-hidden="true"></i> Invoices</a></li>
+
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b>GatePass </b></h4>
+            <div class="panel">
+                @using (Html.BeginForm("Update", "Gatepass", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {<div class="panel-content">
+                        <div class="row">
+                            <div class="form-group col-sm-2">
+                                <label>INVID</label>
+                                @Html.TextBoxFor(m => m.gatepassMaster.InvID, new { @class = "form-control input-xs", @readonly = "readonly" })
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label>Select Store</label>
+                                @Html.DropDownListFor(m => m.gatepassMaster.Store, new SelectList(Model.Store, "Id", "Name"), "Select Store", htmlAttributes: new { @class = "chosen-select form-control", @required = "true" })
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label>Select Supplier</label>
+                                @Html.DropDownListFor(m => m.gatepassMaster.supid, new SelectList(Model.sup_list, "AccountNo", "Name"), "Select Supplier", htmlAttributes: new { @class = "chosen-select form-control", @required = "true" })
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label>Select Receiver</label>
+                                @Html.DropDownListFor(m => m.gatepassMaster.DsrId, new SelectList(Model.emp_list, "AccountNo", "Name"), "Select Receiver", htmlAttributes: new { @class = "chosen-select form-control" })
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-2">
+                                <label>Delivery Person</label>
+                                @Html.TextBoxFor(m => m.gatepassMaster.CargoName, new { @class = "form-control input-xs" })
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label>Address</label>
+                                @Html.TextAreaFor(m => m.gatepassMaster.Address, new { @class = "form-control input-xs", style = " rows=2, columns=40" })
+                            </div>
+                            @*<div class="form-group col-sm-2">
+                                    <a class="btn btn-wide btn-info pull-right" data-toggle="modal" data-target="#lg-modal" style="margin-top:25px;margin-left:-40px"><i class="fa fa-search-plus"></i>  Search Items</a>
+                                </div>*@
+                            <div class="form-group col-sm-3">
+                                <label>Phone Number</label>
+                                @Html.TextBoxFor(m => m.gatepassMaster.PhoneNo, new { @class = "form-control input-xs" })
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label>Date</label>
+                                @Html.TextBoxFor(m => m.gatepassMaster.Date, new { @class = "form-control input-xs", id = "date", type = "Date", @Value = DateTime.Now.ToString("yyyy-MM-dd") })
+                            </div>
+
+                        </div>
+                        <hr id="eight" data-symbol="✂" style="margin-top:5px"><br />
+                        <div clas="row" style="margin-top:10px;">
+                            <div clas="col-md-12">
+                                <div class="form-group col-sm-1">
+                                    <a class="btn btn-info" data-toggle="modal" data-target="#lg-modal" style="width:50px !important;margin-top:25px"><i class="fa fa-search-plus"></i></a>
+                                </div>
+                                <div class="form-group col-sm-1" style="margin-left:-30px">
+                                    <label>ID</label>
+                                    <input type="text" id="id" readonly class="form-control" />
+                                </div>
+                                <div class="form-group col-sm-4" style="margin-left:-20px">
+                                    <label>Item Name</label>
+                                    <input type="text" id="item_name" class="form-control" />
+                                </div>
+
+                                <div class="form-group col-sm-2">
+                                    <label>Qty</label>
+                                    <input type="text" id="qty" value="0" class="form-control" />
+                                </div>
+                                <div class="form-group col-sm-2" style="margin-top:10px">
+                                    <br />
+                                    <br />
+                                    <a class="btn btn-wide btn-warning pull-left" onclick='return add()' style="margin-right:-130px;width:25px;margin-top:-27px"> <i class="fa fa-plus"></i> Add</a> &nbsp;&nbsp;
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12" style="margin-top:-15px">
+                                <div class="table-responsive">
+                                    <table id="invoiceItem" class="table table-bordered table-hover table-striped table-success">
+                                        <thead class="bordered-darkorange">
+                                            <tr style="background-color:#189279;color:white">
+                                                <th>Action</th>
+                                                <th>ID</th>
+                                                <th>Product Name</th>
+                                                @*<th>Item Identification</th>*@
+                                                <th>Qty</th>
+                                                @*<th>Batch #</th>
+                                                    <th>Exp Date</th>*@
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            @foreach (var item in Model.g_detail)
+                                            {
+                                                <tr>
+                                                    <td style="width:80px !important"><a class="badge badge-xs x-danger b-rounded" onclick="return deleteRow(this)"><i class="fa fa-trash-o"></i></a></td>
+                                                    <td style="width:80px !important"><input type="text" name="id" value="@item.ItemID" required style="width:80px !important" class="form-control" readonly autocomplete="off"></td>
+                                                    <td><input type="text" name="item_name" value="@item.ItemName" readonly class="form-control" autocomplete="off"></td>
+                                                    @*<td><input type="text" name="item_iden" value="@item.item_iden" readonly class="form-control" autocomplete="off"></td>*@
+                                                    <td><input type="text" name="qty" value="@item.Qty" readonly class="form-control" autocomplete="off"></td>
+                                                    <td style="display:none">@item.ItemID</td>
+                                                    <td style="display:none">@item.ItemName</td>
+                                                    <td style="display:none">@item.Qty</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-sm-12">
+                                <button type="submit" class="btn btn-primary col-sm-4 col-sm-offset-4" style="margin-top:10px"><i class="fa fa-save"></i> &nbsp; Save Invoice</button>
+                            </div>
+                        </div>
+
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="lg-modal" aria-labelledby="modal-large-label" style="margin-top:-180px">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header state modal-primary">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modal-large-label">Product Details</h4>
+                </div>
+                <div class="modal-body">
+                    <div style="width: 100%; height:430px;overflow-y: scroll;">
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Product Name</th>
+                                    <th>MUnit</th>
+                                    <th>Barcode</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="abc" id="myTable">
+                                @foreach (var item in Model.pro_list)
+                                {
+                                    <tr>
+                                        <td>@item.ID</td>
+                                        <td>@item.Name</td>
+                                        <td>@item.MUnit</td>
+                                        <td>@item.Barcode</td>
+                                        <td><button class="btnSelect btn btn-danger" data-dismiss="modal"><i class="fa fa-check"></i></button></td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+

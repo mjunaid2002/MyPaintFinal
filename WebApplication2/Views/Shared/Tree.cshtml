@@ -1,0 +1,215 @@
+﻿<!doctype html>
+<html lang="en" class="fixed">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>POS</title>
+    <link rel="apple-touch-icon" sizes="120x120" href="~/content/favicon/apple-icon-120x120.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="~/content/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="~/content/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="~/content/favicon/favicon-16x16.png">
+    <script src="~/content/vendor/pace/pace.min.js"></script>
+    <link href="~/content/vendor/pace/pace-theme-minimal.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/content/vendor/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="~/content/vendor/font-awesome/css/font-awesome.css">
+    <link rel="stylesheet" href="~/content/vendor/animate.css/animate.css">
+    <link rel="stylesheet" href="~/content/vendor/toastr/toastr.min.css">
+    <link rel="stylesheet" href="~/content/vendor/magnific-popup/magnific-popup.css">
+    <link rel="stylesheet" href="~/content/stylesheets/css/style.css">
+    <link rel="stylesheet" href="~/content/vendor/data-table/media/css/dataTables.bootstrap.min.css">
+    <link href="~/content/Datatable/dataTables.bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/content/choosen/chosen.css">
+    <style>
+        .abc {
+            display: table-footer-group;
+            vertical-align: middle;
+            border-color: inherit;
+        }
+
+            .abc tr td {
+                font-size: 11px;
+            }
+
+        .form-control {
+            height: 30px;
+            padding: 5px 10px;
+            font-size: 12px;
+            line-height: 1.5;
+            border-radius: 3px;
+        }
+
+        .chosen-container {
+            height: 27px;
+            font-size: 12px;
+            line-height: 1.5;
+            border-radius: 3px;
+        }
+
+        /*/*modal-backdrop {
+            display: none;
+        }
+
+        .modal-backdrop.in {
+            filter: alpha(opacity=50);
+            opacity: .5;
+        }
+        .modal {
+            text-align: center;
+        }
+
+            .modal:before {
+                display: inline-block;
+                vertical-align: middle;
+                content: " ";
+                height: 100%;
+            }
+
+        .modal-dialog {
+            display: inline-block;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .modal-dialog {
+            width: auto;
+        }*/
+    </style>
+    <script>
+        function PageLoad() {
+            cal_total(); date(); date22();
+        }
+        window.onload = PageLoad;
+    </script>
+    <style>
+        #main-nav li {
+            background-color: white !important;
+            border: 1px solid white;
+        }
+
+            #main-nav li a {
+                color: black !important;
+            }
+
+                #main-nav li a:hover {
+                    background-color: grey !important;
+                    border: 1px solid white;
+                }
+
+            #main-nav li:active {
+                background-color: white !important;
+                border: 1px solid white;
+            }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="page-header" style="background-color:#1ABC9C">
+            <div class="leftside-header">
+                <div class="logo">
+                    <a href="@Url.Action("Index", "Dashboard")" class="on-click">
+                        <center>
+                            <h2 style="color:white;margin-top:10px;">
+                                @if (Session["CompName"] != null)
+                                {
+                                    @*@Session["CompName"].ToString()*@
+                                }
+                                else
+                                {
+                                }
+                            </h2>
+                        </center>
+                    </a>
+                </div>
+                <div id="menu-toggle" class="visible-xs toggle-left-sidebar" data-toggle-class="left-sidebar-open" data-target="html">
+                    <i class="fa fa-bars" aria-label="Toggle sidebar"></i>
+                </div>
+            </div>
+            <div class="rightside-header">
+                <div class="header-middle"></div>
+                <div class="header-section" id="search-headerbox">
+                    @*<h5 class="pull-right"><b> @Session["CompName"].ToString()</b></h5>*@
+                    <input type="text" name="search" id="search" placeholder="Search...">
+                    <i class="fa fa-search search" id="search-icon" aria-hidden="true"></i>
+                    <div class="header-separator"></div>
+                </div>
+                <div class="header-section">
+                    <a href="@Url.Action("Logout", "Home")" data-toggle="tooltip" data-placement="left" title="Logout"><i class="fa fa-sign-out log-out" aria-hidden="true"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="page-body">
+            <div class="left-sidebar" style="background-color:#FFFFFF !important;border-right:1px solid grey">
+                <div class="left-sidebar-header" style="background-color:#0F5D4D !important">
+                    <div class="left-sidebar-title"><h5 style="margin-top:2px;color:white"><b></b></h5> </div>
+                    <div class="left-sidebar-toggle c-hamburger c-hamburger--htla hidden-xs" data-toggle-class="left-sidebar-collapsed" data-target="html" style="background-color: #0F5D4D !important">
+                        <span></span>
+                    </div>
+                </div>
+                <div id="left-nav" class="nano" style="background-color: white !important;">
+                    <div class="nano-content">
+                        <nav>
+                            @*@if (Session["isadmin"].ToString() != "0")
+                            {*@
+                            @*}
+                            else
+                            {*@
+                                <ul class="nav" id="main-nav" style="border:1px solid white;background-color: white !important;">
+                                    <li style="border:1px solid white;background-color: white !important;"><a href="@Url.Action("Index", "Dashboard")"><img src="~/Content/unnamed (1).png" style="width:30px" /> &nbsp; <span>Dashboard</span></a></li>
+                                    <!--<li class="has-child-item close-item" style="border:1px solid white">
+                                    <a><img src="~/Content/Store-Icon.png" style="width:30px" /> &nbsp; <span>  Store  </span></a>
+                                    <ul class="nav child-nav level-1">-->
+                                    @*<li><a href="@Url.Action("Index", "BusinessUnit")"> Business Unit</a></li>*@
+                                    <!--</ul>
+                                    </li>-->
+                                    }
+                                    @*<li class="has-child-item close-item">
+                                            <a><i class="fa fa-cubes" aria-hidden="true"></i><span>QMS</span></a>
+                                            <ul class="nav child-nav level-1">
+                                                <li><a href="@Url.Action("", "")"></a></li>
+                                            </ul>
+                                        </li>*@
+                                    <!--<li class="has-child-item close-item" style="border:1px solid white">
+                                    <a><img src="~/Content/6818478_preview.png" style="width:30px" /> &nbsp;  <span>Production</span></a>
+                                    <ul class="nav child-nav level-1">-->
+                                    @*<li><a href="@Url.Action("Purchases", "Procduction")">Production</a></li>
+                                        <li><a href="@Url.Action("Purchases", "ProcductionNew")">Production New</a></li>*@
+                                    <!--<li><a href="@Url.Action("Purchases", "ProcductionNew")">Production </a></li>
+                                    <li><a href="@Url.Action("Index", "ProcductionNew")">Production List</a></li>-->
+                                    @*<li><a href="@Url.Action("Index", "Procduction")">Production List</a></li>*@
+                                    <!--<li><a href="@Url.Action("Production", "Reports")">Production Report</a></li>
+                                            <li><a href="@Url.Action("DailyRawStock", "Reports")">Daily Raw Stock Report</a></li>
+                                        </ul>
+                                    </li>-->
+                                    @*<li class="has-child-item close-item">
+                                            <a><i class="fa fa-cubes" aria-hidden="true"></i><span>Production New</span></a>
+                                            <ul class="nav child-nav level-1">
+                                                <li><a href="@Url.Action("Purchases", "ProcductionNew")">Production </a></li>
+                                                <li><a href="@Url.Action("Index", "ProcductionNew")">Production List</a></li>
+                                            </ul>
+                                        </li>*@
+                                    @*}*@
+                                </ul>
+                            }
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            @RenderBody()
+            <a href="#" class="scroll-to-top"><i class="fa fa-angle-double-up"></i></a>
+        </div>
+    </div>
+    <script src="~/Content/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/Content/vendor/nano-scroller/nano-scroller.js"></script>
+    <script src="~/Content/javascripts/template-script.min.js"></script>
+    <script src="~/Content/javascripts/template-init.min.js"></script>
+    <script src="~/Content/vendor/data-table/media/js/jquery.dataTables.min.js"></script>
+    <script src="~/Content/vendor/data-table/media/js/dataTables.bootstrap.min.js"></script>
+    <script src="~/Content/javascripts/examples/tables/data-tables.js"></script>
+    <script src="~/Content/javascripts/examples/ui-elements/buttons.js"></script>
+    <script src="~/Content/Datatable/jquery.dataTables.min.js"></script>
+    <script src="~/Content/Datatable/dataTables.tableTools.min.js"></script>
+    <script src="~/Content/Datatable/dataTables.bootstrap.min.js"></script>
+    <script src="~/Content/Datatable/datatables-init.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,124 @@
+﻿@model WebApplication1.ViewModels.SaleInvVM
+@{
+    ViewBag.Title = "Creat";
+    string transfer = "Transfer";
+    string Receive = "Receive";
+}
+<script>
+    function Action1(code) {
+        //  alert(code);
+        $.ajax({
+            type: "GET",
+            url: "/BatchTransfer/GetProd?value=" + code,
+            data: "{}",
+            success: function (data) {
+                //    alert(data);
+                var s = '<option value="">Select Batch</option>';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].BatchNo + '" data-weight="' + data[i].totalweight + '">' + data[i].BatchNo + '</option>';
+                }
+                $('#b').html(s);
+            }
+        });
+    }
+</script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var selectElement = document.getElementById('b');
+        var weightInput = document.getElementById('totalweight');
+
+        selectElement.addEventListener('change', function () {
+            var selectedOption = this.options[this.selectedIndex];
+            var weight = selectedOption.getAttribute('data-weight');
+            weightInput.value = weight;
+        });
+    });
+</script>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i>  Batch Procesing</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-sm-12 col-md-12">
+            <h4 class="section-subtitle"><b>Batch Transfer</b></h4>
+            <a href="@Url.Action("Index","BatchTransfer")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-list"></i> Batch Transfer List</a>
+            @if (Convert.ToString(TempData["succ"]) != "")
+            {
+                <p class="alert alert-success" style="width:400px;height:50px"><b>@TempData["succ"]</b></p>
+            }
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form action="Edit" method="post" enctype="multipart/form-data" onsubmit="return confirm('Are you sure you want to Register ?');">
+                                <div class="row">
+                                    <div class="form-group col-sm-1">
+                                        <label>ID</label>
+                                        @Html.TextBoxFor(m => m.batchTransferQuery.Id, new { @class = "form-control input-xs", @readonly = "readonly", @required = "required" })
+                                    </div>
+                                    <div class="form-group col-sm-2">
+                                        <label>Date</label>
+                                        @Html.TextBoxFor(m => m.batchTransferQuery.date, "{0:yyyy-MM-dd}", new { @class = "form-control input-xs", type = "date" })
+                                        @*@Html.TextBoxFor(m => m.batchTransferQuery.date, new { @class = "form-control input-xs", @type = "date", @value = Model.batchTransferQuery.date.ToString("yyyy-MM-dd") })*@
+                                    </div>
+                                    <div class="form-group col-sm-2">
+                                        <label>Transfer Date</label>
+                                        @Html.TextBoxFor(m => m.batchTransferQuery.daterec, "{0:yyyy-MM-dd}", new { @class = "form-control input-xs", type = "date" })
+                                    </div>
+                                    <div class="form-group col-sm-2">
+                                        <label>Color Name</label>
+                                        @Html.DropDownListFor(m => m.batchTransferQuery.color, new SelectList(Model.color, "ProductName", "ProductName"), "Select Color", htmlAttributes: new { @class = "chosen-select form-control", @required = "true", @onChange = "Action1(this.value)" })
+                                    </div>
+                                    <div class="form-group col-sm-2">
+                                        <label>Select Region</label>
+                                        @Html.DropDownListFor(m => m.batchTransferQuery.RegionId, new SelectList(Model.Region_list, "Id", "Name"), "Select Region", htmlAttributes: new { @class = "chosen-select form-control", @required = "true" })
+                                    </div>
+                                    <div class="form-group col-sm-2">
+                                        <label>Select Batch</label>
+                                        <select id="b" class="form-control" name="batch" required>
+                                            <option selected value="@Model.batchTransferQuery.batch">@Model.batchTransferQuery.batch</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-sm-2">
+                                        <label>Total Weight</label>
+                                        @Html.TextBoxFor(m => m.batchTransferQuery.totalweight, new { @class = "form-control input-xs", @readonly = "readonly", @id = "totalweight", @name = "totalweight" })
+                                        @*<input type="text" id="totalweight" name="totalweight" value="0" readonly />*@
+                                    </div>
+                                    <div class="form-group col-sm-2">
+                                        <label>Weight</label>
+                                        @Html.TextBoxFor(m => m.batchTransferQuery.weight, new { @class = "form-control input-xs" })
+                                    </div>
+                                    <div class="form-group col-sm-2">
+                                        <label>Select Option</label></br>
+                                        @if (Model.batchTransferQuery.status == "Transfer")
+                                        {
+                                            <input type="radio" name="opt" value="Transfer" checked />@transfer
+                                            <input type="radio" name="opt" value="Receiving" /> @Receive
+                                        }
+                                        @if (Model.batchTransferQuery.status == "Receiving")
+                                        {
+                                            <input type="radio" name="opt" value="Transfer" />@transfer
+                                            <input type="radio" name="opt" value="Receiving" checked /> @Receive
+                                        }
+                                    </div>
+                                    <div class="col-sm-12">
+                                        @if (Session["SubBatchTransferUpdate"].ToString() != "0")
+                                        {
+                                            <button type="submit" class="btn btn-primary" style="margin-top:10px"><i class="fa fa-save"></i> Save</button>
+                                        }
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

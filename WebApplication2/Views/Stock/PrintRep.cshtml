@@ -1,0 +1,90 @@
+﻿@model IEnumerable<WebApplication1.QueryViewModel.stockquery>
+@{
+    ViewBag.Title = "PrintRep";
+    Layout = "~/Views/Shared/full_page.cshtml";
+    decimal total = 0;
+}
+    <script>
+
+function printDiv(divName) {
+     var printContents = document.getElementById(divName).innerHTML;
+     var originalContents = document.body.innerHTML;
+
+     document.body.innerHTML = printContents;
+
+     window.print();
+
+     document.body.innerHTML = originalContents;
+}
+
+    </script>
+    <div class="row" style="background-color:white">
+        <br />
+        <br />
+        <a href="#" onclick="printDiv('printableArea')" class="btn btn-wide btn-info pull-right" style="margin-top:-40px"><i class="fa fa-print"></i>  Print</a>
+
+        <div class="col-sm-12" style="background-color:white;padding:50px" id="printableArea">
+            <table class="table table-bordered" id="printableArea">
+                <thead>
+                    <tr>
+                        <td colspan="11" align="center" style="font-size:20px;font-weight:bold;background-color:steelblue;color:white">Stock Report</td>
+                    </tr>
+                    <tr style="background-color:cadetblue;color:white;font-weight:bold;font-size:14px;">
+                        <th>Id</th>
+                        <th>Item Name</th>
+                        <th>CostPrice</th>
+                        <th>Barcode</th>
+                        <th>Brand</th>
+                        <th>Category</th>
+                        <th>Purchase</th>
+                        <th>Sale</th>
+                        @*<th>Net Qty</th>*@
+                        <th>Final Ctn</th>
+                        <th>Final Qty</th>
+                        <th>Total Cost</th>
+
+                    </tr>
+                </thead>
+
+                <tbody class="abc">
+                    @foreach (var item in Model)
+                    {
+                        total += item.TotalCost;
+
+                        <tr>
+
+                            <td>@item.ID</td>
+                            <td>@item.Name</td>
+                            <td>@item.CostPrice</td>
+                            <td>@item.Barcode</td>
+                            <td>@item.BrandName</td>
+                            <td>@item.CatName</td>
+                            <td>@item.QTYIN</td>
+                            <td>@item.QTYOUT</td>
+                            @*<td>@item.BAL</td>*@
+                            <td>@item.CTN</td>
+                            <td>@item.QTY</td>
+                            <td>@item.TotalCost</td>
+
+                        </tr>
+                    }
+                    <tr>
+                        
+                        <td colspan="10" align="right" style="font-size:16px;font-weight:bold;"> <b>Total Cost:</b></td>
+                        <td style="font-size:16px;font-weight:bold;background-color:#CCCCCC;color:white">@total</td>
+                    </tr>
+                </tbody>
+
+            </table>
+            <br />
+            <br /> <br />
+            <br /> <br />
+            <br /> <br />
+            <br /> <br />
+            <br /> <br />
+            <br /> <br />
+            <br /> <br />
+            <br />
+        </div>
+    </div>
+      

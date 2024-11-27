@@ -1,0 +1,106 @@
+﻿@model IEnumerable<WebApplication1.QueryViewModel.ItemLedger_finished>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var position = 0;
+    decimal bal = 0;
+    decimal sum_cr = 0;
+    decimal sum_dr = 0;
+    var total = 0;
+    int op = 0;
+    var s_date = ViewBag.StartDate;
+    string PINV = "PINV";
+    string SINV = "SINV";
+    var open_qty = ViewBag.OpeningDubbi;
+    var tot_In = Model.Sum(x => x.DabbiIN);
+    var tot_out = Model.Sum(x => x.DabbiOUT);
+    var tot_bal = tot_In - tot_out + open_qty;
+}
+<script type="text/javascript">
+    function printDiv(divName) {
+        var printContents = document.getElementById(divName).innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+
+        window.print();
+
+        document.body.innerHTML = originalContents;
+    }</script>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Raw Item Ledger</a></li>
+            </ul>
+        </div>
+    </div>
+    <button type="button" onclick="printDiv('printableArea')" class="btn btn-info pull-right"><i class="fa fa-print"></i> Print</button>
+    <div class="row" id="printableArea">
+        <div class="col-sm-12">
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="table-responsive">
+                        <center>
+                            <br />
+                            Item Ledger</br/>
+                            <b><u>@ViewBag.itemname</u></b>
+                            <br />@Convert.ToDateTime(ViewBag.StartDate).ToString("dd-MM-yyyy") To @Convert.ToDateTime(ViewBag.EndDate).ToString("dd-MM-yyyy")</br/></br/></br/>
+                        </center>
+                        <table class="table table-bordered table-hover table-striped table-success">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th colspan="2">
+                                        (Opening<u>
+                                            <span id="demo"></span>
+                                            <script>
+                                                var y = @(ViewBag.OpeningDubbi);
+                                                var x = y.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                                document.getElementById("demo").innerHTML = x;
+                                            </script>
+                                            )
+                                        </u>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>IN</th>
+                                    <th>OUT</th>
+                                    <th>BAL</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <span style="color:white"></span>
+                                @foreach (var item in Model)
+                                {
+                            <tr>
+                                <td>@item.ID</td>
+                                <td>@item.Date</td>
+                                <td>@item.Description</td>
+                                <td>@String.Format("{0:N}", item.DabbiIN)</td>
+                                <td>@String.Format("{0:N}", item.DabbiOUT)</td>
+                                <td>@String.Format("{0:N}", item.DabbiBAL)</td>
+                            </tr>
+                                }
+                                <tr>
+                                    <th colspan="3"> Grand Total</th>
+                                    <th>@tot_In</th>
+                                    <th>@tot_out</th>
+                                    <th>@tot_bal</th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

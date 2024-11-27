@@ -1,0 +1,93 @@
+﻿@model IEnumerable<WebApplication1.QueryViewModel.Products>
+@{
+    ViewBag.Title = "Index";
+}
+<script>
+    $('#searchable').DataTable({
+        buttons: [
+            'copy', 'excel', 'pdf'
+        ]
+    });
+</script>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Registrations</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b> Finished Products List</b></h4>
+            <a href="@Url.Action("Create", "FinishedProducts")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  Creat New</a>
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th>ProductID</th>
+                                    <th>Product Name</th>
+                                    <th>Description</th>
+                                    <th>Min Dubbi</th>
+                                    <th>Max Dubbi</th>
+                                    <th>Min Quarter</th>
+                                    <th>Max Quarter</th>
+                                    <th>Min Gallon</th>
+                                    <th>Max Gallon</th>
+                                    <th>Min Drum</th>
+                                    <th>Max Drum</th>
+                                    <th>Active</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody class="abc">
+                                @foreach (var item in Model)
+                                {
+                                <tr>
+                                    <td>@item.ProductID</td>
+                                    <td>@item.ProductName</td>
+                                    <td>@item.desc</td>
+                                    <td>@item.ReorderDubbi</td>
+                                    <td>@item.MaxDubbi</td>
+                                    <td>@item.ReorderQuarter</td>
+                                    <td>@item.MaxQuarter</td>
+                                    <td>@item.ReorderGallon</td>
+                                    <td>@item.MaxGallon</td>
+                                    <td>@item.ReorderDrum</td>
+                                    <td>@item.MaxDrum</td>
+                                    <td>@item.Active</td>
+                                    <td>
+                                        <a href="@Url.Action("Edit", new { ID= item.ProductID } )" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="btn btn-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
+                                        <a href="@Url.Action("Delete", new { ID= item.ProductID } )" new { onclick="return confirm('Are you sure you want to delete this record?');" class="btn btn-danger shiny input-xs"><i class="fa fa-trash-o"></i></a>
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    @*<th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>*@
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

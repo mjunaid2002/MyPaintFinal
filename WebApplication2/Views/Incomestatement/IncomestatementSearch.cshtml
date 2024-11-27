@@ -1,0 +1,220 @@
+﻿@model WebApplication2.ViewModels.ChartofaccountVm
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    //var position = 0;
+    //var bal = 0;
+    //var sum_cr = 0; var sum_ccr = 0; var sum_cdr = 0; var sum_closingcr = 0; var sum_closingdr = 0;
+    //var sum_dr = 0;
+    decimal sale_total1 = 0;
+    decimal new_f_bal = 0;
+    decimal f_bal = 0;
+    decimal bal = 0;
+    decimal new_bal = 0;
+    decimal sale_total2 = 0;
+    decimal total_sale = 0;
+    decimal profit = 0;
+    decimal total2_cgs = 0;
+    decimal total_cgs = 0;
+    int f_totall = 0;
+    int f_totalc = 0;
+    var odr = 0;
+    var ocr = 0; string dr_str = "DR"; string cr_str = "CR";
+    //var cdr = 0;
+    //var ccr = 0;
+    //var a = 0;
+    //decimal b = 0;
+    //var c = 0;
+    //var closing = 0;
+}
+
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i>  Income Statement</a></li>
+            </ul>
+        </div>
+    </div>
+    <h4 class="section-subtitle"><b> Income Statement Search </b></h4>
+    <p class="pull-right" style="color: red;margin-top:-30px">
+    </p>
+    @using (Html.BeginForm("IncomestatementSearch", "Incomestatement", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="panel">
+            <div class="panel-content">
+                <div class="col-md-12">
+                    <div class="form-group col-sm-3">
+                        <label>Start Date </label>
+                        <input type="date" name="s_date" class="form-control" required value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label>End Date </label>
+                        <input type="date" name="e_date" class="form-control" required value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    </div>
+                    <div class="col-sm-3">
+                        <button type="submit" name="submit" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Search &nbsp;&nbsp;</button>
+                    </div>
+
+                </div>
+                <br /><br /><br />
+            </div>
+
+        </div>
+
+    }
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel">
+
+                <div class="panel-content">
+                    <center>
+                        <h4>
+                            Income Statement<br />
+                            <b><u>@Session["BusinessUnitName"]</u></b><br />
+                            @ViewBag.StartDate to @ViewBag.EndDate
+                        </h4>
+                        <br />
+                    </center>
+                    <div class="main-box" style="padding:20px">
+                        <div class="row">
+                            <B>SALES:</B><br />
+                            <div class="table-responsive">
+                                <table id="table-example" class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Item Name</th>
+                                            <th>Amount</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item2 in Model.item_ist)
+                                        {
+                                            sale_total1 += item2.saledetailtotal;
+                                            <tr>
+                                                <td>@item2.ItemName</td>
+                                                <td>@item2.saledetailtotal</td>
+                                            </tr>
+                                        }
+                                        @foreach (var item1 in Model.item_ist2)
+                                        {
+                                            sale_total2 += item1.saledetaildistotal;
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+                            <div class="col-lg-6 col-xs-6" style="background-color:#CCCCCC">
+
+                                <b>	Total SALE</b> <br />
+                            </div>
+                            <div class="col-lg-6 col-xs-6" style="background-color:#CCCCCC"><b style="margin-left:200px">@(total_sale = sale_total1 + sale_total2)</b></div><br />
+                        </div></br>
+
+                        <div class="row" style="padding:10px">
+                            <p><b>LESS:</b></p>
+                            <div class="table-responsive">
+                                <table id="table-example" class="table table-hover">
+
+
+                                    <tbody>
+                                        <tr>
+                                            <td style="width:580px">Cost of Goods Sold</td>
+                                            @foreach (var item3 in Model.total_cgs)
+                                            {
+                                                total2_cgs = item3.trans_balance;
+                                                <td>@item3.trans_balance</td>
+                                            }
+
+                                        </tr>
+
+                                    </tbody>
+                                </table>
+                                <div class="col-lg-6 col-xs-6" style="background-color:#CCCCCC"><b>GROSS PROFIT</b></div>
+                                <div class="col-lg-6 col-xs-6" style="background-color:#CCCCCC"><b style="margin-left:200px">@(total_cgs = total_sale-total2_cgs)</b></div>
+
+                            </div>
+                        </div>	</br>
+                        <!--------- new row -------->
+                        <div class="row">
+                            <p><B>Expences:</B></p>
+
+                            <div class="table-responsive">
+                                <table id="table-example" class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th style="">Account No</th>
+                                            <th>Account Name</th>
+                                            <th>Balance </th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        @foreach (var item4 in Model.exp_list.Where(z=>z.AccountNo != 5500001))
+                                        {
+                                            bal = (Convert.ToInt32(item4.dr - item4.cr));
+                                            new_bal = (Convert.ToInt32(item4.cdr - item4.ccr));
+                                            f_bal = bal + new_bal;
+                                            new_f_bal += f_bal;
+                                            <tr>
+                                                <td>@item4.AccountNo </td>
+                                                <td s>@item4.AccountTitleName</td>
+                                                <td>
+                                                    @f_bal @if (f_bal > 0)
+                                                    {@dr_str;
+                                                }
+                                                else if (f_bal < 0)
+                                                { @cr_str;
+                                            }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-xs-6" style="background-color:#CCCCCC"><b>TOTAL EXPENSES</b></div>
+                        <div class="col-lg-6 col-xs-6" style="background-color:#CCCCCC"><b style="margin-left:200px">@new_f_bal</b></div>
+                        <br><br>
+                        <!-- <div class="row">
+                        <p><b>OTHER IMCOME:</b></p>
+                        <div class="table-responsive">
+                            <table id="table-example" class="table table-hover">
+
+
+                                <tbody>
+                                    <tr>
+                                        <td style="width:620px">  SALE OF CO2 TANK</td>
+                                        <td><?php if($balance2==''){ echo "0";}else { echo $balance2;} ?></td>
+                                    </tr>
+                                    <tr>
+                                        <td>SALE OF SCRAP</td>
+                                        <td><?php if($balance21==''){ echo "0";}else { echo $balance21;} ?></td>
+
+                                    </tr>
+                                    <tr>
+                                        <td>SALE OF TYRES</td>
+                                        <td><?php if($balance211==''){ echo "0";}else { echo $balance211;} ?></td>
+                                    </tr>
+
+
+                                </tbody>
+                            </table>-->
+                        <div class="row">
+                            <br>
+
+                            <div class="col-lg-6 col-xs-6" style="background-color:#CCCCCC">
+                                <B>Net income</B>
+                            </div>
+
+                            <div class="col-lg-6 col-xs-6" style="background-color:#CCCCCC"><b style="margin-left:200px">@(profit = (total_cgs - new_f_bal)) </b></div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,221 @@
+﻿@model IEnumerable<WebApplication1.QueryViewModel.FinishedGoodsQuery2>
+@*@model IEnumerable<CRM.Models.ProductCapShow>*@
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var position = 0;
+    decimal bal = 0;
+    decimal sum_cr = 0;
+    decimal sum_dr = 0;
+    var total = 0;
+    int op = 0;
+    var s_date = ViewBag.StartDate;
+    string PINV = "PINV";
+    string SINV = "SINV";
+    var type = ViewBag.type;
+}
+<style>
+    .stock {
+        background-color: aqua;
+    }
+
+    .order {
+        background-color: azure;
+    }
+
+    .com {
+        background-color: lightgray;
+    }
+
+    .rem {
+        background-color: lightgoldenrodyellow;
+    }
+</style>
+<script type="text/javascript">
+    function printDiv(divName) {
+        var printContents = document.getElementById(divName).innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+
+        window.print();
+
+        document.body.innerHTML = originalContents;
+    }</script>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Production Order Report</a></li>
+            </ul>
+        </div>
+    </div>
+    @*<button type="button" onclick="printDiv('printableArea')" class="btn btn-info pull-right"><i class="fa fa-print"></i> Print</button>*@
+    <div class="row" id="printableArea">
+        <div class="col-sm-12">
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="table-responsive">
+                        @*<center>
+                                <br /><b>From:</b> @Convert.ToDateTime(ViewBag.StartDate).ToString("dd-MM-yyyy") <b>To :</b> @Convert.ToDateTime(ViewBag.EndDate).ToString("dd-MM-yyyy")</br/></br/></br/>
+                            </center>*@
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th style="width:20%"></th>
+                                    @*<th colspan="4"  class="stock"><center>Stock</center></th>*@
+                                    @if (type == "Filling")
+                                    {
+                                        <th colspan="4" class="order"><center>Production Order</center></th>
+                                        <th colspan="4" class="com"><center>Complete</center></th>
+                                        <th colspan="4" class="rem"><center>Remaining</center></th>
+                                    }
+                                    else
+                                    {
+                                        <th class="order"><center>Production Order</center></th>
+                                        <th class="com"><center>Complete</center></th>
+                                        <th colspan="3" class="rem"><center>Remaining</center></th>
+                                    }
+
+
+                                </tr>
+                                <tr>
+                                    <th>Product Name</th>
+
+                                    @*<th class="stock">Dubbi</th>
+                                        <th class="stock">Quarter</th>
+                                        <th class="stock">Gallon</th>
+                                        <th class="stock">Drum</th>*@
+                                    @if (type == "Filling")
+                                    {
+                                        <th class="order">Dubbi</th>
+                                        <th class="order">Quarter</th>
+                                        <th class="order">Gallon</th>
+                                        <th class="order">Drum</th>
+                                    }
+                                    else
+                                    {
+                                        <th class="order">QTY(Kg)</th>
+                                    }
+                                    @if (type == "Filling")
+                                    {
+                                        <th class="com">Dubbi</th>
+                                        <th class="com">Quarter</th>
+                                        <th class="com">Gallon</th>
+                                        <th class="com">Drum</th>
+                                    }
+                                    else
+                                    {
+                                        <th class="com">QTY(Kg)</th>
+                                    }
+                                    @if (type == "Filling")
+                                    {
+                                        <th class="rem">Dubbi</th>
+                                        <th class="rem">Quarter</th>
+                                        <th class="rem">Gallon</th>
+                                        <th class="rem">Drum</th>
+                                    }
+                                    else
+                                    {
+                                        <th class="rem">Qty(kg)</th>
+                                        <th class="rem">Make </th>
+                                        <th class="rem">Rem Qty</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <span style="color:white"></span>
+                                @foreach (var item in ViewBag.getgrosspackage as List<CRM.Models.ProductCapShow>)
+                                {
+                                    <tr>
+                                        <td>@item.ProductName</td>
+
+                                        @*@foreach (var item1 in Model.Where(x => x.ProductID == item.ProductID1))
+                                            {
+                                                <td  class="stock">@String.Format("{0:N}", item1.StkDubbi)</td>
+                                                <td  class="stock">@String.Format("{0:N}", item1.StkQuarter)</td>
+                                                <td  class="stock">@String.Format("{0:N}", item1.StkGallon)</td>
+                                                <td  class="stock">@String.Format("{0:N}", item1.StkDrum)</td>
+                                            }*@
+
+
+                                        @if (type == "Filling")
+                                        {
+                                            <td class="order">@String.Format("{0:N}", item.dubbi_o)</td>
+                                            <td class="order">@String.Format("{0:N}", item.quarter_o)</td>
+                                            <td class="order">@String.Format("{0:N}", item.gallon_o)</td>
+                                            <td class="order">@String.Format("{0:N}", item.drum_o)</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="order">@String.Format("{0:N}", item.qty_o)</td>
+
+                                        }
+                                        @if (type == "Filling")
+                                        {
+                                            <td class="com">@String.Format("{0:N}", item.dubbi_c)</td>
+                                            <td class="com">@String.Format("{0:N}", item.quarter_c)</td>
+                                            <td class="com">@String.Format("{0:N}", item.gallon_c)</td>
+                                            <td class="com">@String.Format("{0:N}", item.drum_c)</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="com">@String.Format("{0:N}", item.qty_c)</td>
+
+                                        }
+                                        @if (type == "Filling")
+                                        {
+                                            <td class="rem"> @String.Format("{0:N}", item.dubbi_o - item.dubbi_c)</td>
+                                            <td class="rem">@String.Format("{0:N}", item.quarter_o - item.quarter_c)</td>
+                                            <td class="rem">@String.Format("{0:N}", item.gallon_o - item.gallon_c)</td>
+                                            <td class="rem">@String.Format("{0:N}", item.drum_o - item.drum_c)</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="rem">@String.Format("{0:N}", item.qty_r)</td>
+                                            <td class="rem">@String.Format("{0:N}", item.qty_m)</td>
+                                            <td class="rem">@String.Format("{0:N}", item.qty_r - item.qty_m)</td>
+
+
+                                        }
+                                    </tr>
+                                }
+
+
+                                @*@foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.ProductName</td>
+
+                                            <td>@String.Format("{0:N}", item.StkOpenDubbi)</td>
+                                            <td>@String.Format("{0:N}", item.StkOpenQuarter)</td>
+                                            <td>@String.Format("{0:N}", item.StkOpenGallon)</td>
+                                            <td>@String.Format("{0:N}", item.StkOpenDrum)</td>
+
+                                            <td>@String.Format("{0:N}", item.StkInDubbi)</td>
+                                            <td>@String.Format("{0:N}", item.StkInQuarter)</td>
+                                            <td>@String.Format("{0:N}", item.StkInGallon)</td>
+                                            <td>@String.Format("{0:N}", item.StkInDrum)</td>
+
+                                            <td>@String.Format("{0:N}", item.StkOutDubbi)</td>
+                                            <td>@String.Format("{0:N}", item.StkOutQuarter)</td>
+                                            <td>@String.Format("{0:N}", item.StkOutGallon)</td>
+                                            <td>@String.Format("{0:N}", item.StkOutDrum)</td>
+
+                                            <td>@String.Format("{0:N}", item.StkDubbi)</td>
+                                            <td>@String.Format("{0:N}", item.StkQuarter)</td>
+                                            <td>@String.Format("{0:N}", item.StkGallon)</td>
+                                            <td>@String.Format("{0:N}", item.StkDrum)</td>
+
+
+
+                                        </tr>
+                                    }*@
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

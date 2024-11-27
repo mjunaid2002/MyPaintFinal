@@ -1,0 +1,166 @@
+﻿@model WebApplication1.ViewModels.ProductVM
+
+@{
+
+    ViewBag.Title = "Edit";
+    var type1= "Raw Product";
+    var type2= "Finisihed Product";
+    var type3= "SemiFinished Product";
+}
+<style>
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+        width: 900px;
+    }
+
+        table td, th {
+            display: inline-block;
+            width: 160px !important;
+        }
+</style>
+<script>
+    function date() {
+        var d = new Date();
+
+        function twoDigitDate(d) {
+            return ((d.getDate()).toString().length == 1) ? "0" + (d.getDate()).toString() : (d.getDate()).toString();
+        };
+
+        function twoDigitMonth(d) {
+            return ((d.getMonth() + 1).toString().length == 1) ? "0" + (d.getMonth() + 1).toString() : (d.getMonth() + 1).toString();
+        };
+
+        var today_ISO_date = d.getFullYear() + "-" + twoDigitMonth(d) + "-" + twoDigitDate(d); // in yyyy-mm-dd format
+        document.getElementById('datepicker').setAttribute("value", today_ISO_date);
+
+    }
+    var count = $(".itemRow").length;
+    $(document).on('click', '#addRows', function () {
+
+        var d = new Date();
+
+        function twoDigitDate(d) {
+            return ((d.getDate()).toString().length == 1) ? "0" + (d.getDate()).toString() : (d.getDate()).toString();
+        };
+
+        function twoDigitMonth(d) {
+            return ((d.getMonth() + 1).toString().length == 1) ? "0" + (d.getMonth() + 1).toString() : (d.getMonth() + 1).toString();
+        };
+
+        var today_ISO_date = d.getFullYear() + "-" + twoDigitMonth(d) + "-" + twoDigitDate(d); // in yyyy-mm-dd format
+        document.getElementById('datepicker').setAttribute("value", today_ISO_date);
+
+
+
+        count++;
+        var htmlRows = '';
+        htmlRows += '<tr>';
+        htmlRows += '<td style="width:60px !important"><button class="btn btn-danger" onclick="deleteRow(this)"><i class="fa fa-trash-o"></i></button></td>';
+        htmlRows += '<td><input type="file"  name="file"  class="form-control" /></td>';
+        htmlRows += '<td><input type="text"   name="name" required class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td><input type="text"   name="des" required class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td><input type="text" name="cost_price" value="0" class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td><input type="text" name="sale_price" value="0" required  class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td><input type="text" name="least_price" value="0" class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td><input type="number" name="pieces_boc" value="0" class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td><input type="number" name="op_stock" value="0" class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td><input type="text" name="re_level" value="0" class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td style="width:180px !important"><input type="date" value="' + today_ISO_date + '" name="stock_date" class="form-control" ></td>';
+        htmlRows += '<td><input type="text" onkeypress="return (event.charCode > 47 && event.charCode < 58)" name="bar_code" value="0" class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td><input type="text" name="wat" value="0" class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td><input type="text" name="brand" value="0" class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td><input type="text" name="m_unit" value="No" class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td><input type="number" name="shelf_number" value="0" class="form-control" autocomplete="off"></td>';
+        htmlRows += '</tr>';
+        $('#invoiceItem').append(htmlRows);
+    });
+    function deleteRow(btn) {
+        if (confirm("Are you sure want to delete the row?"))
+            $(btn).closest("tr").remove();
+    }
+</script>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Registration</a></li>
+
+            </ul>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-sm-12 col-md-12">
+            <h4 class="section-subtitle"><b>Update Product</b></h4>
+            <a href="@Url.Action("Index", "Product")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-list"></i> Product List</a>
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="row" id="wrapper">
+                        <div class="col-md-12">
+                            @using (Html.BeginForm("Edit", "Product", FormMethod.Post, new { enctype = "multipart/form-data"}))
+                            {
+                                <div class="row">
+                                   
+                                    <table class="table table-bordered table-hover table-striped" id="invoiceItem" cellspacing="0">
+                                        <tr>
+                                            <th style="width:40px;display:none">ID</th>
+                                            <th style="width:70px">Previous</th>
+                                            <th>Image</th>
+                                            <th>Item Name</th>
+                                            <th>Description</th>
+                                            <th>Cost Price</th>
+                                            <th>Sale Price</th>
+                                            <th>WholeSale Price</th>
+                                            <th>Hanks</th>
+                                            <th>Opening Stock</th>
+                                            <th>Reorder Level</th>
+                                            <th style="width:180px !important">Stock Opening Date</th>
+                                            <th>Barcode</th>
+                                            <th>Vat %</th>
+                                            <th>Brand %</th>
+                                            <th>Measuring Unit</th>
+                                            <th>Shelf Number</th>
+                                        </tr>
+                                        @foreach (var item in Model.product_list)
+                                        {
+                                    <tr>
+                                        <td style="width:40px;display:none"><input type="text" name="ID" readonly value="@item.ID" class="form-control" style="width:40px"></td>
+                                        <td style="width:70px"><img src="~/uploads/@item.Image" style="width:60px" /></td>
+                                        <td><input type="file" name="file" class="form-control"></td>
+                                        <td><input type="text" name="name" required value="@item.Name" class="form-control" autocomplete="off"></td>
+                                        <td><input type="text" name="des"  value="@item.CatID" class="form-control" autocomplete="off"></td>
+                                        <td><input type="text" name="cost_price" value="@item.CostPrice" class="form-control" autocomplete="off"></td>
+                                        <td><input type="text" name="sale_price" value="@item.SalePrice" required class="form-control" autocomplete="off"></td>
+                                        <td><input type="text" name="least_price" value="@item.LeastPrice" class="form-control" autocomplete="off"></td>
+                                        <td><input type="text" name="pieces_boc" required value="@item.PiecesBox" class="form-control" autocomplete="off"></td>
+                                        <td><input type="number" name="op_stock" value="@item.OpeningStock" class="form-control" autocomplete="off"></td>
+                                        <td><input type="text" name="re_level" value="@item.ReOrder" class="form-control" autocomplete="off"></td>
+                                        <td style="width:180px !important"><input type="date" value="@item.StockDate" name="stock_date" id="datepicker" class="form-control" autocomplete="off"></td>
+                                        <td><input type="text" name="bar_code" value="@item.Barcode" class="form-control" onkeypress="return (event.charCode > 47 && event.charCode < 58)" autocomplete="off"></td>
+                                        <td><input type="text" name="wat" value="@item.Wat" class="form-control" autocomplete="off"></td>
+                                        <td><input type="text" name="brand" value="@item.Brand" class="form-control" autocomplete="off"></td>
+                                        <td><input type="text" name="m_unit" value="@item.MUnit" class="form-control" autocomplete="off"></td>
+                                        <td><input type="number" name="shelf_number" value="@item.ShelfNumber" class="form-control" autocomplete="off"></td>
+                                    </tr>
+                                        }
+                                        </table>
+                                </div>
+                                @*<div class="row">
+                                            <div class="col-xs-12 col-sm-3 col-md-3 col-lg-3">
+                                                <button class="btn btn-success" id="addRows" type="button">+ Add More</button>
+                                                                    <a class="btn btn-success" id="addRows">+ Add More</a>
+                                    </div>
+                                                                    </div>*@
+                                <div class="col-sm-12">
+                                    <button type="submit" class="btn btn-primary" style="margin-top:10px"><i class="fa fa-save"></i> Save</button>           </div>
+
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

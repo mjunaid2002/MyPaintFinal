@@ -1,0 +1,353 @@
+﻿@model CRM.Models.Customer
+@{
+    ViewData["Title"] = "Index";
+
+}
+<script>
+    function date() {
+        var d = new Date();
+
+        function twoDigitDate(d) {
+            return ((d.getDate()).toString().length == 1) ? "0" + (d.getDate()).toString() : (d.getDate()).toString();
+        };
+
+        function twoDigitMonth(d) {
+            return ((d.getMonth() + 1).toString().length == 1) ? "0" + (d.getMonth() + 1).toString() : (d.getMonth() + 1).toString();
+        };
+
+        var today_ISO_date = d.getFullYear() + "-" + twoDigitMonth(d) + "-" + twoDigitDate(d); // in yyyy-mm-dd format
+        document.getElementById('date').setAttribute("value", today_ISO_date);
+
+    }
+    $(document).ready(function () {
+        // code to read selected table row cell data (values).
+        $(".btnSelect").on('click', function () {
+
+            var currentRow = $(this).closest("tr");
+            var col1 = currentRow.find("td:eq(0)").html();
+            var col2 = currentRow.find("td:eq(1)").html();
+            var col3 = currentRow.find("td:eq(2)").html();
+            var col4 = currentRow.find("td:eq(3)").html();
+            var col5 = currentRow.find("td:eq(4)").html();
+            var data = col1 + "\n" + col2 + "\n" + col3;
+            //alert(col1);
+            document.getElementById("id").value = col1;
+            document.getElementById("item_name").value = col3;
+            document.getElementById("sp").value = col4;
+            document.getElementById("p_box").value = col5;
+            // alert(data);
+            //var htmlRows = '';
+            //htmlRows += '<tr>';
+            //htmlRows += '<td style="width:60px !important"><button class="btn btn-danger" onclick="deleteRow(this)"><i class="fa fa-trash-o"></i></button></td>';
+            //htmlRows += '<td><input type="text"   name="name1[]" value="' + col1 + '" required class="form-control" autocomplete="off"></td>';
+            //htmlRows += '<td><input type="text"   name="name[]" value="' + col2 + '" required class="form-control" autocomplete="off"></td>';
+            //htmlRows += '<td><input type="text"   name="name2[]" value="' + col3 + '" required class="form-control" autocomplete="off"></td>';
+            //$('#invoiceItem').append(htmlRows);
+        });
+    });
+    function add() {
+        //alert("dsdas");
+        var id = document.getElementById("id").value;
+        var item_name = document.getElementById("item_name").value;
+        var sp = document.getElementById("sp").value;
+        var qty = document.getElementById("qty").value;
+        var n_total = document.getElementById("n_total").value;
+
+        // alert(id);
+        if (id == "" || id == 0) {
+            alert("Please Select Item");
+        }
+        else if (qty == "" || qty == 0) {
+
+            alert("Please Enter Quantity");
+        }
+        else {
+            var htmlRows = '';
+            htmlRows += '<tr>';
+            htmlRows += '<td style="width:80px !important"><a class="badge badge-xs x-danger b-rounded" onclick="return deleteRow(this)" ><i class="fa fa-trash-o"></i></a><a class="badge badge-xs x-warning b-rounded" onclick="return ShowEditModal(this)" ><i class="fa fa-pencil"></i></a></td>';
+            htmlRows += '<td><input type="text"  name="id"  value="' + id + '" required class="form-control" readonly autocomplete="off"></td>';
+            htmlRows += '<td><input type="text"  name="item_name"  value="' + item_name + '" readonly class="form-control" autocomplete="off"></td>';
+            htmlRows += '<td><input type="text"  name="sp"  value="' + sp + ' "   readonly class="form-control" autocomplete="off"></td>';
+            htmlRows += '<td><input type="text"  name="qty"  value="' + qty + '"  readonly class="form-control" autocomplete="off"></td>';
+            htmlRows += '<td><input type="text"  name="n_total"  value="' + n_total + '"   readonly class="form-control" autocomplete="off"></td>';
+            htmlRows += '<td style="display:none">' + id + '</td>';
+            htmlRows += '<td style="display:none">' + item_name + '</td>';
+            htmlRows += '<td style="display:none">' + sp + '</td>';
+            htmlRows += '<td style="display:none">' + qty + '</td>';
+            htmlRows += '<td style="display:none">' + n_total + '</td>';
+            $('#invoiceItem').append(htmlRows);
+
+
+            $('#id').val('');
+            $('#item_name').val('');
+            $('#sp').val('');
+            $('#qty').val('0');
+            $('#n_total').val('0');
+
+
+            var table = document.getElementById("invoiceItem"), sumVal = 0;
+
+            for (var i = 1; i < table.rows.length; i++) {
+                sumVal = sumVal + parseInt(table.rows[i].cells[10].innerHTML);
+            }
+            //alert(sumVal);
+            document.getElementById("net_final").value = sumVal;
+            document.getElementById("total").value = sumVal;
+            document.getElementById("g_total").value = sumVal;
+            document.getElementById("r_total").value = sumVal;
+
+            //$('#d_amount').val('0');
+            //$('#g_total').val('0');
+            //$('#cgo_charges').val('0');
+            //$('#total').val('0');
+            //$('#r_total').val('0');
+
+        }
+    }
+    function ShowEditModal(button) {
+        if (confirm("Are you sure want to Edit the row?"))
+            var $row = $(button).closest('tr');
+        var col1 = $row.find("td:eq(6)").html();
+        var col2 = $row.find("td:eq(7)").html();
+        var col3 = $row.find("td:eq(8)").html();
+        var col5 = $row.find("td:eq(9)").html();
+        var col6 = $row.find("td:eq(10)").html();
+
+        document.getElementById("id").value = col1;
+        document.getElementById("item_name").value = col2;
+        document.getElementById("sp").value = col3;
+        document.getElementById("qty").value = col5;
+        document.getElementById("n_total").value = col6;
+
+        $(button).closest("tr").remove();
+        var table = document.getElementById("invoiceItem"), sumVal = 0;
+
+        for (var i = 1; i < table.rows.length; i++) {
+            sumVal = sumVal + parseInt(table.rows[i].cells[10].innerHTML);
+        }
+        //alert(sumVal);
+        document.getElementById("net_final").value = sumVal;
+        document.getElementById("g_total").value = sumVal;
+        document.getElementById("r_total").value = sumVal;
+        $('#d_amount').val('0');
+        // $('#g_total').val('0');
+        $('#cgo_charges').val('0');
+        $('#total').val('0');
+
+
+    }
+
+    function deleteRow(btn) {
+        if (confirm("Are you sure want to delete the row?"))
+            $(btn).closest("tr").remove();
+        var table = document.getElementById("invoiceItem"), sumVal = 0;
+
+        for (var i = 1; i < table.rows.length; i++) {
+            sumVal = sumVal + parseInt(table.rows[i].cells[10].innerHTML);
+        }
+        //alert(sumVal);
+        document.getElementById("net_final").value = sumVal;
+        document.getElementById("g_total").value = sumVal;
+        document.getElementById("r_total").value = sumVal;
+        $('#d_amount').val('0');
+        //$('#g_total').val('0');
+        $('#cgo_charges').val('0');
+        $('#total').val('0');
+    }
+
+
+    function tota() {
+
+        var n_total = document.getElementById("n_total").value;
+        var qty = document.getElementById("qty").value;
+        if (qty == '' || qty == null) {
+            document.getElementById("qty").value = "0";
+
+        }
+
+        var sp = document.getElementById("sp").value;
+        if (sp == '' || sp == null) {
+            document.getElementById("sp").value = "0";
+        }
+
+
+        var totl;
+        totl = qty * sp;
+        if (n_total == '' || n_total == null) {
+            document.getElementById("n_total").value = "0";
+        }
+        document.getElementById("n_total").value = totl;
+        if (n_total == '' || n_total == null) {
+            document.getElementById("n_total").value = "0";
+        }
+    }
+    function gt() {
+        var cgo_charges = document.getElementById("cgo_charges").value;
+        var total = document.getElementById("total").value;
+        var nt = document.getElementById("net_final").value;
+        var t_f = parseInt(cgo_charges) + parseInt(nt);
+        document.getElementById("total").value = t_f;
+        var da = document.getElementById("d_amount").value;
+        document.getElementById("d_amount").value = "0";
+        document.getElementById("g_total").value = t_f;
+        document.getElementById("r_total").value = t_f;
+    }
+    function gt1() {
+        var da = document.getElementById("d_amount").value;
+        var total = document.getElementById("total").value;
+        var totl = total - da;
+        document.getElementById("g_total").value = totl;
+        document.getElementById("r_total").value = totl;
+    }
+
+</script>
+<script type="text/javascript">
+    function Action(code) {
+        //  alert(code);
+        $.ajax({
+            /**/
+            url: "Action/PurInvWoctn?message=" + code,
+            method: "GET",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                var address = data.value1;
+                document.getElementById("address").value = address
+            }
+        });
+    }
+</script>
+
+
+<style>
+    hr {
+        height: 1px;
+        background: black;
+        border: none;
+        outline: none;
+        margin: 3em 3em 5em;
+        position: relative;
+    }
+
+
+        hr#eight {
+            background: transparent;
+            border-bottom: 2px dashed #189279;
+            width: 100%;
+            margin: 0 auto;
+            &:before
+
+    {
+        top: 3px;
+        left: 0;
+        padding-right: 2em;
+    }
+    }
+</style>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-print" aria-hidden="true"></i> Invoices</a></li>
+
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b>Purchase Invoice Without Cottons</b></h4>
+            @using (Html.BeginForm("Create", "Invoice", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {<div class="panel-content">
+                    <div clas="row" style="margin-top:10px;">
+                        <div clas="col-md-12">
+                            <div class="form-group col-sm-2">
+                                <label>ID</label>
+                                <input type="text" id="id" class="form-control" />
+                            </div>
+                            <div class="form-group col-sm-3" style="margin-left:-20px">
+                                <label>Item Name</label>
+                                <input type="text" id="item_name" class="form-control" />
+                            </div>
+                            <div class="form-group col-sm-2" style="margin-left:-20px">
+                                <label>Sale Price</label>
+                                <input type="number" id="sp" onKeyUp="tota(); " class="form-control" />
+                            </div>
+
+                            <div class="form-group col-sm-2" style="margin-left:-20px">
+                                <label>Qty</label>
+                                <input type="number" id="qty" value="0" onKeyUp="tota(); " class="form-control" />
+                            </div>
+                            <div class="form-group col-sm-3" style="margin-left:-20px;width:210px">
+                                <label>Net Total</label>
+                                <input type="number" id="n_total" value="0" readonly class="form-control" />
+                                <a class="btn btn-wide btn-warning pull-right" onclick='return add()' style="margin-right:-130px;width:25px;margin-top:-32px"> <i class="fa fa-plus"></i> Add</a> &nbsp;&nbsp;
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12" style="margin-top:-15px">
+                            <div class="table-responsive">
+                                <table id="invoiceItem" class="table table-bordered table-hover table-striped table-success">
+                                    <thead class="bordered-darkorange">
+                                        <tr style="background-color:#189279;color:white">
+                                            <th>Action</th>
+                                            <th>ID</th>
+                                            <th>Product Name</th>
+                                            <th>Sale Price</th>
+                                            <th>Qty</th>
+                                            <th>Net Total</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        @*<div class="col-12">
+                        <div class="form-group col-sm-3">
+                            <label>Cargo Charges</label>
+                            <input type="number" value="0" asp-for="PurMaster.CargoCharges" onKeyUp="gt(); " id="cgo_charges" class="form-control" />
+                        </div>
+                        <div class="form-group col-sm-2">
+                            <label>Total</label>
+                            <input type="number" id="net_final" readonly value="0" asp-for="PurMaster.NetAmount" class="form-control" />
+                        </div>
+                        <div class="form-group col-sm-2">
+                            <label>Net Total</label>
+                            <input type="number" id="total" readonly onKeyUp="gt(); " asp-for="PurMaster.Total" value="0" class="form-control" />
+                        </div>
+                        <div class="form-group col-sm-3">
+                            <label>Discount Amount</label>
+                            <input type="number" id="d_amount" onKeyUp="gt1(); " value="0" asp-for="PurMaster.DiscountAmount" class="form-control" />
+                        </div>
+                        <div class="form-group col-sm-2">
+                            <label>Grand Total</label>
+                            <input type="text" readonly id="g_total" value="0" asp-for="PurMaster.GrandTotal" class="form-control" />
+                        </div>
+                        <div class="form-group col-sm-2">
+                            <label>Received</label>
+                            <input type="text" id="r_total" value="0" asp-for="PurMaster.Rtotal" class="form-control" />
+                        </div>
+                        <div class="form-group col-sm-2">
+                            <label>Balance</label>
+                            <input type="text" readonly id="b_total" value="0" asp-for="PurMaster.BTotal" class="form-control" />
+                        </div>
+                    </div>*@
+                        <div class="col-sm-12">
+                            <button type="submit" class="btn btn-primary col-sm-4 col-sm-offset-4" style="margin-top:10px"><i class="fa fa-save"></i> &nbsp; Save Invoice</button>
+                        </div>
+                    </div>
+
+                </div>
+            }
+            </div>
+    </div>
+</div>
+
+</div>
+
+

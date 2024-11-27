@@ -1,0 +1,47 @@
+﻿@model WebApplication1.ViewModels.TouchSaleInvVM
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Trail Balance</a></li>
+            </ul>
+        </div>
+    </div>
+    <h4 class="section-subtitle"><b>Trail Balance Search </b></h4>
+
+    @using (Html.BeginForm("GroupTrailBalanceSearch", "GroupTrailBalance", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="panel">
+            <div class="panel-content">
+                <div class="col-md-12">
+                    <div class="form-group col-sm-6">
+                        <label>Select Account Head </label>
+                        <select class="chosen-select form-control" required name="acc_head">
+                            <option value="" disabled> Select Account Head</option>
+                            @foreach (var lst_dept in Model.Ac_head_list)
+                            {
+                                <option value="@lst_dept.Id"> @lst_dept.ac_h_name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label>Select Date </label>
+                        <input type="date" name="e_date" class="form-control" />
+                    </div>
+                    <div class="col-sm-3">
+                        <button type="submit" name="submit" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Search &nbsp;&nbsp;</button>
+                    </div>
+
+                </div>
+                <br /><br /><br />
+            </div>
+
+        </div>
+
+    }
+</div>

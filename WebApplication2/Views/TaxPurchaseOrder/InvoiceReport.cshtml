@@ -1,0 +1,127 @@
+﻿@model IEnumerable<WebApplication1.QueryViewModel.PoDetail>
+@{Layout = null;
+    var total = Model.Sum(x => x.total);
+    var tax = Model.Sum(x => x.tax);
+    var inctax = Model.Sum(x => x.inctax);
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <title>PURCHASE ORDER</title>
+    <!-- You can add additional meta tags, stylesheets, or scripts in the head section -->
+</head>
+<body>
+    <div class="container text-center " style="margin-top:40px">
+        <div style="display: flex; justify-content: space-between;">
+            <div style="padding: 10px; width: 40%; text-align: left;font-size:15px;font-weight:bold">
+                <div style="display: flex">
+                    <div @*style="padding-right:60px; width: 30%;"*@>
+                        <img style="max-width: 180px; height: auto;" src="~/Content/invoiceimg1.png" alt="Invoice Image" />
+                    </div>
+                    <div style=" padding: 10px; width:70%;text-align:left">
+
+                        <div style="color:blue;font-size:18px;font-weight:bold">@ViewData["compname"]</div>
+                        <div>@ViewData["email"]</div>
+                        <div>@ViewData["phone"]</div>
+                        <div>@ViewData["address"]</div>
+
+                    </div>
+                </div>
+
+                <div style="background-color: #8686df;text-align:left;font-weight:bold;font-size:15px;padding-left:5px">Bill TO :</div>
+                <div>@ViewData["customername"]</div>
+                <div>@ViewData["cusaddress"]</div>
+                <div>@ViewData["cusphone"]</div>
+
+
+
+            </div>
+            <div style=" padding: 10px; width: 60%; text-align: Center">
+                <div style="color: blue; font-size: 18px; font-weight: bold"> PURCHASE ORDER</div>
+                <br />
+                <div><b>Inv#</b> <span style="border:1px solid; width: 100px; display: inline-block;">@ViewData["OrderId"]</span></div>
+                <div><b>Date</b> <span style="border: 1px solid; width: 100px; display: inline-block; ">@ViewData["date"]</span></div>
+                <br>
+                <div>@DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt ")</div>
+            </div>
+        </div>
+
+
+
+
+        <table class="table" style="border:1px solid">
+
+            <thead>
+                <tr class="text-center" style="background-color: #8686df">
+
+                    <th style="width:40%"> Item Name</th>
+                    <th>Unit Price</th>
+                    <th>Quantity</th>
+                    <th> Total </th>
+
+                    <th>Tax </th>
+                    <th>Inc.Tax</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any()) { }
+                else
+                {
+
+                    foreach (var lst in Model)
+                    {
+
+
+                        <tr>
+
+                            <td class="text-left">@lst.pname</td>
+                            <td>@lst.cp</td>
+                            <td>@lst.qty</td>
+                            <td>@lst.total</td>
+
+                            <td>@lst.tax</td>
+                            <td>@lst.inctax</td>
+
+                        </tr>
+
+                    }
+
+                }
+
+
+
+            </tbody>
+
+        </table>
+
+        <div style="text-align:right;font-weight:bold">Total : @total</div>
+        <div style="text-align:right;font-weight:bold">Tax Total : @tax</div>
+        <div style="text-align:right;font-weight:bold">_______________________</div>
+        <div style="text-align:right;font-weight:bold">Grand Total : @inctax</div>
+
+
+    </div>
+
+    @*<script>
+            window.onload = function () {
+                window.print();
+            };
+        </script>*@
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+

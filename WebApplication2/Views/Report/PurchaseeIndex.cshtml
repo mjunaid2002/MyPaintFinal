@@ -1,0 +1,85 @@
+﻿
+@model WebApplication1.ViewModels.SaleInvVM
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Reports</a></li>
+            </ul>
+        </div>
+    </div>
+    <h4 class="section-subtitle"><b>Purchase Report </b></h4>
+    @using (Html.BeginForm("PurchaseSearch", "Report", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="panel">
+            <div class="panel-content">
+                <div class="row">
+                    <div class="form-group col-sm-3">
+                        <label>Start Date</label>
+                        <input type="date" name="s_date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class=" form-control" required />
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label>End Date </label>
+                        <input type="date" name="e_date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
+                    </div>
+                    <div class="col-md-3">
+                        <label>Select Product</label>
+                        <select name="prd" class="chosen-select form-control">
+                            <option value="0">Select Product</option>
+                            @foreach (var item in Model.pro_listsss)
+                            {
+                                <option value="@item.ProductID">@item.ProductName</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label>Select Supplier</label>
+                        <select name="sup" class="chosen-select form-control">
+                            <option value="0">Select Supplier</option>
+                            @foreach (var item in Model.Cus_list)
+                            {
+                                <option value="@item.customerid">@item.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Select Report Type</label>
+                        <select name="type" class="form-control" required>
+                            <option value="">Select Option</option>
+                            <option value="1">Purchase Order</option>
+                            <option value="2">Purchase Invoice</option>
+                            <option value="3">Purchase Return</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Select Report Nature</label>
+                        <select name="optt" class="form-control" required>
+                            <option value="">Select Nature</option>
+                            <option value="1">Including Tax</option>
+                            <option value="2">Excluding Tax</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Supplier Invoice No</label>
+                        @Html.TextBoxFor(m => m.InvNo, new { @class = "form-control input-xs" })
+                    </div>
+
+                </div>
+                <br /><br />
+                <br />
+                <div class="col-sm-3">
+                    <button type="submit" name="submit1" value="pdf" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Pdf &nbsp;&nbsp;</button>
+                    <button type="submit" name="submit1" value="show" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Show &nbsp;&nbsp;</button>
+                </div>
+            </div>
+            <br /><br /><br />
+        </div>
+
+    }
+</div>

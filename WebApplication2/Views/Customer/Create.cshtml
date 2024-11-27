@@ -1,0 +1,74 @@
+﻿@model WebApplication1.QueryViewModel.Customers
+@{
+    ViewBag.Title = "Creat";
+}
+
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Registration</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-sm-12 col-md-12">
+            <h4 class="section-subtitle"><b>Register Customer</b></h4>
+            <a href="@Url.Action("Index","Customer")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-list"></i> Customer List</a>
+            @if (Convert.ToString(TempData["succ"]) != "")
+            {
+                <p class="alert alert-success" style="width:400px;height:50px"><b>@TempData["succ"]</b></p>
+            }
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <form action="Create" method="post" enctype="multipart/form-data" onsubmit="return confirm('Are you sure you want to Register ?');">
+                                <div class="row">
+                                    <div class="form-group col-sm-1" style="display:none">
+                                        <label> ID</label>
+                                        @Html.TextBoxFor(m => m.customerid, new { @class = "form-control input-xs", @readonly = "readonly", @required = "required" })
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        <label> Name</label>
+                                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control input-xs", @required = "required" })
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        <label>Address</label>
+                                        @Html.TextBoxFor(m => m.Address, new { @class = "form-control input-xs" })
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        <label>Mobile</label>
+                                        @Html.TextBoxFor(m => m.mobile, new { @class = "form-control input-xs" })
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        <label>Phone</label>
+                                        @Html.TextBoxFor(m => m.Phone, new { @class = "form-control input-xs" })
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        <label>Email</label>
+                                        @Html.TextBoxFor(m => m.email, new { @class = "form-control input-xs" })
+                                    </div>
+                                  <div class="form-group col-sm-2">
+                                        <label>WHT %</label>
+                                        @Html.TextBoxFor(m => m.partywht, new { @class = "form-control input-xs" })
+                                    </div>
+                                    <div class="form-group col-sm-2">
+                                        <label>NTN</label>
+                                        @Html.TextBoxFor(m => m.NTN, new { @class = "form-control input-xs" })
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <button type="submit" class="btn btn-primary" style="margin-top:10px"><i class="fa fa-save"></i> Save</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

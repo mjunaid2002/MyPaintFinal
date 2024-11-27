@@ -1,0 +1,104 @@
+﻿@model IEnumerable<WebApplication1.QueryViewModel.PurchaseReportQuery>
+@{
+    ViewBag.Title = "Index";
+    var tex = @TempData["Tex"] as string;
+    int sr = 0;
+}
+<script>
+    $('#searchable').DataTable({
+        buttons: [
+            'copy', 'excel', 'pdf'
+        ]
+    });
+</script>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Reports</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b>Purchase Report</b></h4>
+            @*<a href="@Url.Action("Create", "Category")"  class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  Creat New</a>*@
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th>Sr</th>
+                                    <th>Date</th>
+                                    <th>Inv #</th>
+                                    <th>Supplier Name</th>
+                                    <th>Item</th>
+                                    <th>Cost</th>
+                                    <th>Qty</th>
+                                    <th>Total</th>
+                                    @if (tex == "Tex")
+                                    {
+                                        <th>Tax</th>
+                                        <th>Total Inc Tax</th>
+                                    }
+
+                                </tr>
+                            </thead>
+
+                            <tbody class="abc">
+                                @if (!Model.Any())
+                                {
+
+                                }
+                                else
+                                {
+                                    foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@{sr++;}@sr</td>
+                                            <td>@item.date.ToString("dd/MM/yyyy")</td>
+                                            <td>@item.invid</td>
+                                            <td>@item.supname</td>
+                                            <td>@item.pname</td>
+                                            <td>@item.cp</td>
+                                            <td>@item.qty</td>
+                                            <td>@item.total</td>
+                                            @if (tex == "Tex")
+                                            {
+                                                <td>@item.tax</td>
+                                                <td>@item.taxtotal</td>
+                                            }
+                                            @*<td>
+                                                     <a href="@Url.Action("Edit", new { ID= item.MainCategoryID } )" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="btn btn-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
+                                                     <a href="@Url.Action("Delete", new { ID= item.MainCategoryID } )" new { onclick="return confirm('Are you sure you want to delete this record?');" class="btn btn-danger shiny input-xs"><i class="fa fa-trash-o"></i></a>
+                                                </td>*@
+                                        </tr>
+                                    }
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    @if (tex == "Tex")
+                                    {
+                                        <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                        <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    } @*<th></th>*@
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

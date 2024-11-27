@@ -1,0 +1,45 @@
+﻿@model WebApplication1.ViewModels.LoginVM
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/Login.cshtml";
+    var parameter = Request.QueryString["ac"];
+}
+<div class="wrap" id="login-page">
+    <div class="page-body animated slideInDown">
+        <br />
+        <br />
+        <div class="logo">
+        </div>
+        <div class="box" style="margin-top:-50px">
+            @if (ViewBag.Message != null)
+            {
+                <div class="alert alert-info alert-dismissable">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong><i class="fa fa-check" aria-hidden="true"></i> @ViewBag.Message</strong>
+                </div>
+            }
+            <div class="panel">
+                <center>
+                    <img src="~/Content/logo.png" style="width:70%;margin-top:10px" />
+                </center>
+                <div class="panel-content bg-scale-0" style="padding: 25px; background-color: #F7F7F7 !important">
+                    @using (Html.BeginForm("ForgetSubmit", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        <div class="form-group mt-md">
+                            <span class="input-with-icon">
+                                @Html.TextBoxFor(m => m.businessUnit.Email, new { @class = "form-control input-xs", @placeholder = "Enter Registred Email Address", @required = "@required", @type = "email" })
+                                <i class="fa fa-envelope"></i>
+                            </span>
+                        </div>
+                        <center>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary" style="margin-top:10px">Forget </button>
+                            </div>
+                        </center>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

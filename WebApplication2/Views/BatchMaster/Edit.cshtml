@@ -1,0 +1,1038 @@
+﻿@model WebApplication1.ViewModels.SaleInvVM
+@{
+    ViewBag.Title = "Index";
+}
+<style>
+    .chosen-container {
+        width: 100% !important;
+    }
+</style>
+<script>
+        var showLoader = function(form){
+            $("<div />").css({
+                'position': 'fixed',
+                'left': 0,
+                'right': 0,
+                'bottom': 0,
+                'top': 0,
+                'background': '#0020ff36',
+                'z-index': '99',
+                'text-align': 'center'
+            }).appendTo($("body"))
+                .append(
+                    $("<img />").attr("src", "https://mir-s3-cdn-cf.behance.net/project_modules/disp/35771931234507.564a1d2403b3a.gif")
+                );
+        }
+
+        function Action(code) {
+        $.ajax({
+            /**/
+            url: '@Url.Action("Action", "BatchMaster")',
+            /**/
+            type: "POST",
+            data: { "code": code },
+
+            "success": function (data) {
+                if (data != null) {
+                    var vdata = data;
+                    $("#rate1").val(vdata[0].UnitPrice);
+                    $("#id1").val(vdata[0].ProductID);
+                    $("#id1").val(vdata[0].ProductID);
+                }
+            }
+        });
+    }
+    function Action1(code) {
+        $.ajax({
+            /**/
+            url: '@Url.Action("Action", "BatchMaster")',
+            /**/
+            type: "POST",
+            data: { "code": code },
+
+            "success": function (data) {
+                if (data != null) {
+                    var vdata = data;
+                    $("#rate2").val(vdata[0].UnitPrice);
+                    $("#id2").val(vdata[0].ProductID);
+                }
+            }
+        });
+    }
+    function Action2(code) {
+        //alert(code);
+        $.ajax({
+            /**/
+            url: '@Url.Action("Action1", "BatchMaster")',
+            /**/
+            type: "POST",
+            data: { "code": code },
+
+            "success": function (data) {
+                if (data != null) {
+                    var vdata = data;
+                  // alert(vdata);
+                    $("#itmdisc").val(vdata[0].itmdisc);
+                }
+            }
+        });
+    }
+    function tota() {
+        var weight1 = document.getElementById("weight1").value;
+        /*var rate1 = document.getElementById("rate1").value;*/
+        var selObj = document.getElementById("rate1drop");
+        var rate1 = selObj.options[selObj.selectedIndex].value;
+        var totl;
+        totl = weight1 * rate1;
+        document.getElementById("cost1").value = totl;
+
+        if (kgcost > itmdisc) {
+            var inputVal = document.getElementById("1kgcost");
+            inputVal.style.backgroundColor = "red";
+        }
+
+
+
+
+    }
+    function add() {
+        var selObj = document.getElementById("item_name1");
+        var item_name1 = selObj.options[selObj.selectedIndex].text;
+        var id = selObj.options[selObj.selectedIndex].value;
+        var sp = document.getElementById("weight1").value;
+        /*var rate1 = document.getElementById("rate1").value;*/
+        var total = document.getElementById("cost1").value;
+        var date = document.getElementById("date1").value;
+        var per1 = document.getElementById("per1").value;
+        var selObj1 = document.getElementById("rate1drop");
+        var rate1 = selObj1.options[selObj1.selectedIndex].value;
+
+        var htmlRows = '';
+        htmlRows += '<tr>';
+        htmlRows += '<td style="width:80px !important"><a class="badge badge-xs x-danger b-rounded" onclick="return deleteRow(this)" ><i class="fa fa-trash-o"></i></a></td>';
+        htmlRows += '<td><input type="text"  name="id1[]"  value="' + id + '" required class="form-control" readonly autocomplete="off"></td>';
+        htmlRows += '<td><input type="text"  name="date1[]"  value="' + date + '" required class="form-control" readonly autocomplete="off"></td>';
+        htmlRows += '<td><input type="text"  name="item_name1[]"  value="' + item_name1 + '" readonly class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td><input type="text"  name="weight1[]"  value="' + sp + ' "   readonly class="form-control" autocomplete="off"></td>';
+       /* htmlRows += '<td><input type="text"  name="per1[]"  value="' + per1 + '"  readonly class="form-control" autocomplete="off"></td>';*/
+        htmlRows += '<td><input type="text"  name="rate1[]"  value="' + rate1 + '"   readonly class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td><input type="text"  name="cost1[]"  value="' + total + '"   readonly class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td style="display:none">' + total + '</td>';
+        htmlRows += '<td style="display:none">' + sp + '</td>';
+        htmlRows += '<td style="display:none"></td>';
+        htmlRows += '<td></td>';
+
+        $('#invoiceItem').append(htmlRows);
+
+
+        var table = document.getElementById("invoiceItem"), sumVal = 0;
+        for (var i = 1; i < table.rows.length; i++) {
+            sumVal = sumVal + parseFloat(table.rows[i].cells[8].innerHTML);
+        }
+        document.getElementById("weight1tot").value = sumVal;
+
+        var tot_weight = document.getElementById("weight1tot").value;
+        var table = document.getElementById("invoiceItem");
+        //alert(tot_weight);
+        for (var i = 1; i < table.rows.length; i++) {
+            var weight = table.rows[i].cells[8].innerHTML;
+            var tot = 0;
+           // alert(weight);
+            //alert(tot_weight);
+            if (tot_weight != 0) {
+                tot = (weight * 100) / tot_weight;
+            }
+            else {
+                tot = 100.00;
+            }
+            table.rows[i].cells[9].innerHTML = tot.toFixed(3);
+            table.rows[i].cells[10].innerHTML = '<input type="text"  name="per1"  value=' + tot.toFixed(3)+'  readonly class="form-control" autocomplete="off">';
+
+        }
+
+        $('#id1').val('');
+        $('#item_name1').val('');
+        $('#weight1').val('0');
+        $('#rate1').val('0');
+        $('#cost1').val('0');
+        $('#per1').val('0');
+        $('#rate1drop').val('');
+        $('#rem1').val('0');
+
+
+        var table = document.getElementById("invoiceItem"), sumVal = 0;
+        for (var i = 1; i < table.rows.length; i++) {
+            sumVal = sumVal + parseFloat(table.rows[i].cells[9].innerHTML);
+        }
+        document.getElementById("t_per").value = sumVal;
+
+        var table = document.getElementById("invoiceItem"), sumVal = 0;
+        for (var i = 1; i < table.rows.length; i++) {
+            sumVal = sumVal + parseFloat(table.rows[i].cells[7].innerHTML);
+        }
+        document.getElementById("t_cost").value = sumVal;
+
+        //Calculta Total weight
+
+        var w1 = document.getElementById("weight1tot").value;
+        var w2 = document.getElementById("weight2tot").value;
+        document.getElementById("weighttot").value = parseFloat(w1) + parseFloat(w2);
+
+        //Calculta 1kg cost
+
+        var cost1 = document.getElementById("t_cost").value;
+        var cost2 = document.getElementById("t_cost1").value;
+        var weighttot = document.getElementById("weighttot").value;
+        var sum = parseFloat(cost1) + parseFloat(cost2);
+        document.getElementById("1kgcost").value = parseFloat(sum) / parseFloat(weighttot);
+        document.getElementById("tot_cost").value = parseFloat(sum);
+
+        var kgcost = parseFloat(document.getElementById("1kgcost").value);
+        var itmdisc = parseFloat(document.getElementById("itmdisc").value);
+
+        if (kgcost > itmdisc)
+        {
+            var inputVal = document.getElementById("1kgcost");
+                inputVal.style.backgroundColor = "red";
+        }
+
+    }
+    function tota1() {
+        //  alert("text");
+        var weight1 = document.getElementById("weight2").value;
+        // var rate1 = document.getElementById("rate2").value;
+        var selObj = document.getElementById("rate2drop");
+        var rate1 = selObj.options[selObj.selectedIndex].value;
+        var totl;
+        totl = weight1 * rate1;
+        document.getElementById("cost2").value = totl;
+
+        var table = document.getElementById("invoiceItem1"), sumVal = 0;
+        for (var i = 1; i < table.rows.length; i++) {
+            sumVal = sumVal + parseInt(table.rows[i].cells[9].innerHTML);
+        }
+        document.getElementById("weight2tot").value = parseFloat(sumVal);
+        // alert(sumVal);
+        if (sumVal != 0) {
+            // alert("first");
+            var new_weight = (sumVal * weight1) / 100;
+            document.getElementById("per2").value = parseFloat(new_weight);
+        }
+        else {
+            // alert("second");
+            var new_weight = (weight1 * weight1) / 100;
+            document.getElementById("per2").value = parseFloat(new_weight);
+        }
+
+    }
+    function add1() {
+        //var id = document.getElementById("id2").value;
+        var selObj = document.getElementById("item_name2");
+        var item_name1 = selObj.options[selObj.selectedIndex].text;
+        var id = selObj.options[selObj.selectedIndex].value;
+        var sp = document.getElementById("weight2").value;
+        /*var rate1 = document.getElementById("rate2").value;*/
+        var total = document.getElementById("cost2").value;
+        var date = document.getElementById("date2").value;
+        var per1 = document.getElementById("per2").value;
+        var selObj1 = document.getElementById("rate2drop");
+        var rate1 = selObj1.options[selObj1.selectedIndex].value;
+        var htmlRows = '';
+        htmlRows += '<tr>';
+        htmlRows += '<td style="width:80px !important"><a class="badge badge-xs x-danger b-rounded" onclick="return deleteRow1(this)" ><i class="fa fa-trash-o"></i></a></td>';
+        htmlRows += '<td><input type="text"  name="id2[]"  value="' + id + '" required class="form-control" readonly autocomplete="off"></td>';
+        htmlRows += '<td><input type="text"  name="date2[]"  value="' + date + '" required class="form-control" readonly autocomplete="off"></td>';
+        htmlRows += '<td><input type="text"  name="item_name2[]"  value="' + item_name1 + '" readonly class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td><input type="text"  name="weight2[]"  value="' + sp + ' "   readonly class="form-control" autocomplete="off"></td>';
+        //htmlRows += '<td><input type="text"  name="per2[]"  value="' + per1 + '"  readonly class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td><input type="text"  name="rate2[]"  value="' + rate1 + '"   readonly class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td><input type="text"  name="cost2[]"  value="' + total + '"   readonly class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td style="display:none">' + total + '</td>';
+        htmlRows += '<td style="display:none">' + sp + '</td>';
+        htmlRows += '<td style="display:none"></td>';
+        htmlRows += '<td></td>';
+
+        $('#invoiceItem1').append(htmlRows);
+        var table = document.getElementById("invoiceItem1"), sumVal = 0;
+        for (var i = 1; i < table.rows.length; i++) {
+            sumVal = sumVal + parseFloat(table.rows[i].cells[8].innerHTML);
+        }
+        document.getElementById("weight2tot").value = sumVal;
+
+        var tot_weight = document.getElementById("weight2tot").value;
+        var weight1tot = document.getElementById("weight1tot").value;
+
+        var total_weight = parseFloat(weight1tot) + parseFloat(tot_weight);
+        var table = document.getElementById("invoiceItem1");
+        //alert(tot_weight);
+        for (var i = 1; i < table.rows.length; i++) {
+            var weight = table.rows[i].cells[8].innerHTML;
+            var tot = 0;
+            // alert(weight);
+            //alert(tot_weight);
+            if (tot_weight != 0) {
+                tot = (weight * 100) / total_weight;
+            }
+            else {
+                tot = 100.00;
+            }
+            table.rows[i].cells[9].innerHTML = tot.toFixed(3);
+            table.rows[i].cells[10].innerHTML = '<input type="text"  name="per2"  value=' + tot.toFixed(3) + '  readonly class="form-control" autocomplete="off">';
+
+        }
+
+        $('#id2').val('');
+        $('#item_name2').val('');
+        $('#weight2').val('0');
+        $('#rate2').val('0');
+        $('#cost2').val('0');
+        $('#per2').val('0');
+        $('#rate2drop').val('');
+        $('#rem2').val('0');
+
+
+        var table = document.getElementById("invoiceItem1"), sumVal = 0;
+        for (var i = 1; i < table.rows.length; i++) {
+            sumVal = sumVal + parseFloat(table.rows[i].cells[9].innerHTML);
+        }
+        document.getElementById("t_per1").value = sumVal;
+
+        var table = document.getElementById("invoiceItem1"), sumVal = 0;
+        for (var i = 1; i < table.rows.length; i++) {
+            sumVal = sumVal + parseFloat(table.rows[i].cells[7].innerHTML);
+        }
+        document.getElementById("t_cost1").value = sumVal;
+
+        //Calculta Total weight
+
+        var w1 = document.getElementById("weight1tot").value;
+        var w2 = document.getElementById("weight2tot").value;
+        document.getElementById("weighttot").value = parseFloat(w1) + parseFloat(w2);
+
+        //Calculta 1kg cost
+
+        var cost1 = document.getElementById("t_cost").value;
+        var cost2 = document.getElementById("t_cost1").value;
+        var weighttot = document.getElementById("weighttot").value;
+        var sum = parseFloat(cost1) + parseFloat(cost2);
+        document.getElementById("1kgcost").value = parseFloat(sum) / parseFloat(weighttot);
+        document.getElementById("tot_cost").value = parseFloat(sum);
+
+        var kgcost = parseFloat(document.getElementById("1kgcost").value);
+        var itmdisc = parseFloat(document.getElementById("itmdisc").value);
+
+        if (kgcost > itmdisc) {
+            var inputVal = document.getElementById("1kgcost");
+            inputVal.style.backgroundColor = "red";
+        }
+
+
+        //var tax_amount = (sumVal * tax_per) / 100;
+        //document.getElementById("net_final").value = parseFloat(sumVal);
+        //document.getElementById("tax").value = parseFloat(tax_amount);
+        //document.getElementById("inc_tax").value = parseFloat(sumVal) + parseFloat(tax_amount);
+    }
+    function deleteRow(btn) {
+        if (confirm("Are you sure want to delete the row?"))
+            $(btn).closest("tr").remove();
+        var table = document.getElementById("invoiceItem"), sumVal = 0;
+        for (var i = 1; i < table.rows.length; i++) {
+            sumVal = sumVal + parseFloat(table.rows[i].cells[8].innerHTML);
+        }
+        document.getElementById("weight1tot").value = sumVal;
+
+        var tot_weight = document.getElementById("weight1tot").value;
+        var table = document.getElementById("invoiceItem");
+        //alert(tot_weight);
+        for (var i = 1; i < table.rows.length; i++) {
+            var weight = table.rows[i].cells[8].innerHTML;
+            var tot = 0;
+            // alert(weight);
+            //alert(tot_weight);
+            if (tot_weight != 0) {
+                tot = (weight * 100) / tot_weight;
+            }
+            else {
+                tot = 100.00;
+            }
+            table.rows[i].cells[9].innerHTML = tot.toFixed(3);
+            table.rows[i].cells[10].innerHTML = '<input type="text"  name="per1"  value=' + tot.toFixed(3) + '  readonly class="form-control" autocomplete="off">';
+
+        }
+
+        var table = document.getElementById("invoiceItem"), sumVal = 0;
+        for (var i = 1; i < table.rows.length; i++) {
+            sumVal = sumVal + parseFloat(table.rows[i].cells[9].innerHTML);
+        }
+        document.getElementById("t_per").value = sumVal;
+
+        var table = document.getElementById("invoiceItem"), sumVal = 0;
+        for (var i = 1; i < table.rows.length; i++) {
+            sumVal = sumVal + parseFloat(table.rows[i].cells[7].innerHTML);
+        }
+        document.getElementById("t_cost").value = sumVal;
+
+        //Calculta Total weight
+
+        var w1 = document.getElementById("weight1tot").value;
+        var w2 = document.getElementById("weight2tot").value;
+        document.getElementById("weighttot").value = parseFloat(w1) + parseFloat(w2);
+
+        //Calculta 1kg cost
+
+        var cost1 = document.getElementById("t_cost").value;
+        var cost2 = document.getElementById("t_cost1").value;
+        var weighttot = document.getElementById("weighttot").value;
+        var sum = parseFloat(cost1) + parseFloat(cost2);
+        document.getElementById("1kgcost").value = parseFloat(sum) / parseFloat(weighttot);
+        document.getElementById("tot_cost").value = parseFloat(sum);
+
+        var kgcost = parseFloat(document.getElementById("1kgcost").value);
+        var itmdisc = parseFloat(document.getElementById("itmdisc").value);
+
+
+        if (kgcost > itmdisc) {
+            var inputVal = document.getElementById("1kgcost");
+            inputVal.style.backgroundColor = "red";
+        }
+    }
+    function deleteRow1(btn) {
+        if (confirm("Are you sure want to delete the row?"))
+            $(btn).closest("tr").remove();
+        var table = document.getElementById("invoiceItem1"), sumVal = 0;
+        for (var i = 1; i < table.rows.length; i++) {
+            sumVal = sumVal + parseFloat(table.rows[i].cells[8].innerHTML);
+        }
+        document.getElementById("weight2tot").value = sumVal;
+
+        var tot_weight = document.getElementById("weight2tot").value;
+        var table = document.getElementById("invoiceItem1");
+        //alert(tot_weight);
+        for (var i = 1; i < table.rows.length; i++) {
+            var weight = table.rows[i].cells[8].innerHTML;
+            var tot = 0;
+            // alert(weight);
+            //alert(tot_weight);
+            if (tot_weight != 0) {
+                tot = (weight * 100) / tot_weight;
+            }
+            else {
+                tot = 100.00;
+            }
+            table.rows[i].cells[9].innerHTML = tot.toFixed(3);
+            table.rows[i].cells[10].innerHTML = '<input type="text"  name="per2"  value=' + tot.toFixed(3) + '  readonly class="form-control" autocomplete="off">';
+
+        }
+
+        var table = document.getElementById("invoiceItem1"), sumVal = 0;
+        for (var i = 1; i < table.rows.length; i++) {
+            sumVal = sumVal + parseFloat(table.rows[i].cells[9].innerHTML);
+        }
+        document.getElementById("t_per1").value = sumVal;
+
+        var table = document.getElementById("invoiceItem1"), sumVal = 0;
+        for (var i = 1; i < table.rows.length; i++) {
+            sumVal = sumVal + parseFloat(table.rows[i].cells[7].innerHTML);
+        }
+        document.getElementById("t_cost1").value = sumVal;
+
+        //Calculta Total weight
+
+        var w1 = document.getElementById("weight1tot").value;
+        var w2 = document.getElementById("weight2tot").value;
+        document.getElementById("weighttot").value = parseFloat(w1) + parseFloat(w2);
+
+        //Calculta 1kg cost
+
+
+        var cost1 = document.getElementById("t_cost").value;
+        var cost2 = document.getElementById("t_cost1").value;
+        var weighttot = document.getElementById("weighttot").value;
+        var sum = parseFloat(cost1) + parseFloat(cost2);
+        document.getElementById("1kgcost").value = parseFloat(sum) / parseFloat(weighttot);
+        document.getElementById("tot_cost").value = parseFloat(sum);
+
+        var kgcost = parseFloat(document.getElementById("1kgcost").value);
+        var itmdisc = parseFloat(document.getElementById("itmdisc").value);
+
+        if (kgcost > itmdisc) {
+            var inputVal = document.getElementById("1kgcost");
+            inputVal.style.backgroundColor = "red";
+        }
+    }
+
+    function Action3(code) {
+        //alert(code);
+        $.ajax({
+            type: "GET",
+            url: "/Batch/GetCat?value=" + code,
+            data: "{}",
+            success: function (data) {
+              //  alert(data);
+                var s = '<option value="-1">Select Item</option>';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].CategoryName + '">' + data[i].CategoryName + '</option>';
+                }
+                $('#a').html(s);
+            }
+        });
+    }
+    function Action4(code) {
+      //  alert(code);
+        $.ajax({
+            type: "GET",
+            url: "/Batch/GetProd?value=" + code,
+            data: "{}",
+            success: function (data) {
+             //   alert(data);
+                var s = '<option value="-1">Select Item</option>';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].ProductName + '">' + data[i].ProductName + '</option>';
+                }
+                $('#b').html(s);
+            }
+        });
+    }
+
+    function totalcal() {
+        //alert("text");
+        var weighttot = document.getElementById("weighttot").value;
+        var waste = document.getElementById("waste").value;
+        var totl;
+        totl = (weighttot - waste) / weighttot;
+        document.getElementById("yield").value = totl * 100;
+    }
+        function Action5(code) {
+
+        $.ajax({
+            type: "GET",
+            url: "/Batch/GetstockValue?value=" + code,
+            data: "{}",
+            success: function (data) {
+               //alert(data);
+                var s = '<option value="-1">Select Rate</option>';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].cp + '">' + data[i].cp + '</option>';
+                }
+                $('#rate1drop').html(s);
+            }
+        });
+    }
+      function Action6(code) {
+          var selObj = document.getElementById("item_name1");
+          var rate = selObj.options[selObj.selectedIndex].value;
+        $.ajax({
+            /**/
+            url: '@Url.Action("GetRemqty", "BatchMaster")',
+    /**/
+    type: "POST",
+            data: { "code": code, "rate": rate },
+
+    "success": function (data) {
+        if (data != null) {
+            var vdata = data;
+            //alert(vdata);
+            $("#rem1").val(vdata[0].op + vdata[0].qty - vdata[0].qty1 - vdata[0].qtylab - vdata[0].qtybatchfilling - vdata[0].qtyreturn);
+        }
+    }
+});
+    }
+
+        function Action77(code) {
+        var selObj = document.getElementById("item_name2");
+        var rate = selObj.options[selObj.selectedIndex].value;
+
+          $.ajax({
+            /**/
+            url: '@Url.Action("GetRemqtyTotal", "BatchMaster")',
+    /**/
+    type: "POST",
+              data: { "code": rate},
+
+    "success": function (data) {
+        if (data != null) {
+            var vdata = data;
+            $("#rem2").val(vdata[0].qty);
+        }
+    }
+});
+    }
+
+    function Action7(code) {
+
+        $.ajax({
+            type: "GET",
+            url: "/Batch/GetstockValue?value=" + code,
+            data: "{}",
+            success: function (data) {
+               //alert(data);
+                var s = '<option value="-1">Select Rate</option>';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].cp + '">' + data[i].cp + '</option>';
+                }
+                $('#rate2drop').html(s);
+            }
+        });
+    }
+      function Action8(code) {
+          var selObj = document.getElementById("item_name2");
+          var rate = selObj.options[selObj.selectedIndex].value;
+        $.ajax({
+            /**/
+            url: '@Url.Action("GetRemqty", "BatchMaster")',
+    /**/
+    type: "POST",
+            data: { "code": code, "rate": rate },
+
+    "success": function (data) {
+        if (data != null) {
+            var vdata = data;
+            alert(vdata[0].op);
+            $("#rem2").val(vdata[0].op + vdata[0].qty - vdata[0].qty1 - vdata[0].qtylab - vdata[0].qtybatchfilling - vdata[0].qtyreturn);
+        }
+    }
+});
+    }
+
+      function Action88(code) {
+          var selObj = document.getElementById("item_name2");
+          var rate = selObj.options[selObj.selectedIndex].value;
+        $.ajax({
+            /**/
+            url: '@Url.Action("GetRemqtyTotal", "BatchMaster")',
+    /**/
+    type: "POST",
+            data: { "code": rate },
+
+    "success": function (data) {
+        if (data != null) {
+            var vdata = data;
+            $("#rem2").val(vdata[0].qty);
+        }
+    }
+});
+    }
+
+        function Action66(code) {
+        var selObj = document.getElementById("item_name1");
+        var rate = selObj.options[selObj.selectedIndex].value;
+
+          $.ajax({
+            /**/
+            url: '@Url.Action("GetRemqtyTotal", "BatchMaster")',
+    /**/
+    type: "POST",
+              data: { "code": rate},
+
+    "success": function (data) {
+        if (data != null) {
+            var vdata = data;
+            $("#rem1").val(vdata[0].qty);
+        }
+    }
+});
+    }
+
+</script>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Batch Master</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b> Batch Master List</b></h4>
+            <a href="@Url.Action("Index", "BatchMaster")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-list"></i>  List</a>
+            <div class="panel">
+                @using (Html.BeginForm("Update", "BatchMaster", FormMethod.Post, new { enctype = "multipart/form-data", onsubmit = "showLoader(this);" }))
+                {
+                    <div class="panel-content">
+                        <div class="row">
+                            <div class="form-group col-sm-3">
+                                <label>Date</label>
+                                @Html.TextBoxFor(m => m.productIngrMasterQuery.Date, "{0:yyyy-MM-dd}", new { @class = "form-control input-xs", @type = "date", @readonly = "readonly" })
+                                @*@Html.TextBoxFor(m => m.productIngrMasterQuery.Date, new { @class = "form-control input-xs", type = "date" })*@
+                            </div>
+                            <div class="form-group col-sm-1" style="display:none">
+                                <label>Order Id</label>
+                                @Html.TextBoxFor(m => m.productIngrMasterQuery.OrderId, new { @class = "form-control input-xs", @readonly = "readonly" })
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label>Select Region</label>
+                                @Html.DropDownListFor(m => m.productIngrMasterQuery.RegionId, new SelectList(Model.Region_list, "Id", "Name"), "Select Region", htmlAttributes: new { @class = "chosen-select form-control", @required = "true" })
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label>Select Quality</label>
+                                @Html.DropDownListFor(m => m.productIngrMasterQuery.Quality, new SelectList(Model.quality, "MainCategoryName", "MainCategoryName"), "Select Quality", htmlAttributes: new { @class = "chosen-select form-control", @required = "true", @onChange = "Action3(this.value)" })
+                            </div>
+
+                            <div class="form-group col-sm-2">
+                                <label>Select Product Name</label>
+                                <select id="a" class="form-control" name="ProductName" onChange="Action4(this.value)">
+                                    <option value="@Model.productIngrMasterQuery.ProductName">@Model.productIngrMasterQuery.ProductName</option>
+                                </select>
+                                @*@Html.DropDownListFor(m => m.productIngrMasterQuery.ProductName, new SelectList(Model.product, "CategoryName", "CategoryName"), "Select Product Name", htmlAttributes: new { @class = "chosen-select form-control", @required = "true",id = "a", @onChange = "Action4(this.value)" })*@
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label>Select Color Name</label>
+                                <select id="b" class="form-control" name="ColorName" onChange="Action2(this.value)">
+                                    <option value="@Model.productIngrMasterQuery.ColorName">@Model.productIngrMasterQuery.ColorName</option>
+                                </select>
+                                @*@Html.DropDownListFor(m => m.productIngrMasterQuery.ColorName, new SelectList(Model.color, "ProductName", "ProductName"), "Select Color", htmlAttributes: new { onChange = "Action2(this.value)", @class = "chosen-select form-control", @required = "true" })*@
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label>Batch No</label>
+                                @Html.TextBoxFor(m => m.productIngrMasterQuery.BatchNo, new { @class = "form-control input-xs" })
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label>1 KG Cost</label>
+                                @if (Model.productIngrMasterQuery.kgcoast > Model.productIngrMasterQuery.estimated)
+                                {
+                                    @Html.TextBoxFor(m => m.productIngrMasterQuery.kgcoast, new { @class = "form-control input-xs", id = "1kgcost", style = "background-color:red" })
+                                }
+                                else
+                                {
+                                    @Html.TextBoxFor(m => m.productIngrMasterQuery.kgcoast, new { @class = "form-control input-xs", id = "1kgcost" })
+                                }
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label>Ltr Cost</label>
+                                @Html.TextBoxFor(m => m.productIngrMasterQuery.ltrcoast, new { @class = "form-control input-xs" })
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label>Estimated Cost</label>
+                                <input type="text" class="form-control input-xs" id="itmdisc" name="estimated" value="@Model.productIngrMasterQuery.estimated" readonly="readonly" />
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label>Viscocity</label>
+                                @Html.TextBoxFor(m => m.productIngrMasterQuery.viscosity, new { @class = "form-control input-xs" })
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label>Weight/Ltr</label>
+                                @Html.TextBoxFor(m => m.productIngrMasterQuery.whc, new { @class = "form-control input-xs" })
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label>Total Weight</label>
+                                @Html.TextBoxFor(m => m.productIngrMasterQuery.totalweight, new { @class = "form-control input-xs", id = "weighttot", onKeyUp = "totalcal();" })
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label>Yield (%)</label>
+                                @Html.TextBoxFor(m => m.productIngrMasterQuery.yield, new { @class = "form-control input-xs", id = "yield", @readonly = "readonly" })
+                            </div>
+                            @*<div class="form-group col-sm-3">
+            <label>PH</label>
+            @Html.TextBoxFor(m => m.productIngrMasterQuery.ph, new { @class = "form-control input-xs" })
+        </div>
+        <div class="form-group col-sm-3">
+            <label>Waste Qty</label>
+            @Html.TextBoxFor(m => m.productIngrMasterQuery.Prdwaste, new { @class = "form-control input-xs", id = "waste", onKeyUp = "totalcal();" })
+        </div>
+        <div class="form-group col-sm-3">
+            <label>Test By</label>
+            @Html.TextBoxFor(m => m.productIngrMasterQuery.testby, new { @class = "form-control input-xs" })
+        </div>
+        <div class="form-group col-sm-3">
+            <label>Transfered By</label>
+            @Html.TextBoxFor(m => m.productIngrMasterQuery.transferedby, new { @class = "form-control input-xs" })
+        </div>
+        <div class="form-group col-sm-3">
+            <label>Machine Operator 1</label>
+            @Html.TextBoxFor(m => m.productIngrMasterQuery.machineoper1, new { @class = "form-control input-xs" })
+        </div>
+        <div class="form-group col-sm-3">
+            <label>Assistant/ Helper</label>
+            @Html.TextBoxFor(m => m.productIngrMasterQuery.machineoper2, new { @class = "form-control input-xs" })
+        </div>*@
+                            <div class="form-group col-sm-4">
+                                <label>Note</label>
+                                @Html.TextBoxFor(m => m.productIngrMasterQuery.note, new { @class = "form-control input-xs" })
+                            </div>
+
+                            <div class="form-group col-sm-3">
+                                <br />
+                                @*<label>Ready to Transfer ? </label>
+            @Html.CheckBoxFor(m => m.productIngrMasterQuery.ready)*@
+                                @*@if (Model.productIngrMasterQuery.ready == true)
+            {
+                <input type="checkbox" name="ready" value="1" checked />
+            }
+            else
+            {
+                <input type="checkbox" name="ready" value="0" />
+            }*@
+                            </div>
+                            <div class="col-sm-12 col-md-12">
+                                <div class="tabs mt-none">
+                                    <!-- Tabs Header -->
+                                    <ul class="nav nav-tabs nav-justified">
+                                        <li class="active"><a href="#home" data-toggle="tab">Standard</a></li>
+                                        <li><a href="#profile" data-toggle="tab">Additional Items</a></li>
+                                        @*<li><a href="#st" data-toggle="tab">Stock</a></li>*@
+                                    </ul>
+                                    <!-- Tabs Content -->
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade in active" id="home">
+                                            <div clas="row" style="margin-top:10px;">
+                                                <div clas="col-md-12">
+                                                    <div class="form-group col-sm-1" style="display:none">
+                                                        <label>ID</label>
+                                                        <input type="text" id="id1" readonly class="form-control" />
+                                                    </div>
+                                                    <div class="form-group col-sm-2" style="margin-left:-20px">
+                                                        <label>Date</label>
+                                                        <input type="date" id="date1" class="form-control" Value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                                    </div>
+                                                    <div class="form-group col-sm-3">
+                                                        <label>Select Product</label>
+                                                        @*@Html.DropDownListFor(m => m.productIngrMasterQuery.ColorName, new SelectList(Model.color, "ProductID", "ProductName"), "Select Product", htmlAttributes: new { @class = "chosen-select form-control", onChange = "Action(this.value)", @style = "margin-left:-20px", id = "item_name1" })*@
+                                                        @Html.DropDownListFor(m => m.productIngrMasterQuery.ColorName, new SelectList(Model.color, "ProductID", "ProductName"), "Select Product", htmlAttributes: new { @class = "chosen-select form-control", @onChange = "Action5(this.value)", @style = "margin-left:-20px", id = "item_name1" })
+                                                    </div>
+                                                    <div class="form-group col-sm-2" style="margin-left:-20px;width:150px">
+                                                        <label>Select Rate</label>
+                                                        @*<input type="text" id="rate1" onKeyUp="tota(); " class="form-control" />*@
+                                                        <select id="rate1drop" class="form-control" onChange="Action66(this.value)"></select>
+                                                    </div>
+                                                    <div class="form-group col-sm-2" style="margin-left:-20px;width:150px">
+                                                        <label>Rem-Weight</label>
+                                                        <input type="text" id="rem1" readonly class="form-control" />
+                                                    </div>
+                                                    <div class="form-group col-sm-2" style="margin-left:-20px;width:150px">
+                                                        <label>Weight</label>
+                                                        <input type="text" id="weight1" onKeyUp="tota();" class="form-control" />
+                                                    </div>
+                                                    <div class="form-group col-sm-2" style="display:none">
+                                                        <label>%</label>
+                                                        <input type="text" id="per1" readonly class="form-control" />
+
+                                                    </div>
+                                                    <div class="form-group col-sm-2" style="margin-left:-20px;width:150px">
+                                                        <label>Cost</label>
+                                                        <input type="text" id="cost1" readonly class="form-control" />
+                                                    </div>
+                                                    <div class="form-group col-sm-1" style="margin-top:10px">
+                                                        <br />
+                                                        <br />
+                                                        <a class="btn btn-wide btn-warning pull-left" onclick='return add()' style="margin-right:-130px;width:25px !important;margin-top:-32px"> <i class="fa fa-plus"></i> Add</a> &nbsp;&nbsp;
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-12" style="margin-top:-15px">
+                                                    <div class="table-responsive">
+                                                        <table id="invoiceItem" class="table table-bordered table-hover table-striped table-success">
+                                                            <thead class="bordered-darkorange">
+                                                                <tr style="background-color:#189279;color:white">
+                                                                    <th>Action</th>
+                                                                    <th>ID</th>
+                                                                    <th style="width:100px;">Date</th>
+                                                                    <th style="width:300px;">Product Name</th>
+                                                                    <th>Weight</th>
+                                                                    <th>Rate</th>
+                                                                    <th>Cost</th>
+                                                                    <th>%</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach (var item in Model.ProductIngrDetailQuery.Where(x => x.status == 0))
+                                                                {
+                                                                    <tr>
+                                                                        <td style="width:80px !important"><a class="badge badge-xs x-danger b-rounded" onclick="return deleteRow(this)"><i class="fa fa-trash-o"></i></a></td>
+                                                                        <td><input type="text" name="id1[]" value="@item.ItemId" required class="form-control" readonly autocomplete="off"></td>
+                                                                        <td><input type="text" name="date1[]" value="@item.Date.ToString("yyyy-MM-dd")" required class="form-control" readonly autocomplete="off"></td>
+                                                                        <td><input type="text" name="item_name1[]" value="@item.ItemName" readonly class="form-control" autocomplete="off"></td>
+                                                                        <td><input type="text" name="weight1[]" value="@item.weight" readonly class="form-control" autocomplete="off"></td>
+                                                                        <td><input type="text" name="rate1[]" value="@item.Rate" readonly class="form-control" autocomplete="off"></td>
+                                                                        <td><input type="text" name="cost1[]" value="@item.Cost" readonly class="form-control" autocomplete="off"></td>
+                                                                        <td style="display:none">@item.Cost</td>
+                                                                        <td style="display:none">@item.weight</td>
+                                                                        <td style="display:none"></td>
+                                                                        <td><input type="text" name="per1[]" value="@item.percentage" readonly class="form-control" autocomplete="off"></td>
+                                                                    </tr>
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-sm-4">
+                                                <label>Total Weight</label>
+                                                <input type="text" id="weight1tot" value="@Model.productIngrMasterQuery.Stand_total_weight" name="Stand_total_weight" readonly class="form-control" />
+                                            </div>
+                                            <div class="form-group col-sm-4">
+                                                <label>Total %</label>
+                                                <input type="text" id="t_per" value="@Model.productIngrMasterQuery.Stand_total_cost" name="Stand_total_cost" readonly class="form-control" />
+                                            </div>
+                                            <div class="form-group col-sm-4">
+                                                <label>Total Cost</label>
+                                                <input type="text" id="t_cost" value="@Model.productIngrMasterQuery.Stand_total_per" name="Stand_total_per" readonly class="form-control" />
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="profile">
+                                            <div clas="row" style="margin-top:10px;">
+                                                <div clas="col-md-12">
+                                                    <div class="form-group col-sm-1" style="display:none">
+                                                        <label>ID</label>
+                                                        <input type="text" id="id2" readonly class="form-control" />
+                                                    </div>
+                                                    <div class="form-group col-sm-2" style="margin-left:-20px">
+                                                        <label>Date</label>
+                                                        <input type="date" id="date2" class="form-control" Value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                                                    </div>
+                                                    <div class="form-group col-sm-3">
+                                                        <label>Select Product</label>
+                                                        @Html.DropDownListFor(m => m.productIngrMasterQuery.ColorName, new SelectList(Model.color, "ProductID", "ProductName"), "Select Product", htmlAttributes: new { @class = "chosen-select form-control", onChange = "Action7(this.value)", @style = "margin-left:-20px", id = "item_name2" })
+                                                    </div>
+                                                    <div class="form-group col-sm-2" style="margin-left:-20px;width:150px">
+                                                        <label>Select Rate</label>
+                                                        @*<input type="text" id="rate1" onKeyUp="tota(); " class="form-control" />*@
+                                                        <select id="rate2drop" class="form-control" onChange="Action88(this.value)"></select>
+                                                    </div>
+                                                    <div class="form-group col-sm-2" style="margin-left:-20px;width:150px">
+                                                        <label>Rem-Weight</label>
+                                                        <input type="text" id="rem2" readonly class="form-control" />
+                                                    </div>
+                                                    <div class="form-group col-sm-2" style="margin-left:-20px;width:150px">
+                                                        <label>Weight</label>
+                                                        <input type="text" id="weight2" onKeyUp="tota1(); " class="form-control" />
+                                                    </div>
+                                                    <div class="form-group col-sm-2" style="display:none">
+                                                        <label>%</label>
+                                                        <input type="text" readonly id="per2" class="form-control" />
+                                                    </div>
+                                                    <div class="form-group col-sm-2" style="margin-left:-20px;width:150px">
+                                                        <label>Cost</label>
+                                                        <input type="text" id="cost2" readonly class="form-control" />
+                                                    </div>
+                                                    <div class="form-group col-sm-1" style="margin-top:10px">
+                                                        <br />
+                                                        <br />
+                                                        <a class="btn btn-wide btn-warning pull-left" onclick='return add1()' style="margin-right:-130px;width:25px !important;margin-top:-32px"> <i class="fa fa-plus"></i> Add</a> &nbsp;&nbsp;
+                                                    </div>
+                                                </div>
+                                            </div>  <div class="row">
+                                                <div class="col-sm-12" style="margin-top:-15px">
+                                                    <div class="table-responsive">
+                                                        <table id="invoiceItem1" class="table table-bordered table-hover table-striped table-success">
+                                                            <thead class="bordered-darkorange">
+                                                                <tr style="background-color:#189279;color:white">
+                                                                    <th>Action</th>
+                                                                    <th>ID</th>
+                                                                    <th>Date</th>
+                                                                    <th>Product Name</th>
+                                                                    <th>Weight</th>
+                                                                    <th>Rate</th>
+                                                                    <th>Cost</th>
+                                                                    <th>%</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach (var item in Model.ProductIngrDetailQuery.Where(x => x.status == 1))
+                                                                {
+                                                                    <tr>
+                                                                        <td style="width:80px !important"><a class="badge badge-xs x-danger b-rounded" onclick="return deleteRow(this)"><i class="fa fa-trash-o"></i></a></td>
+                                                                        <td><input type="text" name="id2[]" value="@item.ItemId" required class="form-control" readonly autocomplete="off"></td>
+                                                                        <td><input type="text" name="date2[]" value="@item.Date" required class="form-control" readonly autocomplete="off"></td>
+                                                                        <td><input type="text" name="item_name2[]" value="@item.ItemName" readonly class="form-control" autocomplete="off"></td>
+                                                                        <td><input type="text" name="weight2[]" value="@item.weight" readonly class="form-control" autocomplete="off"></td>
+                                                                        <td><input type="text" name="rate2[]" value="@item.Rate" readonly class="form-control" autocomplete="off"></td>
+                                                                        <td><input type="text" name="cost2[]" value="@item.Cost" readonly class="form-control" autocomplete="off"></td>
+                                                                        <td style="display:none">@item.Cost</td>
+                                                                        <td style="display:none">@item.weight</td>
+                                                                        <td style="display:none"></td>
+                                                                        <td><input type="text" name="per2[]" value="@item.percentage" readonly class="form-control" autocomplete="off"></td>
+                                                                    </tr>
+                                                                }
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-sm-4">
+                                                <label>Total Weight</label>
+                                                <input type="text" id="weight2tot" value="@Model.productIngrMasterQuery.Add_total_weight" name="Add_total_weight" readonly class="form-control" />
+                                            </div>
+                                            <div class="form-group col-sm-4">
+                                                <label>Total %</label>
+                                                <input type="text" id="t_per1" value="@Model.productIngrMasterQuery.Add_total_cost" readonly name="Add_total_cost" class="form-control" />
+                                            </div>
+                                            <div class="form-group col-sm-4">
+                                                <label>Total Cost</label>
+                                                <input type="text" id="t_cost1" value="@Model.productIngrMasterQuery.Add_total_per" readonly name="Add_total_per" class="form-control" />
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="exp">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-sm-4" style="margin-top:10px">
+                                        <label>Final Cost</label>
+                                        <input type="text" id="tot_cost" value="@Model.productIngrMasterQuery.Total_cost" name="tot_cost" readonly class="form-control" />
+                                    </div>
+                                    <div class="col-sm-12">
+                                        @if (Session["SubBatchFormulationUpdate"].ToString() != "0")
+                                        {
+                                            <button type="submit" class="btn btn-primary col-sm-4 col-sm-offset-4" style="margin-top:10px"><i class="fa fa-save"></i> &nbsp; Save Data</button>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="lg-modal" aria-labelledby="modal-large-label" style="margin-top:-180px">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header state modal-primary" style="background-color: #3498DB !important">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="modal-large-label">Product Details</h4>
+            </div>
+            <div class="modal-body">
+                <div style="width: 100%; height:480px;overflow-y: scroll;">
+                    <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                        <thead class="bordered-darkorange">
+                            <tr>
+                                <th>ID</th>
+                                <th>Product Name</th>
+                                <th>Unit Price</th>
+                                <th>Action</th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody class="abc" id="myTable">
+                            @foreach (var item in Model.color)
+                            {
+                                <tr>
+                                    <td>@item.ProductID</td>
+                                    <td>@item.ProductName</td>
+                                    <td>@item.UnitPrice</td>
+                                    <td><button class="btnSelect btn btn-danger" data-dismiss="modal"><i class="fa fa-check"></i></button></td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th style="width:60px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:80px"></th>
+                                <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

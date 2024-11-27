@@ -1,0 +1,491 @@
+﻿<!doctype html>
+<html lang="en" class="fixed">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>POS</title>
+    <link rel="apple-touch-icon" sizes="120x120" href="~/Content/favicon/apple-icon-120x120.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="~/Content/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="~/Content/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="~/Content/favicon/favicon-16x16.png">
+    <script src="~/Content/vendor/pace/pace.min.js"></script>
+    <link href="~/Content/vendor/pace/pace-theme-minimal.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Content/vendor/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="~/Content/vendor/font-awesome/css/font-awesome.css">
+    <link rel="stylesheet" href="~/Content/vendor/animate.css/animate.css">
+    <link rel="stylesheet" href="~/Content/vendor/toastr/toastr.min.css">
+    <link rel="stylesheet" href="~/Content/vendor/magnific-popup/magnific-popup.css">
+    <link rel="stylesheet" href="~/Content/stylesheets/css/style.css">
+    <link rel="stylesheet" href="~/Content/vendor/data-table/media/css/dataTables.bootstrap.min.css">
+    <link href="~/Content/Datatable/dataTables.bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Content/choosen/chosen.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <script>
+        function PageLoad() {
+            Actiona();
+        }
+        window.onload = PageLoad;
+    </script>
+    <style type="text/css">
+
+
+
+/**
+ * Nestable
+ */
+
+.dd { position: relative; display: block; margin: 0; padding: 0; max-width: 600px; list-style: none; font-size: 13px; line-height: 20px; }
+
+.dd-list { display: block; position: relative; margin: 0; padding: 0; list-style: none; }
+.dd-list .dd-list { padding-left: 30px; }
+.dd-collapsed .dd-list { display: none; }
+
+.dd-item,
+.dd-empty,
+.dd-placeholder { display: block; position: relative; margin: 0; padding: 0; min-height: 20px; font-size: 13px; line-height: 20px; }
+
+.dd-handle { display: block; height: 30px; margin: 5px 0; padding: 5px 10px; color: #333; text-decoration: none; font-weight: bold; border: 1px solid #ccc;
+    background: #fafafa;
+    background: -webkit-linear-gradient(top, #fafafa 0%, #eee 100%);
+    background:    -moz-linear-gradient(top, #fafafa 0%, #eee 100%);
+    background:         linear-gradient(top, #fafafa 0%, #eee 100%);
+    -webkit-border-radius: 3px;
+            border-radius: 3px;
+    box-sizing: border-box; -moz-box-sizing: border-box;
+}
+.dd-handle:hover { color: #2ea8e5; background: #fff; }
+
+.dd-item > button { display: block; position: relative; cursor: pointer; float: left; width: 25px; height: 20px; margin: 5px 0; padding: 0; text-indent: 100%; white-space: nowrap; overflow: hidden; border: 0; background: transparent; font-size: 12px; line-height: 1; text-align: center; font-weight: bold; }
+.dd-item > button:before { content: '+'; display: block; position: absolute; width: 100%; text-align: center; text-indent: 0; }
+.dd-item > button[data-action="collapse"]:before { content: '-'; }
+
+.dd-placeholder,
+.dd-empty { margin: 5px 0; padding: 0; min-height: 30px; background: #f2fbff; border: 1px dashed #b6bcbf; box-sizing: border-box; -moz-box-sizing: border-box; }
+.dd-empty { border: 1px dashed #bbb; min-height: 100px; background-color: #e5e5e5;
+    background-image: -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff),
+                      -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+    background-image:    -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff),
+                         -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+    background-image:         linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff),
+                              linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
+    background-size: 60px 60px;
+    background-position: 0 0, 30px 30px;
+}
+
+.dd-dragel { position: absolute; pointer-events: none; z-index: 9999; }
+.dd-dragel > .dd-item .dd-handle { margin-top: 0; }
+.dd-dragel .dd-handle {
+    -webkit-box-shadow: 2px 4px 6px 0 rgba(0,0,0,.1);
+            box-shadow: 2px 4px 6px 0 rgba(0,0,0,.1);
+}
+
+/**
+ * Nestable Extras
+ */
+
+.nestable-lists { display: block; clear: both; padding: 30px 0; width: 100%; border: 0; border-top: 2px solid #ddd; border-bottom: 2px solid #ddd; }
+
+#nestable-menu { padding: 0; margin: 20px 0; }
+
+#nestable-output,
+#nestable2-output { width: 100%; height: 7em; font-size: 0.75em; line-height: 1.333333em; font-family: Consolas, monospace; padding: 5px; box-sizing: border-box; -moz-box-sizing: border-box; }
+
+#nestable2 .dd-handle {
+    color: #fff;
+    border: 1px solid #999;
+    background: red;
+}
+#nestable2 .dd-handle:hover { background: #bbb; }
+#nestable2 .dd-item > button:before { color: #fff; }
+
+@*@media only screen and (min-width: 700px) {
+
+    .dd { float: left; width: 48%; }
+    .dd + .dd { margin-left: 2%; }
+
+}*@
+
+.dd-hover > .dd-handle { background: #2ea8e5 !important; }
+
+/**
+ * Nestable Draggable Handles
+ */
+
+.dd3-content { display: block; height: 30px; margin: 5px 0; padding: 5px 10px 5px 40px; color: #333; text-decoration: none; font-weight: bold; border: 1px solid #ccc;
+    background: #fafafa;
+    background: -webkit-linear-gradient(top, #fafafa 0%, #eee 100%);
+    background:    -moz-linear-gradient(top, #fafafa 0%, #eee 100%);
+    background:         linear-gradient(top, #fafafa 0%, #eee 100%);
+    -webkit-border-radius: 3px;
+            border-radius: 3px;
+    box-sizing: border-box; -moz-box-sizing: border-box;
+}
+.dd3-content:hover { color: #2ea8e5; background: #fff; }
+
+.dd-dragel > .dd3-item > .dd3-content { margin: 0; }
+
+.dd3-item > button { margin-left: 30px; }
+
+.dd3-handle { position: absolute; margin: 0; left: 0; top: 0; cursor: pointer; width: 30px; text-indent: 100%; white-space: nowrap; overflow: hidden;
+    border: 1px solid #aaa;
+    background: #ddd;
+    background: -webkit-linear-gradient(top, #ddd 0%, #bbb 100%);
+    background:    -moz-linear-gradient(top, #ddd 0%, #bbb 100%);
+    background:         linear-gradient(top, #ddd 0%, #bbb 100%);
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+.dd3-handle:before { content: '≡'; display: block; position: absolute; left: 0; top: 3px; width: 100%; text-align: center; text-indent: 0; color: #fff; font-size: 20px; font-weight: normal; }
+.dd3-handle:hover { background: #ddd; }
+
+/**
+ * Socialite
+ */
+
+.socialite { display: block; float: left; height: 35px; }
+
+    </style>
+    <style>
+        #main-nav li {
+            background-color: white !important;
+            border: 1px solid white;
+        }
+
+            #main-nav li a {
+                color: black !important;
+            }
+
+                #main-nav li a:hover {
+                    background-color: grey !important;
+                    border: 1px solid white;
+                }
+
+            #main-nav li:active {
+                background-color: white !important;
+                border: 1px solid white;
+            }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="page-header" style="background-color:#1ABC9C">
+            <div class="leftside-header">
+                <div class="logo">
+                    <a href="@Url.Action("Index", "Dashboard")" class="on-click">
+                        <center>
+                            <h2 style="color:white;margin-top:10px;">
+                                @if (Session["CompName"] != null)
+                                {
+                                    @*@Session["CompName"].ToString()*@
+                                }
+                                else
+                                {
+                                }
+                            </h2>
+                        </center>
+                    </a>
+                </div>
+                <div id="menu-toggle" class="visible-xs toggle-left-sidebar" data-toggle-class="left-sidebar-open" data-target="html">
+                    <i class="fa fa-bars" aria-label="Toggle sidebar"></i>
+                </div>
+            </div>
+            <div class="rightside-header">
+                <div class="header-middle"></div>
+                <div class="header-section" id="search-headerbox">
+                    <h5 class="pull-right"><b>@Session["CompName"]</b></h5>
+                    <input type="text" name="search" id="search" placeholder="Search...">
+                    <i class="fa fa-search search" id="search-icon" aria-hidden="true"></i>
+                    <div class="header-separator"></div>
+                </div>
+                <div class="header-section">
+                    <a href="@Url.Action("Logout", "Home")" data-toggle="tooltip" data-placement="left" title="Logout"><i class="fa fa-sign-out log-out" aria-hidden="true"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="page-body">
+            <div class="left-sidebar" style="background-color:#FFFFFF !important;border-right:1px solid grey">
+                <div class="left-sidebar-header" style="background-color:#0F5D4D !important">
+                    <div class="left-sidebar-title"><h5 style="margin-top:2px;color:white"><b>Welcome Admin</b></h5> </div>
+                    <div class="left-sidebar-toggle c-hamburger c-hamburger--htla hidden-xs" data-toggle-class="left-sidebar-collapsed" data-target="html" style="background-color: #0F5D4D !important">
+                        <span></span>
+                    </div>
+                </div>
+                <div id="left-nav" class="nano" style="background-color: white !important;">
+                    <div class="nano-content">
+                        <nav>
+                            <ul class="nav" id="main-nav" style="border:1px solid white;background-color: white !important;">
+                                <li style="border:1px solid white;background-color: white !important;"><a href="@Url.Action("Index", "Dashboard")"><img src="~/Content/unnamed (1).png" style="width:30px" /> &nbsp; <span>Dashboard</span></a></li>
+                                @*@if (Session["reg"].ToString() != "0" || Session["loc"].ToString() != "0" || Session["cat"].ToString() != "0" || Session["brands"].ToString() != "0" || Session["pro"].ToString() != "0" ||
+Session["emp"].ToString() != "0" || Session["cus"].ToString() != "0" || Session["supp"].ToString() != "0" || Session["store"].ToString() != "0")
+                                {*@
+                                    <li class="has-child-item close-item" style="border:1px solid white">
+                                        <a><img src="~/Content/reg.png" style="width:30px" /> &nbsp; <span>  Registration  </span></a>
+                                        <ul class="nav child-nav level-1" style="background-color: white !important;">
+                                            <li style="background-color: white !important;"><a href="@Url.Action("Index", "Category")"> Categories</a></li>
+                                            <li style="background-color: white !important;"><a href="@Url.Action("Index", "Product")"> Products</a></li>
+                                            <li style="background-color: white !important;"><a href="@Url.Action("Index", "Store")"> Store</a></li>
+                                            <li style="background-color: white !important;"><a href="@Url.Action("Index", "Brands")"> Brands</a></li>
+                                            <li style="background-color: white !important;"><a href="@Url.Action("Index", "Employee")"> Employee</a></li>
+                                            <li style="background-color: white !important;"><a href="@Url.Action("Index", "Customer")"> Customer</a></li>
+                                            <li style="background-color: white !important;"><a href="@Url.Action("Index", "Supplier")"> Supplier</a></li>
+                                            <li style="background-color: white !important;"><a href="@Url.Action("Index", "Cargo")"> Cargo</a></li>
+                                            <li style="background-color: white !important;"><a href="@Url.Action("Index", "MeasuringUnit")"> Measuring Unit</a></li>
+                                        </ul>
+                                    </li>
+                                    <!--<li class="has-child-item close-item" style="border:1px solid white">
+                                <a><img src="~/Content/Store-Icon.png" style="width:30px" /> &nbsp; <span>  Store  </span></a>
+                                <ul class="nav child-nav level-1">-->
+
+                                    @*<li><a href="@Url.Action("Index", "BusinessUnit")"> Business Unit</a></li>*@
+                                    <!--</ul>
+                                </li>-->
+                                }
+                                @*<li class="has-child-item close-item">
+                                    <a><i class="fa fa-cubes" aria-hidden="true"></i><span>QMS</span></a>
+                                    <ul class="nav child-nav level-1">
+                                        <li><a href="@Url.Action("", "")"></a></li>
+                                    </ul>
+                                </li>*@
+                                <li class="has-child-item close-item" style="border:1px solid white">
+                                    <a><img src="~/Content/38-512.png" style="width:30px" /> &nbsp;  <span>  Purchase </span></a>
+                                    <ul class="nav child-nav level-1">
+                                        @*<li class="has-child-item close-item">
+                                            <a>Gatepass</a>
+                                            <ul class="nav child-nav level-2 ">
+                                                <li><a href="@Url.Action("Index", "Gatepass")">Inward Gatepass</a></li>
+                                                <li><a href="@Url.Action("GatePass", "Reports")">Gate Pass Report</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="has-child-item close-item">
+                                            <a>Purchase Invoice</a>
+                                            <ul class="nav child-nav level-2 ">
+                                                <li><a href="@Url.Action("GatepassIndex", "Purchase")">Go to Invoice</a></li>
+                                                <li><a href="@Url.Action("Index", "Purchase")">Purchase List</a></li>
+                                            </ul>
+                                        </li>*@
+                                        <li class="has-child-item close-item">
+                                            <a> Purchase Invoice </a>
+                                            <ul class="nav child-nav level-2 ">
+                                                <li><a href="@Url.Action("Index", "SimplePurchase")">Simple Invoice</a></li>
+                                                <li><a href="@Url.Action("Index", "PurWctn")">With Cotton Invoice</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="has-child-item close-item">
+                                            <a>Purchase Return</a>
+                                            <ul class="nav child-nav level-2 ">
+                                                <li><a href="@Url.Action("Index", "PurchaseReturn")">Go to Invoice</a></li>
+                                                <li><a href="@Url.Action("PurchaseReturnList", "PurchaseReturn")">Invoices List</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <!--<li class="has-child-item close-item" style="border:1px solid white">
+                            <a><img src="~/Content/6818478_preview.png" style="width:30px" /> &nbsp;  <span>Production</span></a>
+                            <ul class="nav child-nav level-1">-->
+                                @*<li><a href="@Url.Action("Purchases", "Procduction")">Production</a></li>
+                                <li><a href="@Url.Action("Purchases", "ProcductionNew")">Production New</a></li>*@
+                                <!--<li><a href="@Url.Action("Purchases", "ProcductionNew")">Production </a></li>
+                            <li><a href="@Url.Action("Index", "ProcductionNew")">Production List</a></li>-->
+                                @*<li><a href="@Url.Action("Index", "Procduction")">Production List</a></li>*@
+                                <!--<li><a href="@Url.Action("Production", "Reports")">Production Report</a></li>
+                                    <li><a href="@Url.Action("DailyRawStock", "Reports")">Daily Raw Stock Report</a></li>
+                                </ul>
+                            </li>-->
+                                @*<li class="has-child-item close-item">
+                                    <a><i class="fa fa-cubes" aria-hidden="true"></i><span>Production New</span></a>
+                                    <ul class="nav child-nav level-1">
+                                        <li><a href="@Url.Action("Purchases", "ProcductionNew")">Production </a></li>
+                                        <li><a href="@Url.Action("Index", "ProcductionNew")">Production List</a></li>
+                                    </ul>
+                                </li>*@
+                                <li class="has-child-item close-item" style="border:1px solid white">
+                                    <a><img src="~/Content/sale-icon-green.png" style="width:30px" /> &nbsp;  <span>Sale </span></a>
+                                    <ul class="nav child-nav level-1">
+                                        <li><a href="@Url.Action("Index", "Quotations")">Quotations</a></li>
+                                        @*<li><a href="@Url.Action("Index", "DeliveryNote")">Delivery Note</a></li>
+                                        <li><a href="@Url.Action("Index", "Sale")">Sale Invoice</a></li>
+                                        <li><a href="@Url.Action("Sale", "Reports")">Sale Reports</a></li>*@
+                                        <li class="has-child-item close-item">
+                                            <a> Sale Inoice </a>
+                                            <ul class="nav child-nav level-2 ">
+                                                <li><a href="@Url.Action("Index", "SimpleSale")">Simple Invoice</a></li>
+                                                <li><a href="@Url.Action("Index", "SaleWctn")">With Cotton Invoice</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="has-child-item close-item">
+                                            <a>Sale Return</a>
+                                            <ul class="nav child-nav level-2 ">
+                                                <li><a href="@Url.Action("Index", "SaleReturn")">Go to Invoice</a></li>
+                                                <li><a href="@Url.Action("SaleReturnList", "SaleReturn")"> Invoices List</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="has-child-item close-item" style="border:1px solid white">
+                                    <a><img src="~/Content/unnamed.png" style="width:30px" /> &nbsp;  <span>Accounts </span></a>
+                                    <ul class="nav child-nav level-1">
+                                        <li class="has-child-item close-item">
+                                            <a>Registration</a>
+                                            <ul class="nav child-nav level-2 ">
+                                                <li><a href="@Url.Action("Index", "Session")">Session Registration</a></li>
+                                                <li><a href="@Url.Action("List", "OpeningBalance")">Opening Balance</a></li>
+                                                <li><a href="@Url.Action("Index", "FirstLevel")">First Level</a></li>
+                                                <li><a href="@Url.Action("Index", "SecondLevelAccount")">Second Level</a></li>
+                                                <li><a href="@Url.Action("Index", "ThirdLevelAccount")">Third Level</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="has-child-item close-item">
+                                            <a>Vouchers</a>
+                                            <ul class="nav child-nav level-2 ">
+                                                <li><a href="@Url.Action("Index", "CashPayment")"> Cash Payment Voucher</a></li>
+                                                <li><a href="@Url.Action("Index", "CashReceipt")"> Cash Receipt Voucher</a></li>
+                                                <li><a href="@Url.Action("Index", "BankPayment")"> Bank Payment Voucher</a></li>
+                                                <li><a href="@Url.Action("Index", "BankReceipt")"> Bank Receipt Voucher</a></li>
+                                                <li><a href="@Url.Action("Index", "JournalVoucher")"> Journal Voucher</a></li>
+                                            </ul>
+                                        </li>
+
+                                    </ul>
+                                </li>
+
+                                <li class="has-child-item close-item" style="border:1px solid white">
+                                    <a><img src="~/Content/17-512.png" style="width:30px" /> &nbsp;   <span>  Financial Statements  </span></a>
+                                    <ul class="nav child-nav level-1">
+                                        <li class="has-child-item close-item">
+                                            <a><i class="fa fa-tasks" aria-hidden="true"></i><span>Chart of Accounts</span></a>
+                                            <ul class="nav child-nav level-2">
+                                                <li><a href="@Url.Action("Index", "ChartofAccounts")">Open Chart of Accounts </a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="has-child-item close-item">
+                                            <a><i class="fa fa-tasks" aria-hidden="true"></i><span>Ledgers</span></a>
+                                            <ul class="nav child-nav level-2">
+                                                <li><a href="@Url.Action("Index", "Ledger")">Simple Ledger </a></li>
+                                                <li><a href="@Url.Action("Index", "DetailLedger")">Detailed Ledger </a></li>
+                                                @*<li><a href="@Url.Action("Index", "ItemLedger")">Item Ledger </a></li>*@
+                                            </ul>
+                                        </li>
+                                        <li class="has-child-item close-item">
+                                            <a><i class="fa fa-tasks" aria-hidden="true"></i><span>Transaction Details</span></a>
+                                            <ul class="nav child-nav level-2">
+                                                <li><a href="@Url.Action("Index", "Transactions")">Open Transactions </a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="has-child-item close-item">
+                                            <a><i class="fa fa-tasks" aria-hidden="true"></i><span>Trail Balance</span></a>
+                                            <ul class="nav child-nav level-2">
+                                                <li><a href="@Url.Action("Index", "TrailBalance")">Open Trail Balance  </a></li>
+                                                @*<li><a href="@Url.Action("Index", "GroupTrailBalance")">Group Trail Balance  </a></li>*@
+                                            </ul>
+                                        </li>
+                                        <li class="has-child-item close-item">
+                                            <a><i class="fa fa-tasks" aria-hidden="true"></i><span> Balance Sheet</span></a>
+                                            <ul class="nav child-nav level-2">
+                                                <li><a href="@Url.Action("Index", "BalanceSheet")">Open Balance Sheet  </a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="has-child-item close-item">
+                                            <a><i class="fa fa-tasks" aria-hidden="true"></i><span> Income Statement</span></a>
+                                            <ul class="nav child-nav level-2">
+                                                <li><a href="@Url.Action("Index", "Incomestatement")">Open Income Statement </a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="has-child-item close-item" style="border:1px solid white">
+                                    <a><img src="~/Content/req.png" style="width:30px" /> &nbsp; <span>Reports</span></a>
+                                    <ul class="nav child-nav level-1">
+                                        <li><a href="@Url.Action("StockIndex", "Report")">Inventory Report</a></li>
+                                        @*<li><a href="@Url.Action("ChequesReport", "Reports")">Cheque Status Report</a></li>
+                                        <li><a href="@Url.Action("DailyRawStock", "Reports")">Daily Raw Stock Report</a></li>
+                                        <li><a href="@Url.Action("FinshedStock", "Reports")"> Finished Stock Report</a></li>*@
+                                    </ul>
+                                </li>
+                                @*@if (Session["um"].ToString() != "0" || Session["um_reg"].ToString() != "0")
+                                {*@
+                                    <li class="has-child-item close-item" style="border:1px solid white">
+                                        <a><img src="~/Content/u.png" style="width:30px" /> &nbsp; <span>User Management</span></a>
+                                        <ul class="nav child-nav level-1">
+                                            <li><a href="@Url.Action("Create", "UserMan")"> Register User</a></li>
+                                        </ul>
+                                    </li>
+                                @*}
+                                @if (Session["g_set"].ToString() != "0" || Session["g_go"].ToString() != "0")
+                                {*@
+                                    <li class="has-child-item close-item" style="border:1px solid white">
+                                        <a><img src="~/Content/free-icons-settings-icon-green-11553435316jtokrg8mit-removebg-preview (1).png" style="width:30px" /> &nbsp; <span>Imports</span></a>
+                                        <ul class="nav child-nav level-1">
+                                            <li><a href="@Url.Action("Product", "Import")"> Products</a></li>
+                                            <li><a href="@Url.Action("Supplier", "Import")"> Suppliers</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="has-child-item close-item" style="border:1px solid white">
+                                        <a><img src="~/Content/free-icons-settings-icon-green-11553435316jtokrg8mit-removebg-preview (1).png" style="width:30px" /> &nbsp; <span>General Settings</span></a>
+                                        <ul class="nav child-nav level-1">
+                                            <li><a href="@Url.Action("Index", "Settings")"> Go to Settings</a></li>
+                                        </ul>
+                                    </li>
+                                @*}*@
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            @RenderBody()
+            <a href="#" class="scroll-to-top"><i class="fa fa-angle-double-up"></i></a>
+        </div>
+    </div>
+    <script src="~/Content/javascripts/template-script.min.js"></script>
+
+
+
+    <script>
+
+        $(document).ready(function () {
+
+            var updateOutput = function (e) {
+                var list = e.length ? e : $(e.target),
+                    output = list.data('output');
+                if (window.JSON) {
+                    output.val(window.JSON.stringify(list.nestable('serialize')));//, null, 2));
+                } else {
+                    output.val('JSON browser support required for this demo.');
+                }
+            };
+
+            // activate Nestable for list 1
+            $('#nestable').nestable({
+                group: 1
+            })
+                .on('change', updateOutput);
+
+            // activate Nestable for list 2
+            $('#nestable2').nestable({
+                group: 1
+            })
+                .on('change', updateOutput);
+            $('.dd').nestable('collapseAll');
+            // output initial serialised data
+            updateOutput($('#nestable').data('output', $('#nestable-output')));
+            updateOutput($('#nestable2').data('output', $('#nestable2-output')));
+
+            //$('#nestable-menu').on('click', function (e) {
+            //    var target = $(e.target),
+            //        action = target.data('action');
+            //    if (action === 'expand-all') {
+            //        $('.dd').nestable('expandAll');
+            //    }
+            //    if (action === 'collapse-all') {
+            //        $('.dd').nestable('collapseAll');
+            //    }
+            //});
+
+            $('#nestable3').nestable();
+
+        });
+    </script>
+</body>
+</html>

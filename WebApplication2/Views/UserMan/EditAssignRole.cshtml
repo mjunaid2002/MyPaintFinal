@@ -1,0 +1,123 @@
+﻿@model WebApplication2.ViewModels.UserMan
+@{
+    ViewBag.Title = "Creat";
+}
+
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> User Management</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-sm-12 col-md-12">
+            <h4 class="section-subtitle"><b>Create User</b></h4>
+            <a href="@Url.Action("IndexLogin","UserMan")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-list"></i> User's List</a>
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form action="@Url.Action("SaveEditAssignRole","UserMan")" method="post" enctype="multipart/form-data" onsubmit="return confirm('Are you sure you want to Register ?');">
+                                <div class="row">
+                                    <div class="form-group col-sm-3">
+
+                                        <label>Select Department</label>
+                                        @Html.DropDownListFor(m => m.UserLogin.dep_id, new SelectList(Model.dep_list, "ID", "Name"), "Select Department", htmlAttributes: new { @class = "chosen-select form-control", id = "dep_id", @onChange = "OneSelect(this.value)" })
+                                        @*    @Html.DropDownListFor(m => m.UserLogin.dep_id, new SelectList(Model.dep_list, "ID", "Name"), "Select Department", htmlAttributes: new { @class = "chosen-select form-control", id = "dep_id" })*@
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Select Team Lead</label>
+                                        @* @Html.DropDownListFor(m => m.UserLogin.teamlead_id, new SelectList(Model.teamlead_list, "ID", "Name"), "Select Team Lead", htmlAttributes: new { @class = "chosen-select form-control", id = "teamlead_id" })*@
+                                        @Html.DropDownListFor(m => m.UserLogin.teamlead_id, new SelectList(Model.teamlead_list, "ID", "Name"), "Select Team Lead", htmlAttributes: new { @class = " form-control", id = "teamlead_id", @onChange = "SecondSelect(this.value)" })
+                                        @*     @Html.DropDownListFor(m => m.UserLogin.teamlead_id, new SelectList(Enumerable.Empty<SelectListItem>(), "ID", "Name"), "Select Team Lead", htmlAttributes: new { @class = "chosen-select form-control", id = "teamlead_id" })*@
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Select Employee</label>
+                                        @* @Html.DropDownListFor(m => m.UserLogin.EmpId, new SelectList(Model.emp_list, "ID", "Name"), "Select Employee", htmlAttributes: new { @class = "chosen-select form-control", id = "empid" })*@
+                                        @Html.DropDownListFor(m => m.UserLogin.EmpId, new SelectList(Model.emp_list, "ID", "Name"), "Select Employee", htmlAttributes: new { @class = "form-control", id = "empid" })
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Select Role</label>
+                                        @Html.DropDownListFor(m => m.UserLogin.roleid, new SelectList(Model.role_list, "Id", "name"), "Select Role", htmlAttributes: new { @class = "chosen-select form-control", id = "empid" })
+                                    </div>
+                                    <div class="form-group col-sm-3" hidden>
+                                        <label>ID</label>
+                                        @Html.TextBoxFor(m => m.UserLogin.Id, new { @class = "form-control input-xs", id = "id", value = "" })
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        <label>User Name</label>
+                                        @Html.TextBoxFor(m => m.UserLogin.UserName, new { @class = "form-control input-xs", id = "username" })
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Password</label>
+                                        @Html.TextBoxFor(m => m.UserLogin.Password, new { @class = "form-control input-xs", id = "pass", value = "" })
+                                    </div>
+                                    <div class="col-sm-12">
+                                        <button type="submit" class="btn btn-primary" style="margin-top:10px"><i class="fa fa-save"></i> Save</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    // When the department changes, update the Team Lead dropdown
+    function OneSelect(departmentId) {
+        if (departmentId) {
+            $.ajax({
+                type: "GET",
+                url: "/UserMan/GetTeamLeads?dep_id=" + departmentId,
+                success: function (data) {
+                    var teamLeadDropdown = $('#teamlead_id');
+                    teamLeadDropdown.empty(); // Clear the current options
+                    teamLeadDropdown.append('<option value="">Select Team Lead</option>'); // Default option
+                    $.each(data, function (i, teamLead) {
+                        teamLeadDropdown.append('<option value="' + teamLead.ID + '">' + teamLead.Name + '</option>');
+                    });
+                    $('#teamlead_id').trigger("chosen:updated"); // Update chosen plugin
+                }
+            });
+        }
+    }
+
+    // When the team lead changes, update the Employee dropdown
+    function SecondSelect(teamLeadId) {
+        if (teamLeadId) {
+            $.ajax({
+                type: "GET",
+                url: "/UserMan/GetEmployees?teamlead_id=" + teamLeadId,
+                success: function (data) {
+                    var employeeDropdown = $('#empid');
+                    employeeDropdown.empty(); // Clear the current options
+                    employeeDropdown.append('<option value="">Select Employee</option>'); // Default option
+                    $.each(data, function (i, employee) {
+                        employeeDropdown.append('<option value="' + employee.ID + '">' + employee.Name + '</option>');
+                    });
+                    $('#empid').trigger("chosen:updated"); // Update chosen plugin
+                }
+            });
+        }
+    }
+
+
+    //$('#dep_id').change(function () {
+    //    // Same AJAX call as before...
+    //    $('#teamlead_id').trigger("chosen:updated");
+    //});
+
+    //$('#teamlead_id').change(function () {
+    //    // Same AJAX call as before...
+    //    $('#empid').trigger("chosen:updated");
+    //});
+
+</script>
+
+
+

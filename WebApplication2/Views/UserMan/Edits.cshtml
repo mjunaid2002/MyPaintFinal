@@ -1,0 +1,512 @@
+﻿@model WebApplication2.ViewModels.UserMan
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/Tree.cshtml";
+}
+<style>
+    #treeview .k-sprite {
+        background-image: url("../content/web/treeview/coloricons-sprite.png");
+    }
+
+    .rootfolder {
+        background-position: 0 0;
+    }
+
+    .folder {
+        background-position: 0 -16px;
+    }
+
+    .pdf {
+        background-position: 0 -32px;
+    }
+
+    .html {
+        background-position: 0 -48px;
+    }
+
+    .image {
+        background-position: 0 -64px;
+    }
+</style>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-users" aria-hidden="true"></i> User Management</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-sm-12 col-md-12">
+            <h4 class="section-subtitle"><b>Assign Role</b></h4>
+            <a href="@Url.Action("Index", "UserMan")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-list"></i> List</a>
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            @*<form action="Create" method="post" enctype="multipart/form-data">*@
+                            <div class="row">
+                                <div class="form-group col-sm-4">
+                                    <label>Select Role</label>
+                                    @Html.DropDownListFor(m => m.Roles.Id, new SelectList(Model.role_list, "Id", "name"), "Select Role", htmlAttributes: new { @class = "chosen-select form-control", id = "empid" })
+                                </div>
+                                <div class="form-group col-sm-12">
+                                    <h4>Assign Roles</h4>
+                                    <div id="treeview"></div>
+                                    @*<div style="padding-top: 2em;">
+                                            <h4>Status</h4>
+                                            <p id="result">No nodes checked.</p>
+                                        </div>*@
+                                </div>
+                                <div class="col-sm-12">
+                                    <button type="submit" class="btn btn-primary" onclick='return btnSave()' style="margin-top:10px"><i class="fa fa-plus"></i> Register User</button>
+                                </div>
+                            </div>
+                            @*</form>*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<link rel="stylesheet" href="https://kendo.cdn.telerik.com/2020.2.513/styles/kendo.default-v2.min.css" />
+
+<script src="https://kendo.cdn.telerik.com/2020.2.513/js/jquery.min.js"></script>
+
+
+<script src="https://kendo.cdn.telerik.com/2020.2.513/js/kendo.all.min.js"></script>
+<script>
+    $("#treeview").kendoTreeView({
+        checkboxes: {
+            checkChildren: true
+        },
+
+        check: onCheck,
+
+
+        dataSource: [{
+            id: 0, text: "Select Menu ", expanded: true, spriteCssClass: "rootfolder", items: [
+                {
+                    id: 1, text: "Registration", expanded: true, spriteCssClass: "folder", items: [
+                        {
+                            id: 1001, text: "Main Category", spriteCssClass: "html", items: [
+                                { id: 1001001, text: "Add", spriteCssClass: "html" },
+                                { id: 1001002, text: "Delete", spriteCssClass: "html" },
+                                { id: 1001003, text: "View", spriteCssClass: "html" },
+                                { id: 1001004, text: "Update", spriteCssClass: "html" }
+                            ]
+                        },
+                        {
+                            id: 1002, text: "Category", spriteCssClass: "html", items: [
+                                { id: 1002001, text: "Add", spriteCssClass: "html" },
+                                { id: 1002002, text: "Delete", spriteCssClass: "html" },
+                                { id: 1002003, text: "View", spriteCssClass: "html" },
+                                { id: 1002004, text: "Update", spriteCssClass: "html" }
+                            ]
+                        },
+                        {
+                            id: 1003, text: "Quality Category", spriteCssClass: "html", items: [
+                                { id: 1003001, text: "Add", spriteCssClass: "html" },
+                                { id: 1003002, text: "Delete", spriteCssClass: "html" },
+                                { id: 1003003, text: "View", spriteCssClass: "html" },
+                                { id: 1003004, text: "Update", spriteCssClass: "html" }
+                            ]
+                        },
+                        {
+                            id: 1004, text: "Raw Product", spriteCssClass: "html", items: [
+                                { id: 1004001, text: "Add", spriteCssClass: "html" },
+                                { id: 1004002, text: "Delete", spriteCssClass: "html" },
+                                { id: 1004003, text: "View", spriteCssClass: "html" },
+                                { id: 1004004, text: "Update", spriteCssClass: "html" }
+                            ]
+                        },
+                        {
+                            id: 1005, text: "Finished Product", spriteCssClass: "html", items: [
+                                { id: 1005001, text: "Add", spriteCssClass: "html" },
+                                { id: 1005002, text: "Delete", spriteCssClass: "html" },
+                                { id: 1005003, text: "View", spriteCssClass: "html" },
+                                { id: 1005004, text: "Update", spriteCssClass: "html" }
+                            ]
+                        },
+                        {
+                            id: 1010, text: "Employee", spriteCssClass: "html", items: [
+                                { id: 10010001, text: "Add", spriteCssClass: "html" },
+                                { id: 10010002, text: "Delete", spriteCssClass: "html" },
+                                { id: 10010003, text: "View", spriteCssClass: "html" },
+                                { id: 10010004, text: "Update", spriteCssClass: "html" }
+                            ]
+                        },
+                        {
+                            id: 1006, text: "Customers", spriteCssClass: "html", items: [
+                                { id: 1006001, text: "Add", spriteCssClass: "html" },
+                                { id: 1006002, text: "Delete", spriteCssClass: "html" },
+                                { id: 1006003, text: "View", spriteCssClass: "html" },
+                                { id: 1006004, text: "Update", spriteCssClass: "html" }
+                            ]
+                        }
+                        ,
+                        {
+                            id: 1007, text: "Suppliers", spriteCssClass: "html", items: [
+                                { id: 1007001, text: "Add", spriteCssClass: "html" },
+                                { id: 1007002, text: "Delete", spriteCssClass: "html" },
+                                { id: 1007003, text: "View", spriteCssClass: "html" },
+                                { id: 1007004, text: "Update", spriteCssClass: "html" }
+                            ]
+                        }
+                        ,
+                        {
+                            id: 1008, text: "Cargo", spriteCssClass: "html", items: [
+                                { id: 1008001, text: "Add", spriteCssClass: "html" },
+                                { id: 1008002, text: "Delete", spriteCssClass: "html" },
+                                { id: 1008002, text: "View", spriteCssClass: "html" },
+                                { id: 1008002, text: "Update", spriteCssClass: "html" }
+                            ]
+                        },
+                        {
+                            id: 1009, text: "Product Pricing", spriteCssClass: "html", items: [
+                                { id: 1009001, text: "Add", spriteCssClass: "html" },
+                                { id: 1009002, text: "Delete", spriteCssClass: "html" },
+                                { id: 1009003, text: "View", spriteCssClass: "html" },
+                                { id: 1009004, text: "Update", spriteCssClass: "html" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    id: 2, text: "Accounts", expanded: true, spriteCssClass: "html", items: [
+                        {
+                            id: 2001, text: "Registration", spriteCssClass: "html"
+                        },
+                        {
+                            id: 2002, text: "Vouchers", spriteCssClass: "html"
+                        }
+                        ,
+                        {
+                            id: 2003, text: "Ledger", spriteCssClass: "html"
+                        }
+                        , {
+                            id: 2004, text: "Opening Balance", spriteCssClass: "html"
+                        }
+                    ]
+                },
+                {
+                    id: 3, text: "Purchase", expanded: true, spriteCssClass: "folder", items: [
+                        {
+                            id: 3001, text: "Stock Inward", spriteCssClass: "html", items: [
+                                { id: 3001001, text: "Add", spriteCssClass: "html" },
+                                { id: 3001002, text: "Delete", spriteCssClass: "html" },
+                                { id: 3001003, text: "View", spriteCssClass: "html" },
+                                { id: 3001004, text: "Update", spriteCssClass: "html" }
+                            ]
+                        },
+
+                        {
+                            id: 3002, text: "Purchase Order", spriteCssClass: "html", items: [
+                                { id: 3002001, text: "Add", spriteCssClass: "html" },
+                                { id: 3002002, text: "Delete", spriteCssClass: "html" },
+                                { id: 3002003, text: "View", spriteCssClass: "html" },
+                                { id: 3002004, text: "Update", spriteCssClass: "html" }
+                            ]
+                        },
+                        {
+                            id: 3003, text: "Purchase Invoice", spriteCssClass: "html", items: [
+                                { id: 3003001, text: "Add", spriteCssClass: "html" },
+                                { id: 3003002, text: "Delete", spriteCssClass: "html" },
+                                { id: 3003003, text: "View", spriteCssClass: "html" },
+                                { id: 3003004, text: "Update", spriteCssClass: "html" }
+                            ]
+                        },
+                        {
+                            id: 3004, text: "Purchase Return", spriteCssClass: "html", items: [
+                                { id: 3004001, text: "Add", spriteCssClass: "html" },
+                                { id: 3004002, text: "Delete", spriteCssClass: "html" },
+                                { id: 3004003, text: "View", spriteCssClass: "html" },
+                                { id: 3004004, text: "Update", spriteCssClass: "html" }
+                            ]
+                        },
+                        {
+                            id: 3005, text: "Purchase Tax Order", spriteCssClass: "html", items: [
+                                { id: 3005001, text: "Add", spriteCssClass: "html" },
+                                { id: 3005002, text: "Delete", spriteCssClass: "html" },
+                                { id: 3005003, text: "View", spriteCssClass: "html" },
+                                { id: 3005004, text: "Update", spriteCssClass: "html" }
+                            ]
+                        },
+                        {
+                            id: 3006, text: "Purchase Tax Invoice", spriteCssClass: "html", items: [
+                                { id: 3006001, text: "Add", spriteCssClass: "html" },
+                                { id: 3006002, text: "Delete", spriteCssClass: "html" },
+                                { id: 3006003, text: "View", spriteCssClass: "html" },
+                                { id: 3006004, text: "Update", spriteCssClass: "html" }
+                            ]
+                        },
+                        {
+                            id: 3007, text: "Purchase Tax Return", spriteCssClass: "html", items: [
+                                { id: 3007001, text: "Add", spriteCssClass: "html" },
+                                { id: 3007002, text: "Delete", spriteCssClass: "html" },
+                                { id: 3007003, text: "View", spriteCssClass: "html" },
+                                { id: 3007004, text: "Update", spriteCssClass: "html" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    id: 4, text: "Sale", expanded: true, spriteCssClass: "html", items: [
+                        {
+                            id: 4001, text: "Sale Invocie", spriteCssClass: "html", items: [
+                                { id: 4001001, text: "Add", spriteCssClass: "html" },
+                                { id: 4001002, text: "Delete", spriteCssClass: "html" },
+                                { id: 4001003, text: "View", spriteCssClass: "html" },
+                                { id: 4001004, text: "Update", spriteCssClass: "html" }
+                            ]
+                        },
+                        {
+                            id: 4002, text: "Sale Return", spriteCssClass: "html", items: [
+                                { id: 4002001, text: "Add", spriteCssClass: "html" },
+                                { id: 4002002, text: "Delete", spriteCssClass: "html" },
+                                { id: 4002003, text: "View", spriteCssClass: "html" },
+                                { id: 4002004, text: "Update", spriteCssClass: "html" }
+                            ]
+                        },
+                        {
+                            id: 4003, text: "Sale Invoice For Raw ", spriteCssClass: "html", items: [
+                                { id: 4003001, text: "Add", spriteCssClass: "html" },
+                                { id: 4003002, text: "Delete", spriteCssClass: "html" },
+                                { id: 4003003, text: "View", spriteCssClass: "html" },
+                                { id: 4003004, text: "Update", spriteCssClass: "html" }
+                            ]
+                        },
+                        {
+                            id: 4004, text: "Sale Order For Raw", spriteCssClass: "html", items: [
+                                { id: 4004001, text: "Add", spriteCssClass: "html" },
+                                { id: 4004002, text: "Delete", spriteCssClass: "html" },
+                                { id: 4004003, text: "View", spriteCssClass: "html" },
+                                { id: 4004004, text: "Update", spriteCssClass: "html" }
+                            ]
+                        },
+                        {
+                            id: 4005, text: "Sale Tax Invoice", spriteCssClass: "html", items: [
+                                { id: 4005001, text: "Add", spriteCssClass: "html" },
+                                { id: 4005002, text: "Delete", spriteCssClass: "html" },
+                                { id: 4005003, text: "View", spriteCssClass: "html" },
+                                { id: 4005004, text: "Update", spriteCssClass: "html" }
+                            ]
+                        },
+                        {
+                            id: 4006, text: "Sale Tax Invoice WHT", spriteCssClass: "html", items: [
+                                { id: 4006001, text: "Add", spriteCssClass: "html" },
+                                { id: 4006002, text: "Delete", spriteCssClass: "html" },
+                                { id: 4006003, text: "View", spriteCssClass: "html" },
+                                { id: 4006004, text: "Update", spriteCssClass: "html" }
+                            ]
+                        },
+                        {
+                            id: 4007, text: "Sale Tax Return", spriteCssClass: "html", items: [
+                                { id: 4007001, text: "Add", spriteCssClass: "html" },
+                                { id: 4007002, text: "Delete", spriteCssClass: "html" },
+                                { id: 4007003, text: "View", spriteCssClass: "html" },
+                                { id: 4007004, text: "Update", spriteCssClass: "html" }
+                            ]
+                        },
+                        {
+                            id: 4008, text: "Sale Tax Order", spriteCssClass: "html", items: [
+                                { id: 4008001, text: "Add", spriteCssClass: "html" },
+                                { id: 4008002, text: "Delete", spriteCssClass: "html" },
+                                { id: 4008003, text: "View", spriteCssClass: "html" },
+                                { id: 4008004, text: "Update", spriteCssClass: "html" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    id: 5, text: "Batch Processing", expanded: true, spriteCssClass: "html", items: [
+                        {
+                            id: 5001, text: "Batch Formulation", spriteCssClass: "html", items: [
+                                { id: 5001001, text: "Add", spriteCssClass: "html" },
+                                { id: 5001002, text: "View", spriteCssClass: "html" },
+                                { id: 5001003, text: "Update", spriteCssClass: "html" }
+                            ]
+                        },
+                        {
+                            id: 5002, text: "Batch Transfer", spriteCssClass: "html", items: [
+                                { id: 5002001, text: "Add", spriteCssClass: "html" },
+                                { id: 5002002, text: "View", spriteCssClass: "html" },
+                                { id: 5002003, text: "Update", spriteCssClass: "html" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    id: 6, text: "Filling Department", expanded: true, spriteCssClass: "html", items: [
+                        {
+                            id: 6001, text: "Batch Receiving", spriteCssClass: "html", items: [
+                                { id: 6001001, text: "Add", spriteCssClass: "html" },
+                                { id: 6001002, text: "View", spriteCssClass: "html" },
+                                { id: 6001003, text: "Update", spriteCssClass: "html" }
+                            ]
+                        },
+                        {
+                            id: 6002, text: "Batch Filling", spriteCssClass: "html", items: [
+                                { id: 6002001, text: "Add", spriteCssClass: "html" },
+                                { id: 6002002, text: "View", spriteCssClass: "html" },
+                                { id: 6002003, text: "Update", spriteCssClass: "html" },
+                                { id: 6002004, text: "Cost Visible", spriteCssClass: "html" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    id: 7, text: "Lab", expanded: true, spriteCssClass: "folder", items: [
+                        {
+                            id: 7001, text: "Lab", spriteCssClass: "html", items: [
+                                { id: 7001001, text: "Add", spriteCssClass: "html" },
+                                { id: 7001002, text: "View", spriteCssClass: "html" },
+                                { id: 7001003, text: "Update", spriteCssClass: "html" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    id: 8, text: "Wastage", expanded: true, spriteCssClass: "folder", items: [
+                        {
+                            id: 8001, text: "For Raw Items", spriteCssClass: "html", items: [
+                                { id: 8001001, text: "Add", spriteCssClass: "html" },
+                                { id: 8001002, text: "Delete", spriteCssClass: "html" },
+                                { id: 8001003, text: "View", spriteCssClass: "html" },
+                                { id: 8001004, text: "Update", spriteCssClass: "html" }]
+                        },
+                        {
+                            id: 8002, text: "For Finished Product", spriteCssClass: "html", items: [
+                                { id: 8002001, text: "Add", spriteCssClass: "html" },
+                                { id: 8002002, text: "Delete", spriteCssClass: "html" },
+                                { id: 8002003, text: "View", spriteCssClass: "html" },
+                                { id: 8002004, text: "Update", spriteCssClass: "html" }]
+                        }
+                    ]
+                },
+                {
+                    id: 9, text: "Customer Item Discount", expanded: true, spriteCssClass: "html"
+                },
+                {
+                    id: 10, text: "Reports", expanded: true, spriteCssClass: "folder", items: [
+                        {
+                            id: 10001, text: "Raw Material", spriteCssClass: "html"
+                        },
+                        {
+                            id: 10002, text: "Finished Items", spriteCssClass: "html"
+                        },
+                        {
+                            id: 10003, text: "Batch Balance", spriteCssClass: "html"
+                        },
+                        {
+                            id: 10004, text: "Purchase Report", spriteCssClass: "html"
+                        },
+                        {
+                            id: 10005, text: "Sale Report", spriteCssClass: "html"
+                        },
+                        {
+                            id: 10006, text: "Batch Sheet Summery", spriteCssClass: "html"
+                        },
+                        {
+                            id: 10007, text: "Lab Sheet Summery", spriteCssClass: "html"
+                        }
+                    ]
+                }
+                ,
+                {
+                    id: 11, text: "User Management", expanded: true, spriteCssClass: "html", items: [
+                        {
+                            id: 11001, text: "Create Role", spriteCssClass: "html"
+                        },
+                        {
+                            id: 11002, text: "Assign Role", spriteCssClass: "html"
+                        },
+                        {
+                            id: 11003, text: "Create User", spriteCssClass: "html"
+                        }
+
+                    ]
+                },
+                {
+                    id: 12, text: "Imports", expanded: true, spriteCssClass: "html"
+                },
+                {
+                    id: 13, text: "General Settings", expanded: true, spriteCssClass: "html"
+                }
+            ]
+        }]
+
+    });
+    function checkedNodeIds(nodes, checkedNodes) {
+        for (var i = 0; i < nodes.length; i++) {
+            if (nodes[i].checked) {
+                checkedNodes.push(nodes[i].id);
+            }
+
+            if (nodes[i].hasChildren) {
+                checkedNodeIds(nodes[i].children.view(), checkedNodes);
+            }
+        }
+    }
+
+    var checkedNodes1 = [];
+    function onCheck() {
+
+        var checkedNodes = [],
+            treeView = $("#treeview").data("kendoTreeView"),
+            message;
+        checkedNodeIds(treeView.dataSource.view(), checkedNodes);
+        checkedNodes1 = checkedNodes;
+
+        $("#result").html(message);
+    }
+var data;
+    function btnSave() {
+        onCheck();
+        var empid = document.getElementById("empid").value;
+        //var encodedHTML = escape(checkedNodes1);         //here encoding Html.
+        var encodedHTML = checkedNodes1;         //here encoding Html.
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("GetJavaScriptString", "UserMan")',
+            data: "{ChildNodes:'" + encodedHTML + "',empid:'" + empid + "'}",
+            contentType: "application/json",
+            dataType: "json",
+            success: function (data) {
+               window.location.href = '@Url.Action("Index", "UserMan")';
+            },
+            error: function (data) {
+                window.location.href = '@Url.Action("Index", "UserMan")';
+            }
+        });
+
+    }
+
+    @foreach (var item in Model.UserAccess.Where(x=>x.SuperFormId>0))
+    {
+        @:var dataItem = $("#treeview").data("kendoTreeView").dataSource.get(@item.SuperFormId);
+        @:var node = $("#treeview").data("kendoTreeView").findByUid(dataItem.uid);
+        @:var treeview = $("#treeview").data("kendoTreeView");
+        @:treeview.dataItem(node).set("checked", true);
+    }
+    @foreach (var item in Model.UserAccess.Where(x => x.SubFormId > 0))
+    {
+        @:var dataItem = $("#treeview").data("kendoTreeView").dataSource.get(@item.SubFormId);
+        @:var node = $("#treeview").data("kendoTreeView").findByUid(dataItem.uid);
+        @:var treeview = $("#treeview").data("kendoTreeView");
+        @:treeview.dataItem(node).set("checked", true);
+    }
+    @foreach (var item in Model.UserAccess.Where(x => x.FormId > 0))
+    {
+        @:var dataItem = $("#treeview").data("kendoTreeView").dataSource.get(@item.FormId);
+        @:var node = $("#treeview").data("kendoTreeView").findByUid(dataItem.uid);
+        @:var treeview = $("#treeview").data("kendoTreeView");
+        @:treeview.dataItem(node).set("checked", true);
+    }
+
+</script>
+

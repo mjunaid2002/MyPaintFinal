@@ -1,0 +1,96 @@
+﻿@model CRM.Models.BusinessUnit
+@{
+    ViewBag.Title = "Creat";
+}
+
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Registration</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-sm-12 col-md-12">
+            <h4 class="section-subtitle"><b>Register BusinessUnit</b></h4>
+            <a href="@Url.Action("Index","BusinessUnit")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-list"></i> BusinessUnit List</a>
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <form action="Create" method="post" enctype="multipart/form-data" onsubmit="return confirm('Are you sure you want to Register ?');">
+                                <div class="row">
+                                    <div class="form-group col-sm-1">
+                                        <label>ID</label>
+                                        @Html.TextBoxFor(m => m.Id, new { @class = "form-control input-xs", @readonly = "readonly" })
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Business Unit Name</label>
+                                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control input-xs" })
+                                    </div>
+                                 <div class="form-group col-sm-3">
+                                     <label>	Expiry  date</label>
+                                        @Html.TextBoxFor(m => m.expiraydate, new { @class = "form-control input-xs",@type="date" })
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Email</label>
+                                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control input-xs" })
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Phone</label>
+                                        @Html.TextBoxFor(m => m.Phone, new { @class = "form-control input-xs" })
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Telephone</label>
+                                        @Html.TextBoxFor(m => m.Telephone, new { @class = "form-control input-xs" })
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Address</label>
+                                        @Html.TextBoxFor(m => m.Address, new { @class = "form-control input-xs" })
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>GST</label>
+                                        @Html.TextBoxFor(m => m.Gst, new { @class = "form-control input-xs" })
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>NTN</label>
+                                        @Html.TextBoxFor(m => m.Ntn, new { @class = "form-control input-xs" })
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        <label>Invoices Language</label>
+                                        <select class="form-control" name="lang">
+                                            <option value="1" selected>English</option>
+                                            <option value="2">Urdu</option>
+                                        </select>
+                                    </div>
+                                    <script>
+                                        var loadFile = function (event) {
+                                            var output = document.getElementById('output');
+                                            output.src = URL.createObjectURL(event.target.files[0]);
+                                        };
+                                    </script>
+                                    <div class="form-group col-sm-4">
+                                        <label>Choose Image</label>
+                                        <input type="file" name="file" onchange="loadFile(event)" class="form-control" />
+                                    </div>
+                                    <div class="form-group col-md-2">
+                                        <img id="output" style="width:140px;margin-top:10px" />
+                                    </div>
+
+                                    <div class="col-sm-12">
+                                        <button type="submit" class="btn btn-primary" style="margin-top:10px"><i class="fa fa-plus"></i> Save</button>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

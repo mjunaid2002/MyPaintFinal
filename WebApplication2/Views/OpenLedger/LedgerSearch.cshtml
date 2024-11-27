@@ -1,0 +1,163 @@
+﻿@model WebApplication2.ViewModels.ChartofaccountVm
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var position = 0;
+    var bal = 0;
+    var sum_cr = 0;
+    var sum_dr = 0;
+    var total = 0;
+    int op = 0;
+    var s_date = ViewBag.StartDate;
+    string PINV = "PINV";
+    string SINV = "SINV";
+}
+<script type="text/javascript">
+    function printDiv(divName) {
+        var printContents = document.getElementById(divName).innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+
+        window.print();
+
+        document.body.innerHTML = originalContents;
+    }</script>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Ledger</a></li>
+            </ul>
+        </div>
+    </div>
+    <h4 class="section-subtitle"><b>Ledger Search </b></h4>
+    <p class="pull-right" style="color: red;margin-top:-30px">
+    </p>
+    @using (Html.BeginForm("LedgerSearch", "OpenLedger", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="col-md-12">
+            <div class="form-group col-sm-3">
+                <label>Select Account</label>
+                @Html.DropDownListFor(m => m.accountTitle.AccountNo, new SelectList(Model.third_level, "AccountNo", "AccountTitleName"), "Select Account", htmlAttributes: new { @class = "chosen-select form-control" })
+            </div>
+            <div class="form-group col-sm-3">
+                <label>Start Date </label>
+                <input type="date" name="s_date" value="@Convert.ToDateTime(ViewBag.StartDate).ToString("yyyy-MM-dd")" class="form-control" />
+            </div>
+            <div class="form-group col-sm-3">
+                <label>End Date </label>
+                <input type="date" name="e_date" value="@Convert.ToDateTime(ViewBag.EndDate).ToString("yyyy-MM-dd")" class="form-control" />
+            </div>
+            <div class="col-sm-3">
+                <button type="submit" name="submit" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Search &nbsp;&nbsp;</button>
+            </div>
+        </div>
+    }
+    <button type="button" onclick="printDiv('printableArea')" class="btn btn-info pull-right"><i class="fa fa-print"></i> Print</button>
+    <div class="row" id="printableArea">
+        <div class="col-sm-12">
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="table-responsive">
+                        <center>
+                            <br />
+                            General Ledger</br/>
+                            <b><u>@Session["BusinessUnitName"]</u></b></br/>
+                            <b><u>@Model.accountTitle.AccountTitleName</u></b>
+                            <br />@Convert.ToDateTime(ViewBag.StartDate).ToString("dd-MM-yyyy") To @Convert.ToDateTime(ViewBag.EndDate).ToString("dd-MM-yyyy")</br/></br/></br/>
+                        </center>
+                        <table class="table table-bordered table-hover table-striped table-success">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th colspan="4">
+                                        (Opening Balance Pkr  <u>
+                                            <span id="demo"></span>
+                                            <script>
+                                                var y = @(bal = Model.accountTitle.cr);
+
+                                                var x = y.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                                document.getElementById("demo").innerHTML = x;
+                                            </script>
+
+                                            )
+                                        </u>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th>Tr no</th>
+                                    <th> Date</th>
+                                    <th> Vtype</th>
+                                    <th>Inv No</th>
+                                    <th>Description</th>
+                                    <th>DEBIT</th>
+                                    <th>CREDIT</th>
+                                    <th>Balance(PKR)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.trans_list)
+                                {
+                                    // position = 0;
+                                    sum_cr += Convert.ToInt32(item.Cr);
+                                    sum_dr += Convert.ToInt32(item.Dr);
+                                    if (item.AccountHeadId == 1 || item.AccountHeadId == 5)
+                                    {
+                                        bal = (bal + (Convert.ToInt32(item.Dr - item.Cr)));
+                                    }
+                                    else
+                                    {
+                                        bal = (bal + (Convert.ToInt32(item.Cr - item.Dr)));
+                                    }
+                                    DateTime edate = Convert.ToDateTime(item.TransDate);
+                                    <tr>
+                                        <td>@item.TransId</td>
+                                        <td>@edate.ToString("dd-MM-yyyy")</td>
+                                        <td>
+                                            @if (item.Vtype == "PINVWOCTN" || item.Vtype == "PINVWCTN")
+                                            {
+                                                @PINV
+                                            }
+                                            else if (item.Vtype == "SINVWOCTN" || item.Vtype == "SINVWCTN")
+                                            {
+                                                @SINV
+                                            }
+                                            else
+                                            {
+                                                @item.Vtype
+                                            }
+                                        </td>
+
+                                        <td>@item.InvId</td>
+                                        <td> @item.TransDes </td>
+                                        <td>@String.Format("{0:N}", item.Dr)</td>
+                                        <td>@String.Format("{0:N}", item.Cr)</td>
+                                        <td>@String.Format("{0:N}", bal)</td>
+                                    </tr>
+
+                                    position++;
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th>Grand Total</th>
+                                    <th> @String.Format("{0:N}", sum_dr) </th>
+                                    <th>@String.Format("{0:N}", sum_cr)</th>
+                                    <th>@String.Format("{0:N}", bal)</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

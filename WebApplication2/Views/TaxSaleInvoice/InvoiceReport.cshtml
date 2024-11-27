@@ -1,0 +1,428 @@
+﻿@model IEnumerable<WebApplication1.QueryViewModel.SaleReturnDetailQuery>
+@{Layout = null;
+    var total = Model.Sum(x => x.total);
+    var totalqty = Model.Sum(x => x.qty);
+    var totalsp = Model.Sum(x => x.sp);
+    var dtotal = Model.Sum(x => x.totalafterdisc);
+    var totalgst = Model.Sum(x => x.gst);
+    var ntotal = Model.Sum(x => x.ntotal);
+
+    decimal totalkg = 0;
+    decimal Gtotalkg = 0;
+
+    var dubbiQty = Model.Where(x => x.packing.Trim() == "Dubbi").Sum(x => x.qty);
+    var QuarterQty = Model.Where(x => x.packing.Trim() == "Quarter").Sum(x => x.qty);
+    var DrumQty = Model.Where(x => x.packing.Trim() == "Drum").Sum(x => x.qty);
+    var GallonQty = Model.Where(x => x.packing.Trim() == "Gallon").Sum(x => x.qty);
+
+
+    var totalQty = Model.Sum(x => x.qty);
+    var type = ViewData["type"] as string;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <title>Sale Invoice</title>
+    <!-- You can add additional meta tags, stylesheets, or scripts in the head section -->
+</head>
+<body>
+    <div class="container text-center " style="margin-top:40px">
+        <div style="display: flex; justify-content: space-between;">
+            <div style="padding: 10px; width: 70%; text-align: left;font-size:15px;font-weight:bold">
+                <div style="display: flex">
+
+                    <div style=" padding: 10px;">
+                        @if (ViewData["logo"] != null)
+                        {
+                            string imageSrc = $"data:image/png;base64,{ViewData["logo"]}";
+                            <img style="width:250px; height: 100px;" src="@imageSrc" alt="Logo Image">
+                        }
+
+                        <div style="color:blue;font-size:22px;font-weight:bold;margin-top:20px"><u>@ViewData["compname"]</u></div>
+                        @*<div>@ViewData["email"]</div>
+                    <div>@ViewData["phone"]</div>*@
+                        <div>@ViewData["address"]</div>
+                        <br>
+                        <div style="margin-bottom: 5px;"><b>NTN : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b> <span style="border:1px solid; width: 120px; display: inline-block;">@ViewData["cusntn"]</span></div>
+                        <div style="margin-bottom: 5px;"><b>STRN : &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b> <span style="border: 1px solid; width: 120px; display: inline-block; ">@ViewData["STRN"]</span></div>
+                        <div style="margin-bottom: 5px;"><b>Contact # :</b> <span style="border: 1px solid; width: 120px; display: inline-block; ">@ViewData["phone"]</span></div>
+
+                    </div>
+                </div>
+                @*<div style="display: flex">
+                <div >
+                    <img style="max-width: 180px; height: auto;" src="~/Content/invoiceimg1.png" alt="Invoice Image" />
+                </div>
+                <div style=" padding: 10px; width:70%;text-align:left">
+
+                    <div style="color:blue;font-size:18px;font-weight:bold">@ViewData["compname"]</div>
+                    <div>@ViewData["email"]</div>
+                    <div>@ViewData["phone"]</div>
+                    <div>@ViewData["address"]</div>
+
+                </div>
+            </div>*@
+
+
+
+
+            </div>
+            <div style=" padding: 10px; width: 60%; text-align: Center">
+                @if (type != "Delivery" && type != "Delivery1")
+                {
+                    <div style="color: blue; font-size: 18px; font-weight: bold"> Sales Invoice</div>
+                    <br />
+                    <div><b>Inv#</b> <span style="border:1px solid; width: 100px; display: inline-block;">@ViewData["OrderId"]</span></div>
+                }
+                else
+                {
+                    <div style="color: blue; font-size: 18px; font-weight: bold">Delivery Order</div>
+                    <br />
+                    <div><b>DO#</b> <span style="border:1px solid; width: 100px; display: inline-block;">@ViewData["OrderId"]</span></div>
+                }
+
+
+                <div><b>Date</b> <span style="border: 1px solid; width: 100px; display: inline-block; ">@ViewData["date"]</span></div>
+                <br>
+                <div>@DateTime.Now.ToString("dd/MM/yyyy hh:mm:ss tt ")</div>
+
+
+                <div style="text-align: left; font-weight: bold; font-size: 15px; padding-left: 5px; padding-top: 10px">Region : @ViewData["Region"] <br>  Cargo : @ViewData["cargo"]  </div>
+                <div style="background-color: #8686df; text-align: left; font-weight: bold; font-size: 15px; padding-left: 5px">Bill TO : @ViewData["customername"] <br>@ViewData["cusaddress"]<br>@ViewData["cusphone"]</div>
+                @*<div>@ViewData["customername"]</div>
+                <div>@ViewData["cusaddress"]</div>
+                <div>@ViewData["cusphone"]</div>*@
+            </div>
+
+            
+
+        </div>
+
+
+
+        @if (type == "show")
+        {
+            <table class="table" style="border:1px solid">
+
+                <thead>
+                    <tr class="text-center" style="background-color: #8686df">
+
+                        <th style="width:40%"> Item Name</th>
+                        <th>Packing</th>
+                        <th>Quantity</th>
+                        <th>Sale Price</th>
+
+                        <th>Net Total </th>
+                        <th>Disc% </th>
+                        <th>Tax </th>
+                        <th>After Dis</th>
+                        <th>Net Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any()) { }
+                    else
+                    {
+
+                        foreach (var lst in Model)
+                        {
+
+
+                            <tr>
+
+                                <td class="text-left">@lst.prname</td>
+                                <td>@lst.packing</td>
+                                <td>@lst.qty</td>
+                                <td>@lst.sp</td>
+
+                                <td>@lst.total</td>
+                                <td>@lst.dsicval</td>
+                                <td>@lst.gst</td>
+                                <td>@lst.totalafterdisc</td>
+                                <td>@lst.ntotal</td>
+
+                            </tr>
+
+                        }
+
+                    }
+
+                    <tr>
+                        <td colspan="2"></td>
+                        <td><b>@totalqty</b></td>
+                        <td><b>@totalsp</b></td>
+                        <td><b>@total</b></td>
+                        <td></td>
+
+                        <td><b>@totalgst</b></td>
+                        <td><b>@dtotal</b></td>
+                        <td><b>@ntotal</b></td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+        }
+        else
+        {
+            <style>
+                table, th, td {
+                    border: 1px solid;
+                }
+            </style>
+
+            <table class="table" style="border: 1px solid; width: 100%;">
+
+                <thead>
+                    <tr class="text-center" style="background-color: #8686df">
+
+                        <th style="width:30%"> Product Quality</th>
+                        <th style="width:30%"> Item Name</th>
+                        <th>STN</th>
+                        <th>QTR</th>
+                        <th>GLN</th>
+                        <th>DRM</th>
+                        @if (type == "Delivery")
+                        {
+                            <th>Literage / Kg</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any()) { }
+                    else
+                    {
+
+                        foreach (var lst in Model)
+                        {
+                            <tr style="border-collapse: separate; border-spacing: 0; ">
+
+                                <td class="text-left" style="width:40%">@lst.catagoryname</td>
+                                <td class="text-left">@lst.prname</td>
+                                <td class="text-center">
+                                    @if (@lst.packing.Trim() == "Dubbi")
+                                    {
+                                        @(lst.qty.ToString("N0"))
+
+                                        totalkg = totalkg + lst.CapDubbi * lst.qty;
+
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @if (@lst.packing.Trim() == "Quarter")
+                                    {
+
+                                        @( lst.qty.ToString("N0"))
+                                        totalkg = totalkg + lst.CapQuarter * lst.qty;
+                                    }
+                                </td>
+
+                                <td class="text-center">
+                                    @if (@lst.packing.Trim() == "Gallon")
+                                    {
+                                        @(lst.qty.ToString("N0"))
+                                        totalkg = totalkg + lst.CapGallon * lst.qty;
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    @if (@lst.packing.Trim() == "Drum")
+                                    {
+                                        @( lst.qty.ToString("N0"))
+                                        totalkg = totalkg + lst.CapDrum * lst.qty;
+                                    }
+                                </td>
+
+                                @if (type == "Delivery")
+                                {
+                                    <td class="text-center">@(totalkg.ToString("F3"))</td>
+                                    Gtotalkg = Gtotalkg + totalkg;
+                                    totalkg = 0;
+                                }
+
+                            </tr>
+
+                        }
+
+                    }
+
+                <tr>
+                    <th>Packing Summary</th>
+                    <th>Total-Qty : @totalQty.ToString("N0")</th>
+                    <th class="text-center">@dubbiQty.ToString("N0")</th>
+                    <th class="text-center">@QuarterQty.ToString("N0")</th>
+                    <th class="text-center">@GallonQty.ToString("N0")</th>
+                    <th class="text-center">@DrumQty.ToString("N0")</th>
+                    @if (type == "Delivery")
+                    {
+                        <th class="text-center">@(Gtotalkg.ToString("F3"))</th>
+                     
+                    }
+                </tr>
+
+                </tbody>
+
+            </table>
+        }
+
+        @if (type == "show")
+        {
+            <div style="text-align:right;font-weight:bold">Total : @ntotal</div>
+        }
+        else
+        {
+            @*<div class="container text-left  " style=" display: flex; justify-content: flex-start;">
+
+                <div style="width: 40% ;padding-left:40px">
+                    <div style="font:bold"><u>Packing Summary</u></div>
+
+                    <table class="table" height="200px" width="50%" border="1" style="border-collapse: collapse;">
+                        <thead style="text-align: left">
+                            <tr>
+                                <td width="70%">Drums</td>
+                                <td style="text-align: right;">@DrumQty.ToString("N0")</td>
+                            </tr>
+                         
+                            <tr>
+                                <td>Gallon</td>
+                                <td style="text-align: right;">@GallonQty.ToString("N0")</td>
+                            </tr>
+                            <tr>
+                                <td>Qtr</td>
+                                <td style="text-align: right;">@QuarterQty.ToString("N0")</td>
+                            </tr>
+                            <tr>
+                                <td>Dubbi</td>
+                                <td style="text-align: right;">@dubbiQty.ToString("N0")</td>
+                            </tr>
+                        
+                            <tr>
+                                <td>Total Quantity</td>
+                                <td style="text-align: right;">@totalQty.ToString("N0")</td>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+              
+
+            </div>*@
+            @*<style>
+                .info-box {
+
+                    width: 25%;
+                    border-top: 2px solid;
+                    padding: 10px; /* Adjust the padding as needed */
+                    box-sizing: border-box; /* Include padding in the width calculation */
+                }
+            </style>*@
+            <style>
+                .lineshow div {
+                    border-top: 1px solid black;
+                    width: 20%;
+                    padding-top: 5px; /* Optional: Adjust padding for spacing */
+                }
+            </style>
+            <br>
+            <br>
+            <br>
+            <div class="container lineshow" style="display: flex; justify-content: space-between;text-align:center">
+                <div>Processed By </div>
+                <div>Authorized By </div>
+                <div>Delivered By </div>
+                <div>Received By </div>
+            </div>
+        }
+    </div>
+
+    @*<script>
+            window.onload = function () {
+                window.print();
+            };
+        </script>*@
+
+
+</body>
+</html>
+@functions {
+    // Method to convert numeric value to words
+    string ConvertToWords(decimal number)
+    {
+        // Convert decimal to long for simplicity
+        long wholePart = (long)Math.Floor(number);
+        int decimalPart = (int)((number - wholePart) * 100);
+
+        string words = ConvertToWords(wholePart);
+
+        if (decimalPart > 0)
+        {
+            words += " and " + ConvertToWords(decimalPart) + " Paisa";
+        }
+
+        return words;
+    }
+
+    string ConvertToWords(long number)
+    {
+        if (number == 0)
+            return "Zero";
+
+        if (number < 0)
+            return "Minus " + ConvertToWords(Math.Abs(number));
+
+        string words = "";
+
+        if ((number / 1000000) > 0)
+        {
+            words += ConvertToWords(number / 1000000) + " Million ";
+            number %= 1000000;
+        }
+
+        if ((number / 1000) > 0)
+        {
+            words += ConvertToWords(number / 1000) + " Thousand ";
+            number %= 1000;
+        }
+
+        if ((number / 100) > 0)
+        {
+            words += ConvertToWords(number / 100) + " Hundred ";
+            number %= 100;
+        }
+
+        if (number > 0)
+        {
+            if (words != "")
+                words += "and ";
+
+            var unitsArray = new[] { "", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine" };
+            var teensArray = new[] { "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen" };
+            var tensArray = new[] { "", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety" };
+
+            if (number < 10)
+                words += unitsArray[number];
+            else if (number < 20)
+                words += teensArray[number - 10];
+            else
+            {
+                words += tensArray[number / 10];
+                if ((number % 10) > 0)
+                    words += "-" + unitsArray[number % 10];
+            }
+        }
+
+        return words;
+    }
+}
+
+
+
+
+
+
+

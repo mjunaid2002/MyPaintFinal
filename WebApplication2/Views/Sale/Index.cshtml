@@ -1,0 +1,69 @@
+﻿@model IEnumerable<WebApplication1.QueryViewModel.Salequery>
+@{
+    ViewBag.Title = "Index";
+}
+<script>
+    function check() {
+        //  alert("dsasd");
+        var len = document.querySelectorAll('.abc input[type="checkbox"]:checked').length;
+        // alert(len);
+        if (len <= 0) {
+            alert("Please select atleast one Gatepass");
+            return false;
+        } else {
+
+        }
+    }
+</script>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-print" aria-hidden="true"></i> Invoices</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b>Sale Invoices List</b></h4>
+             @using (Html.BeginForm("SaleSearch", "Sale", FormMethod.Post, new { enctype = "multipart/form-data" }))
+             {
+                 <input type="submit" value="Proceed" class="btn btn-success pull-right" onclick="return check();" style="margin-top:-50px" />
+                <div class="panel">
+                    <div class="panel-content">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover table-striped table-success">
+                                <thead class="bordered-darkorange">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Inv Id</th>
+                                        <th>Customer</th>
+                                        <th>Delivery Person</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="abc">
+                                    @foreach (var item in Model)
+                                    {
+                                    <tr>
+                                        <td>
+                                            <label>
+                                                <input name="ID" type="checkbox" value="@item.InvID" class="colored-primary">
+                                                <span class="text">@item.InvID</span>
+                                            </label>
+                                        </td>
+                                        <td>@item.InvID</td>
+                                        <td>@item.CustomerName</td>
+                                        <td>@item.EmployeeName</td>
+                                        <td>@item.Date</td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

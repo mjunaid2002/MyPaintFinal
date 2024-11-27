@@ -1,0 +1,75 @@
+﻿@model IEnumerable<WebApplication1.QueryViewModel.ProductIngrMasterQuery>
+@{
+    ViewBag.Title = "Index";
+}
+<script>
+    $('#searchable').DataTable({
+        buttons: [
+            'copy', 'excel', 'pdf'
+        ]
+    });
+</script>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Batch Procesing</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b> Batch History</b></h4>
+            <a href="@Url.Action("Create", "Batch")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  Creat New</a>
+            @*<a href="#" data-toggle="modal" data-target="#exampleModal" class="btn btn-wide btn-info pull-right" style="margin-top:-40px;margin-right:10px"><i class="fa fa-list"></i> Batch History</a>*@
+            <a href="@Url.Action("History", "Batch")" class="btn btn-wide btn-info pull-right" style="margin-top:-40px;margin-right:10px"><i class="fa fa-list"></i> Batch History</a>
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="tabs mt-none">
+                        <!-- Tabs Header -->
+                        <ul class="nav nav-tabs nav-justified">
+                            <li><a href="@Url.Action("History", "Batch")">All</a></li>
+                            <li class="active"><a href="@Url.Action("CompHistory", "Batch")">Completed</a></li>
+                            <li><a href="@Url.Action("InCompHistory", "Batch")">In-Completed</a></li>
+                        </ul>
+                        <!-- Tabs Content -->
+                        <div class="tab-content" style="min-height:220px">
+                            <div class="tab-pane fade in active" id="profile" style="min-height:100px">
+                                </bR>
+                                <div class="row">
+                                    <div class="col-sm-12" style="margin-top:-15px">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                                                <thead class="bordered-darkorange">
+                                                    <tr style="background-color:#189279;color:white">
+                                                        <th>Date</th>
+                                                        <th>SrNo</th>
+                                                        <th>Batch No</th>
+                                                        <th>Color Name</th>
+                                                        <th>Product Name</th>
+                                                    </tr>
+                                                </thead>
+                                                @foreach (var item in Model.Where(z => z.ready2 == "1"))
+                                                {
+                                                    <tr>
+                                                        <td>@item.Date.ToString("dd-MM-yyyy")</td>
+                                                        <td>@item.OrderId</td>
+                                                        <td>@item.BatchNo</td>
+                                                        <td>@item.ColorName</td>
+                                                        <td>@item.ProductName</td>
+                                                    </tr>
+                                                }
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

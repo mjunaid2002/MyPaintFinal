@@ -1,0 +1,100 @@
+﻿@model IEnumerable<WebApplication1.QueryViewModel.stockquery>
+@{
+    ViewBag.Title = "Index";
+    decimal total = 0;
+}
+
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-print" aria-hidden="true"></i> Stock</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b>Stock Report</b></h4>
+            <a href="@Url.Action("PrintRep", "Stock")" target="_blank" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-print"></i>  Print Preview</a>
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Item Name</th>
+                                    <th>CostPrice</th>
+                                    <th>Barcode</th>
+                                    <th>Brand</th>
+                                    <th>Category</th>
+                                    <th>Purchase</th>
+                                    <th>Sale</th>
+                                    @*<th>Net Qty</th>*@
+                                    <th>Final Ctn</th>
+                                    <th>Final Qty</th>
+                                    <th>Total Cost</th>
+                                    
+                                  </tr>
+                            </thead>
+
+                            <tbody class="abc">
+                                @foreach (var item in Model)
+                                {
+                                    total +=item.TotalCost;
+
+                                    <tr>
+
+                                        <td>@item.ID</td>
+                                        <td>@item.Name</td>
+                                        <td>@item.CostPrice</td>
+                                        <td>@item.Barcode</td>
+                                        <td>@item.BrandName</td>
+                                        <td>@item.CatName</td>
+                                        <td>@item.QTYIN</td>
+                                        <td>@item.QTYOUT</td>
+                                        @*<td>@item.BAL</td>*@
+                                        <td>@item.CTN</td>
+                                        <td>@item.QTY</td>
+                                        <td>@item.TotalCost</td>
+
+                                    </tr>
+                                }
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td > <b>Total Cost:</b></td>
+                                    <td>@total</td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th style="width:80px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:80px"></th>
+                                   @* <th style="width:80px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:80px"></th>*@
+                                    <th style="width:80px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:80px"></th>
+                                    <th style="width:80px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:80px"></th>
+                                    <th style="width:80px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:80px"></th>
+                                    <th style="width:80px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:80px"></th>
+                                    <th style="width:80px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:80px"></th>
+                                    <th style="width:80px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:80px"></th>
+                                    <th style="width:80px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:80px"></th>
+                                    <th style="width:80px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:80px"></th>
+                                    <th style="width:80px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:80px"></th>
+                                    <th style="width:80px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:80px"></th>
+                                      <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

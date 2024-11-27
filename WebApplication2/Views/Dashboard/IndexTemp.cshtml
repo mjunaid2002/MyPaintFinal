@@ -1,0 +1,79 @@
+﻿@{
+    ViewBag.Title = "Index";
+    int sr = 0;
+}
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Dashboard </a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            @if (Session["isadmin"].ToString() != "0")
+            {
+                <div class="panel">
+                    <div class="panel-content">
+                        <div class="row">
+                            <!--BOX Style 3-->
+                            <h4 style="margin-left:10px"><b>Companies Details</b></h4>
+                            <div class="col-sm-4 col-sm-2">
+                                <div class="panel widgetbox wbox-3 bg-lighter-1" style="width:300px; height: 80px !important ">
+                                    <div class="col-md-12">
+                                        <div class="col-md-1">
+                                            <span class="icon fa fa-line-chart" style="font-size:22px;margin-top:25px;color:white;margin-left:-10px"></span>
+                                        </div>
+                                        <div class="col-md-9" style="margin-left:-20px">
+                                            <a href="#">
+                                                <div class="panel-content">
+                                                    <p class="title" style="font-size:18px">Total</p>
+                                                    <p class="subtitle">@String.Format("{0:N}", Session["t_comp"])</p>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 col-sm-2" style="margin-left:150px">
+                                <div class="panel widgetbox wbox-3 bg-darker-2" style="width:300px;height:80px !important">
+                                    <div class="col-md-12">
+                                        <div class="col-md-1">
+                                            <span class="icon fa fa-shopping-cart" style="font-size:22px;margin-top:25px;color:white;margin-left:-10px"></span>
+                                        </div>
+                                        <div class="col-md-9" style="margin-left:-20px">
+                                            <a href="#">
+                                                <div class="panel-content">
+                                                    <p class="title" style="font-size:18px">Active</p>
+                                                    <p class="subtitle">@String.Format("{0:N}", Session["active_comp"])</p>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4 col-sm-3" style="margin-left:150px">
+                                <div class="panel widgetbox wbox-3 bg-danger" style="width:300px;height:80px !important">
+                                    <div class="col-md-12">
+                                        <div class="col-md-1">
+                                            <span class="icon fa fa-refresh" style="font-size:22px;margin-top:25px;color:white;margin-left:-10px"></span>
+                                        </div>
+                                        <div class="col-md-9" style="margin-left:-20px">
+                                            <a href="#">
+                                                <div class="panel-content">
+                                                    <p class="title" style="font-size:18px">Expire</p>
+                                                    <p class="subtitle">@String.Format("{0:N}", Session["inactive_comp"])</p>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+         </div>
+    </div>
+</div>

@@ -1,0 +1,610 @@
+﻿@model WebApplication1.ViewModels.SaleInvVM
+
+@{
+    ViewBag.Title = "Create";
+
+
+
+}
+
+
+<script>
+     $(document).ready(function () {
+        // code to read selected table row cell data (values).
+
+
+        $("#searchable").on("click", ".btnSelect", function () {
+            var currentRow = $(this).closest("tr");
+            var col0 = currentRow.find("td:eq(0)").html();
+            var col1 = currentRow.find("td:eq(1)").html();
+
+
+
+            document.getElementById("id").value = col0;
+            document.getElementById("item_name").value = col1;
+
+
+            var supid = document.getElementById("supp").value;
+            var regionid = document.getElementById("regionid").value;
+
+            if (supid == "" || supid == 0) {
+                alert("Please Select Customer !");
+            }
+
+            else if (regionid == "" || regionid == 0) {
+                alert("Please Select Region !");
+            }
+            else {
+                $.ajax({
+                    /**/
+                    url: '@Url.Action("getweight", "ProductionOrder")',
+                    /**/
+                    type: "POST",
+                    data: { "code": col0, "regionid": regionid },
+
+                    "success": function (data) {
+                        if (data != null) {
+                            var vdata = data;
+                            // $("#disc_val").val(vdata[0].disc);
+                            //wdubbi = vdata[0].CapDubbi;
+                            //wquarter = vdata[0].CapQuarter;
+                            //wdrum = vdata[0].CapGallon;
+                            //wgallon = vdata[0].CapDrum;
+                            document.getElementById("capdubbi").value = vdata[0].CapDubbi;
+                            document.getElementById("capquarter").value = vdata[0].CapQuarter;
+                            document.getElementById("capdrum").value = vdata[0].CapDrum;
+                            document.getElementById("capgallon").value = vdata[0].CapGallon;
+
+                        }
+                    }
+                });
+
+            }
+        });
+     });
+    function tota() {
+        //  alert("text");
+
+        var dubbi = document.getElementById("dubbi").value;
+        var quarter = document.getElementById("quarter").value;
+        var drum = document.getElementById("drum").value;
+        var gallon = document.getElementById("gallon").value;
+        var wdubbi = document.getElementById("capdubbi").value;
+        var wquarter = document.getElementById("capquarter").value;
+        var wdrum = document.getElementById("capdrum").value;
+        var wgallon = document.getElementById("capgallon").value;
+
+         @*$.ajax({
+                    /**/
+                    url: '@Url.Action("getweight", "ProductionOrder")',
+                    /**/
+                    type: "POST",
+                    data: { "code": id },
+
+                    "success": function (data) {
+                        if (data != null) {
+                            var vdata = data;
+                            $("#disc_val").val(vdata[0].disc);
+                            wdubbi = vdata[0].CapDubbi;
+                            wquarter = vdata[0].CapQuarter;
+                            wdrum = vdata[0].CapGallon;
+                            wgallon = vdata[0].CapDrum;
+                        }
+                    }
+             });*@
+
+        var tot1 = dubbi * wdubbi + quarter * wquarter + drum  * wdrum + gallon * wgallon;
+       // var tot1 = parseFloat(dubbi) + parseFloat(quarter) + parseFloat(drum) + parseFloat(gallon);
+        if (tot1 == null) {
+            tot1 = 0;
+        }
+        document.getElementById("totalqty").value = tot1;
+
+
+
+    }
+    function add() {
+        //  alert("das");
+        var id = document.getElementById("id").value;
+        var item_name = document.getElementById("item_name").value;
+        var dubbi = document.getElementById("dubbi").value;
+        var quarter = document.getElementById("quarter").value;
+        var drum = document.getElementById("drum").value;
+        var gallon = document.getElementById("gallon").value;
+        var totalqty = document.getElementById("totalqty").value;
+
+        var dubbi_c = 0;
+        var quarter_c = 0;
+        var drum_c = 0;
+        var gallon_c = 0;
+        var totalqty_c = 0;
+        var totalqty_r = 0;
+        var totalqty_m = 0;
+
+
+         if (id == "" || id == 0) {
+            //  alert("Please Select Item");
+        }
+       else {
+            var htmlRows = '';
+            htmlRows += '<tr>';
+            htmlRows += '<td style="width:80px !important"><a class="badge badge-xs x-danger b-rounded" onclick="return deleteRow(this)" ><i class="fa fa-trash-o"></i></a></td>';
+            htmlRows += '<td><input type="text"  name="id[]"  value="' + id + '" required class="form-control" readonly autocomplete="off"></td>';
+            htmlRows += '<td><input type="text"  name="item_name[]"  value="' + item_name + '" readonly class="form-control" autocomplete="off"></td>';
+             htmlRows += '<td><input type="text"  name="dubbi[]"  value="' + dubbi + '" readonly class="form-control" autocomplete="off"></td>';
+             htmlRows += '<td><input type="text"  name="quarter[]"  value="' + quarter + ' "   readonly class="form-control" autocomplete="off"></td>';
+             htmlRows += '<td><input type="text"  name="gallon[]"  value="' + gallon + '"   readonly class="form-control" autocomplete="off"></td>';
+             htmlRows += '<td><input type="text"  name="drum[]"  value="' + drum + '"  readonly class="form-control" autocomplete="off"></td>';
+             htmlRows += '<td><input type="text"  name="totalqty[]"  value="' + totalqty + '"   readonly class="form-control" autocomplete="off"></td>';
+             htmlRows += '<td><input type="text"  name="dubbi_c[]"  value="' + dubbi_c + '"       onkeyup="getweight1(this)"  class="form-control" autocomplete="off"></td>';
+             htmlRows += '<td><input type="text"  name="quarter_c[]"  value="' + quarter_c + '"   onkeyup="getweight1(this)"    class="form-control" autocomplete="off"></td>';
+             htmlRows += '<td><input type="text"  name="gallon_c[]"  value="' + gallon_c + '"     onkeyup="getweight1(this)"    class="form-control" autocomplete="off"></td>';
+             htmlRows += '<td><input type="text"  name="drum_c[]"  value="' + drum_c + '"         onkeyup="getweight1(this)"   class="form-control" autocomplete="off"></td>';
+             htmlRows += '<td><input type="text"  name="totalqty_c[]"  value="' + totalqty_c + '"   readonly class="form-control" autocomplete="off"></td>';
+             htmlRows += '<td><input type="text"  name="totalqty_r[]"  value="' + totalqty_r + '" readonly class="form-control" autocomplete="off"></td>';
+             htmlRows += '<td><input type="text"  name="totalqty_m[]"  value="' + totalqty_m + '" readonly class="form-control" autocomplete="off"></td>';
+             htmlRows += '<td style="display:none">' + id + '</td>';
+             htmlRows += '<td style="display:none">' + item_name + '</td>';
+             htmlRows += '<td style="display:none">' + dubbi + '</td>';
+             htmlRows += '<td style="display:none">' + quarter + '</td>';
+             htmlRows += '<td style="display:none">' + gallon + '</td>';
+             htmlRows += '<td style="display:none">' + drum + '</td>';
+             htmlRows += '<td style="display:none">' + totalqty + '</td></tr>';
+
+
+
+            $('#invoiceItem').append(htmlRows);
+            $('#id').val('');
+            $('#item_name').val('');
+             $('#dubbi').val('0');
+             $('#quarter').val('0');
+             $('#drum').val('0');
+             $('#gallon').val('0');
+             $('#totalqty').val('0');
+
+
+        }
+    }
+    function deleteRow(btn) {
+        if (confirm("Are you sure want to delete the row?"))
+            $(btn).closest("tr").remove();
+
+
+    }
+</script>
+<script>
+        $(document).ready(function () {
+            $("#uploadForm").on("submit", function (e) {
+                e.preventDefault();
+
+                var formData = new FormData();
+                formData.append('fileInput', $('#fileInput')[0].files[0]);
+
+                $.ajax({
+                    url: '@Url.Action("UploadExcel", "ProductionOrder")',
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        if (data.success) {
+                            var rows = '';
+                            var htmlRows = '';
+                            data.products.forEach(function (product) {
+
+                                htmlRows += '<tr>';
+                                htmlRows += '<td style="width:80px !important"><a class="badge badge-xs x-danger b-rounded" onclick="return deleteRow(this)" ><i class="fa fa-trash-o"></i></a></td>';
+                                htmlRows += '<td><input type="text"  name="id[]"  value="' + product.ProductID+ '" required class="form-control" readonly autocomplete="off"></td>';
+                                htmlRows += '<td><input type="text"  name="item_name[]"  value="' + product.ProductName + '" readonly class="form-control" autocomplete="off"></td>';
+                                htmlRows += '<td><input type="text"  name="dubbi[]"  value="' + product.CapDubbi + '" readonly class="form-control" autocomplete="off"></td>';
+                                htmlRows += '<td><input type="text"  name="quarter[]"  value="' + product.CapQuarter + ' "   readonly class="form-control" autocomplete="off"></td>';
+                                htmlRows += '<td><input type="text"  name="gallon[]"  value="' + product.CapGallon + '"   readonly class="form-control" autocomplete="off"></td>';
+                                htmlRows += '<td><input type="text"  name="drum[]"  value="' + product.CapDrum + '"  readonly class="form-control" autocomplete="off"></td>';
+                                htmlRows += '<td><input type="text"  name="totalqty[]"  value="' + product.qty + '"   readonly class="form-control" autocomplete="off"></td>';
+                                htmlRows += '<td style="display:none">' + product.ProductID + '</td>';
+                                htmlRows += '<td style="display:none">' + product.ProductName + '</td>';
+                                htmlRows += '<td style="display:none">' + product.CapDubbi + '</td>';
+                                htmlRows += '<td style="display:none">' + product.CapQuarter + '</td>';
+                                htmlRows += '<td style="display:none">' + product.CapGallon + '</td>';
+                                htmlRows += '<td style="display:none">' + product.CapDrum + '</td>';
+                                htmlRows += '<td style="display:none">' + product.qty + '</td></tr>';
+
+
+
+
+                                //rows += '<tr>';
+                                //rows += '<td>' + product.ProductID + '</td>';
+                                //rows += '<td>' + product.ProductName + '</td>';
+                                //rows += '<td>' + product.CapDubbi + '</td>';
+                                //rows += '<td>' + product.CapQuarter + '</td>';
+                                //rows += '<td>' + product.CapGallon + '</td>';
+                                //rows += '<td>' + product.CapDrum + '</td>';
+                                //rows += '<td>' + product.CapDrum + '</td>';
+                                //rows += '</tr>';
+                            });
+                     /*       $('#dataTable tbody').html(rows);*/
+                            $('#invoiceItem').append(htmlRows);
+                            $('#uploadModal').modal('hide');
+
+                        } else {
+                            alert("Error: " + data.message);
+                        }
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        alert('Error: ' + textStatus + ' - ' + errorThrown);
+                    }
+                });
+            });
+        });
+</script>
+<script>
+    function getweight1(inputElement) {
+        var regionid = document.getElementById("regionid").value;
+        var row = inputElement.closest('tr');
+        var id = row.querySelector('input[name="id[]"]').value;
+         $.ajax({
+                    /**/
+                    url: '@Url.Action("getweight", "ProductionOrder")',
+                    /**/
+                    type: "POST",
+                    data: { "code": id, "regionid": regionid },
+
+                    "success": function (data) {
+                        if (data != null) {
+                            var vdata = data;
+                            var capdubbi = vdata[0].CapDubbi;
+                            var capquarter = vdata[0].CapQuarter;
+                            var capgallon = vdata[0].CapGallon;
+                             var capdrum = vdata[0].CapDrum;
+                            //var row = document.querySelector('input[name="dubbi_c[]"][value="' + id + '"]').closest("tr");
+                            //// Get the values from the current row
+                            var dubbi = parseFloat(row.querySelector('input[name="dubbi_c[]"]').value) || 0;
+                            var quarter = parseFloat(row.querySelector('input[name="quarter_c[]"]').value) || 0;
+                            var drum = parseFloat(row.querySelector('input[name="drum_c[]"]').value) || 0;
+                            var gallon = parseFloat(row.querySelector('input[name="gallon_c[]"]').value) || 0;
+
+                            var totalqty = parseFloat(row.querySelector('input[name="totalqty[]"]').value) || 0;
+                            // Calculate the total
+                            var tot1 = (dubbi * capdubbi) + (quarter * capquarter) + (drum * capdrum) + (gallon * capgallon);
+                            tot1 = parseFloat(tot1).toFixed(2);
+                            var tot2 = parseFloat(totalqty - tot1).toFixed(2);
+
+                            // Update the totalqty_c field
+                            row.querySelector('input[name="totalqty_c[]"]').value = tot1;
+                            row.querySelector('input[name="totalqty_r[]"]').value = tot2;
+
+
+                        }
+                    }
+                });
+                }
+</script>
+
+
+
+<style>
+    hr {
+        height: 1px;
+        background: black;
+        border: none;
+        outline: none;
+        margin: 3em 3em 5em;
+        position: relative;
+    }
+
+
+        hr#eight {
+            background: transparent;
+            border-bottom: 2px dashed #189279;
+            width: 100%;
+            margin: 0 auto;
+            &:before
+
+    {
+        top: 3px;
+        left: 0;
+        padding-right: 2em;
+    }
+    }
+</style>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-print" aria-hidden="true"></i> Production Order</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b>Production Order </b></h4>
+
+            <a href="@Url.Action("Index", "ProductionOrder")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  List</a>
+         @*   <a href="@Url.Action("downloadSheet", "ProductionOrder")" id="downloadLink" class="btn btn-wide btn-info pull-right" style="margin-top:-40px;margin-right:5px"><i class="fa fa-download"></i>Download </a>*@
+            @*   <a href="javascript:void(0);" id="downloadLink" class="btn btn-wide btn-info pull-right" style="margin-top:-40px;margin-right:5px"><i class="fa fa-download"></i>Download </a>*@
+            @*<form id="uploadForm" enctype="multipart/form-data">
+                    <input type="file" id="fileInput" name="fileInput" />
+                    <button type="submit">Upload</button>
+                </form>*@
+            @*<button type="button" class="btn btn-primary btn-info pull-right" style="margin-top:-40px;margin-right:5px" data-toggle="modal" data-target="#uploadModal">
+                Upload Excel
+            </button>*@
+
+            <div class="panel">
+                @using (Html.BeginForm("Update", "ProductionOrder", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="panel-content">
+                        <div class="row">
+                            <div class="form-group col-sm-2" hidden>
+                                <label>INVID</label>
+                                @Html.TextBoxFor(m => m.ProductionOrder.Id, new { @class = "form-control input-xs", @readonly = "readonly" })
+                            </div>
+
+                            <div class="form-group col-sm-2">
+                                <label>Date</label>
+
+                                @*@Html.TextBoxFor(m => m.ProductionOrder.curdate, new { @class = "form-control input-xs", id = "date", type = "Date", @Value = DateTime.Now.ToString("yyyy-MM-dd"), @readonly = "readonly" })*@
+                                @Html.TextBoxFor(m => m.ProductionOrder.curdate, new { @class = "form-control input-xs", id = "date", type = "Date", @Value = Model.ProductionOrder.curdate.ToString("yyyy-MM-dd"), @readonly = "readonly" })
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label>Select Customer</label>
+                                @Html.DropDownListFor(m => m.ProductionOrder.customerid, new SelectList(Model.Cus_list, "customerid", "Name"), "Select Customer", htmlAttributes: new { @class = "chosen-select form-control ", required = "required", id = "supp" })
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label>Select Region</label>
+                                @Html.DropDownListFor(m => m.ProductionOrder.regionid, new SelectList(Model.Region_list, "Id", "Name"), "Select Region", htmlAttributes: new { @class = "chosen-select form-control", required = "required", id = "regionid" })
+                            </div>
+
+
+                        </div>
+                        <div class="row">
+                           
+                            <div class="form-group col-sm-2">
+                                <label>Promised Date</label>
+                                @Html.TextBoxFor(m => m.ProductionOrder.Promiseddate, new { @class = "form-control input-xs", id = "prodate", type = "Date", @Value = Model.ProductionOrder.Promiseddate.ToString("yyyy-MM-dd") })
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <a class="btn btn-wide btn-info pull-right" data-toggle="modal" data-target="#lg-modal" style="margin-top:25px;margin-left:-40px"><i class="fa fa-search-plus"></i>  Search Items</a>
+                            </div>
+                        </div>
+                        <hr id="eight" data-symbol="✂" style="margin-top:5px"><br />
+                        <div clas="row" style="margin-top:10px;">
+                            <div clas="col-md-12">
+                                <div class="form-group col-sm-1" style="display:none">
+                                    <label>ID</label>
+                                    <input type="text" id="id" readonly class="form-control" />
+                                </div>
+                                <div class="form-group col-sm-3" style="margin-left:-20px">
+                                    <label>Item Name</label>
+                                    <input type="text" id="item_name" readonly class="form-control" />
+                                </div>
+                                @*<div class="form-group col-sm-1" style="margin-left: -20px; width: 130px">
+                                        <label>Packing</label>
+                                        <select id="packing" class="form-control" onChange="Action1(this.value)">
+                                            <option>-Select Packing-</option>
+                                            <option value="Dubbi">Dubbi</option>
+                                            <option value="Quarter">Quarter</option>
+                                            <option value="Drum">Drum</option>
+                                            <option value="Gallon">Gallon</option>
+                                        </select>
+                                    </div>*@
+                                <div class="form-group col-sm-1" style="margin-left: -20px; width: 150px">
+                                    <label>Dubbi </label>
+                                    <input type="text" id="dubbi" onKeyUp="tota();" value="0" class="form-control" />
+                         
+
+                                </div>
+
+                                <div hidden class="form-group col-sm-1" style="margin-left: -20px; width: 150px">
+                                    <input hidden type="text" id="capdubbi" value="0" class="form-control" />
+
+                                    <input hidden type="text" id="capquarter" value="0" class="form-control" />
+                                    <input hidden type="text" id="capgallon" value="0" class="form-control" />
+                                    <input hidden type="text" id="capdrum" value="0" class="form-control" />
+                                </div>
+
+
+
+                                <div class="form-group col-sm-1" style="margin-left: -20px; width: 150px">
+                                    <label>Quarter</label>
+                                    <input type="text" id="quarter" onKeyUp="tota(); " value="0" class="form-control" />
+                                </div>
+                                <div class="form-group col-sm-1" style="margin-left: -20px; width: 150px">
+                                    <label>Gallon</label>
+                                    <input type="text" id="gallon" onKeyUp="tota(); " value="0" class="form-control" />
+                                </div>
+                                <div class="form-group col-sm-1" style="margin-left: -20px; width: 150px">
+                                    <label>Drum</label>
+                                    <input type="text" id="drum" onKeyUp="tota(); " value="0" class="form-control" />
+                                </div>
+
+                                <div class="form-group col-sm-1" style="margin-left:-20px;width:110px">
+                                    <label>Quantity</label>
+                                    <input type="text" id="totalqty" value="0" class="form-control" />
+
+                                </div>
+
+
+
+                                <div class="form-group col-sm-2" style="margin-top:10px">
+                                    <br />
+                                    <br />
+                                    <a class="btn btn-wide btn-warning pull-left" onclick='return add()' style="margin-right:-130px;width:25px;margin-top:-32px"> <i class="fa fa-plus"></i> Add</a> &nbsp;&nbsp;
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12" style="margin-top:-15px">
+                                <div class="table-responsive">
+                                    <table id="invoiceItem" class="table table-bordered table-hover table-striped table-success">
+                                        <thead class="bordered-darkorange">
+                                            <tr  style="background-color: #3498DB; color: white;border:1px solid white">
+                                                <th colspan="3"></th>
+                                                <th colspan="5"><center>Total Production Order</center></th>
+                                                <th colspan="5"  style="background-color: forestgreen"><center>@*Complete*@ Dispatch</center></th>
+                                                <th colspan="2"  style="background-color: orange "><center> Rem</center></th>
+                                            </tr>
+                                            <tr style="background-color: #3498DB; color: white;border:1px solid white">
+                                                <th>Action</th>
+                                                <th>ID</th>
+                                                <th>Product Name</th>
+                                                <th>Dubbi</th>
+                                                <th>Quarter</th>
+                                                <th>Gallon</th>
+                                                <th>Drum</th>
+
+                                                <th>Quantity</th>
+                                                
+                                                <th style="background-color: forestgreen">Dubbi</th>
+                                                <th style="background-color: forestgreen">Quarter</th>
+                                                <th style="background-color: forestgreen">Gallon</th>
+                                                <th style="background-color: forestgreen">Drum</th>
+
+                                                <th style="background-color: forestgreen">Quantity</th>
+                                                <th style="background-color: orange">Rem QTY </th>
+                                                <th style="background-color: orange">Comp </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model.ProductionOrder.Id == 0) { }
+                                            else
+                                            {
+                                                if (!Model.ProductionOrderDetaillist.Any())
+                                                {
+                                                }
+                                                else
+                                                {
+                                                    foreach (var lst in Model.ProductionOrderDetaillist)
+                                                    {
+                                            <tr>
+                                                <td style="width:40px !important"><a class="badge badge-xs x-danger b-rounded" onclick="return deleteRow(this)"><i class="fa fa-trash-o"></i></a></td>
+                                                <td><input type="text" name="id[]" value="@lst.pid" required class="form-control" readonly autocomplete="off"></td>
+                                                <td><input type="text" name="item_name[]" value="@lst.pname" readonly class="form-control" autocomplete="off"></td>
+                                                <td><input type="text" name="dubbi[]" value="@lst.dubbi" readonly class="form-control" autocomplete="off"></td>
+                                                <td><input type="text" name="quarter[]" value="@lst.quarter" readonly class="form-control" autocomplete="off"></td>
+                                                <td><input type="text" name="gallon[]" value="@lst.gallon" readonly class="form-control" autocomplete="off"></td>
+                                                <td><input type="text" name="drum[]" value="@lst.drum" readonly class="form-control" autocomplete="off"></td>
+                                                <td><input type="text" name="totalqty[]" value="@lst.totalqty" readonly class="form-control" autocomplete="off"></td>
+                                                <td><input type="text" name="dubbi_c[]" value="@lst.dubbi_c" onkeyup="getweight1(this)" class="form-control" autocomplete="off"></td>
+                                                <td><input type="text" name="quarter_c[]" value="@lst.quarter_c" onkeyup="getweight1(this)" class="form-control" autocomplete="off"></td>
+                                                <td><input type="text" name="gallon_c[]" value="@lst.gallon_c" onkeyup="getweight1(this)"  class="form-control" autocomplete="off"></td>
+                                                <td><input type="text" name="drum_c[]" value="@lst.drum_c" onkeyup="getweight1(this)" class="form-control" autocomplete="off"></td>
+                                                <td><input type="text" name="totalqty_c[]" value="@lst.totalqty_c" readonly class="form-control" autocomplete="off"></td>
+                                                <td><input type="text" name="totalqty_r[]" value="@lst.totalqty_r" readonly  class="form-control" autocomplete="off"></td>
+                                                <td><input type="text" name="totalqty_m[]" value="@lst.totalqty_m"   class="form-control" autocomplete="off"></td>
+                                            </tr>
+                                                    }
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+
+                            <div class="col-sm-12">
+                                @if (Model.ProductionOrder.Id == 0)
+                                {
+
+                                    <button type="submit" onclick="return check_total()" class="btn btn-primary col-sm-4 col-sm-offset-4" style="margin-top: 10px; background-color: #3498DB !important; border: 1px solid #3498DB "><i class="fa fa-save"></i> &nbsp; Save Invoice</button>
+                                }
+                                else
+                                {
+                                    <button type="submit" onclick="return check_total()" class="btn btn-primary col-sm-4 col-sm-offset-4" style="margin-top: 10px; background-color: #3498DB !important; border: 1px solid #3498DB "><i class="fa fa-save"></i> &nbsp; Update Invoice</button>
+
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+                @*<form id="uploadForm" enctype="multipart/form-data">
+                        <input type="file" id="fileInput" name="fileInput" />
+                        <button type="submit">Upload</button>
+                    </form>*@
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="lg-modal" aria-labelledby="modal-large-label" style="margin-top:-180px">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header state modal-primary" style="background-color: #3498DB !important">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modal-large-label">Product Details</h4>
+                </div>
+                <div class="modal-body">
+                    <div style="width: 100%; height:480px;overflow-y: scroll;">
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Product Name</th>
+                                    @*<th >Cap Dubbi </th>
+                                        <th >Cap Quarter</th>
+                                        <th >cap drum</th>
+                                        <th >Cap gallon</th>*@
+                                    @*<th>Cost Price</th>
+                                        <th>Barcode</th>*@
+                                    <th>Action</th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody class="abc" id="myTable">
+                                @foreach (var item in Model.pro_listsss)
+                                {
+                                    <tr>
+                                        <td>@item.ProductID</td>
+                                        <td>@item.ProductName</td>
+                                        @*<td >@item.CapDubbi</td>
+                                            <td >@item.CapQuarter</td>
+                                            <td >@item.CapDrum</td>
+                                            <td >@item.CapGallon</td>*@
+                                        <td><button class="btnSelect btn btn-danger" data-dismiss="modal"><i class="fa fa-check"></i></button></td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th style="width:60px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:80px"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                    @*<th ><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                        <th ><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                        <th ><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                        <th ><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>*@
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="uploadModalLabel">Upload Excel File</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="uploadForm" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <input type="file" id="fileInput" name="fileInput" class="form-control" />
+                        </div>
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

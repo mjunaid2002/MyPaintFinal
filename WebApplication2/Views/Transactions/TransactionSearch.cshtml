@@ -1,0 +1,127 @@
+﻿@model WebApplication2.ViewModels.ChartofaccountVm
+@{
+    ViewBag.Title = "Index";
+    var position = 0;
+    decimal bal = 0;
+    var sum_cr = 0;
+    var sum_dr = 0;
+    var total = 0;
+}
+
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Transaction</a></li></a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b>Transaction Report</b></h4>
+            <p class="pull-right" style="color: red;margin-top:-30px">
+            </p>
+            @using (Html.BeginForm("TransactionSearch", "Transactions", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <div class="col-md-12">
+                    <div class="form-group col-sm-3">
+                        <label>Select Account</label>
+                        @Html.DropDownListFor(m => m.accountTitle.AccountNo, new SelectList(Model.third_level, "AccountNo", "AccountTitleName"), "Select Account", htmlAttributes: new { @class = "chosen-select form-control" })
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label>Start Date </label>
+                        <input type="date" name="s_date" class="form-control" />
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label>End Date </label>
+                        <input type="date" name="e_date" class="form-control" />
+                    </div>
+                    <div class="col-sm-3">
+                        <button type="submit" name="submit" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Search &nbsp;&nbsp;</button>
+                    </div>
+                </div>
+            }
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="panel">
+                        <div class="panel-content">
+                            <div class="table-responsive">
+                                <center>
+                                    <br />
+                                    Transaction Report</br/>
+                                    <b><u>@Session["BusinessUnitName"]</u></b></br/>
+                                    <b><u>@Model.accountTitle.AccountTitleName</u></b>
+                                    <br />@ViewBag.StartDate to @ViewBag.EndDate
+                                </center>
+                                <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                                    <thead class="bordered-darkorange">
+                                        <tr>
+                                            <th>Account Title</th>
+                                            <th>Transaction ID</th>
+                                            <th>Transaction Date</th>
+                                            <th>Description</th>
+                                            <th> DB</th>
+                                            <th> CR</th>
+                                            @*<th>Balance </th>*@
+
+                                        </tr>
+                                    </thead>
+
+                                    <tbody class="abc">
+                                        @foreach (var item in Model.trans_list)
+                                        {
+                                            // position = 0;
+                                            sum_cr += Convert.ToInt32(item.Cr);
+                                            sum_dr += Convert.ToInt32(item.Dr);
+                                            if (position == 0 && item.AccountHeadId == 1)
+                                            {
+                                                bal = (Model.accountTitle.cr + (Convert.ToInt32(item.Dr - item.Cr)));
+                                            }
+                                            else
+                                            {
+                                                if (item.AccountHeadId == 1 || item.AccountHeadId == 4 || item.AccountHeadId == 5)
+                                                {
+                                                    bal = (bal + (Convert.ToInt32(item.Dr - item.Cr)));
+                                                }
+                                                else
+                                                {
+                                                    bal = (bal + (Convert.ToInt32(item.Cr - item.Dr)));
+                                                }
+                                            }
+                                            DateTime edate = Convert.ToDateTime(item.TransDate);
+                                            <tr>
+                                                <td>@item.AccountTitleName</td>
+
+                                                <td>@item.TransId</td>
+                                                <td>@edate.ToString("dd-MM-yyyy")</td>
+                                                <td>@item.TransDes</td>
+                                                <td>@String.Format("{0:N}", @item.Dr)</td>
+                                                <td>@String.Format("{0:N}", @item.Cr)</td>
+                                                @*<td>@String.Format("{0:N}", @bal)</td>*@
+                                            </tr>
+
+                                            position++;
+                                        }
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th style="width:170px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:160px"></th>
+                                            <th style="width:130px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:130px"></th>
+                                            <th style="width:150px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:120px"></th>
+                                            <th style="width:240px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:190px"></th>
+                                            <th style="width:100px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:90px"></th>
+                                            <th style="width:100px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:90px"></th>
+                                            @*<th style="width:100px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:90px"></th>*@
+                                            <th></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

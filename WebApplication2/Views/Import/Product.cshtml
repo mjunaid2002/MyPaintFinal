@@ -1,0 +1,37 @@
+﻿@{
+    ViewBag.Title = "FileUpload";
+    var parameter = Request.QueryString["ac"];
+}
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Import Data</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b>Import Products List</b></h4>
+            <div class="panel">
+                <div class="panel-content">
+                    <br />     <div class="row" id="wrapper">
+                        <div class="col-md-12">
+                            @if (parameter == "Succ")
+                            {
+                                <h5 class="alert alert-success" style="margin-top:-10px"><b>Successfully Imported !</b></h5>
+                            }
+                            @using (Html.BeginForm("ImportProductsRO", "Import", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                            {
+                                <input type="file" name="postedFile" required class="btn btn-primary">
+                                <br />
+                                <button type="submit" class="btn btn-success shiny"><i class="btn-label glyphicon glyphicon-saved"></i> Upload Data</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

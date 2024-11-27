@@ -1,0 +1,48 @@
+﻿@model WebApplication1.ViewModels.Account_headVm
+@{
+    ViewBag.Title = "Create";
+}
+
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-dollar" aria-hidden="true"></i>Accounts </a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-sm-12 col-md-12">
+            <h4 class="section-subtitle"><b>First Level Accounts Registrations</b></h4>
+            <a href="@Url.Action("Index", "FirstLevel")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-list"></i> Accounts List</a>
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            @using (Html.BeginForm("Save", "FirstLevel", FormMethod.Post, new { enctype = "multipart/form-data"}))
+                            {<div class="row">
+                                    <div class="form-group col-sm-6">
+                                        <label>Select Account Head</label>
+                                        @Html.DropDownListFor(m => m.Ac_main.a_head, new SelectList(Model.Ac_head_list, "ac_h_id", "ac_h_name"), "Select Account Head", htmlAttributes: new { @class = "chosen-select form-control" })
+
+                                    </div>
+                                    <div class="form-group col-sm-5">
+                                        <label>Account Name</label>
+                                        @Html.TextBoxFor(m => m.Ac_main.a_title, new { @class = "form-control input-xs", @required = "required" })
+                                    </div>
+
+                                    <div class="col-sm-12">
+                                        <button type="submit" class="btn btn-primary" style="margin-top:10px"><i class="fa fa-check"></i> Save</button>
+                                    </div>
+                                </div>
+                            }
+
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

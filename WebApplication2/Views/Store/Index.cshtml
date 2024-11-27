@@ -1,0 +1,118 @@
+﻿@model IEnumerable<CRM.Models.Store>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Registrations</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b>Store List</b></h4>
+           
+                <a href="@Url.Action("Create", "Store")"  class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  Creat New</a>
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="table-responsive">
+                            <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                                <thead class="bordered-darkorange">
+                                    <tr>
+                                        @*<th>Image</th>*@
+                                        <th>Id</th>
+                                        <th>Name</th>
+                                        <th>Address</th>
+                                        <th>Phone</th>
+                                        <th>Stock</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody class="abc">
+                                    @foreach (var item in Model)
+                                    {
+                                    <tr>
+                                        @*<td>
+            @if (item.Image == "" || item.Image == "0")
+            {
+                <img src="~/images/demo.jpg" width="60" />
+            }
+            else
+            {
+                <img src="~/Uploads/@item.Image" width="60" />
+            }
+        </td>*@
+                                        <td>@item.ID</td>
+                                        <td>@item.Name</td>
+                                        <td>@item.Address</td>
+                                        <td>@item.Phone</td>
+                                        <td><a data-toggle="modal" data-target="#@item.ID" class="btn btn-info"><i class="fa fa-search"></i></a></td>
+                                        <td>
+
+                                            <a href="@Url.Action("Edit", new { ID= item.ID } )" asp-action="Edit" asp-route-id="@item.ID" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="btn btn-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
+                                            <a href="@Url.Action("Delete", new { ID= item.ID } )" new { onclick="return confirm('Are you sure you want to delete this record?');" class="btn btn-danger shiny input-xs"><i class="fa fa-trash-o"></i></a>
+                                        </td>
+                                        <div class="modal fade" id="@item.ID" aria-labelledby="modal-large-label" style="margin-top:-100px">
+                                            <div class="modal-dialog modal-lg" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header state modal-primary">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                                        <h4 class="modal-title" id="modal-large-label">Stock Report Details</h4>
+                                                    </div>
+                                                    @using (Html.BeginForm("StockReport", "Report", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                                    {
+                                                        <div class="modal-body">
+                                                            <div class="col-sm-12">
+                                                                <br />
+                                                                <div class="form-group col-sm-3">
+                                                                    <label>Select Date </label>
+                                                                    <input type="hidden" name="storeid" value="@item.ID" class="form-control" required />
+                                                                    <input type="date" name="s_date" class="form-control" value = "@DateTime.Now.ToString("yyyy-MM-dd")" required />
+                                                                </div>
+                                                                <div class="form-group col-sm-4">
+                                                                    <label>Family Type</label>
+                                                                    <select class="form-control" required name="type">
+                                                                        <option value="">Family Type</option>
+                                                                        <option value="1">Raw Product</option>
+                                                                        <option value="2">Finisihed Product</option>
+                                                                        <option value="3">Semi Finisihed Product</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-12">
+                                                                <button type="submit" class="btn btn-primary" style="margin-top:10px;margin-left:20px"><i class="fa fa-plus"></i> Search Stock</button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th style="width:60px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:60px"></th>
+                                        <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                        <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                        <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                        <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                        <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                      
+                                    </tr>
+                                </tfoot>
+                            </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

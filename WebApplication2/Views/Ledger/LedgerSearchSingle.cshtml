@@ -1,0 +1,129 @@
+﻿@model WebApplication2.ViewModels.ChartofaccountVm
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var position = 0;
+    var bal = 0;
+    var sum_cr = 0;
+    var sum_dr = 0;
+    var total = 0;
+    int op = 0;
+}
+<script type="text/javascript">
+    function printDiv(divName) {
+        var printContents = document.getElementById(divName).innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents;
+
+        window.print();
+
+        document.body.innerHTML = originalContents;
+    }</script>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Ledger</a></li>
+            </ul>
+        </div>
+    </div>
+    <h4 class="section-subtitle"><b>Ledger Search </b></h4>
+    <p class="pull-right" style="color: red;margin-top:-30px">
+    </p>
+    <button type="button" onclick="printDiv('printableArea')" class="btn btn-info pull-right"><i class="fa fa-print"></i> Print</button>
+    <div class="row" id="printableArea">
+        <div class="col-sm-12">
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="table-responsive">
+                        <center>
+                            <br />
+                            General Ledger</br/>
+                            <b><u>@Session["BusinessUnitName"]</u></b></br/>
+                            <b><u>@ViewBag.AccountTitleName</u></b>
+                        </center>
+                        <table class="table table-bordered table-hover table-striped table-success">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th colspan="4">
+                                        (Opening Balance Pkr  <u>
+                                            <span id="demo"></span>
+                                            <script>
+                                                var y = @(op= ViewBag.cr);
+
+                                                var x = y.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                                                document.getElementById("demo").innerHTML = x;
+                                            </script>
+
+                                            )
+                                        </u>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th>Tr no</th>
+                                    <th> Date</th>
+                                    <th> Vtype</th>
+                                    <th>Inv No</th>
+                                    <th>Account</th>
+                                    <th>Description</th>
+                                    <th>DEBIT</th>
+                                    <th>CREDIT</th>
+                                    <th>Balance(PKR)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <span style="color:white">@(bal=op)</span>
+                                @foreach (var item in Model.trans_list)
+                                {
+                                    // position = 0;
+                                    sum_cr += Convert.ToInt32(item.Cr);
+                                    sum_dr += Convert.ToInt32(item.Dr);
+                                    if (ViewBag.status == 0)
+                                    {
+                                        bal = (bal + (Convert.ToInt32(item.Dr - item.Cr)));
+                                    }
+                                    else
+                                    {
+                                        bal = (bal + (Convert.ToInt32(item.Cr - item.Dr)));
+                                    }
+                                    DateTime edate = Convert.ToDateTime(item.TransDate);
+                                    <tr>
+                                        <td>@item.TransId</td>
+                                        <td>@edate.ToString("dd-MM-yyyy")</td>
+                                        <td>@item.Vtype</td>
+                                        <td>@item.InvId</td>
+                                        <td>@item.facc</td>
+                                        <td>@item.TransDes</td>
+                                        <td style="text-align:right">@String.Format("{0:N}", item.Dr)</td>
+                                        <td style="text-align:right">@String.Format("{0:N}", item.Cr)</td>
+                                        <td style="text-align:right">@String.Format("{0:N}", bal)</td>
+                                    </tr>
+
+                                    position++;
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th>Grand Total</th>
+                                    <th style="text-align:right"> @String.Format("{0:N}", sum_dr) </th>
+                                    <th style="text-align:right">@String.Format("{0:N}", sum_cr)</th>
+                                    <th style="text-align:right">@String.Format("{0:N}", bal)</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

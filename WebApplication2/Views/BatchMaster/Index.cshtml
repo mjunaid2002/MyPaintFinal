@@ -1,0 +1,255 @@
+﻿@model IEnumerable<WebApplication1.QueryViewModel.ProductIngrMasterQuery>
+@{
+    ViewBag.Title = "Index";
+}
+<script>
+    $('#searchable').DataTable({
+        buttons: [
+            'copy', 'excel', 'pdf'
+        ]
+    });
+</script>
+<style>
+    .test {
+        width: 15px;
+        height: 15px;
+        background-color: green;
+        border-radius: 20px;
+    }
+
+    .test1 {
+        width: 15px;
+        height: 15px;
+        background-color: red;
+        border-radius: 20px;
+    }
+</style>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Batch Master</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <h4 class="section-subtitle"><b> Batch Master List</b></h4>
+        @using (Html.BeginForm("Index", "BatchMaster", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div class="form-group col-sm-3">
+                <label>Start Date</label>
+                <input type="date" name="batch_s_date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
+            </div>
+            <div class="form-group col-sm-3">
+                <label>End Date </label>
+                <input type="date" name="batch_e_date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
+            </div>
+            <div class="col-sm-3">
+                <button type="submit" name="submit" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Search &nbsp;&nbsp;</button>
+            </div>
+        }
+
+        @if (Session["SubBatchFormulationAdd"].ToString() != "0")
+        {
+            <a href="@Url.Action("Create", "BatchMaster")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  Creat New</a>
+        }
+
+
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
+
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th>Batch Sr</th>
+                                    <th>Date</th>
+                                    @*<th>Batch Status</th>*@
+                                    <th>Batch No</th>
+                                    <th>Color Name</th>
+                                    <th>Product Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody class="abc">
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @item.OrderId
+                                        <td>@item.Date.ToString("dd-MM-yyyy")</td>
+                                        @*<td>
+                                            @if (item.ready == true)
+                                            {
+                                                <p>YES</p>
+                                            }
+                                            else
+                                            {
+                                                <p>NO</p>
+                                            }
+                                        </td>*@
+                                        <td>@item.BatchNo</td>
+                                        <td>@item.ColorName</td>
+                                        <td>@item.ProductName</td>
+                                        <td>
+                                            @if (Session["SubBatchFormulationUpdate"].ToString() != "0")
+                                            {
+                                                if (item.ready != true)
+                                                {
+                                                    <a href="@Url.Action("Edit", new { ID= item.OrderId } )" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="label label-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
+                                                }
+                                            }
+                                            @if (Session["SubBatchFormulationView"].ToString() != "0")
+                                            {
+                                                @*<a href="@Url.Action("InvoiceReport", new { ID= item.OrderId } )" class="label label-success shiny input-xs"><i class="fa fa-print"></i></a>
+                                                <a href="@Url.Action("InvoiceReportQTY", new { ID= item.OrderId } )" class="label label-warning shiny input-xs"><i class="fa fa-print"></i></a>*@
+                                                <a href="@Url.Action("InvoiceReport", new { ID= item.OrderId,type="pdf" } )" class="label label-success shiny input-xs"><i class="fa fa-print"></i></a>
+                                                <a href="@Url.Action("InvoiceReport", new { ID= item.OrderId,type="show" }  )" class="label label-primary shiny input-xs" target="_blank"><i class="fa fa-print"></i></a>
+                                                <a href="@Url.Action("InvoiceReportQTY", new { ID= item.OrderId,type="pdf" } )" class="label label-warning shiny input-xs"><i class="fa fa-print"></i></a>
+                                                <a href="@Url.Action("InvoiceReportQTY", new { ID= item.OrderId,type="show" } )" class="label label-primary shiny input-xs" target="_blank"><i class="fa fa-print"></i></a>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    @*<th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>*@
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="exampleModal" style="margin-top:-150px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Batch History</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="tabs mt-none">
+                    <!-- Tabs Header -->
+                    <ul class="nav nav-tabs nav-justified">
+                        <li class="active"><a href="#home" data-toggle="tab">All</a></li>
+                        <li><a href="#profile" data-toggle="tab">Completed</a></li>
+                        <li><a href="#st" data-toggle="tab">In-Completed</a></li>
+                    </ul>
+                    <!-- Tabs Content -->
+                    <div class="tab-content">
+                        <div class="tab-pane fade in active" id="home" style="max-height:100px">
+                            <div class="row">
+                                <div class="col-sm-12" style="margin-top:-15px">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                                            <thead class="bordered-darkorange">
+                                                <tr style="background-color:#189279;color:white">
+                                                    <th>Date</th>
+                                                    <th>SrNo</th>
+                                                    <th>Batch No</th>
+                                                    <th>Color Name</th>
+                                                    <th>Product Name</th>
+                                                </tr>
+                                            </thead>
+                                            @foreach (var item in Model)
+                                            {
+                                                <tr>
+                                                    <td>@item.Date.ToString("dd-MM-yyyy")</td>
+                                                    <td>@item.OrderId</td>
+                                                    <td>@item.BatchNo</td>
+                                                    <td>@item.ColorName</td>
+                                                    <td>@item.ProductName</td>
+                                                </tr>
+                                            }
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="profile">
+                            <div class="row">
+                                <div class="col-sm-12" style="margin-top:-15px">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                                            <thead class="bordered-darkorange">
+                                                <tr style="background-color:#189279;color:white">
+                                                    <th>Date</th>
+                                                    <th>SrNo</th>
+                                                    <th>Batch No</th>
+                                                    <th>Color Name</th>
+                                                    <th>Product Name</th>
+                                                </tr>
+                                            </thead>
+                                            @foreach (var item in Model.Where(z => z.ready2 == "1"))
+                                            {
+                                                <tr>
+                                                    <td>@item.Date.ToString("dd-MM-yyyy")</td>
+                                                    <td>@item.OrderId</td>
+                                                    <td>@item.BatchNo</td>
+                                                    <td>@item.ColorName</td>
+                                                    <td>@item.ProductName</td>
+                                                </tr>
+                                            }
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="st">
+                            <div class="row">
+                                <div class="col-sm-12" style="margin-top:-15px">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                                            <thead class="bordered-darkorange">
+                                                <tr style="background-color:#189279;color:white">
+                                                    <th>Date</th>
+                                                    <th>SrNo</th>
+                                                    <th>Batch No</th>
+                                                    <th>Color Name</th>
+                                                    <th>Product Name</th>
+                                                </tr>
+                                            </thead>
+                                            @foreach (var item in Model.Where(z => z.ready2 == "0"))
+                                            {
+                                                <tr>
+                                                    <td>@item.Date.ToString("dd-MM-yyyy")</td>
+                                                    <td>@item.OrderId</td>
+                                                    <td>@item.BatchNo</td>
+                                                    <td>@item.ColorName</td>
+                                                    <td>@item.ProductName</td>
+                                                </tr>
+                                            }
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

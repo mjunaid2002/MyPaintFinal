@@ -1,0 +1,65 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/Login.cshtml";
+    var parameter = Request.QueryString["ac"];
+}
+<div class="wrap" id="login-page">
+    <div class="page-body animated slideInDown" >
+        <br />
+        <br />
+        <div class="logo">
+        </div>
+        <div class="box" style="margin-top:-40px">
+            @if (parameter == "fail")
+            {
+                <div class="alert alert-danger alert-dismissable">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Invalid Login credentials !</strong>
+                </div>
+            }
+            @if (parameter == "fail1")
+            {
+                <div class="alert alert-danger alert-dismissable">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> Login Expire !</strong>
+                </div>
+            }
+            @if (ViewData["Message"] != null)
+            {
+                <div class="alert alert-success alert-dismissable">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong><i class="fa fa-envelope" aria-hidden="true"></i> @ViewData["Message"]</strong>
+                </div>
+            }
+            <div class="panel">
+                <center>
+                    <img src="~/Content/download.jfif" style="width:70%;margin-top:10px" />
+                </center>
+              </br>
+                <div class="panel-content bg-scale-0" style="padding: 25px; background-color: #F7F7F7 !important ">
+                    @using (Html.BeginForm("Login", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        <div class="form-group mt-md">
+                            <span class="input-with-icon">
+                                <input type="text" value="123" class="form-control" Placeholder = "Enter Username" name="u_name" required = "required"/>
+                                <i class="fa fa-envelope"></i>
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <span class="input-with-icon">
+                                <input type="password" value="123" class="form-control" Placeholder="Enter password" name="pass" required="required" />
+                                <i class="fa fa-key"></i>
+                            </span>
+                        </div>
+                        <center>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary" style="margin-top:10px"> Login </button>
+                            </div>
+                        </center>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

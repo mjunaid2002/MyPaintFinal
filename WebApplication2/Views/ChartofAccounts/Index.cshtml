@@ -1,0 +1,66 @@
+﻿@model WebApplication2.ViewModels.ChartofaccountVm
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/chart_of_accounts.cshtml";
+}
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-tasks" aria-hidden="true"></i>Chart of Accounts </a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row" >
+        <div class="col-sm-12 col-md-12">
+            <h4 class="section-subtitle"><b>Chart of Accounts </b></h4>
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                                    <div class="cf nestable-lists" style="border:0px solid black;margin-top:-20px;margin-left:30px">
+                                        <div class="dd" id="nestable">
+                                            <ol class="dd-list">
+                                                @foreach (var item0 in Model.ac_head)
+                                                {
+                                                <li class="dd-item" data-id="1">
+                                                    <div class="dd-handle" >  @item0.ac_h_name ( @item0.ac_h_id )</div>
+                                                    <ol class="dd-list">
+                                                        @foreach (var item in Model.pro_list.Where(z => z.a_head == item0.ac_h_id))
+                                                        {
+                                                            <li class="dd-item" data-id="2">
+                                                                <div class="dd-handle">  @item.a_title ( @item.account_no )</div>
+                                                                <ol class="dd-list">
+                                                                    @foreach (var item1 in Model.sec_list.Where(x => x.ac_main == item.account_no))
+                                                                    {
+                                                                        <li class="dd-item" data-id="5">
+                                                                            <div class="dd-handle">@item1.a_title ( @item1.account_no )</div>
+                                                                            <ol class="dd-list">
+                                                                                @foreach (var item2 in Model.third_level.Where(y => y.SecondLevel == item1.account_no))
+                                                                                {
+                                                                                    <li class="dd-item" data-id="6"><div class="dd-handle">@item2.AccountTitleName ( @item2.AccountNo )</div></li>
+                                                                                }
+                                                                            </ol>
+                                                                        </li>
+                                                                    }
+                                                                </ol>
+
+                                                            </li>
+
+                                                        }
+                                                    </ol>
+                                                </li>
+                                                }
+                                                    </ol>
+                                        </div>
+                                    </div>
+                                </div>
+                              
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+

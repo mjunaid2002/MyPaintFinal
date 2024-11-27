@@ -1,0 +1,49 @@
+﻿@model WebApplication1.ViewModels.PurInvoiceVM
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-print" aria-hidden="true"></i> Invoices</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b>Purchase Invoices List</b></h4>
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    @*<th>Inv Id</th>*@
+                                    @*<th>Supplier</th>
+                                        <th>Date</th>*@
+                                    <th>Batch no</th>
+                                    <th>Proceed</th>
+                                </tr>
+                            </thead>
+                            <tbody class="abc">
+                                @foreach (var item in Model.list)
+                                {
+                                    <tr>
+                                        <td>@item.Name</td>
+                                        <td>
+                                            <a href="@Url.Action("ProductionCreate", new { ID=item.ID})" class="badge badge-xs x-info b-rounded"><i class="fa fa-sign-out"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

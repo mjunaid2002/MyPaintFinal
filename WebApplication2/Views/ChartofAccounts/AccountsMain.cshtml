@@ -1,0 +1,22 @@
+﻿@model WebApplication2.ViewModels.ChartofaccountVm
+
+@foreach (var item in Model.pro_list)
+{
+    <li class="dd-item" data-id="2" id="AllowanceListWrapper">
+        <div class="dd-handle">@item.a_title</div>
+        <ol class="dd-list">
+            <li class="dd-item" data-id="5">
+                @foreach (var item1 in Model.sec_list.Where(x => x.ac_main == item.account_no))
+                {
+                <div class="dd-handle">@item1.a_title</div>
+                    <ol class="dd-list">
+
+                        <li class="dd-item" data-id="6"><div class="dd-handle"></div></li>
+                       
+                    </ol>
+                }
+                </li>           
+        </ol>
+    </li>
+
+}

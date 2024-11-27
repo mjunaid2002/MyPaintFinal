@@ -1,0 +1,223 @@
+﻿@model WebApplication1.ViewModels.SaleInvVM
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Reports</a></li>
+            </ul>
+        </div>
+    </div>
+    <h4 class="section-subtitle"><b>Sale Report </b></h4>
+    @using (Html.BeginForm("SaleSearch", "Report", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="panel">
+            <div class="panel-content">
+                <div class="row">
+                    <div class="form-group col-sm-3" style="color:red">
+                        <b>General Info</b>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-3">
+                        <label>Start Date</label>
+                        <input type="date" name="s_date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label>End Date </label>
+                        <input type="date" name="e_date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
+                    </div>
+                    <div class="col-md-3">
+                        <label>Select Customer</label>
+                        <select name="cus_id" class="chosen-select form-control">
+                            <option value="0">Select Customer</option>
+                            @foreach (var item in Model.Cus_list)
+                            {
+                                <option value="@item.customerid">@item.Name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Select Region</label>
+                        <select name="reg_id" class="chosen-select form-control">
+                            <option value="0">Select Region</option>
+                            @foreach (var item in Model.Region_list)
+                            {
+                                <option value="@item.id">@item.name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-3" style="color:red">
+                        <b>Quality And Products</b>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col-sm-3">
+                        <label>Select Quality</label>
+                        <select id="optquality" name="qualityname" class="chosen-select form-control" onChange="OneSelect(this.value)">
+                            <option value="0">Select Quality</option>
+                            @foreach (var item in Model.quality)
+                            {
+                                <option value="@item.MainCategoryID">@item.MainCategoryName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label>Select Product</label>
+                        @*<input type="text" id="searchFilter" placeholder="Search..." class="form-control" oninput="filterOptions()">*@
+                        <select id="Catid" name="second_id" class=" form-control" onChange="SecondSelect(this.value)">
+                           
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label>Select Color</label>
+                        @*<input type="text"  id="searchFilter1" placeholder="Search..." class="form-control" oninput="filterOptions1()">*@
+                        <select id="Prdid" name="third_id" class="form-control">
+                        </select>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-3" style="color:red">
+                        <b>Sales Report Type</b>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label>Select Report Type</label>
+                        <select name="type" class="form-control" required>
+                            <option value="">Select Option</option>
+                            <option value="1">Sale Order</option>
+                            <option value="2">Sale Invoice</option>
+                            <option value="3">Sale Return</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Select Report Nature</label>
+                        <select name="optt" class="form-control" required>
+                            <option value="">Select Nature</option>
+                            <option value="1">Including Tax</option>
+                            <option value="2">Excluding Tax</option>
+                        </select>
+                    </div>
+
+                </div>
+                <br /><br />
+                <br />
+                <div class="col-sm-3">
+                    @*<button type="submit" name="submit" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Search &nbsp;&nbsp;</button>*@
+
+                    <button type="submit" name="submit1" value="pdf" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Pdf &nbsp;&nbsp;</button>
+                    <button type="submit" name="submit1" value="show" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Show &nbsp;&nbsp;</button>
+                </div>
+            </div>
+            <br /><br /><br />
+        </div>
+
+    }
+</div>
+<style>
+    .select-wrapper {
+        width: 300px; /* Adjust as needed */
+    }
+
+    #searchFilter {
+        margin-bottom: 10px; /* Space between input and select */
+    }
+</style>
+<script>
+    function filterOptions() {
+        var filter = document.getElementById('searchFilter').value.toLowerCase();
+        var select = document.getElementById('Catid');
+        var options = select.options;
+
+        for (var i = 1; i < options.length; i++) { // Skip the first option
+            var option = options[i];
+            if (option.text.toLowerCase().includes(filter)) {
+                option.style.display = '';
+            } else {
+                option.style.display = 'none';
+            }
+        }
+    }
+    function filterOptions1() {
+        var filter = document.getElementById('searchFilter1').value.toLowerCase();
+        var select = document.getElementById('Prdid');
+        var options = select.options;
+
+        for (var i = 1; i < options.length; i++) { // Skip the first option
+            var option = options[i];
+            if (option.text.toLowerCase().includes(filter)) {
+                option.style.display = '';
+            } else {
+                option.style.display = 'none';
+            }
+        }
+    }
+    $(document).ready(function () {
+        $('.chosen-select').chosen({
+            search_contains: true
+        });
+
+        $('#searchFilter').on('input', function () {
+            var search = $(this).val();
+            $('.chosen-select').trigger('chosen:updated');
+        });
+        $('#searchFilter1').on('input', function () {
+            var search = $(this).val();
+            $('.chosen-select').trigger('chosen:updated');
+        });
+    });
+
+    function OneSelect(code) {
+        // alert(code);
+        $.ajax({
+            type: "GET",
+            url: "/Report/GetCategoryData?message=" + code,
+            data: "{}",
+            success: function (data) {
+                var s = '<option value="-1">Select Item</option>';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].CategoryID + '">' + data[i].CategoryName + '</option>';
+                }
+
+            
+               //$('#Catid').html(s);  
+                // $('#Catid').chosen('destroy').chosen();
+             
+                $('#Catid').html(s).trigger('chosen:updated');
+                $('#Catid').addClass("chosen-select");
+           
+            }
+        });
+    }
+
+    function SecondSelect(code) {
+        // alert(code);
+        $.ajax({
+            type: "GET",
+            url: "/Report/GetColorsData?message=" + code,
+            data: "{}",
+            success: function (data) {
+                var s = '<option value="-1">Select Item</option>';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].ProductID + '">' + data[i].ProductName + '</option>';
+                }
+               
+                //$('#Prdid').html(s);
+                //$('#Prdid').chosen('destroy').chosen();
+              
+                $('#Prdid').html(s).trigger('chosen:updated');
+                $('#Prdid').addClass("chosen-select");
+               
+            }
+        });
+    }
+</script>

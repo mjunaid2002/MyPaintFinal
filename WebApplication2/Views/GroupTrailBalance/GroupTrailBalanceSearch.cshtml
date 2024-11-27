@@ -1,0 +1,162 @@
+﻿@model WebApplication2.ViewModels.ChartofaccountVm
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var position = 0;
+    var bal = 0;
+    var sum_cr = 0; var sum_ccr = 0; var sum_cdr = 0; var sum_closingcr = 0; var sum_closingdr = 0;
+    var sum_dr = 0;
+    var total = 0;
+    var odr = 0;
+    var ocr = 0;
+    var cdr = 0;
+    var ccr = 0;
+    var a = 0;
+    decimal b = 0;
+    var c = 0;
+    var closing = 0;
+}
+
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Trial Balance</a></li>
+            </ul>
+        </div>
+    </div>
+    <h4 class="section-subtitle"><b> Trial Balance Search </b></h4>
+
+    @using (Html.BeginForm("GroupTrailBalanceSearch", "GroupTrailBalance", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="col-md-12">
+            <div class="form-group col-sm-6">
+                <label>Select Account Head </label>
+                <select class="chosen-select form-control" required name="acc_head">
+                    <option value="" disabled> Select Account Head</option>
+                    @foreach (var lst_dept in Model.Ac_head_list)
+                    {
+                        <option value="@lst_dept.Id"> @lst_dept.ac_h_name</option>
+                    }
+                </select>
+            </div>
+            <div class="form-group col-sm-3">
+                <label>End Date </label>
+                <input type="date" name="e_date" class="form-control" />
+            </div>
+            <div class="col-sm-3">
+                <button type="submit" name="submit" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Search &nbsp;&nbsp;</button>
+            </div>
+        </div>
+    }
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel">
+
+                <div class="panel-content">
+                    <div class="table-responsive">
+                        <center>
+                            <br />
+                            Trail Balance</br/>
+                            <br />@ViewBag.EndDate
+                        </center>
+                        <table id="table-example" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th colspan="2" style="border-left: 1px solid #000;"><center>Opening Balance</center></th>
+                                    <th colspan="2" style="border-left: 1px solid #000;"><center>Running Balance</center></th>
+                                    <th colspan="2" style="border-left: 1px solid #000;"><center>Final Balance</center></th>
+                                </tr>
+                                <tr>
+                                    <th>Account No.</th>
+                                    <th>Name</th>
+                                    <th style="border-left: 1px solid #000;">DEBIT</th>
+                                    <th>CREDIT</th>
+                                    <th style="border-left: 1px solid #000;">DEBIT</th>
+                                    <th>CREDIT</th>
+                                    <th style="border-left: 1px solid #000;">DEBIT</th>
+                                    <th>CREDIT</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+                                @foreach (var item2 in Model.trans)
+                                {
+                                    a = (Convert.ToInt32(item2.dr) + Convert.ToInt32(item2.cdr));
+                                    b = (Convert.ToInt32(item2.cr) + Convert.ToInt32(item2.ccr));
+                                    c = (Convert.ToInt32(a) - Convert.ToInt32(b));
+
+                                    sum_dr += item2.dr;
+                                    sum_cr += item2.cr;
+                                    sum_cdr += Convert.ToInt32(item2.cdr);
+                                    sum_ccr += Convert.ToInt32(item2.ccr);
+                                    if (c > 0)
+                                    {
+                                        sum_closingdr += c;
+                                    }
+                                    if (c < 0)
+                                    {
+                                        sum_closingcr += c;
+                                    }
+
+
+                                    <tr>
+                                        <td> @item2.AccountNo</td>
+                                        <td> @item2.AccountTitleName</td>
+                                        <td style="border-left: 1px solid #000;"> @item2.dr</td>
+                                        <td> @item2.cr</td>
+                                        <td style="border-left: 1px solid #000;"> @item2.cdr</td>
+                                        <td> @item2.ccr</td>
+                                        <td style="border-left: 1px solid #000;">
+                                            @if (c > 0)
+                                            {
+                                                @c;
+                                            }
+                                            else
+                                            {
+                                                @closing;
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (c < 0)
+                                            {
+                                                @c;
+                                            }
+                                            else
+                                            {
+                                                @closing;
+                                            }
+                                        </td>
+
+                                    </tr>
+                                }
+
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th style="border-left: 1px solid #000;">
+                                        <button class="btn btn-warning">@sum_dr</button>
+                                    </th>
+                                    <th>
+                                        <button class="btn btn-danger">@sum_cr</button>
+                                    </th>
+                                    <th style="border-left: 1px solid #000;"><button class="btn btn-primary">@sum_cdr</button></th>
+                                    <th><button class="btn btn-info">@sum_ccr</button></th>
+                                    <th style="border-left: 1px solid #000;"><button class="btn btn-success">@sum_closingdr</button></th>
+                                    <th><button class="btn" style="background-color:#2C3E50;color:white">@sum_closingcr</button></th>
+                                </tr>
+
+                            </tfoot>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

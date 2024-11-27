@@ -1,0 +1,244 @@
+﻿@model CRM.Models.Settings
+@{ 
+    ViewBag.Title = "Index";
+}
+<script>
+    var loadFile = function (event) {
+        var output = document.getElementById('output');
+        output.src = URL.createObjectURL(event.target.files[0]);
+    };
+</script>
+
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cogs" aria-hidden="true"></i> Settings</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b>General Settings</b></h4>
+             <div class="panel">
+                <div class="panel-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            @using (Html.BeginForm("Index", "Settings", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                            {
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <label>Company Name</label>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    @if (Model.CNameStatus == true)
+                                                    {
+                                                        <input type="checkbox" name="CNameStatus" value="true" checked>
+                                                        <input name="CNameStatus" type="hidden" value="false">
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="checkbox" name="CNameStatus" value="true">
+                                                        <input name="CNameStatus" type="hidden" value="false">
+                                                    }
+                                                </span>
+                                                @Html.TextBoxFor(m => m.CompanyName, new { @class = "form-control input-xs", id = "checkbox-addon" })
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label>Company Email</label>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    @if (Model.EmailStatus == true)
+                                                    {
+                                                        <input type="checkbox" name="EmailStatus" value="true" checked>
+                                                        <input name="EmailStatus" type="hidden" value="false">
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="checkbox" name="EmailStatus" value="true">
+                                                        <input name="EmailStatus" type="hidden" value="false">
+                                                    }
+                                                </span>
+                                                @Html.TextBoxFor(m => m.Email, new { @class = "form-control input-xs", id = "checkbox-addon" })
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label>Company Phone</label>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    @if (Model.PhoneStatus == true)
+                                                    {
+                                                        <input type="checkbox" name="PhoneStatus" value="true" checked>
+                                                        <input name="PhoneStatus" type="hidden" value="false">
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="checkbox" name="PhoneStatus" value="true">
+                                                        <input name="PhoneStatus" type="hidden" value="false">
+                                                    }
+                                                </span>
+                                                @Html.TextBoxFor(m => m.Phone, new { @class = "form-control input-xs", id = "checkbox-addon" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top:10px">
+                                        <div class="col-sm-4">
+                                            <label>Company Telephone</label>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    @if (Model.TelephoneStatus == true)
+                                                    {
+                                                        <input type="checkbox" name="TelephoneStatus" value="true" checked>
+                                                        <input name="TelephoneStatus" type="hidden" value="false">
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="checkbox" name="TelephoneStatus" value="true">
+                                                        <input name="TelephoneStatus" type="hidden" value="false">
+                                                    }
+                                                </span>
+                                                @Html.TextBoxFor(m => m.Telephone, new { @class = "form-control input-xs", id = "checkbox-addon" })
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label>Company GST %</label>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    @if (Model.GstStatus == true)
+                                                    {
+                                                        <input type="checkbox" name="GstStatus" value="true" checked>
+                                                        <input name="GstStatus" type="hidden" value="false">
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="checkbox" name="GstStatus" value="true">
+                                                        <input name="GstStatus" type="hidden" value="false">
+                                                    }
+                                                </span>
+                                                @Html.TextBoxFor(m => m.Gst, new { @class = "form-control input-xs", id = "checkbox-addon" })
+
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label>Company NTN</label>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    @if (Model.NtnStatus == true)
+                                                    {
+                                                        <input type="checkbox" name="NtnStatus" value="true" checked>
+                                                        <input name="NtnStatus" type="hidden" value="false">
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="checkbox" name="NtnStatus" value="true">
+                                                        <input name="NtnStatus" type="hidden" value="false">
+                                                    }
+                                                </span>
+                                                @Html.TextBoxFor(m => m.Ntn, new { @class = "form-control input-xs", id = "checkbox-addon" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top:10px">
+                                        <div class="col-sm-4">
+                                            <label>Company GST/STR #</label>
+                                            @Html.TextBoxFor(m => m.Str, new { @class = "form-control input-xs" })
+                                        </div>
+                                        <div class="form-group col-sm-4">
+                                            <label>Company Address</label>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <input type="checkbox" name="SaleNoteStatus" value="true">
+                                                    <input name="SaleNoteStatus" type="hidden" value="false">
+                                                </span>
+                                                @Html.TextAreaFor(m => m.Address, new { @class = "form-control input-xs", style = " rows=2, cols=40" })
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label>Invoice Logo</label>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    @if (Model.LogoStatus == true)
+                                                    {
+                                                        <input type="checkbox" name="LogoStatus" value="true" checked>
+                                                        <input name="LogoStatus" type="hidden" value="false">
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="checkbox" name="LogoStatus" value="true">
+                                                        <input name="LogoStatus" type="hidden" value="false">
+                                                    }
+                                                </span>
+                                                <input type="file" name="file" onchange="loadFile(event)" class="form-control" id="checkbox-addon">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-md-2">
+                                            <img id="output" src="~/Uploads/@Model.MImage" style="width:140px;margin-top:10px" />
+                                        </div>
+
+                                        <div class="form-group col-sm-12">
+                                            <label>Sale Invoice Note</label>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    @if (Model.SaleNoteStatus == true)
+                                                    {
+                                                        <input type="checkbox" name="SaleNoteStatus" value="true" checked>
+                                                        <input name="SaleNoteStatus" type="hidden" value="false">
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="checkbox" name="SaleNoteStatus" value="true">
+                                                        <input name="SaleNoteStatus" type="hidden" value="false">
+                                                    }
+                                                </span>
+                                                @Html.TextAreaFor(m => m.SaleNote, new { @class = "form-control input-xs", style = " rows=5, cols=40" })
+
+                                            </div>
+
+                                        </div>
+                                        <div class="form-group col-sm-4">
+                                            <label>Invoices Language</label>
+                                            <select class="form-control" name="lang">
+                                                <option value="1" selected>English</option>
+                                                <option value="2">Urdu</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group col-sm-4">
+                                            <label>Invoices Format</label>
+                                            <select class="form-control" name="fort">
+                                                <option value="1" selected>New</option>
+                                                <option value="2">Previous</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <label>All Business Units</label>
+                                            <div class="input-group">
+                                                @if (Model.Bunit_status == true)
+                                                {
+                                                    <input type="checkbox" name="b_unit" value="true" checked>
+                                                    <input name="b_unit" type="hidden" value="false">
+                                                }
+                                                else
+                                                {
+                                                    <input type="checkbox" name="b_unit" value="true">
+                                                    <input name="b_unit" type="hidden" value="false">
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <button type="submit" class="display-block btn btn-primary" style="margin-top:10px"><i class="fa fa-plus"></i> Update Details</button>
+                                        </div>
+                                    </div>
+                             
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,170 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using WebApplication1.Models;
+using WebApplication1.ViewModels;
+using WebApplication1.QueryViewModel;
+
+namespace WebApplication2.Controllers
+{
+    public class FinishTransferController : Controller
+    {
+        private ApplicationDbContext _context;
+        public FinishTransferController()
+        {
+            _context = new ApplicationDbContext();
+        }
+        protected override void Dispose(bool disposing)
+        {
+            _context.Dispose();
+        }
+        // GET: StockInward
+        public ActionResult Index()
+        {
+            string strquery = " where date ='" + DateTime.Now.ToString("yyyy-MM-dd") + "' order by invid";
+            var StartDate = Convert.ToDateTime(Request["s_date"]).ToString("yyyy-MM-dd");
+            var Enddate = Convert.ToDateTime(Request["e_date"]).ToString("yyyy-MM-dd");
+            if (StartDate != null && Enddate != null && StartDate != "0001-01-01" && Enddate != "0001-01-01")
+                strquery = " where date between '" + StartDate + "' and '" + Enddate + "' order by invid ";
+
+            var list = _context.Database.SqlQuery<FinishTransferM>("SELECT  FinishTransferM.invid, FinishTransferM.date, FinishTransferM.Fromregion, FinishTransferM.ToRegion, FinishTransferM.note, Region.name AS Fromname, Region_1.name AS Toname FROM FinishTransferM INNER JOIN Region ON FinishTransferM.Fromregion = Region.id INNER JOIN Region AS Region_1 ON FinishTransferM.ToRegion = Region_1.id " + strquery).ToList();
+            return View(list);
+        }
+        public ActionResult Create(FinishTransferM FinishTransfer)
+        {
+            FinishTransfer.date = DateTime.Now;
+            FinishTransfer.invid = _context.Database.SqlQuery<decimal>("select ISNULL(Max(invid),0)+1 from FinishTransferM").FirstOrDefault();
+            var pro_listsss = _context.Database.SqlQuery<Products>("SELECT ProductName, ProductID, UnitPrice, ReorderLevel, vattax, CategoryID, [desc], Active  FROM   Product WHERE (CategoryID IN (SELECT CategoryID FROM Categories WHERE (RawProductCheck = 0)))").ToList();
+            //var pro_listsss = _context.Database.SqlQuery<Products>("select ProductName,ProductID,UnitPrice,ReorderLevel,vattax,CategoryID,[desc],Active from Product where CategoryID in (select CategoryID from Categories where RawProductCheck<>1)").ToList();
+            var region = _context.Database.SqlQuery<Region>("Select * from region").ToList();
+
+            var SaleInvVM = new SaleInvVM
+            {
+                Region_list = region,
+
+                FinishTransfer = FinishTransfer,
+                pro_listsss = pro_listsss
+            };
+            return View(SaleInvVM);
+        }
+        [HttpPost]
+        public ActionResult Save(string[] item_name, int[] id, decimal[] qty, string[] size,FinishTransferM FinishTransfer)
+        {
+
+
+            FinishTransfer.invid = _context.Database.SqlQuery<decimal>("select ISNULL(Max(invid),0)+1 from FinishTransferM").FirstOrDefault();
+
+            if (item_name != null)
+            {
+                for (int i = 0; i < item_name.Count(); i++)
+                {
+                    _context.Database.ExecuteSqlCommand("INSERT  INTO  FinishTransferDetail(sr, pid, pname, qty, invid, date, size)  VALUES (" + i + "," + id[i] + ",'" + item_name[i] + "','" + qty[i] + "','" + FinishTransfer.invid + "','" + DateTime.Today + "','" + size[i] + "' )");
+                }
+
+                _context.Database.ExecuteSqlCommand("INSERT INTO  FinishTransferM(invid, date, Fromregion, ToRegion, note) VALUES (" + FinishTransfer.invid + ",'" + FinishTransfer.date + "','" + FinishTransfer.Fromregion + "','" + FinishTransfer.ToRegion + "','" + FinishTransfer.note + "')  ");
+
+            }
+
+
+            return RedirectToAction("Index");
+        }
+
+
+        public ActionResult Edit(int? ID)
+        {
+            //var pro_listsss = _context.Database.SqlQuery<Products>("SELECT ProductName, ProductID, UnitPrice, ReorderLevel, vattax, CategoryID, [desc], Active  FROM   Product WHERE (CategoryID <> 1)").ToList();
+            var pro_listsss = _context.Database.SqlQuery<Products>("SELECT ProductName, ProductID, UnitPrice, ReorderLevel, vattax, CategoryID, [desc], Active  FROM   Product WHERE (CategoryID IN (SELECT CategoryID FROM Categories WHERE (RawProductCheck = 0)))").ToList();
+
+            //var pro_listsss = _context.Database.SqlQuery<Products>("select ProductName,ProductID,UnitPrice,ReorderLevel,vattax,CategoryID,[desc],Active from Product where CategoryID in (select CategoryID from Categories where RawProductCheck<>1)").ToList();
+            var list = _context.Database.SqlQuery<FinishTransferM>("SELECT * from FinishTransferM where invid=" + ID).SingleOrDefault();
+            var detaillist = _context.Database.SqlQuery<FinishTransferDetail>("SELECT * from FinishTransferDetail where invid=" + ID).ToList();
+            var region = _context.Database.SqlQuery<Region>("Select * from region").ToList();
+
+            var SaleInvVM = new SaleInvVM
+            {
+                Region_list = region,
+
+                FinishTransfer = list,
+                FinishTransferDetailList = detaillist,
+                pro_listsss = pro_listsss
+            };
+            return View(SaleInvVM);
+
+        }
+        public ActionResult PrintInvoice(int? ID)
+        {
+
+            var CompanyName = _context.Database.SqlQuery<string>("SELECT company FROM   tbl_setting ").FirstOrDefault();
+            var Email = _context.Database.SqlQuery<string>("SELECT email FROM   tbl_setting ").FirstOrDefault();
+            var Phone = _context.Database.SqlQuery<string>("SELECT telephone FROM   tbl_setting ").FirstOrDefault();
+            byte[] Image = _context.Database.SqlQuery<byte[]>("SELECT logo FROM tbl_setting").FirstOrDefault();
+            var Address = _context.Database.SqlQuery<string>("SELECT address FROM   tbl_setting ").FirstOrDefault();
+            var comntn = _context.Database.SqlQuery<string>("SELECT ntn FROM   tbl_setting ").FirstOrDefault();
+            var STRN = _context.Database.SqlQuery<string>("SELECT strn FROM   tbl_setting ").FirstOrDefault();
+
+            ViewData["compname"] = CompanyName;
+            ViewData["email"] = Email;
+            ViewData["phone"] = Phone;
+            ViewData["address"] = Address;
+            ViewData["cusntn"] = comntn;
+            if (Image != null)
+            {
+                ViewData["logo"] = Convert.ToBase64String(Image);
+            }
+            else
+            {
+                ViewData["logo"] = "";
+            }
+
+            var pro_listsss = _context.Database.SqlQuery<Products>("select ProductName,ProductID,UnitPrice,ReorderLevel,vattax,CategoryID,[desc],Active from Product where CategoryID in (select CategoryID from Categories where RawProductCheck<>1)").ToList();
+            var list = _context.Database.SqlQuery<FinishTransferM>("SELECT  FinishTransferM.invid, FinishTransferM.date, FinishTransferM.Fromregion, FinishTransferM.ToRegion, FinishTransferM.note, Region.name AS Fromname, Region_1.name AS Toname FROM FinishTransferM INNER JOIN Region ON FinishTransferM.Fromregion = Region.id INNER JOIN Region AS Region_1 ON FinishTransferM.ToRegion = Region_1.id where invid=" + ID).SingleOrDefault();
+            var detaillist = _context.Database.SqlQuery<FinishTransferDetail>("SELECT * from FinishTransferDetail where invid=" + ID).ToList();
+
+            var SaleInvVM = new SaleInvVM
+            {
+                FinishTransfer = list,
+                FinishTransferDetailList = detaillist,
+                pro_listsss = pro_listsss
+            };
+            return View(SaleInvVM);
+
+        }
+
+        [HttpPost]
+        public ActionResult Update(string[] item_name, int[] id, decimal[] qty, string[] size,  FinishTransferM FinishTransfer)
+        {
+
+
+            if (item_name != null)
+            {
+                //_context.Database.ExecuteSqlCommand("INSERT INTO  FinishTransferM(invid, date, Fromregion, ToRegion, note) VALUES (" + FinishTransfer.invid + ",'" + FinishTransfer.date + "','" + FinishTransfer.Fromregion + "','" + FinishTransfer.ToRegion + "','" + FinishTransfer.note + "')  ");
+
+                _context.Database.ExecuteSqlCommand("UPDATE  FinishTransferM  SET  Fromregion ='" + FinishTransfer.Fromregion + "',ToRegion ='" + FinishTransfer.ToRegion + "',note ='" + FinishTransfer.note + "'  where invid=" + FinishTransfer.invid);
+
+                _context.Database.ExecuteSqlCommand("Delete From FinishTransferDetail where invid=" + FinishTransfer.invid);
+
+                for (int i = 0; i < item_name.Count(); i++)
+                {
+                   _context.Database.ExecuteSqlCommand("INSERT  INTO  FinishTransferDetail(sr, pid, pname, qty, invid, date, size)  VALUES (" + i + "," + id[i] + ",'" + item_name[i] + "','" + qty[i] + "','" + FinishTransfer.invid + "','" + DateTime.Today + "','" + size[i] + "' )");
+
+                }
+
+
+            }
+
+
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult Delete(int? ID)
+        {
+            _context.Database.ExecuteSqlCommand("Delete From FinishTransferM where invid=" + ID);
+            _context.Database.ExecuteSqlCommand("Delete From FinishTransferDetail where invid=" + ID);
+
+            return RedirectToAction("Index");
+
+        }
+    }
+}

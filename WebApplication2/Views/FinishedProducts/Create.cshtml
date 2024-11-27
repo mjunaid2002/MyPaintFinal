@@ -1,0 +1,173 @@
+﻿@model WebApplication1.ViewModels.ProductVM
+@{
+    ViewBag.Title = "Creat";
+}
+
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Registration</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-sm-12 col-md-12">
+            <h4 class="section-subtitle"><b>Register Finished Prouct</b></h4>
+            <a href="@Url.Action("Index","FinishedProducts")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-list"></i> Raw Product List</a>
+            @if (Convert.ToString(TempData["succ"]) != "")
+            {
+                <p class="alert alert-success" style="width:400px;height:50px"><b>@TempData["succ"]</b></p>
+            }
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="row">
+                        <div class="col-md-12">
+
+                            <form action="Create" method="post" enctype="multipart/form-data" onsubmit="return confirm('Are you sure you want to Register ?');">
+                                <div class="row">
+                                    <div class="form-group col-sm-1" style="display:none">
+                                        <label> ID</label>
+                                        @Html.TextBoxFor(m => m.products.ProductID, new { @class = "form-control input-xs", @readonly = "readonly", @required = "required" })
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Select Main Category</label>
+                                        @Html.DropDownListFor(m => m.products.BrandID, new SelectList(Model.quality, "MainCategoryID", "MainCategoryName"), "Select Category", htmlAttributes: new { @class = "chosen-select form-control", @required = "required" })
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Select Category</label>
+                                        @Html.DropDownListFor(m => m.products.CategoryID, new SelectList(Model.Categories_list, "CategoryID", "CategoryName"), "Select Category", htmlAttributes: new { @class = "chosen-select form-control", @required = "required" })
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Product Name</label>
+                                        @Html.TextBoxFor(m => m.products.ProductName, new { @class = "form-control input-xs", @required = "required" })
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Note</label>
+                                        @Html.TextBoxFor(m => m.products.desc, new { @class = "form-control input-xs", @required = "required" })
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Barcode</label>
+                                        @Html.TextBoxFor(m => m.products.barcode, new { @class = "form-control input-xs" })
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Estimated Cost</label>
+                                        @Html.TextBoxFor(m => m.products.itmdisc, new { @class = "form-control input-xs" })
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Active</label>
+                                        <select name="active" class="form-control">
+                                            <option value="Active">Active</option>
+                                            <option value="InActive">InActive</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-1">
+                                        <label style="margin-top:35px">Dubi</label>
+                                        <label style="margin-top:20px">Quarter</label>
+                                        <label style="margin-top:20px">Gallon</label>
+                                        <label style="margin-top:20px">Drum</label>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <center>
+                                            <p><b>Retail Price</b></p>
+                                            <div class="form-group col-sm-10">
+                                                @Html.TextBoxFor(m => m.products.sp, new { @class = "form-control input-xs" })
+                                            </div>
+                                            <div class="form-group col-sm-10">
+                                                @Html.TextBoxFor(m => m.products.splower, new { @class = "form-control input-xs" })
+                                            </div>
+                                            <div class="form-group col-sm-10">
+                                                @Html.TextBoxFor(m => m.products.gallon, new { @class = "form-control input-xs" })
+                                            </div>
+                                            <div class="form-group col-sm-10">
+                                                @Html.TextBoxFor(m => m.products.drum, new { @class = "form-control input-xs" })
+                                            </div>
+                                        </center>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <center>
+                                            <p><b>Capacity (Ltr/KG)</b></p>
+                                            <div class="form-group col-sm-10">
+                                                @Html.TextBoxFor(m => m.products.CapDubbi, new { @class = "form-control input-xs" })
+                                            </div>
+                                            <div class="form-group col-sm-10">
+                                                @Html.TextBoxFor(m => m.products.CapQuarter, new { @class = "form-control input-xs" })
+                                            </div>
+                                            <div class="form-group col-sm-10">
+                                                @Html.TextBoxFor(m => m.products.CapGallon, new { @class = "form-control input-xs" })
+                                            </div>
+                                            <div class="form-group col-sm-10">
+                                                @Html.TextBoxFor(m => m.products.CapDrum, new { @class = "form-control input-xs" })
+                                            </div>
+                                        </center>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <center>
+                                            <p><b>Opening</b></p>
+                                            <div class="form-group col-sm-10">
+                                                @Html.TextBoxFor(m => m.products.OpeningDubbi, new { @class = "form-control input-xs" })
+                                            </div>
+                                            <div class="form-group col-sm-10">
+                                                @Html.TextBoxFor(m => m.products.OpeningQuarter, new { @class = "form-control input-xs" })
+                                            </div>
+                                            <div class="form-group col-sm-10">
+                                                @Html.TextBoxFor(m => m.products.OpeningGallon, new { @class = "form-control input-xs" })
+                                            </div>
+                                            <div class="form-group col-sm-10">
+                                                @Html.TextBoxFor(m => m.products.OpeningDrum, new { @class = "form-control input-xs" })
+                                            </div>
+                                        </center>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <center>
+                                            <p><b>Minimum Level</b></p>
+                                            <div class="form-group col-sm-10">
+                                                @Html.TextBoxFor(m => m.products.ReorderDubbi, new { @class = "form-control input-xs" })
+                                            </div>
+                                            <div class="form-group col-sm-10">
+                                                @Html.TextBoxFor(m => m.products.ReorderQuarter, new { @class = "form-control input-xs" })
+                                            </div>
+                                            <div class="form-group col-sm-10">
+                                                @Html.TextBoxFor(m => m.products.ReorderGallon, new { @class = "form-control input-xs" })
+                                            </div>
+                                            <div class="form-group col-sm-10">
+                                                @Html.TextBoxFor(m => m.products.ReorderDrum, new { @class = "form-control input-xs" })
+                                            </div>
+                                        </center>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <center>
+                                            <p><b>Maximum Level</b></p>
+                                            <div class="form-group col-sm-10">
+                                                @Html.TextBoxFor(m => m.products.MaxDubbi, new { @class = "form-control input-xs" })
+                                            </div>
+                                            <div class="form-group col-sm-10">
+                                                @Html.TextBoxFor(m => m.products.MaxQuarter, new { @class = "form-control input-xs" })
+                                            </div>
+                                            <div class="form-group col-sm-10">
+                                                @Html.TextBoxFor(m => m.products.MaxGallon, new { @class = "form-control input-xs" })
+                                            </div>
+                                            <div class="form-group col-sm-10">
+                                                @Html.TextBoxFor(m => m.products.MaxDrum, new { @class = "form-control input-xs" })
+                                            </div>
+                                        </center>
+                                    </div>
+
+                                </div>
+                                </br>
+                                </br>
+                                <div class="col-sm-12">
+                                    <button type="submit" class="btn btn-primary" style="margin-top:10px"><i class="fa fa-save"></i> Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,207 @@
+﻿@model WebApplication1.ViewModels.ProductVM
+@{
+    ViewBag.Title = "Creat";
+
+
+}
+
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Registration</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-sm-12 col-md-12">
+            <h4 class="section-subtitle"><b>Register Product Pricing Region</b></h4>
+            <a href="@Url.Action("IndexFinishRegion","ProductPricing")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-list"></i>  List</a>
+            @if (Convert.ToString(TempData["succ"]) != "")
+            {
+                <p class="alert alert-success" style="width:400px;height:50px"><b>@TempData["succ"]</b></p>
+            }
+
+            <form action="SaveFinishRegion" method="post" enctype="multipart/form-data" onsubmit="return confirm('Are you sure you want to Register ?');">
+
+                <div class="panel">
+                    <div class="panel-content">
+
+
+                        <div class=" form-group col-3">
+                            <label>Select Region</label>
+                            @*<select id="regionDropdown" class="form-control">
+                                    <option value="0">Select Region</option>
+                                    @foreach (var lst in Model.Region_list)
+                                    {
+                                        <option value="@lst.id">@lst.name</option>
+                                    }
+                                </select>*@
+                            @Html.DropDownListFor(m => m.ProductFinishedRegion.regionid, new SelectList(Model.Region_list, "Id", "NAME"), "Select Region", htmlAttributes: new { @id = "regionDropdown", @class = " form-control", @required = "required" })
+                        </div>
+                        <br>
+                        <div class="table-responsive" style="float:none">
+                            <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                                <thead class="bordered-darkorange">
+                                    <tr>
+
+                                        <th>Category</th>
+                                        <th style="background-color:lightcyan" class="text-center" colspan="4">Opening</th>
+                                        <th style="background-color:lightgoldenrodyellow" class="text-center" colspan="4">Weight</th>
+                                        <th style="background-color: lightgray" class="text-center" colspan="4">MIN</th>
+                                        <th style="background-color: lightsteelblue" class="text-center" colspan="4">MAX</th>
+                                 
+
+                                    </tr>
+                                    <tr>
+
+                                        <th>Category Name</th>
+
+                                        <th style="background-color:lightcyan">Dubi</th>
+                                        <th style="background-color:lightcyan">Quarter</th>
+                                        <th style="background-color:lightcyan">Gallon</th>
+                                        <th style="background-color:lightcyan">Drum</th>
+
+                                        <th style="background-color:lightgoldenrodyellow">Dubi</th>
+                                        <th style="background-color:lightgoldenrodyellow">Quarter</th>
+                                        <th style="background-color:lightgoldenrodyellow">Gallon</th>
+                                        <th style="background-color:lightgoldenrodyellow">Drum</th>
+                                        
+                                        <th style="background-color: lightgray">Dubi</th>
+                                        <th style="background-color: lightgray">Quarter</th>
+                                        <th style="background-color: lightgray">Gallon</th>
+                                        <th style="background-color: lightgray">Drum</th>
+                                                     
+                                        <th style="background-color: lightsteelblue">Dubi</th>
+                                        <th style="background-color: lightsteelblue">Quarter</th>
+                                        <th style="background-color: lightsteelblue">Gallon</th>
+                                        <th style="background-color: lightsteelblue">Drum</th>
+
+
+                                    </tr>
+                                </thead>
+                                <tbody class="abc">
+
+                                    @foreach (var item in Model.pro_list)
+                                    {
+                                        <tr>
+                                            <td><input type="text" value="@item.ProductName" readonly> </td>
+                                            <td hidden><input type="number" name="id[]" value="@item.ProductID"></td>
+
+
+                                            <td style="background-color:lightcyan"><input type="number" name="dubi_o[]" value="0" step="0.001"></td>
+                                            <td style="background-color: lightcyan"><input type="number" name="quarter_o[]" value="0" step="0.001"></td>
+                                            <td style="background-color: lightcyan"><input type="number" name="gallon_o[]" value="0" step="0.001"></td>
+                                            <td style="background-color: lightcyan"><input type="number" name="drum_o[]" value="0" step="0.001"></td>
+
+                                            <td style="background-color:lightgoldenrodyellow"><input type="number" name="dubi_w[]" value="0" step="0.001"></td>
+                                            <td style="background-color: lightgoldenrodyellow"><input type="number" name="quarter_w[]" value="0" step="0.001"></td>
+                                            <td style="background-color: lightgoldenrodyellow"><input type="number" name="gallon_w[]" value="0" step="0.001"></td>
+                                            <td style="background-color: lightgoldenrodyellow"><input type="number" name="drum_w[]" value="0" step="0.001"></td>
+                                            
+                                            
+                                            <td style="background-color: lightgray"><input type="number" name="dubi_min[]" value="0" step="0.001"></td>
+                                            <td style="background-color: lightgray"><input type="number" name="quarter_min[]" value="0" step="0.001"></td>
+                                            <td style="background-color: lightgray"><input type="number" name="gallon_min[]" value="0" step="0.001"></td>
+                                            <td style="background-color: lightgray"><input type="number" name="drum_min[]" value="0" step="0.001"></td>
+                                            
+                                            <td style="background-color: lightsteelblue"><input type="number" name="dubi_max[]" value="0" step="0.001"></td>
+                                            <td style="background-color: lightsteelblue"><input type="number" name="quarter_max[]" value="0" step="0.001"></td>
+                                            <td style="background-color: lightsteelblue"><input type="number" name="gallon_max[]" value="0" step="0.001"></td>
+                                            <td style="background-color: lightsteelblue"><input type="number" name="drum_max[]" value="0" step="0.001"></td>
+
+                                        
+
+
+
+
+                                        </tr>
+                                    }
+                                </tbody>
+                                @*<tfoot>
+                                        <tr>
+                                            <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                            <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                            <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                            <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                            <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                            <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                            <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                            <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                            <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                            <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                            <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                            <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                            <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+
+                                        </tr>
+                                    </tfoot>*@
+                            </table>
+
+                            <div class="col-sm-12">
+                                <button type="submit" class="btn btn-primary" style="margin-top:10px"><i class="fa fa-save"></i> Save</button>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@*<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>*@
+
+<script>
+
+    $(document).ready(function () {
+        $(document).on('change', '#regionDropdown', function () {
+            var regionId = $(this).val();
+            $.ajax({
+                url: '/ProductPricing/UpdateFinishTable', // Replace with your actual controller and action
+                type: 'GET',
+                data: { regionId: regionId },
+                success: function (data) {
+                    if (data.length > 0) {
+                        $.each(data, function (index, rowData) {
+                            var matchingRow = $('.abc tr:has(input[value="' + rowData.pid + '"])');
+
+                            // Update values if a matching row is found
+                            if (matchingRow.length > 0) {
+
+                                matchingRow.find('input[name="dubi_o[]"]').val(rowData.dubi_o);
+                                matchingRow.find('input[name="quarter_o[]"]').val(rowData.quarter_o);
+                                matchingRow.find('input[name="gallon_o[]"]').val(rowData.gallon_o);
+                                matchingRow.find('input[name="drum_o[]"]').val(rowData.drum_o);
+
+                                matchingRow.find('input[name="dubi_w[]"]').val(rowData.dubi_w);
+                                matchingRow.find('input[name="quarter_w[]"]').val(rowData.quarter_w);
+                                matchingRow.find('input[name="gallon_w[]"]').val(rowData.gallon_w);
+                                matchingRow.find('input[name="drum_w[]"]').val(rowData.drum_w);
+
+                                matchingRow.find('input[name="dubi_min[]"]').val(rowData.dubi_min);
+                                matchingRow.find('input[name="quarter_min[]"]').val(rowData.quarter_min);
+                                matchingRow.find('input[name="gallon_min[]"]').val(rowData.gallon_min);
+                                matchingRow.find('input[name="drum_min[]"]').val(rowData.drum_min);
+
+                                matchingRow.find('input[name="dubi_max[]"]').val(rowData.dubi_max);
+                                matchingRow.find('input[name="quarter_max[]"]').val(rowData.quarter_max);
+                                matchingRow.find('input[name="gallon_max[]"]').val(rowData.gallon_max);
+                                matchingRow.find('input[name="drum_max[]"]').val(rowData.drum_max);
+
+                           
+                            }
+                        });
+                    }
+                    else {
+                        $('.abc input[type="number"]').not('[name^="id"]').val('0');
+                    }
+                },
+                error: function () {
+                    console.error('Failed to fetch data.');
+                }
+            });
+        });
+    });
+</script>

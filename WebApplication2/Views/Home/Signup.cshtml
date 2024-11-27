@@ -1,0 +1,88 @@
+﻿@model WebApplication1.ViewModels.LoginVM
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/Login.cshtml";
+    var parameter = Request.QueryString["ac"];
+}
+
+<div class="wrap" id="login-page">
+    <!-- page BODY -->
+    <!-- ========================================================= -->
+    <div class="page-body animated slideInDown">
+        <!-- =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= -->
+        <!--LOGO-->
+        <br />
+        <br />
+        <div class="logo">
+            @*@foreach (var item in Model.Set_list)
+                {
+                    if (item.MImage == "" || item.MImage == "0")
+                    {
+                        <img src="~/Content/images/demo.jpg" style="width:60px" />
+                    }
+                    else
+                    {
+                        <img src="~/Uploads/@item.MImage" style="width:60px" />
+                    }
+                }*@
+
+
+        </div>
+        <div class="box" style="margin-top:-50px">
+            @if (parameter == "fail")
+            {
+                <div class="alert alert-danger alert-dismissable">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong><i class="fa fa-exclamation-triangle" aria-hidden="true"></i> This User Already Exists !</strong>
+                </div>
+            }
+            <div class="panel" style="border-s">
+                <center>
+                    <img src="~/Content/logo.png" style="width:70%;margin-top:10px" />
+                </center>
+                <div class="panel-content bg-scale-0" style="padding: 25px; background-color: #F7F7F7 !important">
+                    @using (Html.BeginForm("SignupSave", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        <div class="form-group mt-md">
+                            <span class="input-with-icon">
+                                @Html.TextBoxFor(m => m.businessUnit.Name, new { @class = "form-control input-xs", @placeholder = "Company Name", @required = "@required" })
+                                <i class="fa fa-user"></i>
+                            </span>
+                        </div>
+                       <div class="form-group mt-md">
+                            <span class="input-with-icon">
+                                <input type="text" name="username" class="form-control" placeholder="Enter UserName"/>
+                                <i class="fa fa-user"></i>
+                            </span>
+                        </div>
+                        <div class="form-group mt-md">
+                            <span class="input-with-icon">
+                                @Html.TextBoxFor(m => m.businessUnit.Email, new { @class = "form-control input-xs", @placeholder = "Company Email", @required = "@required",@type="email"})
+                                <i class="fa fa-envelope"></i>
+                            </span>
+                        </div>
+                        <div class="form-group mt-md">
+                            <span class="input-with-icon">
+                                @Html.TextBoxFor(m => m.businessUnit.Phone, new { @class = "form-control input-xs", @placeholder = "Company Phone Number", @required = "@required" })
+                                <i class="fa fa-phone"></i>
+                            </span>
+                        </div>
+                        <div class="form-group mt-md">
+                            <span class="input-with-icon">
+                                @Html.TextBoxFor(m => m.businessUnit.Address, new { @class = "form-control input-xs", @placeholder = "Company Address", @required = "@required" })
+                                <i class="fa fa-home"></i>
+                            </span>
+                        </div>
+                        <center>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary" style="margin-top:10px"> Sign Up </button>
+                            </div>
+                        </center>
+                    }
+                </div>
+            </div>
+        </div>
+        <!-- =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= -->
+    </div>
+</div>
+

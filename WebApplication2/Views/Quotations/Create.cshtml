@@ -1,0 +1,557 @@
+﻿@model WebApplication1.ViewModels.SaleInvVM
+@{
+    ViewData["Title"] = "Create";
+    var sr = 0;
+    var tot1 = 0;
+    var tot = 0;
+}
+<script>
+    function date() {
+        var d = new Date();
+
+        function twoDigitDate(d) {
+            return ((d.getDate()).toString().length == 1) ? "0" + (d.getDate()).toString() : (d.getDate()).toString();
+        };
+
+        function twoDigitMonth(d) {
+            return ((d.getMonth() + 1).toString().length == 1) ? "0" + (d.getMonth() + 1).toString() : (d.getMonth() + 1).toString();
+        };
+
+        var today_ISO_date = d.getFullYear() + "-" + twoDigitMonth(d) + "-" + twoDigitDate(d); // in yyyy-mm-dd format
+        document.getElementById('date').setAttribute("value", today_ISO_date);
+
+    }
+
+
+    $(document).ready(function () {
+        // code to read selected table row cell data (values).
+        $("#searchable").on("click", ".btnSelect", function () {
+
+            var currentRow = $(this).closest("tr");
+            var col1 = currentRow.find("td:eq(0)").html();
+            var col2 = currentRow.find("td:eq(1)").html();
+            var col3 = currentRow.find("td:eq(2)").html();
+            var col4 = currentRow.find("td:eq(3)").html();
+            var col5 = currentRow.find("td:eq(4)").html();
+            var col6 = currentRow.find("td:eq(5)").html();
+            var data = col1 + "\n" + col2 + "\n" + col3;
+            //alert(col6);
+            document.getElementById("unit").value = col6;
+            document.getElementById("id").value = col1;
+            document.getElementById("item_name").value = col3;
+            document.getElementById("sp").value = col4;
+            document.getElementById("p_box").value = col5;
+            // alert(data);
+            //var htmlRows = '';
+            //htmlRows += '<tr>';
+            //htmlRows += '<td style="width:60px !important"><button class="btn btn-danger" onclick="deleteRow(this)"><i class="fa fa-trash-o"></i></button></td>';
+            //htmlRows += '<td><input type="text"   name="name1[]" value="' + col1 + '" required class="form-control" autocomplete="off"></td>';
+            //htmlRows += '<td><input type="text"   name="name[]" value="' + col2 + '" required class="form-control" autocomplete="off"></td>';
+            //htmlRows += '<td><input type="text"   name="name2[]" value="' + col3 + '" required class="form-control" autocomplete="off"></td>';
+            //$('#invoiceItem').append(htmlRows);
+        });
+    });
+    function add() {
+        //  alert("das");
+        var id = document.getElementById("id").value;
+        var item_name = document.getElementById("item_name").value;
+        var sp = document.getElementById("sp").value;
+        var qty = document.getElementById("ctn").value;
+        var n_total = document.getElementById("n_total").value;
+        var new_id = document.getElementById("new_id").value;
+        //var b_no = document.getElementById("b_no").value;
+        //var datepicker = document.getElementById("exp_date").value;
+        var length = document.getElementById("length").value;
+        var unit = document.getElementById("unit").value;
+        // alert(id);
+        if (id == "" || id == 0) {
+            //  alert("Please Select Item");
+        }
+        else if (qty == "" || qty == 0) {
+
+            // alert("Please Enter Quantity");
+        }
+        else {
+            var htmlRows = '';
+            htmlRows += '<tr>';
+            htmlRows += '<td style="width:80px !important"><a class="badge badge-xs x-danger b-rounded" onclick="return deleteRow(this)" ><i class="fa fa-trash-o"></i></a></td>';
+            htmlRows += '<td><input type="text"  name="id"  value="' + id + '" required class="form-control" readonly autocomplete="off"></td>';
+            htmlRows += '<td><input type="text"  name="item_name"  value="' + item_name + '" readonly class="form-control" autocomplete="off"></td>';
+            htmlRows += '<td><input type="text"  name="sp[]"  value="' + sp + ' "   readonly class="form-control" autocomplete="off"></td>';
+            htmlRows += '<td><input type="text"  name="qty[]"  value="' + qty + '"  readonly class="form-control" autocomplete="off"></td>';
+            htmlRows += '<td><input type="text"  name="unit[]"  value="' + unit + '"  readonly class="form-control" autocomplete="off"></td>';
+            htmlRows += '<td><input type="text"  name="n_total[]"  value="' + n_total + '"   readonly class="form-control" autocomplete="off"></td>';
+            htmlRows += '<td style="display:none"><input type="text"  name="inv_id[]"  value="0"   readonly class="form-control" autocomplete="off"></td>';
+            htmlRows += '<td style="display:none">' + id + '</td>';
+            htmlRows += '<td style="display:none">' + item_name + '</td>';
+            htmlRows += '<td style="display:none">' + sp + '</td>';
+            htmlRows += '<td style="display:none">' + qty + '</td>';
+            htmlRows += '<td style="display:none">' + n_total + '</td>';
+            htmlRows += '<td style="display:none"><input type="hidden"   name="length" value="' + length + '"  readonly class="form-control" autocomplete="off"></td>';
+
+            $('#invoiceItem').append(htmlRows);
+            $('#id').val('');
+            $('#item_name').val('');
+            $('#sp').val('');
+            $('#qty').val('0');
+            $('#n_total').val('0');
+            $('#b_no').val('0');
+            $('#new_id').val('0');
+            var table = document.getElementById("invoiceItem"), sumVal = 0;
+            for (var i = 1; i < table.rows.length; i++) {
+                sumVal = sumVal + parseInt(table.rows[i].cells[12].innerHTML);
+            }
+            //alert(sumVal);
+
+            document.getElementById("net_final").value = parseFloat(sumVal);
+            document.getElementById("total").value = parseFloat(sumVal);
+            document.getElementById("g_total").value = parseFloat(sumVal);
+            $('#d_amount').val('0');
+            //$('#g_total').val('0');
+            $('#cgo_charges').val('0');
+            qty123();
+        }
+    }
+    function deleteRow(btn) {
+        if (confirm("Are you sure want to delete the row?"))
+            $(btn).closest("tr").remove();
+        var table = document.getElementById("invoiceItem"), sumVal = 0;
+
+        for (var i = 1; i < table.rows.length; i++) {
+            sumVal = sumVal + parseInt(table.rows[i].cells[12].innerHTML);
+        }
+
+        document.getElementById("net_final").value = parseFloat(sumVal);
+        document.getElementById("total").value = parseFloat(sumVal);
+        document.getElementById("g_total").value = parseFloat(sumVal);
+        $('#d_amount').val('0');
+        $('#cgo_charges').val('0');
+        qty123();
+    }
+    function tota() {
+        //  alert("text");
+        var p_box = document.getElementById("length").value;
+        var ctn = document.getElementById("ctn").value;
+        var n_total = document.getElementById("n_total").value;
+        qty_f = ctn;
+
+        var sp = document.getElementById("sp").value;
+        var totl;
+        totl = qty_f * sp;
+        if (n_total == '' || n_total == null) {
+            document.getElementById("n_total").value = "0";
+        }
+        document.getElementById("n_total").value = totl;
+        if (n_total == '' || n_total == null) {
+            document.getElementById("n_total").value = "0";
+        }
+    }
+    function gt() {
+        var cgo_charges = document.getElementById("cgo_charges").value;
+        var total = document.getElementById("total").value;
+        var nt = document.getElementById("net_final").value;
+        var t_f = parseInt(cgo_charges) + parseInt(nt);
+        document.getElementById("total").value = t_f;
+        var da = document.getElementById("d_amount").value;
+        document.getElementById("d_amount").value = "0";
+        document.getElementById("g_total").value = t_f;
+        document.getElementById("r_total").value = t_f;
+    }
+    function gt1() {
+        var da = document.getElementById("d_amount").value;
+        var total = document.getElementById("total").value;
+        var totl = total - da;
+        document.getElementById("g_total").value = totl;
+        document.getElementById("r_total").value = totl;
+    }
+
+    function qty123() {
+        //alert("dsa");
+        var grandTotal = 0;
+
+        $("input[name='sp[]']").each(function (index) {
+            var price = $("input[name='sp[]']").eq(index).val();
+            var qty_ne = $("input[name='qty[]']").eq(index).val();
+            var output = parseFloat(price) * parseFloat(qty_ne);
+            if (!isNaN(output)) {
+                $("input[name='n_total[]']").eq(index).val(output.toFixed(2));
+                grandTotal = parseFloat(grandTotal) + parseFloat(output);
+                document.getElementById("net_final").value = grandTotal.toFixed(2);
+                document.getElementById("total").value = grandTotal.toFixed(2);
+                document.getElementById("g_total").value = grandTotal.toFixed(2);
+            }
+
+        });
+    }
+</script>
+@*<script type="text/javascript">
+        function Action(code) {
+            //  alert(code);
+            $.ajax({
+                /**/
+                url: "Action/SaleInvWoctn?message=" + code,
+                method: "GET",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    var address = data.value1;
+                    document.getElementById("address").value = address
+                }
+            });
+        }
+
+
+    </script>*@
+
+
+<script type="text/javascript">
+    function Action(code) {
+
+        $.ajax({
+            /**/
+            url: '@Url.Action("Action", "SaleWctn")',
+    /**/
+    type: "POST",
+    data: { "code": code },
+
+    "success": function (data) {
+        if (data != null) {
+            var vdata = data;
+          //  alert(vdata);
+            $("#Address").val(vdata[0].Address);
+            $("#Phone").val(vdata[0].Phone);
+
+        }
+    }
+});
+    }
+    function check_total() {
+        var da = document.getElementById("net_final").value;
+        if (da == 0) {
+            alert("Please Enter Items");
+            return false;
+        }
+    }
+</script>
+<style>
+    hr {
+        height: 1px;
+        background: black;
+        border: none;
+        outline: none;
+        margin: 3em 3em 5em;
+        position: relative;
+    }
+
+
+        hr#eight {
+            background: transparent;
+            border-bottom: 2px dashed #189279;
+            width: 100%;
+            margin: 0 auto;
+            &:before
+
+    {
+        top: 3px;
+        left: 0;
+        padding-right: 2em;
+    }
+    }
+</style>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-print" aria-hidden="true"></i> Invoices</a></li>
+
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b>Quotations Invoice </b></h4>
+
+            <a href="@Url.Action("Index", "Quotations")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  Invoice List</a>
+            @*<a href="#" data-toggle="modal" data-target="#second" class="btn btn-wide btn-primary pull-right" style="margin-top:-40px;margin-right:10px"><i class="fa fa-list"></i>  Recent Invoices </a>*@
+
+            <div class="panel">
+                <form asp-action="Create" id="invoice-form" method="post" enctype="multipart/form-data" onsubmit="return confirm('Are you sure you want to Continue ?');">
+                    <div class="panel-content">
+                        <div class="row">
+                            <div class="form-group col-sm-2">
+                                <label>INVID</label>
+                                @Html.TextBoxFor(m => m.SaleMaster.InvID, new { @class = "form-control input-xs", @readonly = "readonly" })
+                            </div>
+                            <div class="form-group col-sm-2" style="display:none">
+                                <label>Select Store</label>
+                                @Html.DropDownListFor(m => m.SaleMaster.Store, new SelectList(Model.Store, "Id", "Name"), "Select Store", htmlAttributes: new { @class = "chosen-select form-control" })
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label>Date</label>
+                                @Html.TextBoxFor(m => m.SaleMaster.Date, new { @class = "form-control input-xs", id = "date", type = "Date", @Value = DateTime.Now.ToString("yyyy-MM-dd") })
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label>Select Customer</label>
+                                @Html.DropDownListFor(m => m.SaleMaster.CustomerId, new SelectList(Model.cus_list, "AccountNo", "Name"), "Select Customer", htmlAttributes: new { @class = "chosen-select form-control", onChange = "Action(this.value)", required = "required" })
+                            </div>
+                            <div class="form-group col-sm-3" style="display:none">
+                                <label>Select DSR</label>
+                                @Html.DropDownListFor(m => m.SaleMaster.DsrId, new SelectList(Model.emp_list, "AccountNo", "Name"), "Select DSR", htmlAttributes: new { @class = "chosen-select form-control" })
+                            </div>
+                            <div class="form-group col-sm-5">
+                                <label>Address</label>
+                                @Html.TextAreaFor(m => m.SaleMaster.Address, new { @class = "form-control input-xs", style = " rows=2, columns=40", id = "Address" })
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <a class="btn btn-wide btn-info pull-right" data-toggle="modal" data-target="#lg-modal" style="margin-top:25px;margin-left:-40px"><i class="fa fa-search-plus"></i>  Search Items</a>
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label>Phone Number</label>
+                                @Html.TextBoxFor(m => m.SaleMaster.Phone, new { @class = "form-control input-xs", id = "Phone" })
+                            </div>
+
+                        </div>
+                        <hr id="eight" data-symbol="✂" style="margin-top:5px"><br />
+                        <div clas="row" style="margin-top:10px;">
+                            <div clas="col-md-12">
+                                <div class="form-group col-sm-1">
+                                    <label>ID</label>
+                                    <input type="text" id="id" readonly class="form-control" />
+                                </div>
+                                <div class="form-group col-sm-3" style="margin-left:-20px">
+                                    <label>Item Name</label>
+                                    <input type="text" id="item_name" readonly class="form-control" />
+                                </div>
+                                <div class="form-group col-sm-2" style="margin-left:-20px">
+                                    <label>Sale Price</label>
+                                    <input type="text" id="sp" onKeyUp="tota(); " class="form-control" />
+                                </div>
+
+                                <div class="form-group col-sm-1" style="margin-left:-20px;width:120px">
+                                    <label>Qty</label>
+                                    <input type="text" id="ctn" value="0" onKeyUp="tota(); " class="form-control" />
+                                    <input type="hidden" id="new_id" value="0" class="form-control" />
+                                    <input type="hidden" id="length" value="0" class="form-control" />
+                                </div>
+                                <div class="form-group col-sm-1" style="margin-left:-20px;width:150px">
+                                    <label>Unit</label>
+                                    <input type="text" id="unit" value="0" readonly class="form-control" />
+                                </div>
+                                <div class="form-group col-sm-2" style="margin-left:-20px;width:150px">
+                                    <label>Net Total</label>
+                                    <input type="text" id="n_total" value="0" readonly class="form-control" />
+                                </div>
+                                @*<div class="form-group col-sm-2" style="margin-left:-20px">
+            <label>Batch #</label>
+            <input type="number" id="b_no" value="0" class="form-control" />
+        </div>
+        <div class="form-group col-sm-2" style="margin-left:-20px">
+            <label>Exp Date</label>
+            <input type="date" id="exp_date"  class="form-control" />
+            <a class="btn btn-wide btn-warning pull-right" onclick='return add()' style="margin-right:-130px;width:25px;margin-top:-32px"> <i class="fa fa-plus"></i> Add</a> &nbsp;&nbsp;
+
+        </div>*@
+                                <div class="form-group col-sm-2" style="margin-top:10px">
+
+                                    <br />
+                                    <br />
+                                    <a class="btn btn-wide btn-warning pull-left" onclick='return add()' style="margin-right:-130px;width:25px;margin-top:-32px"> <i class="fa fa-plus"></i> Add</a> &nbsp;&nbsp;
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12" style="margin-top:-15px">
+                                <div class="table-responsive">
+                                    <table id="invoiceItem" class="table table-bordered table-hover table-striped table-success">
+                                        <thead class="bordered-darkorange">
+                                            <tr style="background-color:#189279;color:white">
+                                                <th>Action</th>
+                                                <th>ID</th>
+                                                <th>Product Name</th>
+                                                <th>Sale Price</th>
+                                                <th>Length/Kg</th>
+                                                <th>Unit</th>
+                                                <th>Net Total</th>
+                                                @*<th>Batch #</th>
+                                <th>Exp Date</th>*@
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            @*@foreach (var item in Model.pro_list)
+                                            {
+                                               
+                                                <tr>
+                                                    <td style="width:80px !important"><a class="badge badge-xs x-danger b-rounded" onclick="return deleteRow(this)"><i class="fa fa-trash-o"></i></a></td>
+                                                    <td><input type="text" name="id" value="@item.ID" required class="form-control" readonly autocomplete="off"></td>
+                                                    <td><input type="text" name="item_name" value="@item.Name" readonly class="form-control" autocomplete="off"></td>
+                                                    <td><input type="text" name="sp[]" value="@item.SalePrice " onkeyup="qty123();" class="form-control" autocomplete="off"></td>
+                                                    <td><input type="text" name="qty[]" value="" readonly class="form-control" autocomplete="off"></td>
+                                                    <td><input type="text" name="n_total[]" value="" readonly class="form-control" autocomplete="off"></td>
+                                                    <td style="display:none">@item.ID</td>
+                                                    <td style="display:none">@item.Name</td>
+                                                    <td style="display:none">@item.SalePrice</td>
+                                                    <td style="display:none"><input type="hidden" name="length" value="@item.PiecesBox" readonly class="form-control" autocomplete="off"></td>
+
+                                                </tr>
+                                            }*@
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group col-sm-2">
+                                    <label>Total</label>
+                                    @Html.TextBoxFor(m => m.SaleMaster.NetAmount, new { @class = "form-control input-xs", type = "number", value = "0", id = "net_final", @readonly = "readonly" })
+                                </div>
+                                <div class="form-group col-sm-3">
+                                    <label>Cargo Charges</label>
+                                    @Html.TextBoxFor(m => m.SaleMaster.CargoCharges, new { @class = "form-control input-xs", type = "number", value = "0", onKeyUp = "gt(); ", id = "cgo_charges" })
+                                </div>
+                                <div class="form-group col-sm-2">
+                                    <label> Grand Total</label>
+                                    @Html.TextBoxFor(m => m.SaleMaster.Total, new { @class = "form-control input-xs", type = "number", value = "0", id = "total", @readonly = "readonly" })
+                                </div>
+                                <div class="form-group col-sm-3">
+                                    <label>Discount Amount</label>
+                                    @Html.TextBoxFor(m => m.SaleMaster.DiscountAmount, new { @class = "form-control input-xs", type = "number", value = "0", onKeyUp = "gt1(); ", id = "d_amount" })
+                                </div>
+                                <div class="form-group col-sm-2">
+                                    <label> Net Total</label>
+                                    @Html.TextBoxFor(m => m.SaleMaster.GrandTotal, new { @class = "form-control input-xs", type = "number", value = "0", id = "g_total", @readonly = "readonly" })
+                                </div>
+
+                            </div>
+                            <div class="col-sm-12">
+                                <button type="submit" onclick="return check_total()" class="btn btn-primary col-sm-4 col-sm-offset-4" style="margin-top:10px"><i class="fa fa-save"></i> &nbsp; Save Invoice</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="lg-modal" aria-labelledby="modal-large-label" style="margin-top:-180px">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header state modal-primary">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modal-large-label">Product Details</h4>
+                </div>
+                <div class="modal-body">
+                    <div style="width: 100%; height:480px;overflow-y: scroll;">
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Barcode</th>
+                                    <th>Product Name</th>
+                                    <th>Sale Price</th>
+                                    <th>Pieces In Box</th>
+                                    <th>Munit</th>
+                                    <th>Action</th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody class="abc" id="myTable">
+                                @foreach (var item in Model.pro_list)
+                                {
+                                    <tr>
+                                        <td>@item.ID</td>
+                                        <td>@item.Barcode</td>
+                                        <td>@item.Name</td>
+                                        <td>@item.SalePrice</td>
+                                        <td>@item.PiecesBox</td>
+                                        <td>@item.MUnit</td>
+                                        <td><button class="btnSelect btn btn-danger" data-dismiss="modal"><i class="fa fa-check"></i></button></td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th style="width:60px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:80px"></th>
+                                    <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                    <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    @*Second Modal*@
+
+    <div class="modal fade" id="second" aria-labelledby="modal-large-label" style="margin-top:-180px">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header state modal-primary">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modal-large-label">Recent Invoices</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered table-hover table-striped table-success">
+                        <thead class="bordered-darkorange">
+                            <tr>
+                                <th>Sr</th>
+                                <th>Inv Id</th>
+                                <th>Customer</th>
+                                <th>Date</th>
+                                <th>Net Total</th>
+                                <th>Discount</th>
+                                <th>Grand Total</th>
+                                <th>Received</th>
+                                <th>Action</th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody class="abc">
+                            @foreach (var item in Model.sale_list_woc)
+                            {
+                                sr += 1;
+                                <tr>
+
+                                    <td>@sr</td>
+                                    <td>@item.InvID</td>
+                                    <td>@item.CustomerName</td>
+                                    <td>@item.Date</td>
+                                    <td>@item.NetAmount</td>
+                                    <td>@item.DiscountAmount</td>
+                                    <td>@item.GrandTotal</td>
+                                    <td>@item.Rtotal</td>
+
+                                    <td>
+                                        <a href="@Url.Action("Edit", new { ID= item.InvID } )" class="badge badge-xs x-primary b-rounded"><i class="fa fa-pencil"></i></a>
+                                        <a href="@Url.Action("SaleWctnSS", new { ID= item.InvID } )" class="badge badge-xs x-info b-rounded"><i class="fa fa-copy"></i></a>
+                                        <a href="@Url.Action("SaleReportWctnView", new { ID= item.InvID } )" class="badge badge-xs x-warning b-rounded"><i class="fa fa-print"></i></a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

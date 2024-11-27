@@ -1,0 +1,88 @@
+﻿@model WebApplication1.ViewModels.PurInvoiceVM
+@{
+    ViewBag.Title = "Index";
+}
+<script>
+    function check() {
+        //  alert("dsasd");
+        var len = document.querySelectorAll('.abc input[type="checkbox"]:checked').length;
+        // alert(len);
+        if (len <= 0) {
+            alert("Please select atleast one Gatepass");
+            return false;
+        } else {
+            
+        }
+    }
+
+</script>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-print" aria-hidden="true"></i> Invoices</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        @using (Html.BeginForm("SearchGatepass", "Purchase", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div class="col-sm-12">
+                <h4 class="section-subtitle"><b>Gatepasses List</b></h4>
+                <input type="submit" value="Proceed" class="btn btn-success pull-right" onclick="return check();" style="margin-top:-50px" />
+                <div class="panel">
+                    <div class="panel-content">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover table-striped table-success">
+                                <thead class="bordered-darkorange">
+                                    <tr>
+                                        <th>Gate Pass Id</th>
+                                        <th>Supplier</th>
+                                        <th>Phone #</th>
+                                        <th>Address</th>
+                                        <th>Date</th>
+                                        <th style="display:none">Purchase</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="abc">
+                                    @foreach (var item in Model.gate_list)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <label>
+                                                    <input name="ID" type="checkbox" value="@item.InvID"  class="colored-primary">
+                                                    <span class="text">@item.InvID</span>
+                                                </label>
+                                            </td>
+                                            <td>@item.SupplierName</td>
+                                            <td>@item.PhoneNo</td>
+                                            <td>@item.Address</td>
+                                            <td>@item.Date</td>
+                                            <td style="display:none">
+                                                <a href="@Url.Action("Create", new { ID= item.InvID } )" class="badge badge-xs x-info b-rounded"><i class="fa fa-sign-out"></i></a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                                @*<tfoot>
+                                    <tr>
+                                        <th style="width:60px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:80px"></th>
+                                        <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                        <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                        <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                        <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                       
+                                    </tr>
+                                </tfoot>*@
+                            </table>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+        </div>
+</div>
+
+

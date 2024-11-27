@@ -1,0 +1,107 @@
+﻿@model WebApplication1.ViewModels.PurInvoiceVM
+@{
+    ViewBag.Title = "Index";
+    var Pen = "Pending";
+    var clear = "Clear";
+}
+
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-print" aria-hidden="true"></i> Invoices</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b>Gate Pass List</b></h4>
+            <a href="@Url.Action("Create", "Gatepass")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  Creat New Gate Pass</a>
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th>Inv Id</th>
+                                    <th>Supplier</th>
+                                    <th>Phone #</th>
+                                    <th>Address</th>
+                                    <th>Date</th>
+                                    <th>Purchase Amount</th>
+                                    <th>Status</th>
+                                    <th>Go for Purchase</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody class="abc">
+                                @foreach (var item in Model.gate_list)
+                                {
+                                    <tr>
+                                        <td>@item.InvID</td>
+                                        <td>@item.SupplierName</td>
+                                        <td>@item.PhoneNo</td>
+                                        <td>@item.Address</td>
+                                        <td>@item.Date</td>
+                                        <td>@item.PurchaseAmount</td>
+                                        <td>
+                                            @if (item.status == 0)
+                                            {
+                                                @Pen;
+                                            }
+                                            else
+                                            {
+                                                @clear;
+                                            }
+                                        </td>
+                                        @if (item.status == 0)
+                                        {
+                                            <td>
+                                                @using (Html.BeginForm("SearchGatepass", "Purchase", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                                {
+                                                    <input type="hidden" name="ID" value="@item.InvID" />
+                                                    <button type="submit" class="badge badge-xs dx-info b-rounded"><i class="fa fa-plus"></i></button>
+                                                }
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                <button type="submit" class="badge badge-xs dx-info b-rounded" disabled><i class="fa fa-plus"></i></button>
+                                            </td>
+                                        }
+                                    <td>
+                                        @if (item.status == 0)
+                                        {
+                                            <a href="@Url.Action("Edit", new { ID= item.InvID } )" class="badge badge-xs x-primary b-rounded"><i class="fa fa-pencil"></i></a>
+                                            <a href="@Url.Action("GatepassReport", new { ID= item.InvID } )" target="_blank" class="badge badge-xs x-warning b-rounded"><i class="fa fa-print"></i></a>
+                                        }
+                                        else
+                                        {
+                                            <a href="@Url.Action("GatepassReport", new { ID= item.InvID } )" target="_blank" class="badge badge-xs x-warning b-rounded"><i class="fa fa-print"></i></a>
+                                        }
+                                    </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th style="width:60px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:80px"></th>
+                                    <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                    <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                    <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                    <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

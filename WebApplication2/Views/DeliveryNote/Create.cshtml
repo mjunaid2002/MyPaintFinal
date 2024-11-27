@@ -1,0 +1,545 @@
+﻿@model WebApplication1.ViewModels.SaleInvVM
+@{
+    ViewData["Title"] = "Create";
+    var sr = 0;
+}
+<script>
+    function date() {
+        var d = new Date();
+
+        function twoDigitDate(d) {
+            return ((d.getDate()).toString().length == 1) ? "0" + (d.getDate()).toString() : (d.getDate()).toString();
+        };
+
+        function twoDigitMonth(d) {
+            return ((d.getMonth() + 1).toString().length == 1) ? "0" + (d.getMonth() + 1).toString() : (d.getMonth() + 1).toString();
+        };
+
+        var today_ISO_date = d.getFullYear() + "-" + twoDigitMonth(d) + "-" + twoDigitDate(d); // in yyyy-mm-dd format
+        document.getElementById('date').setAttribute("value", today_ISO_date);
+
+    }
+    $(document).ready(function () {
+        // code to read selected table row cell data (values).
+        $("#searchable").on("click", ".btnSelect", function () {
+
+            var currentRow = $(this).closest("tr");
+            var col1 = currentRow.find("td:eq(0)").html();
+            var col2 = currentRow.find("td:eq(1)").html();
+            var col3 = currentRow.find("td:eq(2)").html();
+            var col4 = currentRow.find("td:eq(3)").html();
+            var col5 = currentRow.find("td:eq(4)").html();
+            var data = col1 + "\n" + col2 + "\n" + col3;
+            //alert(col1);
+            document.getElementById("id").value = col1;
+            document.getElementById("item_name").value = col2;
+            document.getElementById("sp").value = col3;
+            document.getElementById("p_box").value = col4;
+            // alert(data);
+            //var htmlRows = '';
+            //htmlRows += '<tr>';
+            //htmlRows += '<td style="width:60px !important"><button class="btn btn-danger" onclick="deleteRow(this)"><i class="fa fa-trash-o"></i></button></td>';
+            //htmlRows += '<td><input type="text"   name="name1[]" value="' + col1 + '" required class="form-control" autocomplete="off"></td>';
+            //htmlRows += '<td><input type="text"   name="name[]" value="' + col2 + '" required class="form-control" autocomplete="off"></td>';
+            //htmlRows += '<td><input type="text"   name="name2[]" value="' + col3 + '" required class="form-control" autocomplete="off"></td>';
+            //$('#invoiceItem').append(htmlRows);
+        });
+    });
+    function add() {
+        //alert("dsdas");
+        var id = document.getElementById("id").value;
+        var item_name = document.getElementById("item_name").value;
+        var qty = document.getElementById("qty").value;
+        var p_box = document.getElementById("p_box").value;
+        var d_no = document.getElementById("d_no").value;
+        var t_drum = document.getElementById("t_drum").value;
+        var e_drum = document.getElementById("e_drum").value;
+        var idnit = document.getElementById("idnit").value;
+        var packing = document.getElementById("packing").value;
+        // alert(id);
+        if (id == "" || id == 0) {
+            alert("Please Select Item");
+        }
+        else if (qty == "" || qty == 0) {
+
+            alert("Please Enter Quantity");
+        }
+        else {
+            var htmlRows = '';
+            htmlRows += '<tr>';
+            htmlRows += '<td style="width:80px !important"><a class="badge badge-xs x-danger b-rounded" onclick="return deleteRow(this)" ><i class="fa fa-trash-o"></i></a></td>';
+            htmlRows += '<td><input type="text"  name="id"  value="' + id + '" required class="form-control" readonly autocomplete="off"></td>';
+            htmlRows += '<td  style="display:none"><input type="text"  name="d_no"  value="' + d_no + '" readonly class="form-control" autocomplete="off"></td>';
+            htmlRows += '<td  style="display:none"><input type="text"  name="t_drum"  value="' + t_drum + '" readonly class="form-control" autocomplete="off"></td>';
+            htmlRows += '<td  style="display:none"><input type="text"  name="e_drum"  value="' + e_drum + '" readonly class="form-control" autocomplete="off"></td>';
+            htmlRows += '<td><input type="text"  name="item_name"  value="' + item_name + '" readonly class="form-control" autocomplete="off"></td>';
+            htmlRows += '<td  style="display:none"><input type="text"  name="idnit"  value="' + idnit + '" readonly class="form-control" autocomplete="off"></td>';
+            htmlRows += '<td  style="display:none"><input type="text"  name="packing"  value="' + packing + '" readonly class="form-control" autocomplete="off"></td>';
+            htmlRows += '<td><input type="text"  name="qty"  value="' + qty + '"  readonly class="form-control" autocomplete="off"></td>';
+            htmlRows += '<td style="display:none">' + id + '</td>';
+            htmlRows += '<td style="display:none">' + d_no + '</td>';
+            htmlRows += '<td style="display:none">' + t_drum + '</td>';
+            htmlRows += '<td style="display:none">' + e_drum + '</td>';
+            htmlRows += '<td style="display:none">' + item_name + '</td>';
+            htmlRows += '<td style="display:none">' + idnit + '</td>';
+            htmlRows += '<td style="display:none">' + packing + '</td>';
+            htmlRows += '<td style="display:none">' + qty + '</td>';
+            htmlRows += '<td style="display:none"><input type="hidden"   name="p_box" value="' + p_box + '"  readonly class="form-control" autocomplete="off"></td>';
+
+            $('#invoiceItem').append(htmlRows);
+
+
+            $('#id').val('');
+            $('#item_name').val('0');
+            $('#sp').val('');
+            $('#qty').val('0');
+            $('#d_no').val('0');
+            $('#n_total').val('0');
+            $('#idnit').val('0');
+            $('#packing').val('0');
+            $('#t_drum').val('0');
+            $('#e_drum').val('0');
+
+            //var table = document.getElementById("invoiceItem"), sumVal = 0;
+
+            //for (var i = 1; i < table.rows.length; i++) {
+            //    sumVal = sumVal + parseInt(table.rows[i].cells[20].innerHTML);
+            //}
+            ////alert(sumVal);
+            //document.getElementById("net_final").value = sumVal;
+            //document.getElementById("total").value = sumVal;
+            //document.getElementById("g_total").value = sumVal;
+            //document.getElementById("r_total").value = sumVal;
+
+            //$('#d_amount').val('0');
+            //$('#g_total').val('0');
+            //$('#cgo_charges').val('0');
+            //$('#total').val('0');
+            //$('#r_total').val('0');
+
+        }
+    }
+    function ShowEditModal(button) {
+        if (confirm("Are you sure want to Edit the row?"))
+            var $row = $(button).closest('tr');
+        var col1 = $row.find("td:eq(6)").html();
+        var col2 = $row.find("td:eq(7)").html();
+        var col3 = $row.find("td:eq(8)").html();
+        var col5 = $row.find("td:eq(9)").html();
+        var col6 = $row.find("td:eq(10)").html();
+
+        document.getElementById("id").value = col1;
+        document.getElementById("item_name").value = col2;
+        document.getElementById("sp").value = col3;
+        document.getElementById("qty").value = col5;
+        document.getElementById("n_total").value = col6;
+
+        $(button).closest("tr").remove();
+        var table = document.getElementById("invoiceItem"), sumVal = 0;
+
+        for (var i = 1; i < table.rows.length; i++) {
+            sumVal = sumVal + parseInt(table.rows[i].cells[10].innerHTML);
+        }
+        //alert(sumVal);
+        document.getElementById("net_final").value = sumVal;
+        document.getElementById("g_total").value = sumVal;
+        document.getElementById("r_total").value = sumVal;
+        $('#d_amount').val('0');
+        // $('#g_total').val('0');
+        $('#cgo_charges').val('0');
+        $('#total').val('0');
+
+
+    }
+    function deleteRow(btn) {
+        if (confirm("Are you sure want to delete the row?"))
+            $(btn).closest("tr").remove();
+        var table = document.getElementById("invoiceItem"), sumVal = 0;
+
+        for (var i = 1; i < table.rows.length; i++) {
+            sumVal = sumVal + parseInt(table.rows[i].cells[10].innerHTML);
+        }
+        //alert(sumVal);
+        document.getElementById("net_final").value = sumVal;
+        document.getElementById("g_total").value = sumVal;
+        document.getElementById("r_total").value = sumVal;
+        $('#d_amount').val('0');
+        //$('#g_total').val('0');
+        $('#cgo_charges').val('0');
+        $('#total').val('0');
+    }
+    function tota() {
+
+        var n_total = document.getElementById("n_total").value;
+        var p_box = document.getElementById("p_box").value;
+        var totl1 = document.getElementById("qty").value;
+        if (qty == '' || qty == null) {
+            document.getElementById("qty").value = "0";
+
+        }
+
+        var sp = document.getElementById("sp").value;
+        if (sp == '' || sp == null) {
+            document.getElementById("sp").value = "0";
+        }
+
+
+        var totl11;
+        totl11 = totl1;
+        var totl;
+        totl = totl11 * sp;
+        if (n_total == '' || n_total == null) {
+            document.getElementById("n_total").value = "0";
+        }
+        document.getElementById("n_total").value = totl;
+        if (n_total == '' || n_total == null) {
+            document.getElementById("n_total").value = "0";
+        }
+    }
+    function gt() {
+        var cgo_charges = document.getElementById("cgo_charges").value;
+        var total = document.getElementById("total").value;
+        var nt = document.getElementById("net_final").value;
+        var t_f = parseInt(cgo_charges) + parseInt(nt);
+        document.getElementById("total").value = t_f;
+        var da = document.getElementById("d_amount").value;
+        document.getElementById("d_amount").value = "0";
+        document.getElementById("g_total").value = t_f;
+        document.getElementById("r_total").value = t_f;
+
+        // balance();
+    }
+    function balance() {
+        var r_total = document.getElementById("r_total").value;
+        var g_total = document.getElementById("g_total").value;
+        document.getElementById("b_total").value = g_total - r_total;
+    }
+    function gt1() {
+        var da = document.getElementById("d_amount").value;
+        var total = document.getElementById("total").value;
+        var totl = total - da;
+        document.getElementById("g_total").value = totl;
+        document.getElementById("r_total").value = totl;
+    }
+</script>
+<script type="text/javascript">
+    function Action(code) {
+        //  alert(code);
+        $.ajax({
+            /**/
+            url: "Action/SaleInvWoctn?message=" + code,
+            method: "GET",
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                var address = data.value1;
+                document.getElementById("address").value = address
+            }
+        });
+    }
+</script>
+<style>
+    hr {
+        height: 1px;
+        background: black;
+        border: none;
+        outline: none;
+        margin: 3em 3em 5em;
+        position: relative;
+    }
+
+        hr#eight {
+            background: transparent;
+            border-bottom: 2px dashed #189279;
+            width: 100%;
+            margin: 0 auto;
+            &:before
+
+    {
+        top: 3px;
+        left: 0;
+        padding-right: 2em;
+    }
+
+    }
+
+    modal-backdrop {
+        display: none;
+    }
+
+    .modal-backdrop.in {
+        filter: alpha(opacity=50);
+        opacity: .5;
+    }
+
+    .modal {
+        text-align: center;
+    }
+
+        .modal:before {
+            display: inline-block;
+            vertical-align: middle;
+            content: " ";
+            height: 100%;
+        }
+
+    .modal-dialog {
+        display: inline-block;
+        text-align: left;
+        vertical-align: middle;
+    }
+
+    .modal-dialog {
+        width: 800px;
+    }
+</style>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-print" aria-hidden="true"></i>Sale Invoices</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b>Delivery Notes</b></h4>
+
+            <a href="@Url.Action("Index", "Sale")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  Invoice List</a>
+            @*<a href="#" data-toggle="modal" data-target="#second" class="btn btn-wide btn-primary pull-right" style="margin-top:-40px;margin-right:10px"><i class="fa fa-list"></i>  Recent Invoices </a>*@
+
+            <div class="panel">
+                <form action="Create" id="invoice-form" method="post" enctype="multipart/form-data" onsubmit="return confirm('Are you sure you want to Continue ?');">
+                    <div class="panel-content">
+                        <div class="row">
+                            <div class="form-group col-sm-1">
+                                <label>INVID</label>
+                                @Html.TextBoxFor(m => m.SaleMaster.InvID, new { @class = "form-control input-xs", @readonly = "readonly" })
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label>Select Store</label>
+                                @Html.DropDownListFor(m => m.SaleMaster.Store, new SelectList(Model.Store, "Id", "Name"), "Select Store", htmlAttributes: new { @class = "chosen-select form-control", @required = "true" })
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label>Select Customer</label>
+                                @Html.DropDownListFor(m => m.SaleMaster.CustomerId, new SelectList(Model.cus_list, "AccountNo", "Name"), "Select Customer", htmlAttributes: new { @class = "chosen-select form-control" })
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label>Select Delivery Person</label>
+                                @Html.DropDownListFor(m => m.SaleMaster.DsrId, new SelectList(Model.emp_list, "AccountNo", "Name"), "Select Delivery Person", htmlAttributes: new { @class = "chosen-select form-control", onChange = "Action(this.value)" })
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label>Address</label>
+                                @Html.TextAreaFor(m => m.SaleMaster.Address, new { @class = "form-control input-xs", style = " rows=2, columns=40" })
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label>Cargo Name</label>
+                                @Html.TextBoxFor(m => m.SaleMaster.CargoName, new { @class = "form-control input-xs" })
+                                @*<a class="btn btn-wide btn-info pull-left" data-toggle="modal" data-target="#lg-modal" style="margin-top:25px"><i class="fa fa-search-plus"></i>  Search Items</a>*@
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label>Phone Number</label>
+                                @Html.TextBoxFor(m => m.SaleMaster.Phone, new { @class = "form-control input-xs" })
+
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label>Date</label>
+                                @Html.TextBoxFor(m => m.SaleMaster.Date, new { @class = "form-control input-xs", id = "date", type = "Date", @Value = DateTime.Now.ToString("yyyy-MM-dd") })
+                            </div>
+                        </div>
+                        <hr id="eight" data-symbol="✂" style="margin-top:5px"><br />
+                        <div clas="row" style="margin-top:10px;">
+                            <div clas="col-md-12">
+                                <div class="form-group col-sm-1">
+                                    <a class="btn btn-info" data-toggle="modal" data-target="#lg-modal" style="width:50px !important;margin-top:25px"><i class="fa fa-search-plus"></i></a>
+                                </div>
+                                <div class="form-group col-sm-1" ">
+                                    <label>ID</label>
+                                    <input type="text" id="id" readonly class="form-control" />
+                                </div>
+                                <div class="form-group col-sm-2" style="margin-left:-30px;display:none">
+                                    <label>Drum #</label>
+                                    <input type="text" id="d_no" class="form-control" autocomplete="off" />
+                                </div>
+                                <div class="form-group col-sm-2" style="margin-left: -30px; display: none">
+                                    <label>T Drum</label>
+                                    <input type="text" id="t_drum" class="form-control" autocomplete="off" />
+                                </div>
+                                <div class="form-group col-sm-2" style="margin-left: -30px; display: none">
+                                    <label>E. Drum</label>
+                                    <input type="text" id="e_drum" class="form-control" autocomplete="off" />
+                                </div>
+                                <div class="form-group col-sm-4">
+                                    <label>Item Name</label>
+                                    <input type="text" id="item_name" readonly class="form-control" autocomplete="off" />
+                                </div>
+                                <div class="form-group col-sm-2" style="margin-left: -30px; display: none">
+                                    <label>IDNIT</label>
+                                    <input type="text" id="idnit" class="form-control" autocomplete="off" />
+                                </div>
+                                <div class="form-group col-sm-2" style="margin-left: -30px; display: none">
+                                    <label>Packing</label>
+                                    <input type="text" id="packing" class="form-control" autocomplete="off" />
+                                </div>
+                                <div class="form-group col-sm-2">
+                                    <label>Qty</label>
+                                    <input type="number" id="qty" value="0" onKeyUp="tota(); " autocomplete="off" class="form-control" style="width:100px" />
+                                    <input type="hidden" id="p_box" value="0" class="form-control" />
+                                </div>
+                                <div class="form-group col-sm-2" style="margin-top:10px">
+                                    <br />
+                                    <br />
+                                    <a class="btn btn-wide btn-warning pull-left" onclick='return add()' style="margin-right:-130px;width:25px;margin-top:-27px"> <i class="fa fa-plus"></i> Add</a> &nbsp;&nbsp;
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12" style="margin-top:-15px;margin-left:-10px">
+                                <div class="table-responsive">
+                                    <table id="invoiceItem" class="table table-bordered table-hover table-striped table-success">
+                                        <thead class="bordered-darkorange">
+                                            <tr style="background-color:#189279;color:white">
+                                                <th>#</th>
+                                                <th>ID</th>
+                                                @*<th>Drum #</th>
+                                                    <th>T Drum</th>
+                                                    <th>E. Drum</th>*@
+                                                <th>Item Name</th>
+                                                @*<th>IDNIT</th>
+                                                <th>Packing</th>*@
+                                                <th>Qty</th>
+
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <button type="submit" class="btn btn-primary col-sm-4 col-sm-offset-4" style="margin-top:10px"><i class="fa fa-save"></i> &nbsp; Save Invoice</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="lg-modal" aria-labelledby="modal-large-label" style="margin-top:-180px">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header state modal-primary">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modal-large-label">Product Details</h4>
+                </div>
+                <div class="modal-body">
+                    <div style="width: 100%; height:480px;overflow-y: scroll;">
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Product Name</th>
+                                    <th>Sale Price</th>
+                                    <th>Pieces In Box</th>
+                                    <th>Munit</th>
+                                    <th>Action</th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody class="abc" id="myTable">
+                                @foreach (var item in Model.pro_list)
+                                {
+                                    <tr>
+                                        <td>@item.ID</td>
+                                        <td>@item.Name</td>
+                                        <td>@item.SalePrice</td>
+                                        <td>@item.PiecesBox</td>
+                                        <td>@item.MUnit</td>
+                                        <td><button class="btnSelect btn btn-danger" data-dismiss="modal"><i class="fa fa-check"></i></button></td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th style="width:60px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:80px"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                    <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                    <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                    <th style="width:100px"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*Second Modal*@
+    <div class="modal fade" id="second" aria-labelledby="modal-large-label" style="margin-top:-180px">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header state modal-primary">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modal-large-label">Recent Invoices</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered table-hover table-striped table-success">
+                        <thead class="bordered-darkorange">
+                            <tr>
+                                <th>Sr</th>
+                                <th>Inv Id</th>
+                                <th>Customer</th>
+                                <th>Date</th>
+                                <th>Net Total</th>
+                                <th>Discount</th>
+                                <th>Grand Total</th>
+                                <th>Received</th>
+                                <th>Action</th>
+
+                            </tr>
+                        </thead>
+
+                        <tbody class="abc">
+                            @foreach (var item in Model.sale_list_woc)
+                            {
+                                sr += 1;
+                                <tr>
+
+                                    <td>@sr</td>
+                                    <td>@item.InvID</td>
+                                    <td>@item.CustomerName</td>
+                                    <td>@item.Date</td>
+                                    <td>@item.NetAmount</td>
+                                    <td>@item.DiscountAmount</td>
+                                    <td>@item.GrandTotal</td>
+                                    <td>@item.Rtotal</td>
+
+                                    <td>
+                                        <a href="@Url.Action("Edit", new { ID= item.InvID } )" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="badge badge-xs x-warning b-rounded"><i class="fa fa-pencil"></i></a>
+                                        <a href="@Url.Action("Delete", new { ID= item.InvID } )" new { onclick="return confirm('Are you sure you want to delete this record?');" class="badge badge-xs x-danger b-rounded"><i class="fa fa-trash-o"></i></a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+
+                    </table>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

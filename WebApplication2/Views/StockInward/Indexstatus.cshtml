@@ -1,0 +1,105 @@
+﻿@model IEnumerable<CRM.Models.tbl_BatchRequest>
+@{
+    ViewBag.Title = "Index";
+}
+<script>
+    $('#searchable').DataTable({
+        buttons: [
+            'copy', 'excel', 'pdf'
+        ]
+    });
+</script>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i>Purchase Department</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b> Purchase Request List</b></h4>
+           
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th>Invid ID</th>
+                                    
+                                    <th>User Name</th>
+                                    <th>Sale</th>
+                                    <th>Department</th>
+                           
+                                </tr>
+                            </thead>
+
+                            <tbody class="abc">
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                  
+                                        <td>@item.orderid </td>
+                                        <td>
+                                            @item.username
+                                            @if(item.batchno== "StockInWard")
+                                            {
+                                            <a href="@Url.Action("Updatestatus", new { ID = item.orderid,status="Approved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to Approved this StockInWard Request?');" class="label label-success shiny input-xs"><i class="fa fa-check"></i></a>
+                                            <a href="@Url.Action("Updatestatus", new { ID = item.orderid,status="DisApproved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to DisApproved this StockInWard Request?');" class="label label-danger shiny input-xs"><i class="fa fa-times"></i></a>
+                                        }
+                                            else if(item.batchno== "PurchaseOrder")
+                                            {
+                                            <a href="@Url.Action("Updatestatus","PurchaseOrder", new { ID = item.orderid,status="Approved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to Approved this Purchase Order Request?');" class="label label-success shiny input-xs"><i class="fa fa-check"></i></a>
+                                            <a href="@Url.Action("Updatestatus","PurchaseOrder", new { ID = item.orderid,status="DisApproved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to DisApproved this Purchase Order Request?');" class="label label-danger shiny input-xs"><i class="fa fa-times"></i></a>
+                                        }
+                                            else if(item.batchno== "PurchaseInvoice")
+                                            {
+                                            <a href="@Url.Action("Updatestatus","PurchaseInvoice", new { ID = item.orderid,status="Approved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to Approved this Purchase Invoice Request?');" class="label label-success shiny input-xs"><i class="fa fa-check"></i></a>
+                                            <a href="@Url.Action("Updatestatus","PurchaseInvoice", new { ID = item.orderid,status="DisApproved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to DisApproved this Purchase Invoice Request?');" class="label label-danger shiny input-xs"><i class="fa fa-times"></i></a>
+                                        }
+                                            else if(item.batchno== "PuchaseReturns")
+                                            {
+                                            <a href="@Url.Action("Updatestatus","PuchaseReturns", new { ID = item.orderid,status="Approved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to Approved this Puchase Returns Request?');" class="label label-success shiny input-xs"><i class="fa fa-check"></i></a>
+                                            <a href="@Url.Action("Updatestatus","PuchaseReturns", new { ID = item.orderid,status="DisApproved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to DisApproved this Puchase Returns Request?');" class="label label-danger shiny input-xs"><i class="fa fa-times"></i></a>
+                                        }
+                                            else if(item.batchno== "TaxPurchaseOrder")
+                                            {
+                                            <a href="@Url.Action("Updatestatus","TaxPurchaseOrder", new { ID = item.orderid,status="Approved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to Approved this Tax Purchase Order Request?');" class="label label-success shiny input-xs"><i class="fa fa-check"></i></a>
+                                            <a href="@Url.Action("Updatestatus","TaxPurchaseOrder", new { ID = item.orderid,status="DisApproved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to DisApproved this Tax Purchase Order Request?');" class="label label-danger shiny input-xs"><i class="fa fa-times"></i></a>
+                                        }
+                                            else if(item.batchno== "TaxPurchaseInvoice")
+                                            {
+                                            <a href="@Url.Action("Updatestatus","TaxPurchaseInvoice", new { ID = item.orderid,status="Approved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to Approved this Tax Purchase Invoice Request?');" class="label label-success shiny input-xs"><i class="fa fa-check"></i></a>
+                                            <a href="@Url.Action("Updatestatus","TaxPurchaseInvoice", new { ID = item.orderid,status="DisApproved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to DisApproved this Tax Purchase Invoice Request?');" class="label label-danger shiny input-xs"><i class="fa fa-times"></i></a>
+                                        }
+                                            else if(item.batchno== "TaxPuchaseReturns")
+                                            {
+                                            <a href="@Url.Action("Updatestatus","TaxPuchaseReturns", new { ID = item.orderid,status="Approved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to Approved this Tax Puchase Returns Request?');" class="label label-success shiny input-xs"><i class="fa fa-check"></i></a>
+                                            <a href="@Url.Action("Updatestatus","TaxPuchaseReturns", new { ID = item.orderid,status="DisApproved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to DisApproved this Tax Puchase Returns Request?');" class="label label-danger shiny input-xs"><i class="fa fa-times"></i></a>
+                                        }
+                                        </td>
+                                        <td>@item.batchno</td>
+                                        <td>@item.department</td>
+                                      
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                   
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

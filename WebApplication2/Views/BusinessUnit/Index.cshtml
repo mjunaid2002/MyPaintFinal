@@ -1,0 +1,91 @@
+﻿@model IEnumerable<CRM.Models.BusinessUnit>
+@{
+    ViewBag.Title = "Index";
+    int s = 0;
+}
+
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Registrations</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b>Business Unit List</b></h4>
+            <a href="@Url.Action("Create", "BusinessUnit")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  Creat New</a>
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th style="width:70px">Image</th>
+                                    <th>Id</th>
+                                    <th>Name</th>
+                                    <th>Phone</th>
+                                    <th>Address</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody class="abc">
+                                @foreach (var item in Model)
+                                {
+                                    s= Convert.ToInt32((Convert.ToDateTime(item.expiraydate) - DateTime.Now).Days + 1);
+                                    <tr>
+                                        <td>
+                                            @if (item.Image == "" || item.Image == "0" || item.Image == null)
+                                            {
+                                                <img src="~/Uploads/demo.jpg" width="70" />
+                                            }
+                                            else
+                                            {
+                                                <img src="~/Uploads/@item.Image" width="70" />
+                                            }
+                                        </td>
+                                        <td>@item.Id</td>
+                                        <td>@item.Name</td>
+                                        <td>@item.Phone</td>
+                                        <td>@item.Address</td>
+                                        <td>
+                                            @if (s < 0)
+                                            {
+                                                <label class="label label-danger">Expired</label>
+                                            }
+                                            else
+                                            {
+                                                <label class="label label-info">Expire in @s days</label>
+                                            }
+
+                                        </td>
+
+                                        <td>
+                                            <a href="@Url.Action("Edit", new { ID= item.Id } )" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="btn btn-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
+                                            <a href="@Url.Action("Delete", new { ID= item.Id } )" new { onclick="return confirm('Are you sure you want to delete this record?');" class="btn btn-danger shiny input-xs"><i class="fa fa-trash-o"></i></a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th><input type="hidden" placeholder="Search Here" name="search_browser"></th>
+                                    <th style="width:60px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:80px"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

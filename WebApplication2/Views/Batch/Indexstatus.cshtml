@@ -1,0 +1,318 @@
+﻿@model IEnumerable<WebApplication1.QueryViewModel.ProductIngrMasterQuery>
+@{
+    ViewBag.Title = "Index";
+}
+<script>
+    var showLoader = function (form) {
+        $("<div />").css({
+            'position': 'fixed',
+            'left': 0,
+            'right': 0,
+            'bottom': 0,
+            'top': 0,
+            'background': '#0020ff36',
+            'z-index': '99',
+            'text-align': 'center'
+        }).appendTo($("body"))
+            .append(
+                $("<img />").attr("src", "https://mir-s3-cdn-cf.behance.net/project_modules/disp/35771931234507.564a1d2403b3a.gif")
+            );
+    }
+    $('#searchable').DataTable({
+        buttons: [
+            'copy', 'excel', 'pdf'
+        ]
+    });
+</script>
+<style>
+    .test {
+        width: 15px;
+        height: 15px;
+        background-color: green;
+        border-radius: 20px;
+    }
+
+    .test1 {
+        width: 15px;
+        height: 15px;
+        background-color: red;
+        border-radius: 20px;
+    }
+</style>
+@*<script>
+    function updateStatus(checkbox, orderId) {
+        if (checkbox.checked) {
+            checkbox.value = "True";
+        } else {
+            checkbox.value = "False";
+        }
+    }
+</script>*@
+<script>
+    function updateStatus(checkbox) {
+        checkbox.value = checkbox.checked ? "True" : "False";
+    }
+</script>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Batch Procesing</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <h4 class="section-subtitle"><b> Batch Formulation Approval List</b></h4>
+        @*@using (Html.BeginForm("Indexstatus", "Batch", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div class="form-group col-sm-3">
+                <label>Start Date</label>
+                <input type="date" name="batch_s_date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
+            </div>
+            <div class="form-group col-sm-3">
+                <label>End Date </label>
+                <input type="date" name="batch_e_date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
+            </div>
+            <div class="col-sm-3">
+                <button type="submit" name="submit" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Search &nbsp;&nbsp;</button>
+            </div>
+        }*@
+
+        @if (Session["SubBatchFormulationAdd"].ToString() != "0")
+        {
+            <a href="@Url.Action("Create", "Batch")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  Creat New</a>
+        }
+        @*<a href="#" data-toggle="modal" data-target="#exampleModal" class="btn btn-wide btn-info pull-right" style="margin-top:-40px;margin-right:10px"><i class="fa fa-list"></i> Batch History</a>*@
+        <a href="@Url.Action("History", "Batch")" class="btn btn-wide btn-info pull-right" style="margin-top:-40px;margin-right:10px"><i class="fa fa-list"></i> Batch History</a>
+
+
+    </div>
+    @*@using (Html.BeginForm("Updatestatus", "Batch", FormMethod.Post, new { enctype = "multipart/form-data", onsubmit = "return confirm('Are you sure you want to Save the form?')" }))
+    {*@
+        @*<form asp-action="Updatestatus" method="post" enctype="multipart/form-data" onsubmit="return confirm('Are you sure you want to Save the form?')")">*@
+        @*<div class="col-sm-12 text-right">
+            <button type="submit" name="submit" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Save &nbsp;&nbsp;</button>
+        </div>*@
+
+        <div class="row">
+            <div class="col-sm-12">
+
+                <div class="panel">
+                    <div class="panel-content">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                                <thead class="bordered-darkorange">
+                                    <tr>
+                                        <th>Batch Sr</th>
+                                        <th>Date</th>
+                                        <th>Batch Status</th>
+                                        <th>User Name</th>
+                                        <th>Batch No</th>
+                                        <th>Color Name</th>
+                                        <th>Product Name</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody class="abc">
+                                    @foreach (var item in Model)
+                                    {
+                                    <tr>
+                                        <td>
+
+                                            @if (item.ready == true)
+
+                                            {
+                                                <div class="test rounded-circle"></div>
+                                                @*<a href="@Url.Action("Updatestatus", new { ID = item.OrderId,type="False" })" onclick="return confirm('Are you sure you want to Change Batch Status ?');" class="label shiny input-xs"><div class="test rounded-circle"></div></a>*@
+
+                                            }
+                                            else
+                                            {
+                                                <div class="test1 rounded-circle"></div>
+                                                @*<a href="@Url.Action("Updatestatus", new { ID = item.OrderId,type="True" })" onclick="return confirm('Are you sure you want to Change Batch Status ?');" class="label shiny input-xs"><div class="test1 rounded-circle"></div></a>*@
+                                            }
+                                            @* <a href="@Url.Action("Updatestatus", new { ID = item.OrderId })" new { onclick="return confirm('Are you sure you want to Change Batch Status ?');" class="label label-warning shiny input-xs"><i class="fa-toggle-off"></i></a>*@
+
+                                            @item.OrderId
+
+
+                                        </td>
+
+                                        <td>@item.Date.ToString("dd-MM-yyyy")</td>
+                                        <td>
+                                            @if (item.ready == true)
+                                            {
+                                                <p>YES</p>
+                                            }
+                                            else
+                                            {
+                                                <p>NO</p>
+                                            }
+                                        </td>
+
+                                        <td>
+                                            @item.username
+                                           <a href="@Url.Action("Updatestatus", new { ID = item.OrderId,status="Approved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to Approved this Batch Request?');" class="label label-success shiny input-xs"><i class="fa fa-check"></i></a>
+                                           <a href="@Url.Action("Updatestatus", new { ID = item.OrderId,status="DisApproved",userid=item.userid })" new { onclick="return confirm('Are you sure you want to DisApproved this Batch Request?');" class="label label-danger shiny input-xs"><i class="fa fa-times"></i></a>
+                                        </td>
+                                        <td>@item.BatchNo</td>
+                                        <td>@item.ColorName</td>
+                                        <td>@item.ProductName</td>
+                                        <td>
+                                            @if (Session["SubBatchFormulationUpdate"].ToString() != "0")
+                                            {
+
+                                                <a href="@Url.Action("Edit", new { ID = item.OrderId })" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="label label-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
+
+                                            }
+                                            @if (Session["SubBatchFormulationView"].ToString() != "0")
+                                            {
+
+                                                <a href="@Url.Action("InvoiceReport", new { ID = item.OrderId, type = "pdf" })" class="label label-success shiny input-xs"><i class="fa fa-print"></i></a>
+                                                <a href="@Url.Action("InvoiceReport", new { ID = item.OrderId, type = "show" })" class="label label-primary shiny input-xs" target="_blank"><i class="fa fa-print"></i></a>
+                                                <a href="@Url.Action("InvoiceReportQTY", new { ID = item.OrderId, type = "pdf" })" class="label label-warning shiny input-xs"><i class="fa fa-print"></i></a>
+                                                <a href="@Url.Action("InvoiceReportQTY", new { ID = item.OrderId, type = "show" })" class="label label-primary shiny input-xs" target="_blank"><i class="fa fa-print"></i></a>
+                                            }
+                                        </td>
+                                    </tr>
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                        <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                        <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                        <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                        <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                        <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                        <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @*}*@
+    </div>
+<div class="modal fade" id="exampleModal" style="margin-top:-150px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Batch History</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="tabs mt-none">
+                    <!-- Tabs Header -->
+                    <ul class="nav nav-tabs nav-justified">
+                        <li class="active"><a href="#home" data-toggle="tab">All</a></li>
+                        <li><a href="#profile" data-toggle="tab">Completed</a></li>
+                        <li><a href="#st" data-toggle="tab">In-Completed</a></li>
+                    </ul>
+                    <!-- Tabs Content -->
+                    <div class="tab-content">
+                        <div class="tab-pane fade in active" id="home" style="max-height:100px">
+                            <div class="row">
+                                <div class="col-sm-12" style="margin-top:-15px">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                                            <thead class="bordered-darkorange">
+                                                <tr style="background-color:#189279;color:white">
+                                                    <th>Date</th>
+                                                    <th>SrNo</th>
+                                                    <th>Batch No</th>
+                                                    <th>Color Name</th>
+                                                    <th>Product Name</th>
+                                                </tr>
+                                            </thead>
+                                            @foreach (var item in Model)
+                                            {
+                                                <tr>
+                                                    <td>@item.Date.ToString("dd-MM-yyyy")</td>
+                                                    <td>@item.OrderId</td>
+                                                    <td>@item.BatchNo</td>
+                                                    <td>@item.ColorName</td>
+                                                    <td>@item.ProductName</td>
+                                                </tr>
+                                            }
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="profile">
+                            <div class="row">
+                                <div class="col-sm-12" style="margin-top:-15px">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                                            <thead class="bordered-darkorange">
+                                                <tr style="background-color:#189279;color:white">
+                                                    <th>Date</th>
+                                                    <th>SrNo</th>
+                                                    <th>Batch No</th>
+                                                    <th>Color Name</th>
+                                                    <th>Product Name</th>
+                                                </tr>
+                                            </thead>
+                                            @foreach (var item in Model.Where(z => z.ready2 == "1"))
+                                            {
+                                                <tr>
+                                                    <td>@item.Date.ToString("dd-MM-yyyy")</td>
+                                                    <td>@item.OrderId</td>
+                                                    <td>@item.BatchNo</td>
+                                                    <td>@item.ColorName</td>
+                                                    <td>@item.ProductName</td>
+                                                </tr>
+                                            }
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="st">
+                            <div class="row">
+                                <div class="col-sm-12" style="margin-top:-15px">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                                            <thead class="bordered-darkorange">
+                                                <tr style="background-color:#189279;color:white">
+                                                    <th>Date</th>
+                                                    <th>SrNo</th>
+                                                    <th>Batch No</th>
+                                                    <th>Color Name</th>
+                                                    <th>Product Name</th>
+                                                </tr>
+                                            </thead>
+                                            @foreach (var item in Model.Where(z => z.ready2 == "0"))
+                                            {
+                                                <tr>
+                                                    <td>@item.Date.ToString("dd-MM-yyyy")</td>
+                                                    <td>@item.OrderId</td>
+                                                    <td>@item.BatchNo</td>
+                                                    <td>@item.ColorName</td>
+                                                    <td>@item.ProductName</td>
+                                                </tr>
+                                            }
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

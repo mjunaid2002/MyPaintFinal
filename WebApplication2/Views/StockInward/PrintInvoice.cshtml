@@ -1,0 +1,102 @@
+﻿@{
+    // ViewData["Title"] = "Print";
+    //var purchase = ViewData.Model.Purchaselist.SingleOrDefault();
+    Layout = null;
+    var sr = 0;
+}
+
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <link href="~/Content/css/Print.css" rel="stylesheet" />
+    <title>Invoice</title>
+
+</head>
+<body>
+
+    <article>
+        <div class="row">
+
+            <div style="float:right;width:50%;text-align:center">
+                <h4 style="margin-left:50px;color:rgb(47,79,79);font-size:25px"><b>Sale Invoice</b></h4>
+            </div>
+        </div>
+
+        <table class="meta">
+            <div style="float:left;width:50%;padding-top:20px">
+                <h1>Recipient</h1>
+                <h3>Company Name</h3>
+                <h4>Multan,Pakistan</h4>
+                <h4>0321-1234566</h4>
+            </div>
+            <tr>
+                <th><span>Invoice #</span></th>
+                <td><span>125</span></td>
+            </tr>
+            <tr>
+                <th><span>Date</span></th>
+                <td><span></span></td>
+            </tr>
+            <tr>
+                <th><span>Amount Due</span></th>
+                <td><span></span></td>
+            </tr>
+        </table>
+        <table class="inventory">
+            <thead>
+                <tr>
+                    <th style="width:7%"><span>SR#</span></th>
+                    <th style="width:48%"><span>Name</span></th>
+                    <th style="width:15%"><span>Price</span></th>
+                    <th style="width:15%"><span>Qty</span></th>
+                    <th style="width:15%"><span>Total</span></th>
+                    {
+                        <th style="width:15%"><span>Tax</span></th>
+                        <th style="width:15%"><span>NetTotal</span></th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+        <table class="balance">
+            <p style="float:left;width:50%;">Note: </p>
+
+            <tr>
+                <th><span>Total</span></th>
+                <td><span></span></td>
+            </tr>
+            {
+                <tr>
+                    <th><span>Tax</span></th>
+                    <td><span></span></td>
+                </tr>
+            }
+            <tr>
+                <th><span>Discount</span></th>
+                <td><span></span></td>
+            </tr>
+
+            <tr>
+                <th><span>Net Total</span></th>
+                <td><span></span></td>
+            </tr>
+            <tr style="height:20px">
+            </tr>
+
+            <tr>
+                <th><span>Paid Amount</span></th>
+                <td><span></span></td>
+            </tr>
+            <tr>
+                <th><span>Balance</span></th>
+                <td><span></span></td>
+            </tr>
+        </table>
+    </article>
+
+</body>
+</html>
+
