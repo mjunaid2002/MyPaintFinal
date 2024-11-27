@@ -124,6 +124,7 @@ namespace WebApplication2.Controllers
             TransactionDetail.TransDes = _context.Database.SqlQuery<string>("select TransDes from TransactionDetails  where VType = 'BRV' and TransId = " + id + "  ").FirstOrDefault();
             TransactionDetail.TransDate = _context.Database.SqlQuery<string>("select TransDate from TransactionDetails  where VType = 'BRV' and TransId = " + id + "  ").FirstOrDefault();
             var Acc_List = _context.AccountTitle.ToList();
+
            // var cus_list = _context.Customer.ToList();
             var Acc_List_cash = _context.AccountTitle.Where(z => z.SecondLevel == 1000005).ToList();
             var vou_list = _context.Database.SqlQuery<VoucherMaster>("SELECT * FROM VoucherMasters where VType = 'BRV' and TID = " + id + "").ToList();
