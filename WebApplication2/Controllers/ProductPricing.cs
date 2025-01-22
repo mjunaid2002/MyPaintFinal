@@ -21,7 +21,7 @@ namespace WebApplication1.Controllers
         }
         // GET: Category
         public ActionResult Index()
-        {
+        {   
             var list = _context.Database.SqlQuery<ProductPricing>("select Product.CategoryID,CategoryName,sp,splower,gallon,drum from Categories Inner join Product on Product.CategoryID=Categories.CategoryID where RawProductCheck=0 group by Product.CategoryID, CategoryName, sp, splower, gallon, drum").ToList();
             return View(list);
         }
@@ -118,7 +118,8 @@ namespace WebApplication1.Controllers
 
         public ActionResult IndexFinishRegion()
         {
-            var list = _context.Database.SqlQuery<ProductFinishedRegion>("Select PF.sr, PF.pid, PF.regionid, PF.dubi_o, PF.quarter_o, PF.gallon_o, PF.drum_o, PF.dubi_w, PF.quarter_w, PF.gallon_w, PF.drum_w, R.name as regionname,ProductName, dubi_min, quarter_min, gallon_min, drum_min, dubi_max, quarter_max, gallon_max, drum_max From ProductFinishedRegion  AS PF INNER JOIN   Region AS R ON PF.regionid = R.id  INNER JOIN     Product ON PF.pid = Product.ProductID ORDER BY PF.regionid").ToList();
+            //var list = _context.Database.SqlQuery<ProductFinishedRegion>("Select PF.sr, PF.pid, PF.regionid, PF.dubi_o, PF.quarter_o, PF.gallon_o, PF.drum_o, PF.dubi_w, PF.quarter_w, PF.gallon_w, PF.drum_w, R.name as regionname,ProductName, dubi_min, quarter_min, gallon_min, drum_min, dubi_max, quarter_max, gallon_max, drum_max From ProductFinishedRegion  AS PF INNER JOIN   Region AS R ON PF.regionid = R.id  INNER JOIN     Product ON PF.pid = Product.ProductID ORDER BY PF.regionid").ToList();
+            var list = _context.Database.SqlQuery<ProductFinishedRegion>("SELECT PF.sr, PF.pid, PF.regionid, PF.dubi_o, PF.quarter_o, PF.gallon_o, PF.drum_o, PF.dubi_w, PF.quarter_w, PF.gallon_w, PF.drum_w, R.name AS regionname, Product.ProductName, PF.dubi_min, PF.quarter_min, PF.gallon_min, PF.drum_min, PF.dubi_max, PF.quarter_max, PF.gallon_max, PF.drum_max, B.name AS branchname, PF.branchid FROM ProductFinishedRegion AS PF INNER JOIN Region AS R ON PF.regionid = R.id INNER JOIN Product ON PF.pid = Product.ProductID INNER JOIN Branch AS B ON PF.branchid = B.id ORDER BY PF.regionid").ToList();
             return View(list);
         }
         public ActionResult CreateFinishRegion(ProductFinishedRegion ProductFinishedRegion)
@@ -126,11 +127,13 @@ namespace WebApplication1.Controllers
             var listss = _context.Database.SqlQuery<Products>("select ProductName,ProductID,UnitPrice,ReorderLevel,vattax,CategoryID,[desc],Active from Product where CategoryID in (select CategoryID from Categories where RawProductCheck=0)  order by ProductID").ToList();
     
             var regions = _context.Database.SqlQuery<Region>("SELECT * from Region").ToList();
+            var Branch  = _context.Database.SqlQuery<Branch>("SELECT id,name from Branch").ToList();
 
             var ProductVM = new ProductVM
             {
                 ProductFinishedRegion = ProductFinishedRegion,
                 Region_list = regions,
+                branch_list = Branch,
                 pro_list = listss,
            
             };
@@ -141,15 +144,16 @@ namespace WebApplication1.Controllers
         public ActionResult SaveFinishRegion(ProductVM ProductVM, decimal[] id, decimal[] dubi_o, decimal[] quarter_o, decimal[] gallon_o, decimal[] drum_o, decimal[] dubi_w, decimal[] quarter_w, decimal[] gallon_w, decimal[] drum_w, decimal[] dubi_min, decimal[] quarter_min, decimal[] gallon_min, decimal[] drum_min, decimal[] dubi_max, decimal[] quarter_max, decimal[] gallon_max, decimal[] drum_max)
         {
             var region = ProductVM.ProductFinishedRegion.regionid;
-            var check = _context.Database.SqlQuery<decimal>("select ISNULL(Max(sr),0) from ProductFinishedRegion where regionid= " + region).FirstOrDefault();
+            var branch = ProductVM.ProductFinishedRegion.branchid;
+            var check = _context.Database.SqlQuery<decimal>("select ISNULL(Max(sr),0) from ProductFinishedRegion where regionid= " + region+" AND branchid= "+branch  ).FirstOrDefault();
             if (check != 0)
             {
-                _context.Database.ExecuteSqlCommand("Delete From ProductFinishedRegion  where regionid= " + region);
+                _context.Database.ExecuteSqlCommand("Delete From ProductFinishedRegion  where regionid= " + region + " AND branchid= " + branch);
             }
             for (int i = 0; i < id.Length; i++)
             {
                 //var id1= _context.Database.SqlQuery<decimal>("select ISNULL(Max(id),0)+1 from ProductFinishedRegion  ").FirstOrDefault();
-                _context.Database.ExecuteSqlCommand("insert into ProductFinishedRegion (sr,pid,regionid, dubi_o, quarter_o, gallon_o, drum_o, dubi_w, quarter_w, gallon_w, drum_w, dubi_min, quarter_min, gallon_min, drum_min, dubi_max, quarter_max, gallon_max, drum_max) values('" + i+"','" + id[i] + "','" + region + "','" + dubi_o[i] + "','" + quarter_o[i] + "','" + gallon_o[i] + "','" + drum_o[i] + "','" + dubi_w[i] + "','" + quarter_w[i] + "','" + gallon_w[i] + "','" + drum_w[i] + "','" + dubi_min[i] + "','" + quarter_min[i] + "','" + gallon_min[i] + "','" + drum_min[i] + "','" + dubi_max[i] + "','" + quarter_max[i] + "','" + gallon_max[i] + "','" + drum_max[i] + "')");
+                _context.Database.ExecuteSqlCommand("insert into ProductFinishedRegion (sr,pid,regionid,branchid, dubi_o, quarter_o, gallon_o, drum_o, dubi_w, quarter_w, gallon_w, drum_w, dubi_min, quarter_min, gallon_min, drum_min, dubi_max, quarter_max, gallon_max, drum_max) values('" + i+"','" + id[i] + "','" + region + "','" + branch + "','" + dubi_o[i] + "','" + quarter_o[i] + "','" + gallon_o[i] + "','" + drum_o[i] + "','" + dubi_w[i] + "','" + quarter_w[i] + "','" + gallon_w[i] + "','" + drum_w[i] + "','" + dubi_min[i] + "','" + quarter_min[i] + "','" + gallon_min[i] + "','" + drum_min[i] + "','" + dubi_max[i] + "','" + quarter_max[i] + "','" + gallon_max[i] + "','" + drum_max[i] + "')");
 
 
             }
@@ -157,9 +161,9 @@ namespace WebApplication1.Controllers
             return RedirectToAction("IndexFinishRegion");
         }
         [HttpGet]
-        public ActionResult UpdateFinishTable(int regionId)
+        public ActionResult UpdateFinishTable(int regionId,int branchId)
         {
-            var updatedData = _context.Database.SqlQuery<ProductFinishedRegion>("SELECT pid,regionid, dubi_o, quarter_o, gallon_o, drum_o, dubi_w, quarter_w, gallon_w, drum_w, dubi_min, quarter_min, gallon_min, drum_min, dubi_max, quarter_max, gallon_max, drum_max from ProductFinishedRegion where regionid=" + regionId +" order by pid ").OrderBy(x => x.pid).ToList();
+            var updatedData = _context.Database.SqlQuery<ProductFinishedRegion>("SELECT pid,regionid,branchid, dubi_o, quarter_o, gallon_o, drum_o, dubi_w, quarter_w, gallon_w, drum_w, dubi_min, quarter_min, gallon_min, drum_min, dubi_max, quarter_max, gallon_max, drum_max from ProductFinishedRegion where regionid=" + regionId +" AND branchid="+ branchId + " order by pid ").OrderBy(x => x.pid).ToList();
             return Json(updatedData, JsonRequestBehavior.AllowGet);
         }
     }

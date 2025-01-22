@@ -167,8 +167,12 @@ namespace WebApplication1.Controllers
             var Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers ").ToList();
             //var Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers where discount =0").ToList();
             var pro_listsss = _context.Database.SqlQuery<Products>("select ProductName,ProductID,UnitPrice,ReorderLevel,vattax,CategoryID,[desc],Active from Product where CategoryID in (select CategoryID from Categories where RawProductCheck=1)").ToList();
+            var Branch = _context.Database.SqlQuery<Branch>("SELECT id,name from Branch").ToList();
+
             var SaleInvVM = new SaleInvVM
             {
+                Branch_list = Branch,
+
                 poMaster = poMaster,
                 pro_listsss = pro_listsss,
                 Cus_list = Cus_list,
@@ -221,11 +225,14 @@ namespace WebApplication1.Controllers
             var poMaster = _context.Database.SqlQuery<PoMaster>("select * from qtnm_so where invid =" + ID + " and status='SO'").SingleOrDefault();
             var poDetail = _context.Database.SqlQuery<PoDetail>("select * from qtndetail_So where invid =" + ID + " and Stauts='SO'").ToList();
             var Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers ").ToList();
+            var Branch = _context.Database.SqlQuery<Branch>("SELECT id,name from Branch").ToList();
 
             //var Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers where discount =0").ToList();
             var pro_listsss = _context.Database.SqlQuery<Products>("select ProductName,ProductID,UnitPrice,ReorderLevel,vattax,CategoryID,[desc],Active from Product where CategoryID in (select CategoryID from Categories where RawProductCheck=1)").ToList();
             var SaleInvVM = new SaleInvVM
             {
+                Branch_list = Branch,
+
                 poDetail = poDetail,
                 poMaster = poMaster,
                 pro_listsss = pro_listsss,

@@ -89,7 +89,13 @@ namespace WebApplication1.Controllers
             {
                 //var superadmin = _context.Database.SqlQuery<string>("Select top(1) admin From  UserLogins where username='" + Request["u_name"] + "' and password ='" + Request["pass"] + "'").FirstOrDefault();
                 Session["CurrentUserName"] = Request["u_name"];
-                Session["UserID"] = _context.Database.SqlQuery<decimal>("Select top(1) empid From  UserLogins where username='" + Request["u_name"] +"' ").FirstOrDefault();
+                var empid= _context.Database.SqlQuery<decimal>("Select top(1) empid From  UserLogins where username='" + Request["u_name"] + "' ").FirstOrDefault();
+
+                Session["UserID"] = empid;
+                var branches = _context.Database.SqlQuery<string>("SELECT Branch.name FROM EmployeeBranch e INNER JOIN Branch ON e.branchid = Branch.id where e.emp_id=" + empid).ToList();
+                branches.Add("All");
+                Session["Branch"] = branches;
+
                 Session["tax_per"] = _context.Database.SqlQuery<decimal>("Select strnperc From  tbl_setting").FirstOrDefault();
                 // Session["tax_per"] = 17;     
                 DateTime FirstSunday, StartDaylighttime, EndDaylighttime;
@@ -121,6 +127,12 @@ namespace WebApplication1.Controllers
                 Session["SubQualityCategoryV"] = "1";
                 Session["SubQualityCategoryU"] = "1";
                 Session["SubQualityCategory"] = "1";
+                
+                Session["SubRegionA"] = "1";
+                Session["SubRegionD"] = "1";
+                Session["SubRegionV"] = "1";
+                Session["SubRegionU"] = "1";
+                Session["SubRegion"] = "1";
 
                 Session["SubRawProductA"] = "1";
                 Session["SubRawProductD"] = "1";
@@ -134,6 +146,22 @@ namespace WebApplication1.Controllers
                 Session["SubFinishedProductU"] = "1";
 
                 Session["SubFinishedProduct"] = "1";
+                
+                
+                Session["SubFinishedTransferA"] = "1";
+                Session["SubFinishedTransferD"] = "1";
+                Session["SubFinishedTransferV"] = "1";
+                Session["SubFinishedTransferU"] = "1";
+
+                Session["SubFinishedTransfer"] = "1";
+                
+                
+                Session["SubEmployeeDepartmentA"] = "1";
+                Session["SubEmployeeDepartmentD"] = "1";
+                Session["SubEmployeeDepartmentV"] = "1";
+                Session["SubEmployeeDepartmentU"] = "1";
+
+                Session["SubEmployeeDepartment"] = "1";
 
                 Session["SubCustomersA"] = "1";
                 Session["SubCustomersD"] = "1";
@@ -164,6 +192,18 @@ namespace WebApplication1.Controllers
                 Session["SubEmployeeV"] = "1";
                 Session["SubEmployeeU"] = "1";
                 Session["SubEmployee"] = "1";
+                
+                Session["SubProductPricingRegionA"] = "1";
+                Session["SubProductPricingRegionD"] = "1";
+                Session["SubProductPricingRegionV"] = "1";
+                Session["SubProductPricingRegionU"] = "1";
+                Session["SubProductPricingRegion"] = "1";
+                
+                Session["SubProductFinishedRegionA"] = "1";
+                Session["SubProductFinishedRegionD"] = "1";
+                Session["SubProductFinishedRegionV"] = "1";
+                Session["SubProductFinishedRegionU"] = "1";
+                Session["SubProductFinishedRegion"] = "1";
 
                 Session["MenuRegistartion"] = 2;
 
@@ -347,13 +387,49 @@ namespace WebApplication1.Controllers
 
                 Session["MenuCustomerItemDiscount"] = "1";
 
+
+                Session["MenuProductionOrder"] = "1";
+                Session["SubProductionOrder"] = "1";
+                Session["SubProductionOrderA"] = "1";
+                Session["SubProductionOrderD"] = "1";
+                Session["SubProductionOrderV"] = "1";
+                Session["SubProductionOrderU"] = "1";
+                Session["SubProductionOrderDispatch"] = "1";
+                Session["SubProductionOrderProduction"] = "1";
+                Session["MenuProductionOrder"] = 2;
+
+
+
+                Session["SubStockDistributionA"] = "1";
+                Session["SubStockDistributionD"] = "1";
+                Session["SubStockDistributionV"] = "1";
+                Session["SubStockDistributionU"] = "1";
+                Session["SubStockDistribution"] = "1";
+                Session["MenuStockDistribution"] = 2;
+
+                
+              
+             
+                
+
+
                 Session["SubRptRawMaterial"] = "1";
+                Session["SubRptRawMaterialItemLedger"] = "1";
+                Session["SubRptRawMaterialStockReport"] = "1";
+                Session["SubRptRawMaterialPurchaseOrder"] = "1";
                 Session["SubRptFinishedItems"] = "1";
+                Session["SubRptFinishedItemsPackingItemLedger"] = "1";
+                Session["SubRptFinishedItemsFinishedItemLedger"] = "1";
+                Session["SubRptFinishedItemsFinishedGoodsReport"] = "1";
+                Session["SubRptFinishedItemsGoodsProductionOrder"] = "1";
+                Session["SubRptFinishedItemsFillingCompleteReport"] = "1";
                 Session["SubRptBatchBalance"] = "1";
                 Session["SubRptPurchaseReport"] = "1";
                 Session["SubRptSaleReport"] = "1";
                 Session["SubRptBatchSheetSummery"] = "1";
+                Session["SubRptBatchSheetSummeryCostVisible"] = "1";
                 Session["SubRptLabSheetSummery"] = "1";
+                Session["SubRptFillingReportSummery"] = "1";
                 Session["MenuReports"] = 2;
 
                 Session["SubCreateRole"] = "1";
@@ -377,7 +453,24 @@ namespace WebApplication1.Controllers
                 if (count != 0)
                 {
                     Session["CurrentUserName"] = Request["u_name"];
-                    Session["UserID"] = _context.Database.SqlQuery<decimal>("Select top(1) empid From  UserLogins where username='" + Request["u_name"] + "' and password ='" + Request["pass"] + "'").FirstOrDefault();
+                    //Session["UserID"] = _context.Database.SqlQuery<decimal>("Select top(1) empid From  UserLogins where username='" + Request["u_name"] + "' and password ='" + Request["pass"] + "'").FirstOrDefault();
+                   var empid = _context.Database.SqlQuery<decimal>("Select top(1) empid From  UserLogins where username='" + Request["u_name"] + "' and password ='" + Request["pass"] + "'").FirstOrDefault();
+                    Session["UserID"] = empid;
+                    var branches = _context.Database.SqlQuery<string>("SELECT Branch.name FROM EmployeeBranch e INNER JOIN Branch ON e.branchid = Branch.id where e.emp_id=" + empid).ToList();
+
+                    if ("main office" == username.ToLower())
+                    {
+                        branches.Add("All");
+                        Session["Branch"] = branches;
+                        
+                    }
+                    else
+                    {
+                            Session["Branch"] = branches;
+                            Session["BranchId"] = _context.Database.SqlQuery<int>("SELECT Branch.id FROM EmployeeBranch e INNER JOIN Branch ON e.branchid = Branch.id where e.emp_id=" + empid).ToList();
+                        //   Session["Branch"] = _context.Database.SqlQuery<string>("SELECT Top(1) Branch.name FROM Employees INNER JOIN Branch ON Employees.branch_id = Branch.id where Employees.id=" + empid).FirstOrDefault();
+                    //    Session["BranchId"] = _context.Database.SqlQuery<int>("SELECT Top(1) Branch.id FROM Employees INNER JOIN Branch ON Employees.branch_id = Branch.id where Employees.id=" + empid).FirstOrDefault();
+                    }
                     Session["tax_per"] = _context.Database.SqlQuery<decimal>("Select strnperc From  tbl_setting").FirstOrDefault();
                     // Session["tax_per"] = 17;     
                     DateTime FirstSunday, StartDaylighttime, EndDaylighttime;
@@ -425,6 +518,17 @@ namespace WebApplication1.Controllers
                         Session["SubQualityCategory"] = "1";
                     else
                         Session["SubQualityCategory"] = "0";
+                    
+                    
+                    Session["SubRegionA"] = GetFormStatus(Session["UserID"].ToString(), 1011001, 3);
+                    Session["SubRegionD"] = GetFormStatus(Session["UserID"].ToString(), 1011002, 3);
+                    Session["SubRegionV"] = GetFormStatus(Session["UserID"].ToString(), 1011003, 3);
+                    Session["SubRegionU"] = GetFormStatus(Session["UserID"].ToString(), 1011004, 3);
+
+                    if (Session["SubRegionA"].ToString() != "0" || Session["SubRegionD"].ToString() != "0" || Session["SubRegionV"].ToString() != "0" || Session["SubRegionU"].ToString() != "0")
+                        Session["SubRegion"] = "1";
+                    else
+                        Session["SubRegion"] = "0";
 
                     Session["SubRawProductA"] = GetFormStatus(Session["UserID"].ToString(), 1004001, 3);
                     Session["SubRawProductD"] = GetFormStatus(Session["UserID"].ToString(), 1004002, 3);
@@ -445,6 +549,27 @@ namespace WebApplication1.Controllers
                         Session["SubFinishedProduct"] = "1";
                     else
                         Session["SubFinishedProduct"] = "0";
+                    
+                    
+                    Session["SubFinishedTransferA"] = GetFormStatus(Session["UserID"].ToString(), 1012001, 3);
+                    Session["SubFinishedTransferD"] = GetFormStatus(Session["UserID"].ToString(), 1012002, 3);
+                    Session["SubFinishedTransferV"] = GetFormStatus(Session["UserID"].ToString(), 1012003, 3);
+                    Session["SubFinishedTransferU"] = GetFormStatus(Session["UserID"].ToString(), 1012004, 3);
+
+                    if (Session["SubFinishedTransferA"].ToString() != "0" || Session["SubFinishedTransferD"].ToString() != "0" || Session["SubFinishedTransferV"].ToString() != "0" || Session["SubFinishedTransferU"].ToString() != "0")
+                        Session["SubFinishedTransfer"] = "1";
+                    else
+                        Session["SubFinishedTransfer"] = "0";
+                    
+                    Session["SubEmployeeDepartmentA"] = GetFormStatus(Session["UserID"].ToString(), 1013001, 3);
+                    Session["SubEmployeeDepartmentD"] = GetFormStatus(Session["UserID"].ToString(), 1013002, 3);
+                    Session["SubEmployeeDepartmentV"] = GetFormStatus(Session["UserID"].ToString(), 1013003, 3);
+                    Session["SubEmployeeDepartmentU"] = GetFormStatus(Session["UserID"].ToString(), 1013004, 3);
+
+                    if (Session["SubEmployeeDepartmentA"].ToString() != "0" || Session["SubEmployeeDepartmentD"].ToString() != "0" || Session["SubEmployeeDepartmentV"].ToString() != "0" || Session["SubEmployeeDepartmentU"].ToString() != "0")
+                        Session["SubEmployeeDepartment"] = "1";
+                    else
+                        Session["SubEmployeeDepartment"] = "0";
 
                     Session["SubCustomersA"] = GetFormStatus(Session["UserID"].ToString(), 1006001, 3);
                     Session["SubCustomersD"] = GetFormStatus(Session["UserID"].ToString(), 1006002, 3);
@@ -495,10 +620,31 @@ namespace WebApplication1.Controllers
                         Session["SubEmployee"] = "1";
                     else
                         Session["SubEmployee"] = "0";
+                    
+                    Session["SubProductPricingRegionA"] = GetFormStatus(Session["UserID"].ToString(), 1014001, 3);
+                    Session["SubProductPricingRegionD"] = GetFormStatus(Session["UserID"].ToString(), 1014002, 3);
+                    Session["SubProductPricingRegionV"] = GetFormStatus(Session["UserID"].ToString(), 1014003, 3);
+                    Session["SubProductPricingRegionU"] = GetFormStatus(Session["UserID"].ToString(), 1014004, 3);
 
-                    if (Session["SubMainCategory"].ToString() != "0" || Session["SubCategory"].ToString() != "0" || Session["SubQualityCategory"].ToString() != "0" ||
-                        Session["SubRawProduct"].ToString() != "0" || Session["SubFinishedProduct"].ToString() != "0" || Session["SubCustomers"].ToString() != "0" ||
-                        Session["SubSuppliers"].ToString() != "0" || Session["SubCargo"].ToString() != "0" || Session["SubProductPricing"].ToString() != "0" ||
+                    if (Session["SubProductPricingRegionA"].ToString() != "0" || Session["SubProductPricingRegionD"].ToString() != "0" || Session["SubProductPricingRegionV"].ToString() != "0" || Session["SubProductPricingRegionU"].ToString() != "0")
+                        Session["SubProductPricingRegion"] = "1";
+                    else
+                        Session["SubProductPricingRegion"] = "0";
+                    
+                    
+                    Session["SubProductFinishedRegionA"] = GetFormStatus(Session["UserID"].ToString(), 1015001, 3);
+                    Session["SubProductFinishedRegionD"] = GetFormStatus(Session["UserID"].ToString(), 1015002, 3);
+                    Session["SubProductFinishedRegionV"] = GetFormStatus(Session["UserID"].ToString(), 1015003, 3);
+                    Session["SubProductFinishedRegionU"] = GetFormStatus(Session["UserID"].ToString(), 1015004, 3);
+
+                    if (Session["SubProductFinishedRegionA"].ToString() != "0" || Session["SubProductFinishedRegionD"].ToString() != "0" || Session["SubProductFinishedRegionV"].ToString() != "0" || Session["SubProductFinishedRegionU"].ToString() != "0")
+                        Session["SubProductFinishedRegion"] = "1";
+                    else
+                        Session["SubProductFinishedRegion"] = "0";
+
+                    if (Session["SubMainCategory"].ToString() != "0" || Session["SubCategory"].ToString() != "0" || Session["SubQualityCategory"].ToString() != "0" || Session["SubRegion"].ToString() != "0" ||
+                        Session["SubRawProduct"].ToString() != "0" || Session["SubFinishedProduct"].ToString() != "0" || Session["SubFinishedTransfer"].ToString() != "0"  || Session["SubEmployeeDepartment"].ToString() != "0" || Session["SubCustomers"].ToString() != "0" ||
+                        Session["SubSuppliers"].ToString() != "0" || Session["SubCargo"].ToString() != "0" || Session["SubProductPricing"].ToString() != "0" || Session["SubProductPricingRegion"].ToString() != "0" || Session["SubProductFinishedRegion"].ToString() != "0" ||
                         Session["SubEmployee"].ToString() != "0")
                         Session["MenuRegistartion"] = 2;
                     else
@@ -731,8 +877,8 @@ namespace WebApplication1.Controllers
 
                     Session["SubBatchTransfer"] = GetFormStatus(Session["UserID"].ToString(), 5002, 2);
                     Session["SubBatchTransferAdd"] = GetFormStatus(Session["UserID"].ToString(), 5002001, 3);
-                    Session["SubBatchTransferView"] = GetFormStatus(Session["UserID"].ToString(), 5002001, 3);
-                    Session["SubBatchTransferUpdate"] = GetFormStatus(Session["UserID"].ToString(), 5002001, 3);
+                    Session["SubBatchTransferView"] = GetFormStatus(Session["UserID"].ToString(), 5002002, 3);
+                    Session["SubBatchTransferUpdate"] = GetFormStatus(Session["UserID"].ToString(), 5002003, 3);
 
                     if (Session["SubBatchTransfer"].ToString() != "0" || Session["SubBatchTransferAdd"].ToString() != "0" || Session["SubBatchTransferView"].ToString() != "0" || Session["SubBatchTransferUpdate"].ToString() != "0")
                         Session["SubBatchTransfer"] = 2;
@@ -779,8 +925,59 @@ namespace WebApplication1.Controllers
                         Session["MenuLab"] = 2;
                     else
                         Session["MenuLab"] = GetFormStatus(Session["UserID"].ToString(), 7, 1);
+
+
+                    Session["MenuProductionOrder"] = GetFormStatus(Session["UserID"].ToString(), 14, 1);
+                    Session["SubProductionOrder"] = GetFormStatus(Session["UserID"].ToString(), 1401, 2);
+                    Session["SubProductionOrderA"] = GetFormStatus(Session["UserID"].ToString(), 1401001, 3);
+                    Session["SubProductionOrderD"] = GetFormStatus(Session["UserID"].ToString(), 1401002, 3);
+                    Session["SubProductionOrderV"] = GetFormStatus(Session["UserID"].ToString(), 1401003, 3);
+                    Session["SubProductionOrderU"] = GetFormStatus(Session["UserID"].ToString(), 1401004, 3);
+                    Session["SubProductionOrderDispatch"] = GetFormStatus(Session["UserID"].ToString(), 1401005, 3);
+                    Session["SubProductionOrderProduction"] = GetFormStatus(Session["UserID"].ToString(), 1401006, 3);
+
+                    if (Session["SubProductionOrder"].ToString() != "0" || Session["SubProductionOrderA"].ToString() != "0" || Session["SubProductionOrderD"].ToString() != "0" || Session["SubProductionOrderV"].ToString() != "0" || Session["SubProductionOrderU"].ToString() != "0" || Session["SubProductionOrderDispatch"].ToString() != "0" || Session["SubProductionOrderProduction"].ToString() != "0")
+                        Session["SubProductionOrder"] = 2;
+                    else
+                        Session["SubProductionOrder"] = GetFormStatus(Session["UserID"].ToString(), 1401, 2);
+
+
+                    if (Session["SubProductionOrder"].ToString() != "0")
+                        Session["MenuProductionOrder"] = 2;
+                    else
+                        Session["MenuProductionOrder"] = GetFormStatus(Session["UserID"].ToString(), 14, 1);
+
+
+                    Session["SubStockDistributionA"] = "1";
+                    Session["SubStockDistributionD"] = "1";
+                    Session["SubStockDistributionV"] = "1";
+                    Session["SubStockDistributionU"] = "1";
+                    Session["SubStockDistribution"] = "1";
+                    Session["MenuStockDistribution"] = 2;
+
+
+
+
+                    Session["MenuStockDistribution"] = GetFormStatus(Session["UserID"].ToString(), 15, 1);
+                    Session["SubStockDistribution"] = GetFormStatus(Session["UserID"].ToString(), 1501, 2);
+                    Session["SubStockDistributionA"] = GetFormStatus(Session["UserID"].ToString(), 1501001, 3);
+                    Session["SubStockDistributionD"] = GetFormStatus(Session["UserID"].ToString(), 1501002, 3);
+                    Session["SubStockDistributionV"] = GetFormStatus(Session["UserID"].ToString(), 1501003, 3);
+                    Session["SubStockDistributionU"] = GetFormStatus(Session["UserID"].ToString(), 1501004, 3);
+             
+
+                    if (Session["SubStockDistribution"].ToString() != "0" || Session["SubStockDistributionA"].ToString() != "0" || Session["SubStockDistributionD"].ToString() != "0" || Session["SubStockDistributionV"].ToString() != "0" || Session["SubStockDistributionU"].ToString() != "0")
+                        Session["SubStockDistribution"] = 2;
+                    else
+                        Session["SubStockDistribution"] = GetFormStatus(Session["UserID"].ToString(), 1501, 2);
+
+
+                    if (Session["SubStockDistribution"].ToString() != "0")
+                        Session["MenuStockDistribution"] = 2;
+                    else
+                        Session["MenuStockDistribution"] = GetFormStatus(Session["UserID"].ToString(), 15, 1);
                     //----------------------------
-                    
+
                     Session["SubForRaw"] = GetFormStatus(Session["UserID"].ToString(), 8001, 2);
                     Session["SubForRawA"] = GetFormStatus(Session["UserID"].ToString(), 8001001, 3);
                     Session["SubForRawD"] = GetFormStatus(Session["UserID"].ToString(), 8001002, 3);
@@ -811,14 +1008,55 @@ namespace WebApplication1.Controllers
                     //---------------------
                     Session["MenuCustomerItemDiscount"] = GetFormStatus(Session["UserID"].ToString(), 9, 1);
 
+
+
+
+
                     Session["SubRptRawMaterial"] = GetFormStatus(Session["UserID"].ToString(), 10001, 2);
+                    Session["SubRptRawMaterialItemLedger"] = GetFormStatus(Session["UserID"].ToString(), 10001001, 3);
+                    Session["SubRptRawMaterialStockReport"] = GetFormStatus(Session["UserID"].ToString(), 10001002, 3);
+                    Session["SubRptRawMaterialPurchaseOrder"] = GetFormStatus(Session["UserID"].ToString(), 10001003, 3);
+                 
+                    if (Session["SubRptRawMaterial"].ToString() != "0" || Session["SubRptRawMaterialItemLedger"].ToString() != "0" || Session["SubRptRawMaterialStockReport"].ToString() != "0" || Session["SubRptRawMaterialPurchaseOrder"].ToString() != "0" )
+                        Session["SubRptRawMaterial"] = "1";
+                    else
+                        Session["SubRptRawMaterial"] = "0";
+
+
+
+
+
                     Session["SubRptFinishedItems"] = GetFormStatus(Session["UserID"].ToString(), 10002, 2);
+                    Session["SubRptFinishedItemsPackingItemLedger"] = GetFormStatus(Session["UserID"].ToString(), 10002001, 3);
+                    Session["SubRptFinishedItemsFinishedItemLedger"] = GetFormStatus(Session["UserID"].ToString(), 10002002, 3);
+                    Session["SubRptFinishedItemsFinishedGoodsReport"] = GetFormStatus(Session["UserID"].ToString(), 10002003, 3);
+                    Session["SubRptFinishedItemsGoodsProductionOrder"] = GetFormStatus(Session["UserID"].ToString(), 10002004, 3);
+                    Session["SubRptFinishedItemsFillingCompleteReport"] = GetFormStatus(Session["UserID"].ToString(), 10002005, 3);
+
+                    if (Session["SubRptFinishedItems"].ToString() != "0" || Session["SubRptFinishedItemsPackingItemLedger"].ToString() != "0" || Session["SubRptFinishedItemsFinishedItemLedger"].ToString() != "0" || Session["SubRptFinishedItemsFinishedGoodsReport"].ToString() != "0"
+                        || Session["SubRptFinishedItemsGoodsProductionOrder"].ToString() != "0" || Session["SubRptFinishedItemsFillingCompleteReport"].ToString() != "0"
+                        )
+                        Session["SubRptFinishedItems"] = "1";
+                    else
+                        Session["SubRptFinishedItems"] = "0";
+
+
+
+
+
+
+
+
+
+
                     Session["SubRptBatchBalance"] = GetFormStatus(Session["UserID"].ToString(), 10003, 2);
                     Session["SubRptPurchaseReport"] = GetFormStatus(Session["UserID"].ToString(), 10004, 2);
                     Session["SubRptSaleReport"] = GetFormStatus(Session["UserID"].ToString(), 10005, 2);
                     Session["SubRptBatchSheetSummery"] = GetFormStatus(Session["UserID"].ToString(), 10006, 2);
+                    Session["SubRptBatchSheetSummeryCostVisible"] = GetFormStatus(Session["UserID"].ToString(), 10008, 2);
                     Session["SubRptLabSheetSummery"] = GetFormStatus(Session["UserID"].ToString(), 10007, 2);
-                    if (Session["SubRptRawMaterial"].ToString() != "0" || Session["SubRptFinishedItems"].ToString() != "0" || Session["SubRptBatchBalance"].ToString() != "0" || Session["SubRptPurchaseReport"].ToString() != "0" || Session["SubRptSaleReport"].ToString() != "0" || Session["SubRptBatchSheetSummery"].ToString() != "0" || Session["SubRptLabSheetSummery"].ToString() != "0")
+                    Session["SubRptFillingReportSummery"] = GetFormStatus(Session["UserID"].ToString(), 10009, 2);
+                    if (Session["SubRptRawMaterial"].ToString() != "0" ||Session["SubRptFillingReportSummery"].ToString() != "0" || Session["SubRptFinishedItems"].ToString() != "0" || Session["SubRptBatchBalance"].ToString() != "0" || Session["SubRptPurchaseReport"].ToString() != "0" || Session["SubRptSaleReport"].ToString() != "0" || Session["SubRptBatchSheetSummery"].ToString() != "0"  || Session["SubRptBatchSheetSummeryCostVisible"].ToString() != "0" || Session["SubRptLabSheetSummery"].ToString() != "0")
                         Session["MenuReports"] = 2;
                     else
                         Session["MenuReports"] = GetFormStatus(Session["UserID"].ToString(), 10, 1);

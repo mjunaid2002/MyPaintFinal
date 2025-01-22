@@ -1,4 +1,4 @@
-﻿using CRM.Models;
+﻿ using CRM.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,19 +40,66 @@ namespace WebApplication2.Controllers
         {
             int dr = _context.Database.SqlQuery<int>("SELECT  isnull(SUM (Dr),0) as Dr FROM   OpeningBalance where AccountNo = " + accountTitle.AccountNo).FirstOrDefault();
             int cr = _context.Database.SqlQuery<int>("SELECT  isnull(SUM (Cr),0) as Cr FROM   OpeningBalance where AccountNo = " + accountTitle.AccountNo).FirstOrDefault();
+            
             decimal op = 0;
             int headid = _context.Database.SqlQuery<int>("SELECT AccountHeadId from  AccountTitles where accountno=" + accountTitle.AccountNo + "").FirstOrDefault();
             int opening_bal = 0;
+            DateTime today = DateTime.Now;
+            DateTime startOfPrevious90Days = today.AddDays(-90);
+            DateTime startOfPrevious60Days = today.AddDays(-60);
+            DateTime startOfPrevious30Days = today.AddDays(-30);
+            // Convert dates to string in "yyyy-MM-dd" format
+            string todayString = today.ToString("yyyy-MM-dd");
+            string startOfPrevious90DaysString = startOfPrevious90Days.ToString("yyyy-MM-dd");
+            string startOfPrevious60DaysString = startOfPrevious60Days.ToString("yyyy-MM-dd");
+            string startOfPrevious30DaysString = startOfPrevious30Days.ToString("yyyy-MM-dd");
+            
+            DateTime today1 =Convert.ToDateTime(e_date);
+            DateTime startOfPrevious90Days1 = today1.AddDays(-90);
+            DateTime startOfPrevious60Days1 = today1.AddDays(-60);
+            DateTime startOfPrevious30Days1 = today1.AddDays(-30);
+            // Convert dates to string in "yyyy-MM-dd" format
+            string todayString1 = today.ToString("yyyy-MM-dd");
+            string startOfPrevious90DaysString1 = startOfPrevious90Days1.ToString("yyyy-MM-dd");
+            string startOfPrevious60DaysString1 = startOfPrevious60Days1.ToString("yyyy-MM-dd");
+            string startOfPrevious30DaysString1 = startOfPrevious30Days1.ToString("yyyy-MM-dd");
+
+            decimal sum0_30=0, sum31_60=0, sum61_90=0, sum90=0,sum0_30_1=0, sum31_60_1=0, sum61_90_1=0, sum90_1=0, finaltotal=0;
+
             if (headid == 1 || headid == 5)
             {
                 op = _context.Database.SqlQuery<decimal>("SELECT   isnull(SUM (dr-cr),0) as Cr FROM   TransactionDetails  where TransDate < '" + s_date + "'  and AccountId = " + accountTitle.AccountNo + "").FirstOrDefault();
                 opening_bal = dr - cr;
+
+                sum0_30 = _context.Database.SqlQuery<decimal>("SELECT   isnull(SUM (dr-cr),0) as Cr FROM   TransactionDetails  where  TransDate >= '" + startOfPrevious30DaysString + "'  and AccountId = " + accountTitle.AccountNo + " AND Vtype IN ('SINV', 'TSINV', 'WTSINV')").FirstOrDefault();
+                sum31_60 = _context.Database.SqlQuery<decimal>("SELECT   isnull(SUM (dr-cr),0) as Cr FROM   TransactionDetails  where (TransDate >= '" + startOfPrevious60DaysString + "' AND TransDate < '" + startOfPrevious30DaysString + "')   and AccountId = " + accountTitle.AccountNo + " AND Vtype IN ('SINV', 'TSINV', 'WTSINV') ").FirstOrDefault();
+                sum61_90 = _context.Database.SqlQuery<decimal>("SELECT   isnull(SUM (dr-cr),0) as Cr FROM   TransactionDetails  where (TransDate >= '" + startOfPrevious90DaysString + "' AND TransDate < '" + startOfPrevious60DaysString + "')  and AccountId = " + accountTitle.AccountNo + " AND Vtype IN ('SINV', 'TSINV', 'WTSINV') ").FirstOrDefault();
+                finaltotal = opening_bal +  _context.Database.SqlQuery<decimal>("SELECT   isnull(SUM (dr-cr),0) as Cr FROM   TransactionDetails  where AccountId = " + accountTitle.AccountNo + " ").FirstOrDefault();
+                
+                
+                sum0_30_1 = _context.Database.SqlQuery<decimal>("SELECT   isnull(SUM (dr-cr),0) as Cr FROM   TransactionDetails  where  TransDate >= '" + startOfPrevious30DaysString1 + "'  and AccountId = " + accountTitle.AccountNo + " AND Vtype IN ('SINV', 'TSINV', 'WTSINV')").FirstOrDefault();
+                sum31_60_1 = _context.Database.SqlQuery<decimal>("SELECT   isnull(SUM (dr-cr),0) as Cr FROM   TransactionDetails  where (TransDate >= '" + startOfPrevious60DaysString1 + "' AND TransDate < '" + startOfPrevious30DaysString1 + "')   and AccountId = " + accountTitle.AccountNo + " AND Vtype IN ('SINV', 'TSINV', 'WTSINV') ").FirstOrDefault();
+                sum61_90_1 = _context.Database.SqlQuery<decimal>("SELECT   isnull(SUM (dr-cr),0) as Cr FROM   TransactionDetails  where (TransDate >= '" + startOfPrevious90DaysString1 + "' AND TransDate < '" + startOfPrevious60DaysString1 + "')  and AccountId = " + accountTitle.AccountNo + " AND Vtype IN ('SINV', 'TSINV', 'WTSINV') ").FirstOrDefault();
+
+
             }
             else if (headid == 2 || headid == 4)
             {
                 op = _context.Database.SqlQuery<decimal>("SELECT   isnull(SUM (cr-dr),0) as Cr FROM   TransactionDetails  where TransDate < '" + s_date + "'  and AccountId = " + accountTitle.AccountNo + " ").FirstOrDefault();
                 opening_bal = cr - dr;
+
+                sum0_30 = _context.Database.SqlQuery<decimal>("SELECT   isnull(SUM (cr-dr),0) as Cr FROM   TransactionDetails  where TransDate >= '" + startOfPrevious30DaysString + "'  and AccountId = " + accountTitle.AccountNo + "  AND Vtype IN ('SINV', 'TSINV', 'WTSINV') ").FirstOrDefault();
+                sum31_60 = _context.Database.SqlQuery<decimal>("SELECT   isnull(SUM (cr-dr),0) as Cr FROM   TransactionDetails  where (TransDate >= '" + startOfPrevious60DaysString + "' AND TransDate < '" + startOfPrevious30DaysString + "')   and AccountId = " + accountTitle.AccountNo + " AND Vtype IN ('SINV', 'TSINV', 'WTSINV') ").FirstOrDefault();
+                sum61_90 = _context.Database.SqlQuery<decimal>("SELECT   isnull(SUM (cr-dr),0) as Cr FROM   TransactionDetails  where (TransDate >= '" + startOfPrevious90DaysString + "' AND TransDate < '" + startOfPrevious60DaysString + "')  and AccountId = " + accountTitle.AccountNo + " AND Vtype IN ('SINV', 'TSINV', 'WTSINV') ").FirstOrDefault();
+                finaltotal = opening_bal + _context.Database.SqlQuery<decimal>("SELECT   isnull(SUM (cr-dr),0) as Cr FROM   TransactionDetails  where AccountId = " + accountTitle.AccountNo + " ").FirstOrDefault();
+
+
+                sum0_30_1 = _context.Database.SqlQuery<decimal>("SELECT   isnull(SUM (cr-dr),0) as Cr FROM   TransactionDetails  where  TransDate >= '" + startOfPrevious30DaysString1 + "'  and AccountId = " + accountTitle.AccountNo + " AND Vtype IN ('SINV', 'TSINV', 'WTSINV')").FirstOrDefault();
+                sum31_60_1 = _context.Database.SqlQuery<decimal>("SELECT   isnull(SUM (cr-dr),0) as Cr FROM   TransactionDetails  where (TransDate >= '" + startOfPrevious60DaysString1 + "' AND TransDate < '" + startOfPrevious30DaysString1 + "')   and AccountId = " + accountTitle.AccountNo + " AND Vtype IN ('SINV', 'TSINV', 'WTSINV') ").FirstOrDefault();
+                sum61_90_1 = _context.Database.SqlQuery<decimal>("SELECT   isnull(SUM (cr-dr),0) as Cr FROM   TransactionDetails  where (TransDate >= '" + startOfPrevious90DaysString1 + "' AND TransDate < '" + startOfPrevious60DaysString1 + "')  and AccountId = " + accountTitle.AccountNo + " AND Vtype IN ('SINV', 'TSINV', 'WTSINV') ").FirstOrDefault();
+
             }
+
             if (accountTitle.AccountNo == 0)
             {
                 // trans_list = _context.Database.SqlQuery<LedgerQuery>("SELECT td.ID, td.TransId, td.TransDes,td.TransDes as TransDetail, td.TransDate, td.AccountId, td.Dr, td.Cr, td.InvId, td.Vtype, td.b_unit, td.Rinvid, act.AccountNo, act.AccMain, act.AccountHeadId, act.SecondLevel, act.AccountTitleName,act.AccountType from TransactionDetails td , AccountTitles act WHERE td.AccountId = act.Accountno AND td.TransDate between '" + s_date + "' AND '" + e_date + "' order by td.TransDate,td.TransId").ToList();
@@ -69,69 +116,96 @@ namespace WebApplication2.Controllers
                 trans_list = _context.Database.SqlQuery<LedgerQuery>("SELECT td.ID, td.TransId, td.TransDes,td.TransDes as TransDetail, td.TransDate, td.AccountId, td.Dr, td.Cr, td.InvId, td.Vtype, act.AccountNo, act.AccMain, act.AccountHeadId, act.SecondLevel, act.AccountTitleName,act.AccountType from TransactionDetails td , AccountTitles act WHERE td.AccountId = act.Accountno AND td.AccountId = " + accountTitle.AccountNo + " order by td.TransDate,td.TransId").ToList();
 
             }
+          
             _context.Database.ExecuteSqlCommand("Delete From  TempTransDetails where userid=" + Session["UserID"].ToString());
+            var des = "";
+            foreach (var item in trans_list)
+            {
 
-            foreach (var item in trans_list) {
+                if (item.Vtype != "CRV" && item.Vtype != "CPV" && item.Vtype != "BPV" && item.Vtype != "BRV" && item.Vtype != "JV")
+                {
+                    if (@item.Vtype == "TSRINV" || @item.Vtype == "WTSINV" || @item.Vtype == "TSINV" || @item.Vtype == "SRINV")
+                    {
+                        @item.TransDes = _context.Database.SqlQuery<string>("SELECT STUFF(( SELECT ', ' + SUBSTRING(packing, 1, 2) + '-' + dbo.ExtractNumber(prname) + ' | ' + CAST(ROUND(qty, 1) AS VARCHAR) + ' * ' + CAST(ROUND(sp, 1) AS VARCHAR) + ' = ' + CAST(ROUND(total,2) AS VARCHAR) FROM srsdetail WHERE OrderID = '" + item.InvId + "' FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS desp").FirstOrDefault();
+                    }
+                    else if (@item.Vtype == "SINVRAW")
+                    {
+                        @item.TransDes = _context.Database.SqlQuery<string>("SELECT STUFF(( SELECT ', ' + SUBSTRING(packing, 1, 2) + '-' + dbo.ExtractNumber(prname) + ' | ' + CAST(ROUND(qty, 1) AS VARCHAR) + ' * ' + CAST(ROUND(sp, 1) AS VARCHAR) + ' = ' + CAST(ROUND(total,2) AS VARCHAR) FROM Order_detail WHERE OrderID = '" + item.InvId + "' FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS desp").FirstOrDefault();
+                    }
 
+                    else if (@item.Vtype == "SINV")
+                    {
+                        @item.TransDes = _context.Database.SqlQuery<string>("SELECT STUFF(( SELECT ', ' + SUBSTRING(packing, 1, 2) + '-' + dbo.ExtractNumber(prname) + ' | ' + CAST(ROUND(qty,   1) AS VARCHAR) + ' * ' + CAST( ROUND(sp, 1) AS VARCHAR) + ' = ' + CAST(ROUND(total,2) AS VARCHAR) FROM Orderdetail WHERE OrderID = '" + item.InvId + "' FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS desp").FirstOrDefault();
+                        _context.Database.ExecuteSqlCommand("UPDATE  TempTransDetails  SET  TransDes ='" + des + "' where TransId =" + item.TransId);
+
+                    }
+
+                    else if (@item.Vtype == "PINV" || @item.Vtype == "PTINV")
+                    {
+                        @item.TransDes = _context.Database.SqlQuery<string>("SELECT STUFF(( SELECT ', ' + pname + ' - ' + CAST(ROUND(qty,   1) AS VARCHAR) + ' * ' + CAST( ROUND(cp, 1) AS VARCHAR) + ' = ' + CAST(ROUND(total,2) AS VARCHAR) FROM purchasedetail WHERE invid = '" + item.InvId + "' FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS desp").FirstOrDefault();
+                    }
+
+                    else if (@item.Vtype == "PRINV" || @item.Vtype == "TPRINV")
+                    {
+                        @item.TransDes = _context.Database.SqlQuery<string>("SELECT STUFF(( SELECT ', ' + pname + ' - ' + CAST(ROUND(qty,   1) AS VARCHAR) + ' * ' + CAST( ROUND(cp, 1) AS VARCHAR) + ' = ' + CAST(ROUND(total,2) AS VARCHAR) FROM srpdetail WHERE invid = '" + item.InvId + "' FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS desp").FirstOrDefault();
+                    }
+                }
                 _context.Database.ExecuteSqlCommand("INSERT  INTO TempTransDetails(userid,TransId, TransDes, TransDate, AccountId, Dr, Cr, InvId, Vtype, b_unit, Rinvid, AccountNo, AccMain, AccountHeadId, SecondLevel, AccountTitleName, AccountType)  " +
                        "VALUES('" + Session["UserID"].ToString() + "','" + @item.TransId + "','" + @item.TransDes + "','" + @item.TransDate + "','" + @item.AccountId + "','" + @item.Dr + "','" + @item.Cr + "','" + @item.InvId + "','" + @item.Vtype + "','" + @item.AccountType + "','" + @item.Rinvid + "','" + @item.AccountNo + "','" + @item.AccMain + "','" + @item.AccountHeadId + "','" + @item.SecondLevel + "','" + @item.AccountTitleName + "','" + @item.AccountType + "') ");
 
-
             }
-            var des = "";
-            foreach (var item in trans_list.Where(x => x.Vtype != "CRV" && x.Vtype != "CPV" && x.Vtype != "BPV" && x.Vtype != "BRV" && x.Vtype != "JV"))
-            {
-                if (@item.Vtype == "TSRINV" || @item.Vtype == "WTSINV" || @item.Vtype == "TSINV"  || @item.Vtype == "SRINV") {
 
-                  //  des = _context.Database.SqlQuery<string>("SELECT STUFF(( SELECT ', ' + SUBSTRING(packing, 1, 2) + '-' + dbo.ExtractNumber(prname) + ' | ' + CAST( ROUND(qty, '1') AS VARCHAR) + ' * ' + CAST( ROUND(sp, '1') AS VARCHAR) + ' = ' + CAST( ROUND(total, '2') AS VARCHAR) FROM srsdetail WHERE OrderID = '" + item.InvId+"' FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS desp").FirstOrDefault();
-                    des = _context.Database.SqlQuery<string>("SELECT STUFF(( SELECT ', ' + SUBSTRING(packing, 1, 2) + '-' + dbo.ExtractNumber(prname) + ' | ' + CAST(ROUND(qty, 1) AS VARCHAR) + ' * ' + CAST(ROUND(sp, 1) AS VARCHAR) + ' = ' + CAST(ROUND(total,2) AS VARCHAR) FROM srsdetail WHERE OrderID = '" + item.InvId + "' FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS desp").FirstOrDefault();
-                    _context.Database.ExecuteSqlCommand("UPDATE  TempTransDetails  SET  TransDes ='"+des+ "' where TransId ="+item.TransId);
+            //foreach (var item in trans_list.Where(x => x.Vtype != "CRV" && x.Vtype != "CPV" && x.Vtype != "BPV" && x.Vtype != "BRV" && x.Vtype != "JV"))
+            //{
+            //    if (@item.Vtype == "TSRINV" || @item.Vtype == "WTSINV" || @item.Vtype == "TSINV"  || @item.Vtype == "SRINV") {
 
+            //      //  des = _context.Database.SqlQuery<string>("SELECT STUFF(( SELECT ', ' + SUBSTRING(packing, 1, 2) + '-' + dbo.ExtractNumber(prname) + ' | ' + CAST( ROUND(qty, '1') AS VARCHAR) + ' * ' + CAST( ROUND(sp, '1') AS VARCHAR) + ' = ' + CAST( ROUND(total, '2') AS VARCHAR) FROM srsdetail WHERE OrderID = '" + item.InvId+"' FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS desp").FirstOrDefault();
+            //        des = _context.Database.SqlQuery<string>("SELECT STUFF(( SELECT ', ' + SUBSTRING(packing, 1, 2) + '-' + dbo.ExtractNumber(prname) + ' | ' + CAST(ROUND(qty, 1) AS VARCHAR) + ' * ' + CAST(ROUND(sp, 1) AS VARCHAR) + ' = ' + CAST(ROUND(total,2) AS VARCHAR) FROM srsdetail WHERE OrderID = '" + item.InvId + "' FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS desp").FirstOrDefault();
+            //        _context.Database.ExecuteSqlCommand("UPDATE  TempTransDetails  SET  TransDes ='"+des+ "' where TransId ="+item.TransId);
+            //    }
 
-                }
+            //    else if (@item.Vtype == "SINVRAW") 
+            //    {
+            //       // des = _context.Database.SqlQuery<string>("SELECT STUFF(( SELECT ', ' + SUBSTRING(packing, 1, 2) + '-' + dbo.ExtractNumber(prname) + ' | ' + CAST(ROUND(qty, '1') AS VARCHAR) + ' * ' + CAST( ROUND(sp, '1') AS VARCHAR) + ' = ' + CAST( ROUND(total, '2') AS VARCHAR) FROM Order_detail WHERE OrderID = '" + item.InvId + "' FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS desp").FirstOrDefault();
+            //        des = _context.Database.SqlQuery<string>("SELECT STUFF(( SELECT ', ' + SUBSTRING(packing, 1, 2) + '-' + dbo.ExtractNumber(prname) + ' | ' + CAST(ROUND(qty, 1) AS VARCHAR) + ' * ' + CAST(ROUND(sp, 1) AS VARCHAR) + ' = ' + CAST(ROUND(total,2) AS VARCHAR) FROM Order_detail WHERE OrderID = '" + item.InvId + "' FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS desp").FirstOrDefault();
 
-                else if (@item.Vtype == "SINVRAW") 
-                {
-                   // des = _context.Database.SqlQuery<string>("SELECT STUFF(( SELECT ', ' + SUBSTRING(packing, 1, 2) + '-' + dbo.ExtractNumber(prname) + ' | ' + CAST(ROUND(qty, '1') AS VARCHAR) + ' * ' + CAST( ROUND(sp, '1') AS VARCHAR) + ' = ' + CAST( ROUND(total, '2') AS VARCHAR) FROM Order_detail WHERE OrderID = '" + item.InvId + "' FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS desp").FirstOrDefault();
-                    des = _context.Database.SqlQuery<string>("SELECT STUFF(( SELECT ', ' + SUBSTRING(packing, 1, 2) + '-' + dbo.ExtractNumber(prname) + ' | ' + CAST(ROUND(qty, 1) AS VARCHAR) + ' * ' + CAST(ROUND(sp, 1) AS VARCHAR) + ' = ' + CAST(ROUND(total,2) AS VARCHAR) FROM Order_detail WHERE OrderID = '" + item.InvId + "' FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS desp").FirstOrDefault();
+            //        _context.Database.ExecuteSqlCommand("UPDATE  TempTransDetails  SET  TransDes ='" + des + "' where TransId =" + item.TransId);
 
-                    _context.Database.ExecuteSqlCommand("UPDATE  TempTransDetails  SET  TransDes ='" + des + "' where TransId =" + item.TransId);
+            //    }
 
-                }
-                
-                else if (@item.Vtype == "SINV") 
-                {
-                    //   des = _context.Database.SqlQuery<string>("SELECT STUFF(( SELECT ', ' + SUBSTRING(packing, 1, 2) + '-' + dbo.ExtractNumber(prname) + ' | ' + CAST(ROUND(qty, '1') AS VARCHAR) + ' * ' + CAST( ROUND(sp, '1') AS VARCHAR) + ' = ' + CAST( ROUND(total, '2') AS VARCHAR) FROM Orderdetail WHERE OrderID = '" + item.InvId + "' FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS desp").FirstOrDefault();
-                         des = _context.Database.SqlQuery<string>("SELECT STUFF(( SELECT ', ' + SUBSTRING(packing, 1, 2) + '-' + dbo.ExtractNumber(prname) + ' | ' + CAST(ROUND(qty,   1) AS VARCHAR) + ' * ' + CAST( ROUND(sp, 1) AS VARCHAR) + ' = ' + CAST(ROUND(total,2) AS VARCHAR) FROM Orderdetail WHERE OrderID = '" + item.InvId + "' FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS desp").FirstOrDefault();
+            //    else if (@item.Vtype == "SINV") 
+            //    {
+            //        //   des = _context.Database.SqlQuery<string>("SELECT STUFF(( SELECT ', ' + SUBSTRING(packing, 1, 2) + '-' + dbo.ExtractNumber(prname) + ' | ' + CAST(ROUND(qty, '1') AS VARCHAR) + ' * ' + CAST( ROUND(sp, '1') AS VARCHAR) + ' = ' + CAST( ROUND(total, '2') AS VARCHAR) FROM Orderdetail WHERE OrderID = '" + item.InvId + "' FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS desp").FirstOrDefault();
+            //             des = _context.Database.SqlQuery<string>("SELECT STUFF(( SELECT ', ' + SUBSTRING(packing, 1, 2) + '-' + dbo.ExtractNumber(prname) + ' | ' + CAST(ROUND(qty,   1) AS VARCHAR) + ' * ' + CAST( ROUND(sp, 1) AS VARCHAR) + ' = ' + CAST(ROUND(total,2) AS VARCHAR) FROM Orderdetail WHERE OrderID = '" + item.InvId + "' FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS desp").FirstOrDefault();
 
-                    _context.Database.ExecuteSqlCommand("UPDATE  TempTransDetails  SET  TransDes ='" + des + "' where TransId =" + item.TransId);
+            //        _context.Database.ExecuteSqlCommand("UPDATE  TempTransDetails  SET  TransDes ='" + des + "' where TransId =" + item.TransId);
 
-                }
+            //    }
 
-                else if (@item.Vtype == "PINV" || @item.Vtype == "PTINV") 
-                {
-                    //des = _context.Database.SqlQuery<string>("SELECT STUFF(( SELECT ', ' + pname + ' | ' + CAST(ROUND(qty, '1') AS VARCHAR) + ' * ' + CAST( ROUND(cp, '1') AS VARCHAR) + ' = ' + CAST( ROUND(total, '2') AS VARCHAR) FROM purchasedetail WHERE invid = '" + item.InvId + "' FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS desp").FirstOrDefault();
-                    des = _context.Database.SqlQuery<string>("SELECT STUFF(( SELECT ', ' + pname + ' - ' + CAST(ROUND(qty,   1) AS VARCHAR) + ' * ' + CAST( ROUND(cp, 1) AS VARCHAR) + ' = ' + CAST(ROUND(total,2) AS VARCHAR) FROM purchasedetail WHERE invid = '" + item.InvId + "' FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS desp").FirstOrDefault();
+            //    else if (@item.Vtype == "PINV" || @item.Vtype == "PTINV") 
+            //    {
+            //        //des = _context.Database.SqlQuery<string>("SELECT STUFF(( SELECT ', ' + pname + ' | ' + CAST(ROUND(qty, '1') AS VARCHAR) + ' * ' + CAST( ROUND(cp, '1') AS VARCHAR) + ' = ' + CAST( ROUND(total, '2') AS VARCHAR) FROM purchasedetail WHERE invid = '" + item.InvId + "' FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS desp").FirstOrDefault();
+            //        des = _context.Database.SqlQuery<string>("SELECT STUFF(( SELECT ', ' + pname + ' - ' + CAST(ROUND(qty,   1) AS VARCHAR) + ' * ' + CAST( ROUND(cp, 1) AS VARCHAR) + ' = ' + CAST(ROUND(total,2) AS VARCHAR) FROM purchasedetail WHERE invid = '" + item.InvId + "' FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS desp").FirstOrDefault();
 
-                    _context.Database.ExecuteSqlCommand("UPDATE  TempTransDetails  SET  TransDes ='" + des + "' where TransId =" + item.TransId);
+            //        _context.Database.ExecuteSqlCommand("UPDATE  TempTransDetails  SET  TransDes ='" + des + "' where TransId =" + item.TransId);
 
 
-                }
+            //    }
 
-                else if (@item.Vtype == "PRINV" || @item.Vtype == "TPRINV") 
-                {
-                  //des = _context.Database.SqlQuery<string>("SELECT STUFF(( SELECT ', ' + pname + ' | ' + CAST( ROUND(qty, '1') AS VARCHAR) + ' * ' + CAST( ROUND(cp, '1') AS VARCHAR) + ' = ' + CAST( ROUND(total, '2') AS VARCHAR) FROM srpdetail WHERE invid = '" + item.InvId + "' FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS desp").FirstOrDefault();
-                    des = _context.Database.SqlQuery<string>("SELECT STUFF(( SELECT ', ' + pname + ' - ' + CAST(ROUND(qty,   1) AS VARCHAR) + ' * ' + CAST( ROUND(cp, 1) AS VARCHAR) + ' = ' + CAST(ROUND(total,2) AS VARCHAR) FROM srpdetail WHERE invid = '" + item.InvId + "' FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS desp").FirstOrDefault();
+            //    else if (@item.Vtype == "PRINV" || @item.Vtype == "TPRINV") 
+            //    {
+            //      //des = _context.Database.SqlQuery<string>("SELECT STUFF(( SELECT ', ' + pname + ' | ' + CAST( ROUND(qty, '1') AS VARCHAR) + ' * ' + CAST( ROUND(cp, '1') AS VARCHAR) + ' = ' + CAST( ROUND(total, '2') AS VARCHAR) FROM srpdetail WHERE invid = '" + item.InvId + "' FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS desp").FirstOrDefault();
+            //        des = _context.Database.SqlQuery<string>("SELECT STUFF(( SELECT ', ' + pname + ' - ' + CAST(ROUND(qty,   1) AS VARCHAR) + ' * ' + CAST( ROUND(cp, 1) AS VARCHAR) + ' = ' + CAST(ROUND(total,2) AS VARCHAR) FROM srpdetail WHERE invid = '" + item.InvId + "' FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS desp").FirstOrDefault();
 
-                    _context.Database.ExecuteSqlCommand("UPDATE  TempTransDetails  SET  TransDes ='" + des + "' where TransId =" + item.TransId);
+            //        _context.Database.ExecuteSqlCommand("UPDATE  TempTransDetails  SET  TransDes ='" + des + "' where TransId =" + item.TransId);
 
 
-                }
+            //    }
 
 
 
-            }
-            //for (int i = 0; i < trans_list.Count; i++)
+            //}
+            ////for (int i = 0; i < trans_list.Count; i++)
             //{
 
             //    if (trans_list[i].AccountType == "")
@@ -141,7 +215,7 @@ namespace WebApplication2.Controllers
 
             //}
 
-            trans_list = _context.Database.SqlQuery<LedgerQuery>("SELECT * From TempTransDetails where userid=" + Session["UserID"] ).ToList();
+            trans_list = _context.Database.SqlQuery<LedgerQuery>("SELECT * From TempTransDetails where userid=" + Session["UserID"]).ToList();
 
 
             accountTitle.cr = opening_bal + Convert.ToInt32(op);
@@ -153,9 +227,17 @@ namespace WebApplication2.Controllers
                 accountTitle = accountTitle,
                 transactionDetail = transactionDetail,
                 trans_list = trans_list,
+                SumOfInvoice0_30 = sum0_30,
+                SumOfInvoice_31_60=sum31_60,
+                SumOfInvoice_61_90=sum61_90,
+                SumOfInvoice0_30_1 = sum0_30_1,
+                SumOfInvoice_31_60_1 = sum31_60_1,
+                SumOfInvoice_61_90_1 = sum61_90_1,
+                finaltotal = finaltotal,
             };
             ViewBag.StartDate = Convert.ToDateTime(s_date).ToString("yyyy-MM-dd");
             ViewBag.EndDate = Convert.ToDateTime(e_date).ToString("yyyy-MM-dd");
+
             return View(Chart_of_account_Vm);
         }
         public ActionResult LedgerSearchSingle(int? ID, int status)

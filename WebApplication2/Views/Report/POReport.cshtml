@@ -5,6 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     decimal Srn = 1;
     string strcomb = "";
+    string supplier = "";
 }
 
 <script>
@@ -37,7 +38,7 @@
             <div class="panel">
                 <div class="panel-content">
                     <div>
-                        
+
                         <input class="form-check-input" type="checkbox" value="" id="flexCheckChecked1" onclick="showcolcheck(1)" checked>
                         <label class="form-check-label" for="flexCheckChecked1">
                             Sr
@@ -82,7 +83,7 @@
                         <label class="form-check-label" for="flexCheckChecked11">
                             Status
                         </label>
-                    </div>                    
+                    </div>
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover table-striped table-success" id="searchable">
                             <thead class="bordered-darkorange">
@@ -96,6 +97,7 @@
                                     <th>Current Stock</th>
                                     <th>Demand / Order Quantity</th>
                                     <th>Supplier Name</th>
+                                    <th>Detail</th>
                                     <th>Price</th>
                                     <th>Status</th>
                                 </tr>
@@ -104,12 +106,26 @@
                             <tbody class="abc">
                                 @foreach (var item in Model.PORawMaterialReportQuery)
                                 {
-                                    @(strcomb= "")
+                                    @(strcomb = "")
+                                    @(supplier = "")
                                 <tr>
-                                    @foreach (var item1 in Model.POpurchasedetail.Where(x=>x.itemid == item.ProductID).OrderByDescending(x => x.invid).Take(10))
+                                    @foreach (var item1 in Model.POpurchasedetail.Where(x => x.itemid == item.ProductID).OrderByDescending(x => x.invid).Take(10))
                                     {
                                         strcomb = strcomb + item1.SupplierName + "-" + item1.total + " , ";
+                                        //supplier = supplier + item1.SupplierName + ",";
                                     }
+
+                                  @*  @foreach (var item1 in Model.POpurchasedetail.Where(x => x.itemid == item.ProductID).OrderByDescending(x => x.invid).GroupBy(x => x.SupplierName).Select(g => g.First()).Take(10))*@
+
+                                        @foreach (var item1 in Model.POpurchasedetail
+                                        .Where(x => x.itemid == item.ProductID)
+                                        .OrderByDescending(x => x.invid)
+                                          .GroupBy(x => x.SupplierName)
+                                          .Select(g => g.First())
+                                          .Take(10))
+                                        {
+                                            supplier = supplier + item1.SupplierName + ",";
+                                        }
 
                                     @*<td id="1stcol">@(Srn++)</td>*@
                                     <td style="width:50px;">@(Srn++)</td>
@@ -120,6 +136,7 @@
                                     <td>@item.MaxLevelRaw</td>
                                     <td>@item.Qtybal</td>
                                     <td>@item.POQty</td>
+                                    <td>@(supplier)</td>
                                     <td>@(strcomb)</td>
                                     <td style="width:100px;">@item.PurchaseCost</td>
                                     <td style="width:100px;">@item.QTYStatus</td>
@@ -129,6 +146,7 @@
                             <tfoot>
                                 <tr>
                                     <th></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
                                     <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
                                     <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
                                     <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>

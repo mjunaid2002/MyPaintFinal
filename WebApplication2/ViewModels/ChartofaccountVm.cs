@@ -32,7 +32,16 @@ namespace WebApplication2.ViewModels
         public OpeningBalance openingBalance { get; set; }
         public AccountTitle accountTitle { get; set; }
         public TransactionDetail transactionDetail { get; set; }
-     
+
+        public decimal SumOfInvoice0_30 { get; set; } = 0;
+        public decimal SumOfInvoice_31_60 { get; set; } = 0;
+        public decimal SumOfInvoice_61_90 { get; set; } = 0;
+        
+        public decimal SumOfInvoice0_30_1 { get; set; } = 0;
+        public decimal SumOfInvoice_31_60_1 { get; set; } = 0;
+        public decimal SumOfInvoice_61_90_1 { get; set; } = 0;
+        public decimal finaltotal { get; set; } = 0;
+
 
 
     }

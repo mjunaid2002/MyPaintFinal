@@ -1,5 +1,7 @@
-﻿using System;
+﻿using CRM.Models;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
@@ -96,6 +98,8 @@ namespace WebApplication1.QueryViewModel
 
 
     }
+    
+
 
     public class FinishTransferDetail
     {
@@ -109,6 +113,27 @@ namespace WebApplication1.QueryViewModel
 
 
 
+    }
+
+    public class BranchTransferM
+    {
+        public decimal invid { get; set; }
+        public DateTime date { get; set; }
+        public int Frombranch { get; set; }
+        public int Tobranch { get; set; }
+        public string note { get; set; }
+        public string status { get; set; }
+        public string Fromname { get; set; }
+        public string Toname { get; set; }
+    }
+    public class BranchTransferDetail
+    {
+        public decimal invid { get; set; }
+        public decimal pid { get; set; }
+        public string pname { get; set; }
+        public string size { get; set; }
+        public decimal qty { get; set; }
+        public decimal rqty { get; set; }
     }
     public class SaleReturnDetailQuery
     {
@@ -139,9 +164,10 @@ namespace WebApplication1.QueryViewModel
     public class SaleReturnQuery
     {
         public decimal OrderID { get; set; }
+        public int BranchId { get; set; }
         public DateTime date { get; set; }
-        public decimal cargoid { get; set; }
-        public decimal cargo { get; set; }
+        public decimal cargoid { get; set; } = 0;
+        public decimal cargo { get; set; } = 0;
         public decimal custid { get; set; }
         public string empname { get; set; }
         public decimal discount { get; set; }
@@ -192,6 +218,7 @@ namespace WebApplication1.QueryViewModel
         public decimal ntotal { get; set; }
         public decimal OrderID { get; set; }
         public decimal RegionId { get; set; }
+        public int BranchId { get; set; }
         public DateTime date { get; set; }
         public decimal cargoid { get; set; }
         public decimal custid { get; set; }
@@ -230,8 +257,20 @@ namespace WebApplication1.QueryViewModel
         public string note { get; set; }
         public decimal RegionID { get; set; }
         public string RegionName { get; set; }
+        
 
 
+    }
+    
+    
+    public class OpeningStockBranch
+    {
+        public decimal pid { get; set; }
+        public string pname { get; set; }
+        public string branchname { get; set; }
+        public decimal qty { get; set; }
+        public int branchid { get; set; }
+       
     }
 
 
@@ -241,7 +280,9 @@ namespace WebApplication1.QueryViewModel
         public decimal pid { get; set; }
 
         public decimal regionid { get; set; }
+        public decimal branchid { get; set; }
         public string regionname { get; set; }
+        public string branchname { get; set; }
         public string ProductName { get; set; }
 
         public decimal dubi_o { get; set; }
@@ -300,6 +341,7 @@ namespace WebApplication1.QueryViewModel
         public decimal totalfillweight { get; set; }
         public decimal yeild { get; set; }
         public decimal batchespercost { get; set; }
+        public decimal BranchId { get; set; }
         public decimal packingcost { get; set; }
         public decimal batchcost { get; set; }
         public decimal totalcost { get; set; }
@@ -473,7 +515,7 @@ namespace WebApplication1.QueryViewModel
         public string packing { get; set; }
         public string ext4 { get; set; }
         public string ext5 { get; set; }
-        public string ext6 { get; set; }
+        public string ext6 { get; set; }  
         public string maincataname { get; set; }
         public DateTime date { get; set; }
 
@@ -600,6 +642,9 @@ namespace WebApplication1.QueryViewModel
     public class PoMaster
     {
         public decimal invid { get; set; }
+        public string Invoicestatus { get; set; }
+        public int RegionId { get; set; }
+        public int BranchId { get; set; }
         public DateTime date { get; set; }
         public DateTime datetime { get; set; }
         public decimal gtotal { get; set; }
@@ -661,6 +706,10 @@ namespace WebApplication1.QueryViewModel
     {
         public decimal customerid { get; set; }
         public decimal partywht { get; set; }
+        public int? BeltArea { get; set; }
+        public int? employer { get; set; }
+        public int? creditlimitdays { get; set; }
+        public int? creditlimitamount { get; set; }
         public decimal Cityid { get; set; }
         public decimal accno { get; set; }
         public string Name { get; set; }
@@ -703,6 +752,53 @@ namespace WebApplication1.QueryViewModel
         public decimal Id { get; set; }
         public string ProductType { get; set; }
     }
+    
+    public class Acc_Empolyee
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+    }
+    
+    public class BeltArea
+    {
+       
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+    
+    public class Scheme
+    {
+       
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public DateTime date { get; set; }
+        public DateTime startdate { get; set; }
+        public DateTime enddate { get; set; }
+        public string status { get; set; }
+    }
+    
+    public class SchemeDetail
+    {
+       
+        public int Id { get; set; }
+        public int Scheme_Id { get; set; }
+        public int Cat_id { get; set; }
+        public string Cat_Name { get; set; }
+        
+    }
+    
+    public class SchemeVM
+    {
+
+        public Scheme Scheme { get; set; }
+        public SchemeDetail SchemeDetail { get; set; }
+        public List<Scheme> Schemelist { get; set; }
+        public List<Categories> Categorylist { get; set; }
+        public List<SchemeDetail> SchemeDetaillist { get; set; }
+        
+        
+    }
+
     public class cargo
     {
         public decimal id { get; set; }
@@ -715,6 +811,7 @@ namespace WebApplication1.QueryViewModel
         public string fax { get; set; }
         public string email { get; set; }
     }
+
     public class Products
     {
         public decimal rem { get; set; }
@@ -764,6 +861,13 @@ namespace WebApplication1.QueryViewModel
     {
         public decimal id { get; set; }
         public string name { get; set; }
+    }
+    public class Branch
+    {
+        public int id { get; set; }
+        public int regionid { get; set; }
+        public string name { get; set; }
+        public string region_name { get; set; }
     }
     public class ProductPricingRegion
     {

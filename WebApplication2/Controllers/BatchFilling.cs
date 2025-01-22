@@ -114,7 +114,7 @@ namespace WebApplication1.Controllers
             var color = _context.Database.SqlQuery<Products>("select ProductName,ProductID,UnitPrice,ReorderLevel,vattax,CategoryID,[desc],Active from Product where CategoryID in (select CategoryID from Categories where RawProductCheck=0) ").ToList();
             var color1 = _context.Database.SqlQuery<Products>("select ProductName,ProductID,UnitPrice,ReorderLevel,vattax,CategoryID,[desc],Active from Product where CategoryID in (select CategoryID from Categories where RawProductCheck=1 and   IsPacking=1) ").ToList();
             var Region = _context.Database.SqlQuery<Region>("SELECT * from Region").ToList();
-
+         
             batchFillingMasterQUery.ColorName = "0";
             var SaleInvVM = new SaleInvVM
             {
@@ -173,7 +173,6 @@ namespace WebApplication1.Controllers
             var color1 = _context.Database.SqlQuery<Products>("select ProductName,ProductID,UnitPrice,ReorderLevel,vattax,CategoryID,[desc],Active from Product where CategoryID in (select CategoryID from Categories where RawProductCheck=1 and   IsPacking=1) ").ToList();
             batchFillingMasterQUery.ColorID = 0;
             var Region = _context.Database.SqlQuery<Region>("SELECT * from Region").ToList();
-
             var batchfillingdetail = _context.Database.SqlQuery<BatchFillingDetailQUery>("SELECT * from tbl_BatchFillingDetail where sr=" + ID + "").ToList();
             var BatchFillingBatches = _context.Database.SqlQuery<BatchFillingBatches>("SELECT * from tbl_BatchFillingBatches where sr=" + ID + "").ToList();
             decimal sumyield = 0;

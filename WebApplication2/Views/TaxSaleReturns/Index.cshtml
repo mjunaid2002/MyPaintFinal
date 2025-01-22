@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<WebApplication1.QueryViewModel.SaleReturnQuery>
+@using WebApplication1.QueryViewModel
 @{
     ViewBag.Title = "Index";
 }
@@ -30,6 +31,16 @@
                 <label>End Date </label>
                 <input type="date" name="e_date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
             </div>
+            <div class="form-group col-sm-2">
+                <label>Select Branch</label>
+                <select id="branchid" name="branchid" class="form-control">
+                    <option value="">Select Branch</option>
+                    @foreach (var branch in ViewBag.branchList as List<Branch>)
+                    {
+                        <option value="@branch.id">@branch.name</option>
+                        <!-- Adjust property names as needed -->}
+                </select>
+            </div>
             <div class="col-sm-3">
                 <button type="submit" name="submit" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Search &nbsp;&nbsp;</button>
             </div>
@@ -42,8 +53,8 @@
     </div>
     <div class="row">
         <div class="col-sm-12">
-       
-          <div class="panel">
+
+            <div class="panel">
                 <div class="panel-content">
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover table-striped table-success" id="searchable">

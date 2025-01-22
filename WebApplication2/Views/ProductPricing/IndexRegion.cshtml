@@ -20,112 +20,114 @@
     <div class="row">
         <div class="col-sm-12">
             <h4 class="section-subtitle"><b>Product Pricing Region</b></h4>
-            <a href="@Url.Action("CreateRegion", "ProductPricing")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  Creat New</a>
+            @if (Session["SubProductPricingRegionA"].ToString() != "0")
+            {
+                <a href="@Url.Action("CreateRegion", "ProductPricing")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  Creat New</a>
+            }
+                <div class="panel">
+                    <div class="panel-content">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                                <thead class="bordered-darkorange">
 
-            <div class="panel">
-                <div class="panel-content">
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
-                            <thead class="bordered-darkorange">
-                               
-                                <tr>
-                                    <th>Region Name</th>
-                                    <th>Category Name</th>
+                                    <tr>
+                                        <th>Region Name</th>
+                                        <th>Category Name</th>
 
-                                    <th style="background-color:lightcyan">Dubi</th>
-                                    <th style="background-color:lightcyan">Quarter</th>
-                                    <th style="background-color:lightcyan">Gallon</th>
-                                    <th style="background-color:lightcyan">Drum</th>
+                                        <th style="background-color:lightcyan">Dubi</th>
+                                        <th style="background-color:lightcyan">Quarter</th>
+                                        <th style="background-color:lightcyan">Gallon</th>
+                                        <th style="background-color:lightcyan">Drum</th>
 
-                                    
-                                    @*<th>Action</th>*@
-                                </tr>
-                            </thead>
 
-                            <tbody class="abc">
-                                @foreach (var item in Model)
-                                {
-                                <tr>
-                                    <td>@item.RegionName</td>
-                                    <td>@item.CategoryName</td>
+                                        @*<th>Action</th>*@
+                                    </tr>
+                                </thead>
 
-                                  
+                                <tbody class="abc">
+                                    @foreach (var item in Model)
+                                    {
+                                        <tr>
+                                            <td>@item.RegionName</td>
+                                            <td>@item.CategoryName</td>
 
-                                    <td style="background-color: lightcyan">@item.sp</td>
-                                    <td style="background-color: lightcyan">@item.splower</td>
-                                    <td style="background-color: lightcyan">@item.gallon</td>
-                                    <td style="background-color: lightcyan">@item.drum</td>
-                                    @*<td>
-            <a data-toggle="modal" data-target="#@item.CategoryID-123" class="btn btn-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
-        </td>*@
-                                </tr>
 
-                                    @*<div class="modal fade" id="@item.CategoryID-123" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="margin-top:-150px">
-                                            <div class="modal-dialog" role="document">
-                                                @using (Html.BeginForm("Update", "ProductPricing", FormMethod.Post, new { enctype = "multipart/form-data" }))
-                                                {
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Category Values</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <div class="row">
-                                                            <div class="col-md-2">
-                                                                <label style="margin-top:35px">Dubi</label>
-                                                                <label style="margin-top:20px">Quarter</label>
-                                                                <label style="margin-top:20px">Gallon</label>
-                                                                <label style="margin-top:20px">Drum</label>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <center>
-                                                                    <p><b>Retail Price</b></p>
-                                                                    <div class="form-group col-sm-12">
-                                                                        <input type="text" value="@item.sp" name="sp" class="form-control" />
-                                                                        <input type="hidden" value="@item.CategoryID" name="catid" class="form-control" />
-                                                                    </div>
-                                                                    <div class="form-group col-sm-12">
-                                                                        <input type="text" value="@item.splower" name="splower" class="form-control" />
-                                                                    </div>
-                                                                    <div class="form-group col-sm-12">
-                                                                        <input type="text" value="@item.gallon" name="gallon" class="form-control" />
-                                                                    </div>
-                                                                    <div class="form-group col-sm-12">
-                                                                        <input type="text" value="@item.drum" name="drum" class="form-control" />
-                                                                    </div>
-                                                                </center>
-                                                            </div>
+
+                                            <td style="background-color: lightcyan">@item.sp</td>
+                                            <td style="background-color: lightcyan">@item.splower</td>
+                                            <td style="background-color: lightcyan">@item.gallon</td>
+                                            <td style="background-color: lightcyan">@item.drum</td>
+                                            @*<td>
+                                            <a data-toggle="modal" data-target="#@item.CategoryID-123" class="btn btn-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
+                                        </td>*@
+                                        </tr>
+
+                                        @*<div class="modal fade" id="@item.CategoryID-123" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="margin-top:-150px">
+                                        <div class="modal-dialog" role="document">
+                                            @using (Html.BeginForm("Update", "ProductPricing", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                                            {
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Category Values</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row">
+                                                        <div class="col-md-2">
+                                                            <label style="margin-top:35px">Dubi</label>
+                                                            <label style="margin-top:20px">Quarter</label>
+                                                            <label style="margin-top:20px">Gallon</label>
+                                                            <label style="margin-top:20px">Drum</label>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <center>
+                                                                <p><b>Retail Price</b></p>
+                                                                <div class="form-group col-sm-12">
+                                                                    <input type="text" value="@item.sp" name="sp" class="form-control" />
+                                                                    <input type="hidden" value="@item.CategoryID" name="catid" class="form-control" />
+                                                                </div>
+                                                                <div class="form-group col-sm-12">
+                                                                    <input type="text" value="@item.splower" name="splower" class="form-control" />
+                                                                </div>
+                                                                <div class="form-group col-sm-12">
+                                                                    <input type="text" value="@item.gallon" name="gallon" class="form-control" />
+                                                                </div>
+                                                                <div class="form-group col-sm-12">
+                                                                    <input type="text" value="@item.drum" name="drum" class="form-control" />
+                                                                </div>
+                                                            </center>
                                                         </div>
                                                     </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                        <button type="submit" class="btn btn-primary">Update</button>
-                                                    </div>
                                                 </div>
-                                                }
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary">Update</button>
+                                                </div>
                                             </div>
-                                        </div>*@
-                                }
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
-                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
-                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
-                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
-                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
-                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
-                                    
-                                    @*<th></th>*@
-                                </tr>
-                            </tfoot>
-                        </table>
+                                            }
+                                        </div>
+                                    </div>*@
+                                    }
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                        <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                        <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                        <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                        <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                        <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
 
+                                        @*<th></th>*@
+                                    </tr>
+                                </tfoot>
+                            </table>
+
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
     </div>
 </div>

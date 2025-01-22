@@ -3,6 +3,9 @@
 @{
     ViewBag.Title = "Index";
     int sr = 0;
+    var costVisible = Session["SubBatchFillingCostvisible"]?.ToString();
+    var isHidden = costVisible == "0" ? "hidden" : "";
+}
 }
 <script>
     $('#searchable').DataTable({
@@ -35,7 +38,7 @@
                                     <th>Color</th>
                                     <th>Product</th>
                                     <th>Weight</th>
-                                    <th>Cost</th>
+                                    <th @isHidden>Cost</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
@@ -56,7 +59,7 @@
                                             <td>@item.ProductName</td>
 
                                             <td>@item.totalweight</td>
-                                            <td>@item.kgcoast</td>
+                                            <td @isHidden>@item.kgcoast</td>
                                             <td>@item.status</td>
 
 
@@ -73,7 +76,7 @@
                                     <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
                                     <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
                                     <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
-                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th @isHidden><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
                                     <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
 
 

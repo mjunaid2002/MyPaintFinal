@@ -38,7 +38,7 @@
             </div>
         }
 
-        @if (Session["SubStockInwardA"].ToString() != "0")
+        @if (Session["SubFinishedTransferA"].ToString() != "0")
         {
             <a href="@Url.Action("Create", "FinishTransfer")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  Create New</a>
         }
@@ -71,15 +71,15 @@
                                         <td>@item.Fromname</td>
                                         <td>@item.Toname</td>
                                         <td>
-                                            @if (Session["SubStockInwardU"].ToString() != "0")
+                                            @if (Session["SubFinishedTransferU"].ToString() != "0")
                                             {
                                                 <a href="@Url.Action("Edit", new { ID = item.invid })" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="label label-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
                                             }
-                                            @if (Session["SubStockInwardD"].ToString() != "0")
+                                            @if (Session["SubFinishedTransferD"].ToString() != "0")
                                             {
                                                 <a href="@Url.Action("Delete", new { ID = item.invid })" new { onclick="return confirm('Are you sure you want to Delete this record?');" class="label label-danger shiny input-xs"><i class="fa fa-trash"></i></a>
                                             }
-                                            @if (Session["SubStockInwardV"].ToString() != "0")
+                                            @if (Session["SubFinishedTransferV"].ToString() != "0")
                                             {
                                                 <a href="@Url.Action("PrintInvoice", new { ID = item.invid })" class="label label-success shiny input-xs" target="_blank"><i class="fa fa-print"></i></a>
                                             }

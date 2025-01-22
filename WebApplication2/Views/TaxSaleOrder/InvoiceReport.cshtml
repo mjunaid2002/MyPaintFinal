@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<WebApplication1.QueryViewModel.PoDetail>
 @{Layout = null;
-    var total = Model.Sum(x => x.total);
+    var total = Model.Sum(x => x.qty);
     var tax = Model.Sum(x => x.tax);
     var inctax = Model.Sum(x => x.inctax);
 }
@@ -61,13 +61,14 @@
                 <tr class="text-center" style="background-color: #8686df">
 
                     <th style="width:40%"> Item Name</th>
-                    <th>Unit Price</th>
+                    <th class="text-center">Packing</th>
+                    @*<th>Unit Price</th>*@
 
-                    <th>Quantity</th>
-                    <th> Total </th>
+                    <th class="text-center">Quantity</th>
+                    @*<th> Total </th>
 
                     <th>Tax </th>
-                    <th> Inc.Ta</th>
+                    <th> Inc.Ta</th>*@
                 </tr>
             </thead>
             <tbody>
@@ -79,16 +80,17 @@
                     {
 
 
-                        <tr>
+                        <tr >
 
                             <td class="text-left">@lst.pname</td>
 
-                            <td>@lst.cp</td>
-                            <td>@lst.qty</td>
-                            <td>@lst.total</td>
+                            @*<td>@lst.cp</td>*@
+                            <td class="text-center">@lst.psrn</td>
+                            <td class="text-center">@lst.qty</td>
+                            @*<td>@lst.total</td>
 
                             <td>@lst.tax</td>
-                            <td>@lst.inctax</td>
+                            <td>@lst.inctax</td>*@
 
                         </tr>
 
@@ -102,12 +104,12 @@
 
         </table>
 
-        <div style="text-align:right;font-weight:bold">Total : @total</div>
-        <div style="text-align:right;font-weight:bold">Tax Total  : @tax</div>
+        <div style="text-align:right;font-weight:bold">Total Qty : @total</div>
+        @*<div style="text-align:right;font-weight:bold">Tax Total  : @tax</div>
 
         <div style="text-align:right;font-weight:bold">_____________</div>
 
-        <div style="text-align:right;font-weight:bold">Grand Total :  : @inctax</div>
+        <div style="text-align:right;font-weight:bold">Grand Total :  : @inctax</div>*@
 
     </div>
 

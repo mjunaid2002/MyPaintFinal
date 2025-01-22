@@ -30,11 +30,27 @@ namespace WebApplication1.Controllers
         // GET: SaleWctn
         public ActionResult Index()
         {
-            string strquery = " AND date ='" + DateTime.Now.ToString("yyyy-MM-dd") + "' order by invid";
+            string strquery = " AND date ='" + DateTime.Now.ToString("yyyy-MM-dd") + "' ";
             var StartDate = Convert.ToDateTime(Request["s_date"]).ToString("yyyy-MM-dd");
             var Enddate = Convert.ToDateTime(Request["e_date"]).ToString("yyyy-MM-dd");
             if (StartDate != null && Enddate != null && StartDate != "0001-01-01" && Enddate != "0001-01-01")
-                strquery = " AND date between '" + StartDate + "' and '" + Enddate + "' order by invid ";
+                strquery = " AND date between '" + StartDate + "' and '" + Enddate + "'  ";
+         
+            var branchid = Request["branchid"];
+            var branch = Session["Branch"];
+            if (branchid == null && branch != "All")
+            {
+                branchid = Session["BranchId"].ToString();
+            }
+            if (!string.IsNullOrEmpty(branchid))
+            {
+                strquery += " and branchid = " + branchid;
+            }
+            strquery += " order by invid";
+
+            var Branch = _context.Database.SqlQuery<Branch>("SELECT id,name from Branch").ToList();
+            ViewBag.BranchList = Branch;
+
             var list = _context.Database.SqlQuery<PoMaster>("SELECT invid,date,total,supname,status,req_status  from qtnm_so where status='TSO'" + strquery).ToList();
             return View(list);
         }
@@ -166,8 +182,13 @@ namespace WebApplication1.Controllers
             var Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers").ToList();
             //var Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers where discount =0").ToList();
             var pro_listsss = _context.Database.SqlQuery<Products>("select ProductName,ProductID,UnitPrice,ReorderLevel,vattax,CategoryID,[desc],Active from Product where CategoryID in (select CategoryID from Categories where RawProductCheck=0)").ToList();
+            var Region = _context.Database.SqlQuery<Region>("SELECT * from Region").ToList();
+            var Branch = _context.Database.SqlQuery<Branch>("SELECT id,name from Branch").ToList();
+
             var SaleInvVM = new SaleInvVM
             {
+                Region_list= Region,
+                Branch_list = Branch,
                 poMaster = poMaster,
                 pro_listsss = pro_listsss,
                 Cus_list = Cus_list,
@@ -184,7 +205,7 @@ namespace WebApplication1.Controllers
                 _context.Database.ExecuteSqlCommand("INSERT INTO qtndetail_so (tax,Stauts,sr,pid,pname,cp,cp2,qty,total,invid,box,roll,psrn ) VALUES (" + tax[i] + ",'TSO'," + i + "," + id[i] + ",'" + item_name[i] + "'," + sp[i] + ",0," + qty[i] + "," + n_total[i] + "," + poMaster.invid + ",0,0,'"+ packing[i] + "')");
             }
             poMaster.supname = _context.Database.SqlQuery<string>("select name from customers where customerid=" + poMaster.supid + "").FirstOrDefault();
-            _context.Database.ExecuteSqlCommand("INSERT INTO qtnm_so (tax,tax_amount,builty,note,supid,invid,date,total,supname,status,datetime,cargid,cargocharges,othercharges,discount,paid,req_status) VALUES (" + poMaster.tax + "," + poMaster.tax_amount + ",'" + poMaster.builty + "','" + poMaster.note + "'," + poMaster.supid + "," + poMaster.invid + ",'" + poMaster.date + "'," + poMaster.total + ",'" + poMaster.supname + "','TSO','" + DateTime.Now + "',0,0,0,0,0,'Request')");
+            _context.Database.ExecuteSqlCommand("INSERT INTO qtnm_so (BranchId,RegionId,Invoicestatus,tax,tax_amount,builty,note,supid,invid,date,total,supname,status,datetime,cargid,cargocharges,othercharges,discount,paid,req_status) VALUES (" + poMaster.BranchId + "," + poMaster.RegionId + ",'" + poMaster.Invoicestatus + "'," + poMaster.tax + "," + poMaster.tax_amount + ",'" + poMaster.builty + "','" + poMaster.note + "'," + poMaster.supid + "," + poMaster.invid + ",'" + poMaster.date + "'," + poMaster.total + ",'" + poMaster.supname + "','TSO','" + DateTime.Now + "',0,0,0,0,0,'Request')");
             return RedirectToAction("Index");
         }
         public ActionResult SINVWCTNReport(int? ID, SaleMaster SaleMaster, TransactionDetail TransactionDetail)
@@ -220,11 +241,16 @@ namespace WebApplication1.Controllers
             var poMaster = _context.Database.SqlQuery<PoMaster>("select * from qtnm_so where invid =" + ID + " and status='TSO'").SingleOrDefault();
             var poDetail = _context.Database.SqlQuery<PoDetail>("select * from qtndetail_so where invid =" + ID + " and Stauts='TSO'").ToList();
             var Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers").ToList();
+            var Branch = _context.Database.SqlQuery<Branch>("SELECT id,name from Branch").ToList();
 
             //var Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers where discount =0").ToList();
             var pro_listsss = _context.Database.SqlQuery<Products>("select ProductName,ProductID,UnitPrice,ReorderLevel,vattax,CategoryID,[desc],Active from Product where CategoryID in (select CategoryID from Categories where RawProductCheck=0)").ToList();
+            var Region = _context.Database.SqlQuery<Region>("SELECT * from Region").ToList();
+
             var SaleInvVM = new SaleInvVM
             {
+                Branch_list = Branch,
+                Region_list = Region,
                 poDetail = poDetail,
                 poMaster = poMaster,
                 pro_listsss = pro_listsss,
@@ -242,7 +268,7 @@ namespace WebApplication1.Controllers
                 _context.Database.ExecuteSqlCommand("INSERT INTO qtndetail_so (tax,Stauts,sr,pid,pname,cp,cp2,qty,total,invid,box,roll ) VALUES (" + tax[i] + ",'TSO'," + i + "," + id[i] + ",'" + item_name[i] + "'," + sp[i] + ",0," + qty[i] + "," + n_total[i] + "," + poMaster.invid + ",0,0)");
             }
             poMaster.supname = _context.Database.SqlQuery<string>("select name from customers where customerid=" + poMaster.supid + "").FirstOrDefault();
-            _context.Database.ExecuteSqlCommand("INSERT INTO qtnm_so (tax,tax_amount,builty,note,supid,invid,date,total,supname,status,datetime,cargid,cargocharges,othercharges,discount,paid,req_status) VALUES (" + poMaster.tax + "," + poMaster.tax_amount + ",'" + poMaster.builty + "','" + poMaster.note + "'," + poMaster.supid + "," + poMaster.invid + ",'" + poMaster.date + "'," + poMaster.total + ",'" + poMaster.supname + "','TSO','" + DateTime.Now + "',0,0,0,0,0,'Request')");
+            _context.Database.ExecuteSqlCommand("INSERT INTO qtnm_so (BranchId,RegionId,Invoicestatus,tax,tax_amount,builty,note,supid,invid,date,total,supname,status,datetime,cargid,cargocharges,othercharges,discount,paid,req_status) VALUES (" + poMaster.BranchId + "," + poMaster.RegionId + ",'" + poMaster.Invoicestatus + "'," + poMaster.tax + "," + poMaster.tax_amount + ",'" + poMaster.builty + "','" + poMaster.note + "'," + poMaster.supid + "," + poMaster.invid + ",'" + poMaster.date + "'," + poMaster.total + ",'" + poMaster.supname + "','TSO','" + DateTime.Now + "',0,0,0,0,0,'Request')");
             return RedirectToAction("Index");
         }
         [HttpPost]
@@ -350,5 +376,17 @@ namespace WebApplication1.Controllers
             return RedirectToAction("Login", "Home");
         }
 
+        [HttpPost]
+        public ActionResult RemStock(string code, int code1, int regionid)
+        {
+             var stock = _context.Database.SqlQuery<decimal>("SELECT ISNULL(SUM(qtndetail_So.qty), 0) AS Expr1 FROM qtnm_so INNER JOIN qtndetail_So ON qtnm_so.invid = qtndetail_So.invid WHERE (qtnm_so.Invoicestatus = 'Pending') AND (qtnm_so.status = 'TSO') AND (qtnm_so.RegionId = "+ regionid + ") AND (qtndetail_So.psrn = '"+ code + "') AND (qtndetail_So.pid = '"+code1+"')");
+
+            var result = new
+            {
+                stock = stock,
+            
+            };
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
     }
 }

@@ -1,0 +1,223 @@
+﻿@model IEnumerable<WebApplication1.QueryViewModel.SaleReportQuery>
+
+@{
+    ViewBag.Title = "Index";
+    var groupedData = Model.GroupBy(item => item.custname);
+    var tex = @TempData["Tex"] as string;
+    var sr = 0;
+}
+<script>
+    $('#searchable').DataTable({
+        buttons: [
+            'copy', 'excel', 'pdf'
+        ]
+    });
+</script>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Reports</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b>Sale Report</b></h4>
+            @*<a href="@Url.Action("Create", "Category")"  class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  Creat New</a>*@
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th>Sr</th>
+                                    <th>Date</th>
+                                    <th>Inv #</th>
+                                    <th>V.T</th>
+                                    <th>Customer Name</th>
+                                    <th>Category</th>
+                                    <th>Item</th>
+                                    <th>packing</th>
+                                    <th>Qty</th>
+                                    <th>Retail Price</th>
+                                    @if (tex == "Tex")
+                                    {
+                                        <th>Sales Tax</th>
+                                    }
+                                    <th>Discount</th>
+                                    @if (tex == "Tex")
+                                    {
+                                        <th>WHT</th>
+                                    }
+                                    <th>Net Total</th>
+                                </tr>
+                            </thead>
+                            <tbody class="abc">
+                                @if (!Model.Any())
+                                {
+                                    <tr>
+                                        <td colspan="14" class="text-center">No data available</td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    foreach (var group in groupedData)
+                                    {
+                                        <tr class="group-header">
+                                            <td colspan="14" style="font-weight: bold; text-align: left;">
+                                                Customer: @group.Key
+                                            </td>
+                                        </tr>
+                                        decimal groupTotalQty = 0;
+                                        decimal groupTotalSp = 0;
+                                        decimal groupTotalAfter = 0;
+                                        decimal dsicval = 0;
+                                        decimal ext1 = 0;
+                                        decimal wht = 0;
+
+                                        foreach (var item in group)
+                                        {
+                                            groupTotalQty += item.qty;
+                                            groupTotalSp += item.sp;
+                                            groupTotalAfter += item.total_after;
+                                            dsicval += item.dsicval;
+                                            ext1 += item.ext1;
+                                            wht += item.wht;
+
+                                            <tr class="data-row">
+                                                <td>@(++sr)</td>
+                                                <td>@item.date.ToString("dd/MM/yyyy")</td>
+                                                <td>@item.OrderID</td>
+                                                <td>@item.ext6</td>
+                                                <td>@item.custname</td>
+                                                <td>@item.maincataname</td>
+                                                <td>@item.prname</td>
+                                                <td>@item.packing</td>
+                                                <td>@item.qty</td>
+                                                <td>@item.sp</td>
+
+                                                @if (tex == "Tex")
+                                                {
+                                                    <td>@item.ext1</td>
+                                                    <td>@item.total_after</td>
+                                                    <td>@item.wht</td>
+                                                    <td>@item.dsicval</td>
+                                                }
+                                                else
+                                                {
+                                                    <td>@item.dsicval</td>
+                                                    <td>@item.total_after</td>
+                                                }
+                                            </tr>
+                                        } <!-- Subtotal for each customer -->
+                                        <tr class="subtotal-row" style="font-weight: bold;">
+                                            <td colspan="8" style="text-align: right;">Subtotal:</td>
+                                            <td>@groupTotalQty</td>
+                                            <td>@groupTotalSp</td>
+
+                                            @if (tex == "Tex")
+                                            {
+                                                <td>@ext1</td>
+                                                <td>@groupTotalAfter</td>
+                                                <td>@wht</td>
+                                                <td>@dsicval</td>
+                                            }
+                                            else
+                                            {
+                                                <td>@dsicval</td>
+                                                <td>@groupTotalAfter</td>
+                                            }
+                                        </tr>
+                                    }
+                                    @*foreach (var item in Model)
+            {
+                <tr>
+                    <td>@{sr++;}@sr</td>
+                    <td>@item.date.ToString("dd/MM/yyyy")</td>
+                    <td>@item.OrderID</td>
+                    <td>@item.ext6</td>
+                    <td>@item.custname</td>
+                    <td>@item.maincataname</td>
+                    <td>@item.prname</td>
+                    <td>@item.packing</td>
+                    <td>@item.qty</td>
+                    <td>@item.sp</td>
+
+                    @if (tex == "Tex")
+                    {
+                        <td>@item.ext1</td>
+                        <td>@item.total_after</td>
+                        <td>@item.wht</td>
+                        <td>@item.dsicval</td>
+                    }
+
+                    else
+                    {
+                        <td>@item.dsicval</td>
+                        <td>@item.total_after</td>
+
+
+                    }
+
+
+                </tr>
+            }*@
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    @if (tex == "Tex")
+                                    {
+                                        <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    }
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    @if (tex == "Tex")
+                                    {
+                                        <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    }
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*<script>
+    $(document).ready(function () {
+        // Filter rows
+        $('#searchable tfoot input').on('keyup change', function () {
+            var index = $(this).parent().index(); // Get column index
+            var searchValue = $(this).val().toLowerCase();
+
+            $('#searchable tbody tr.data-row').filter(function () {
+                var cellValue = $(this).find('td').eq(index).text().toLowerCase();
+                return searchValue === "" || cellValue.indexOf(searchValue) > -1;
+            }).show();
+
+            // Hide group rows and subtotal rows if no child rows are visible
+            $('#searchable tbody tr.group-header').each(function () {
+                var groupRows = $(this).nextUntil('.group-header');
+                var hasVisible = groupRows.filter(':visible').not('.subtotal-row').length > 0;
+                $(this).toggle(hasVisible); // Toggle group header
+                groupRows.filter('.subtotal-row').toggle(hasVisible); // Toggle subtotal row
+            });
+        });
+    });
+
+</script>*@

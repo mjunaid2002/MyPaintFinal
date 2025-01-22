@@ -11,8 +11,21 @@
         border-radius: 0;
         color: white;
     }
-</style>
 
+
+</style>
+<style>
+  .blinking {
+    animation: blink-animation 1s steps(5, start) infinite;
+    color: red !important; /* Optional: Change the color for visibility */
+  }
+
+  @@keyframes blink-animation {
+    to {
+      visibility: hidden;
+    }
+  }
+</style>
 <div class="content">
     <div class="content-header">
         <div class="leftside-content-header">
@@ -28,23 +41,78 @@
                     <div class="row">
                         <!--BOX Style 3-->
                         <h4 style="margin-left:10px"><b>Companies Details</b></h4>
+                        @*@if (Session["SubFinishedTransfer"].ToString() != "0")
+        {*@
                         <div class="col-sm-4 col-sm-2">
                             <div class="panel widgetbox wbox-3 bg-lighter-1" style="width:300px; height: 80px !important ">
                                 <div class="col-md-12">
                                     <div class="col-md-1">
                                         <span class="icon fa fa-line-chart" style="font-size:22px;margin-top:25px;color:white;margin-left:-10px"></span>
                                     </div>
-                                    <div class="col-md-9" style="margin-left:-20px">
-                                        <a href="#">
+
+                                    @*<div class="col-md-9" style="margin-left:-20px">
+                        <a href="#">
+                            <div class="panel-content">
+                                <p class="title" style="font-size:18px">Transfer Pending</p>
+                                <p class="subtitle" id="transferpending"></p>
+                            </div>
+                        </a>
+                    </div>*@
+
+                                    <div class="col-md-9" id="transfer-pending-section" style="margin-left:-20px">
+                                        <a href="@Url.Action("Index", "BranchTransfer")">
                                             <div class="panel-content">
-                                                <p class="title" style="font-size:18px">Total</p>
-                                                <p class="subtitle">12</p>
+                                                <p class="title" style="font-size:18px">Recived Pending</p>
+                                                <p class="subtitle" id="transferpending"></p>
                                             </div>
                                         </a>
                                     </div>
+                                    <script type="text/javascript">
+                                    $(document).ready(function () {
+                                        function updateTransferPendingCount() {
+                                         $.ajax({
+                                                   url: '@Url.Action("GetTransferPendingCountJson", "BranchTransfer")',
+                                                   type: 'GET',
+                                                   success: function (data) {
+                                                       $('#transferpending').text(data.transferPending);
+                                                       if (data.transferPending > 0) {
+                                                           $('#transfer-pending-section').addClass('blinking');
+                                                       } else {
+                                                           $('#transfer-pending-section').removeClass('blinking');
+                                                       }
+                                                  }
+                                                });
+                                        }
+
+                                     // Initial call to set the batch count
+                                     updateTransferPendingCount();
+
+                                        // Set interval to update batch count every 5 minutes (300000 milliseconds)
+                                        setInterval(updateTransferPendingCount, 300000);
+                                 });
+                                    </script>
+
                                 </div>
                             </div>
                         </div>
+                        @* } *@
+                        @*<div class="col-sm-3 col-sm-2">
+            <div class="panel widgetbox wbox-3 bg-lighter-1" style="width:300px; height: 80px !important ">
+                <div class="col-md-12">
+                    <div class="col-md-1">
+                        <span class="icon fa fa-line-chart" style="font-size:22px;margin-top:25px;color:white;margin-left:-10px"></span>
+                    </div>
+                    <div class="col-md-9" style="margin-left:-20px">
+                        <a href="#">
+                            <div class="panel-content">
+                                <p class="title" style="font-size:18px">Total</p>
+                                <p class="subtitle">12</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>*@
                         <div class="col-sm-4 col-sm-2" style="margin-left:150px">
                             <div class="panel widgetbox wbox-3 bg-darker-2" style="width:300px;height:80px !important">
                                 <div class="col-md-12">

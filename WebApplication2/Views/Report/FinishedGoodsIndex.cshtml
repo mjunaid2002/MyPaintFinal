@@ -1,8 +1,10 @@
 ﻿@model IEnumerable<WebApplication1.QueryViewModel.Region>
 @{
-   
-        ViewBag.Title = "Index";
-        Layout = "~/Views/Shared/_Layout.cshtml";
+
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var Branch = ViewBag.Branch as List<WebApplication1.QueryViewModel.Branch>;
+
     }
     <div class="content">
         <div class="content-header">
@@ -25,11 +27,22 @@
                         <label>End Date </label>
                         <input type="date" name="e_date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
                     </div>
-                    <div class="form-group col-sm-3">
+                    <div class="form-group col-sm-2">
                         <label>Select Region</label>
-                        <select name="region" class="form-control">
-                            <option value="0">Select Region</option>
+                        <select name="region" class="form-control" required>
+                            <option value="">Select Region</option>
                             @foreach (var list in Model)
+                            {
+
+                                <option value="@list.id">@list.name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-2">
+                        <label>Select Branch</label>
+                        <select name="branch" class="form-control" required>
+                            <option value="">Select Branch</option>
+                            @foreach (var list in Branch)
                             {
 
                                 <option value="@list.id">@list.name</option>

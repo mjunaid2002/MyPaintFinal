@@ -31,7 +31,7 @@ namespace WebApplication2.Controllers
         }
         public ActionResult Create(Region Region)
         {
-            Region.id = _context.Database.SqlQuery<decimal>("select ISNULL(Max(id),0)+1 from Region  ").FirstOrDefault();
+          //  Region.id = _context.Database.SqlQuery<decimal>("select ISNULL(Max(id),0)+1 from Region  ").FirstOrDefault();
 
             return View(Region);
         }

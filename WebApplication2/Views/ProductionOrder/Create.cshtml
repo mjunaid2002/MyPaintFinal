@@ -290,220 +290,227 @@
             <h4 class="section-subtitle"><b>Production Order </b></h4>
 
             <a href="@Url.Action("Index", "ProductionOrder")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  List</a>
-            <a href="@Url.Action("downloadSheet", "ProductionOrder")" id="downloadLink" class="btn btn-wide btn-info pull-right" style="margin-top:-40px;margin-right:5px"><i class="fa fa-download"></i>Download </a>
-            @*   <a href="javascript:void(0);" id="downloadLink" class="btn btn-wide btn-info pull-right" style="margin-top:-40px;margin-right:5px"><i class="fa fa-download"></i>Download </a>*@
-            @*<form id="uploadForm" enctype="multipart/form-data">
+            @if (Session["SubProductionOrderA"].ToString() != "0")
+            {
+                <a href="@Url.Action("downloadSheet", "ProductionOrder")" id="downloadLink" class="btn btn-wide btn-info pull-right" style="margin-top:-40px;margin-right:5px"><i class="fa fa-download"></i>Download </a>
+                @*   <a href="javascript:void(0);" id="downloadLink" class="btn btn-wide btn-info pull-right" style="margin-top:-40px;margin-right:5px"><i class="fa fa-download"></i>Download </a>*@
+                @*<form id="uploadForm" enctype="multipart/form-data">
+                <input type="file" id="fileInput" name="fileInput" />
+                <button type="submit">Upload</button>
+            </form>*@
+                <button type="button" class="btn btn-primary btn-info pull-right" style="margin-top:-40px;margin-right:5px" data-toggle="modal" data-target="#uploadModal">
+                    Upload Excel
+                </button>
+            }
+
+                <div class="panel">
+                    @using (Html.BeginForm("Save", "ProductionOrder", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        <div class="panel-content">
+                            <div class="row">
+                                <div class="form-group col-sm-2" hidden>
+                                    <label>INVID</label>
+                                    @Html.TextBoxFor(m => m.ProductionOrder.Id, new { @class = "form-control input-xs", @readonly = "readonly" })
+                                </div>
+
+                                <div class="form-group col-sm-2">
+                                    <label>Date</label>
+
+                                    @*@Html.TextBoxFor(m => m.ProductionOrder.curdate, new { @class = "form-control input-xs", id = "date", type = "Date", @Value = DateTime.Now.ToString("yyyy-MM-dd"), @readonly = "readonly" })*@
+                                    @Html.TextBoxFor(m => m.ProductionOrder.curdate, new { @class = "form-control input-xs", id = "date", type = "Date", @Value = Model.ProductionOrder.curdate.ToString("yyyy-MM-dd"), @readonly = "readonly" })
+                                </div>
+                                <div class="form-group col-sm-3">
+                                    <label>Select Customer</label>
+                                    @Html.DropDownListFor(m => m.ProductionOrder.customerid, new SelectList(Model.Cus_list, "customerid", "Name"), "Select Customer", htmlAttributes: new { @class = "chosen-select form-control ", required = "required", id = "supp" })
+                                </div>
+                                <div class="form-group col-sm-3">
+                                    <label>Select Region</label>
+                                    @Html.DropDownListFor(m => m.ProductionOrder.regionid, new SelectList(Model.Region_list, "Id", "Name"), "Select Region", htmlAttributes: new { @class = "chosen-select form-control", required = "required", id = "regionid" })
+                                </div>
+
+
+                                @*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadModal">
+                                Upload Excel
+                            </button>
+                            <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="uploadModalLabel">Upload Excel File</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form id="uploadForm" enctype="multipart/form-data">
+                                                <div class="form-group">
+                                                    <input type="file" id="fileInput" name="fileInput" class="form-control" />
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">Upload</button>
+                                            </form>
+
+                                                </div>
+                                    </div>
+                                </div>
+                            </div>*@
+                            </div>
+                            <div class="row">
+                                @*<div class="form-group col-sm-4">
+                                <label>Builty No</label>
+                                @Html.TextBoxFor(m => m.srsmQuery.builty, new { @class = "form-control input-xs" })
+                            </div>*@
+                                <div class="form-group col-sm-2">
+                                    <label>Promised Date</label>
+                                    @* @Html.TextBoxFor(m => m.ProductionOrder.Promiseddate, new { @class = "form-control input-xs", id = "prodate", type = "Date", @Value = DateTime.Now.ToString("yyyy-MM-dd")})*@
+                                    @Html.TextBoxFor(m => m.ProductionOrder.Promiseddate, new { @class = "form-control input-xs", id = "prodate", type = "Date", @Value = Model.ProductionOrder.Promiseddate.ToString("yyyy-MM-dd") })
+                                </div>
+                                <div class="form-group col-sm-2">
+                                    <a class="btn btn-wide btn-info pull-right" data-toggle="modal" data-target="#lg-modal" style="margin-top:25px;margin-left:-40px"><i class="fa fa-search-plus"></i>  Search Items</a>
+                                </div>
+                            </div>
+                            <hr id="eight" data-symbol="✂" style="margin-top:5px"><br />
+                            <div clas="row" style="margin-top:10px;">
+                                <div clas="col-md-12">
+                                    <div class="form-group col-sm-1" style="display:none">
+                                        <label>ID</label>
+                                        <input type="text" id="id" readonly class="form-control" />
+                                    </div>
+                                    <div class="form-group col-sm-3" style="margin-left:-20px">
+                                        <label>Item Name</label>
+                                        <input type="text" id="item_name" readonly class="form-control" />
+                                    </div>
+                                    @*<div class="form-group col-sm-1" style="margin-left: -20px; width: 130px">
+                                    <label>Packing</label>
+                                    <select id="packing" class="form-control" onChange="Action1(this.value)">
+                                        <option>-Select Packing-</option>
+                                        <option value="Dubbi">Dubbi</option>
+                                        <option value="Quarter">Quarter</option>
+                                        <option value="Drum">Drum</option>
+                                        <option value="Gallon">Gallon</option>
+                                    </select>
+                                </div>*@
+                                    <div class="form-group col-sm-1" style="margin-left: -20px; width: 150px">
+                                        <label>Dubbi </label>
+                                        <input type="text" id="dubbi" onKeyUp="tota();" value="0" class="form-control" />
+                                        @*<input hidden type="text" id="capdubbi"  value="0" class="form-control" />
+                                    <input hidden type="text" id="capquarter"  value="0" class="form-control" />
+                                    <input hidden type="text" id="capdrum"  value="0" class="form-control" />
+                                    <input hidden type="text" id="capgallon"  value="0" class="form-control" />*@
+
+                                    </div>
+
+                                    <div hidden class="form-group col-sm-1" style="margin-left: -20px; width: 150px">
+                                        <input hidden type="text" id="capdubbi" value="0" class="form-control" />
+
+                                        <input hidden type="text" id="capquarter" value="0" class="form-control" />
+                                        <input hidden type="text" id="capgallon" value="0" class="form-control" />
+                                        <input hidden type="text" id="capdrum" value="0" class="form-control" />
+                                    </div>
+
+
+
+                                    <div class="form-group col-sm-1" style="margin-left: -20px; width: 150px">
+                                        <label>Quarter</label>
+                                        <input type="text" id="quarter" onKeyUp="tota(); " value="0" class="form-control" />
+                                    </div>
+                                    <div class="form-group col-sm-1" style="margin-left: -20px; width: 150px">
+                                        <label>Gallon</label>
+                                        <input type="text" id="gallon" onKeyUp="tota(); " value="0" class="form-control" />
+                                    </div>
+                                    <div class="form-group col-sm-1" style="margin-left: -20px; width: 150px">
+                                        <label>Drum</label>
+                                        <input type="text" id="drum" onKeyUp="tota(); " value="0" class="form-control" />
+                                    </div>
+
+                                    <div class="form-group col-sm-1" style="margin-left:-20px;width:110px">
+                                        <label>Quantity</label>
+                                        <input type="text" id="totalqty" value="0" class="form-control" />
+
+                                    </div>
+
+
+
+                                    <div class="form-group col-sm-2" style="margin-top:10px">
+                                        <br />
+                                        <br />
+                                        <a class="btn btn-wide btn-warning pull-left" onclick='return add()' style="margin-right:-130px;width:25px;margin-top:-32px"> <i class="fa fa-plus"></i> Add</a> &nbsp;&nbsp;
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12" style="margin-top:-15px">
+                                    <div class="table-responsive">
+                                        <table id="invoiceItem" class="table table-bordered table-hover table-striped table-success">
+                                            <thead class="bordered-darkorange">
+                                                <tr style="background-color: #3498DB; color: white;border:1px solid white">
+                                                    <th>Action</th>
+                                                    <th>ID</th>
+                                                    <th>Product Name</th>
+                                                    <th>Dubbi</th>
+                                                    <th>Quarter</th>
+                                                    <th>Gallon</th>
+                                                    <th>Drum</th>
+
+                                                    <th>Quantity</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @if (Model.ProductionOrder.Id == 0) { }
+                                                else
+                                                {
+                                                    if (!Model.ProductionOrderDetaillist.Any())
+                                                    {
+                                                    }
+                                                    else
+                                                    {
+                                                        foreach (var lst in Model.ProductionOrderDetaillist)
+                                                        {
+                                                            <tr>
+                                                                <td style="width:80px !important"><a class="badge badge-xs x-danger b-rounded" onclick="return deleteRow(this)"><i class="fa fa-trash-o"></i></a></td>
+                                                                <td><input type="text" name="id[]" value="@lst.pid" required class="form-control" readonly autocomplete="off"></td>
+                                                                <td><input type="text" name="item_name[]" value="@lst.pname" readonly class="form-control" autocomplete="off"></td>
+                                                                <td><input type="text" name="dubbi[]" value="@lst.dubbi" readonly class="form-control" autocomplete="off"></td>
+                                                                <td><input type="text" name="quarter[]" value="@lst.quarter" readonly class="form-control" autocomplete="off"></td>
+                                                                <td><input type="text" name="gallon[]" value="@lst.gallon" readonly class="form-control" autocomplete="off"></td>
+                                                                <td><input type="text" name="drum[]" value="@lst.drum" readonly class="form-control" autocomplete="off"></td>
+                                                                <td><input type="text" name="totalqty[]" value="@lst.totalqty" readonly class="form-control" autocomplete="off"></td>
+
+                                                            </tr>
+                                                        }
+                                                    }
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+
+                                <div class="col-sm-12">
+                                    @if (Model.ProductionOrder.Id == 0)
+                                    {
+                                        if (Session["SubProductionOrderA"].ToString() != "0")
+                                        {
+                                            <button type="submit" onclick="return check_total()" class="btn btn-primary col-sm-4 col-sm-offset-4" style="margin-top: 10px; background-color: #3498DB !important; border: 1px solid #3498DB "><i class="fa fa-save"></i> &nbsp; Save Invoice</button>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (Session["SubProductionOrderU"].ToString() != "0")
+                                        {
+                                            <button type="submit" onclick="return check_total()" class="btn btn-primary col-sm-4 col-sm-offset-4" style="margin-top: 10px; background-color: #3498DB !important; border: 1px solid #3498DB "><i class="fa fa-save"></i> &nbsp; Update Invoice</button>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @*<form id="uploadForm" enctype="multipart/form-data">
                     <input type="file" id="fileInput" name="fileInput" />
                     <button type="submit">Upload</button>
                 </form>*@
-            <button type="button" class="btn btn-primary btn-info pull-right" style="margin-top:-40px;margin-right:5px" data-toggle="modal" data-target="#uploadModal">
-                Upload Excel
-            </button>
-
-            <div class="panel">
-                @using (Html.BeginForm("Save", "ProductionOrder", FormMethod.Post, new { enctype = "multipart/form-data" }))
-                {
-                    <div class="panel-content">
-                        <div class="row">
-                            <div class="form-group col-sm-2" hidden>
-                                <label>INVID</label>
-                                @Html.TextBoxFor(m => m.ProductionOrder.Id, new { @class = "form-control input-xs", @readonly = "readonly" })
-                            </div>
-
-                            <div class="form-group col-sm-2">
-                                <label>Date</label>
-
-                                @*@Html.TextBoxFor(m => m.ProductionOrder.curdate, new { @class = "form-control input-xs", id = "date", type = "Date", @Value = DateTime.Now.ToString("yyyy-MM-dd"), @readonly = "readonly" })*@
-                                @Html.TextBoxFor(m => m.ProductionOrder.curdate, new { @class = "form-control input-xs", id = "date", type = "Date", @Value = Model.ProductionOrder.curdate.ToString("yyyy-MM-dd"), @readonly = "readonly" })
-                            </div>
-                            <div class="form-group col-sm-3">
-                                <label>Select Customer</label>
-                                @Html.DropDownListFor(m => m.ProductionOrder.customerid, new SelectList(Model.Cus_list, "customerid", "Name"), "Select Customer", htmlAttributes: new { @class = "chosen-select form-control ", required = "required", id = "supp" })
-                            </div>
-                            <div class="form-group col-sm-3">
-                                <label>Select Region</label>
-                                @Html.DropDownListFor(m => m.ProductionOrder.regionid, new SelectList(Model.Region_list, "Id", "Name"), "Select Region", htmlAttributes: new { @class = "chosen-select form-control", required = "required", id = "regionid" })
-                            </div>
-
-
-                            @*<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadModal">
-                                    Upload Excel
-                                </button>
-                                <div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-labelledby="uploadModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="uploadModalLabel">Upload Excel File</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <form id="uploadForm" enctype="multipart/form-data">
-                                                    <div class="form-group">
-                                                        <input type="file" id="fileInput" name="fileInput" class="form-control" />
-                                                    </div>
-                                                    <button type="submit" class="btn btn-primary">Upload</button>
-                                                </form>
-
-                                                    </div>
-                                        </div>
-                                    </div>
-                                </div>*@
-                        </div>
-                        <div class="row">
-                            @*<div class="form-group col-sm-4">
-                                    <label>Builty No</label>
-                                    @Html.TextBoxFor(m => m.srsmQuery.builty, new { @class = "form-control input-xs" })
-                                </div>*@
-                            <div class="form-group col-sm-2">
-                                <label>Promised Date</label>
-                                @* @Html.TextBoxFor(m => m.ProductionOrder.Promiseddate, new { @class = "form-control input-xs", id = "prodate", type = "Date", @Value = DateTime.Now.ToString("yyyy-MM-dd")})*@
-                                @Html.TextBoxFor(m => m.ProductionOrder.Promiseddate, new { @class = "form-control input-xs", id = "prodate", type = "Date", @Value = Model.ProductionOrder.Promiseddate.ToString("yyyy-MM-dd") })
-                            </div>
-                            <div class="form-group col-sm-2">
-                                <a class="btn btn-wide btn-info pull-right" data-toggle="modal" data-target="#lg-modal" style="margin-top:25px;margin-left:-40px"><i class="fa fa-search-plus"></i>  Search Items</a>
-                            </div>
-                        </div>
-                        <hr id="eight" data-symbol="✂" style="margin-top:5px"><br />
-                        <div clas="row" style="margin-top:10px;">
-                            <div clas="col-md-12">
-                                <div class="form-group col-sm-1" style="display:none">
-                                    <label>ID</label>
-                                    <input type="text" id="id" readonly class="form-control" />
-                                </div>
-                                <div class="form-group col-sm-3" style="margin-left:-20px">
-                                    <label>Item Name</label>
-                                    <input type="text" id="item_name" readonly class="form-control" />
-                                </div>
-                                @*<div class="form-group col-sm-1" style="margin-left: -20px; width: 130px">
-                                        <label>Packing</label>
-                                        <select id="packing" class="form-control" onChange="Action1(this.value)">
-                                            <option>-Select Packing-</option>
-                                            <option value="Dubbi">Dubbi</option>
-                                            <option value="Quarter">Quarter</option>
-                                            <option value="Drum">Drum</option>
-                                            <option value="Gallon">Gallon</option>
-                                        </select>
-                                    </div>*@
-                                <div class="form-group col-sm-1" style="margin-left: -20px; width: 150px">
-                                    <label>Dubbi </label>
-                                    <input type="text" id="dubbi" onKeyUp="tota();" value="0" class="form-control" />
-                                    @*<input hidden type="text" id="capdubbi"  value="0" class="form-control" />
-                                        <input hidden type="text" id="capquarter"  value="0" class="form-control" />
-                                        <input hidden type="text" id="capdrum"  value="0" class="form-control" />
-                                        <input hidden type="text" id="capgallon"  value="0" class="form-control" />*@
-
-                                </div>
-
-                                <div hidden class="form-group col-sm-1" style="margin-left: -20px; width: 150px">
-                                    <input hidden type="text" id="capdubbi" value="0" class="form-control" />
-
-                                    <input hidden type="text" id="capquarter" value="0" class="form-control" />
-                                    <input hidden type="text" id="capgallon" value="0" class="form-control" />
-                                    <input hidden type="text" id="capdrum" value="0" class="form-control" />
-                                </div>
-
-
-
-                                <div class="form-group col-sm-1" style="margin-left: -20px; width: 150px">
-                                    <label>Quarter</label>
-                                    <input type="text" id="quarter" onKeyUp="tota(); " value="0" class="form-control" />
-                                </div>
-                                <div class="form-group col-sm-1" style="margin-left: -20px; width: 150px">
-                                    <label>Gallon</label>
-                                    <input type="text" id="gallon" onKeyUp="tota(); " value="0" class="form-control" />
-                                </div>
-                                <div class="form-group col-sm-1" style="margin-left: -20px; width: 150px">
-                                    <label>Drum</label>
-                                    <input type="text" id="drum" onKeyUp="tota(); " value="0" class="form-control" />
-                                </div>
-
-                                <div class="form-group col-sm-1" style="margin-left:-20px;width:110px">
-                                    <label>Quantity</label>
-                                    <input type="text" id="totalqty" value="0" class="form-control" />
-
-                                </div>
-
-
-
-                                <div class="form-group col-sm-2" style="margin-top:10px">
-                                    <br />
-                                    <br />
-                                    <a class="btn btn-wide btn-warning pull-left" onclick='return add()' style="margin-right:-130px;width:25px;margin-top:-32px"> <i class="fa fa-plus"></i> Add</a> &nbsp;&nbsp;
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-12" style="margin-top:-15px">
-                                <div class="table-responsive">
-                                    <table id="invoiceItem" class="table table-bordered table-hover table-striped table-success">
-                                        <thead class="bordered-darkorange">
-                                            <tr style="background-color: #3498DB; color: white;border:1px solid white">
-                                                <th>Action</th>
-                                                <th>ID</th>
-                                                <th>Product Name</th>
-                                                <th>Dubbi</th>
-                                                <th>Quarter</th>
-                                                <th>Gallon</th>
-                                                <th>Drum</th>
-
-                                                <th>Quantity</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @if (Model.ProductionOrder.Id == 0) { }
-                                            else
-                                            {
-                                                if (!Model.ProductionOrderDetaillist.Any())
-                                                {
-                                                }
-                                                else
-                                                {
-                                                    foreach (var lst in Model.ProductionOrderDetaillist)
-                                                    {
-                                                        <tr>
-                                                            <td style="width:80px !important"><a class="badge badge-xs x-danger b-rounded" onclick="return deleteRow(this)"><i class="fa fa-trash-o"></i></a></td>
-                                                            <td><input type="text" name="id[]" value="@lst.pid" required class="form-control" readonly autocomplete="off"></td>
-                                                            <td><input type="text" name="item_name[]" value="@lst.pname" readonly class="form-control" autocomplete="off"></td>
-                                                            <td><input type="text" name="dubbi[]" value="@lst.dubbi" readonly class="form-control" autocomplete="off"></td>
-                                                            <td><input type="text" name="quarter[]" value="@lst.quarter" readonly class="form-control" autocomplete="off"></td>
-                                                            <td><input type="text" name="gallon[]" value="@lst.gallon" readonly class="form-control" autocomplete="off"></td>
-                                                            <td><input type="text" name="drum[]" value="@lst.drum" readonly class="form-control" autocomplete="off"></td>
-                                                            <td><input type="text" name="totalqty[]" value="@lst.totalqty" readonly class="form-control" autocomplete="off"></td>
-
-                                                        </tr>
-                                                    }
-                                                }
-                                            }
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-
-                            <div class="col-sm-12">
-                                @if (Model.ProductionOrder.Id == 0)
-                                {
-
-                                    <button type="submit" onclick="return check_total()" class="btn btn-primary col-sm-4 col-sm-offset-4" style="margin-top: 10px; background-color: #3498DB !important; border: 1px solid #3498DB "><i class="fa fa-save"></i> &nbsp; Save Invoice</button>
-                                }
-                                else
-                                {
-                                    <button type="submit" onclick="return check_total()" class="btn btn-primary col-sm-4 col-sm-offset-4" style="margin-top: 10px; background-color: #3498DB !important; border: 1px solid #3498DB "><i class="fa fa-save"></i> &nbsp; Update Invoice</button>
-
-                                }
-                            </div>
-                        </div>
-                    </div>
-                }
-                @*<form id="uploadForm" enctype="multipart/form-data">
-                        <input type="file" id="fileInput" name="fileInput" />
-                        <button type="submit">Upload</button>
-                    </form>*@
+                </div>
             </div>
-        </div>
     </div>
 
     <div class="modal fade" id="lg-modal" aria-labelledby="modal-large-label" style="margin-top:-180px">

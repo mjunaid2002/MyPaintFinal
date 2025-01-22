@@ -30,11 +30,27 @@ namespace WebApplication1.Controllers
         // GET: SaleWctn
         public ActionResult Index()
         {
-            string strquery = " AND date ='" + DateTime.Now.ToString("yyyy-MM-dd") + "' order by OrderID";
+            string strquery = " AND date ='" + DateTime.Now.ToString("yyyy-MM-dd") + "' ";
             var StartDate = Convert.ToDateTime(Request["s_date"]).ToString("yyyy-MM-dd");
             var Enddate = Convert.ToDateTime(Request["e_date"]).ToString("yyyy-MM-dd");
             if (StartDate != null && Enddate != null && StartDate != "0001-01-01" && Enddate != "0001-01-01")
-                strquery = " AND date between '" + StartDate + "' and '" + Enddate + "' order by OrderID ";
+                strquery = " AND date between '" + StartDate + "' and '" + Enddate + "'  ";
+
+            var branchid = Request["branchid"];
+            var branch = Session["Branch"] as List<string>;
+            if (branchid == null && !branch.Contains("All"))
+            {
+                var branchids = Session["BranchId"] as List<int>;
+                strquery += " AND branchid IN (" + string.Join(",", branchids) + ")";
+            }
+            else if (!string.IsNullOrEmpty(branchid))
+            {
+                strquery += " and branchid = " + branchid;
+            }
+            strquery += " order by OrderID";
+
+            var Branch = _context.Database.SqlQuery<Branch>("SELECT id,name from Branch").ToList();
+            ViewBag.BranchList = Branch;
 
             var list = _context.Database.SqlQuery<SaleReturnQuery>("SELECT OrderID,date,custname,title,total,req_status from srsm where title='TSRINV'" + strquery).ToList();
             return View(list);
@@ -169,9 +185,10 @@ namespace WebApplication1.Controllers
             //var Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers where discount =0").ToList();
             var pro_listsss = _context.Database.SqlQuery<Products>("select ProductName,ProductID,UnitPrice,ReorderLevel,vattax,CategoryID,[desc],Active from Product where CategoryID in (select CategoryID from Categories where RawProductCheck=0)").ToList();
             var Region = _context.Database.SqlQuery<Region>("SELECT * from Region").ToList();
-
+            var Branch = _context.Database.SqlQuery<Branch>("SELECT id,name from Branch").ToList();
             var SaleInvVM = new SaleInvVM
             {
+                Branch_list = Branch,
                 Region_list = Region,
                 saleReturnQuery = saleReturnQuery,
                 pro_listsss = pro_listsss,
@@ -190,8 +207,8 @@ namespace WebApplication1.Controllers
                     "VALUES (" + tax_val[i] + ",0," + tax_amount[i] + ",0," + wht[i] + ",'TSRINV'," + i + "," + id[i] + ",'" + item_name[i] + "'," + sp[i] + "," + n_total[i] + "," + qty[i] + "," + disc_val[i] + "," + disc_value[i] + "," + saleReturnQuery.OrderID + ",'" + packing[i] + "'," + net[i] + "," + disc_amount[i] + ")");
             }
             saleReturnQuery.custname = _context.Database.SqlQuery<string>("select name from customers where customerid=" + saleReturnQuery.custid + "").FirstOrDefault();
-            _context.Database.ExecuteSqlCommand("INSERT INTO srsm (RegionId,gst,OrderID,empname,cargoid,custid,date,total,discount,wht,cargocharges,ntotal,custname,bal,note,pono,custntn,custst,title,time,req_status) " +
-                "VALUES (" + saleReturnQuery.RegionId + "," + saleReturnQuery.gst + "," + saleReturnQuery.OrderID + ",'0'," + saleReturnQuery.inctax + "," + saleReturnQuery.custid + ",'" + saleReturnQuery.date + "'," + saleReturnQuery.total + "," + saleReturnQuery.discount + "," + saleReturnQuery.wht + "," + saleReturnQuery.afterdisc + "," + saleReturnQuery.ntotal + ",'" + saleReturnQuery.custname + "',0,'" + saleReturnQuery.note + "','',0,0,'TSRINV',0,'Request')");
+            _context.Database.ExecuteSqlCommand("INSERT INTO srsm (BranchId,RegionId,gst,OrderID,empname,cargoid,custid,date,total,discount,wht,cargocharges,ntotal,custname,bal,note,pono,custntn,custst,title,time,req_status,cargo) " +
+                "VALUES (" + saleReturnQuery.BranchId + "," + saleReturnQuery.RegionId + "," + saleReturnQuery.gst + "," + saleReturnQuery.OrderID + ",'0'," + saleReturnQuery.inctax + "," + saleReturnQuery.custid + ",'" + saleReturnQuery.date + "'," + saleReturnQuery.total + "," + saleReturnQuery.discount + "," + saleReturnQuery.wht + "," + saleReturnQuery.afterdisc + "," + saleReturnQuery.ntotal + ",'" + saleReturnQuery.custname + "',0,'" + saleReturnQuery.note + "','',0,0,'TSRINV',0,'Request',0)");
 
 
 
@@ -200,8 +217,8 @@ namespace WebApplication1.Controllers
             _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransId + ",'" + saleReturnQuery.date.ToString("yyyy-MM-dd") + "','Supplier'," + accountno + ",0,'" + saleReturnQuery.ntotal + "'," + saleReturnQuery.OrderID + ",'TRSINV')");
             _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransId + ",'" + saleReturnQuery.date.ToString("yyyy-MM-dd") + "','Sales discount',5500003,0,'" + saleReturnQuery.discount + "'," + saleReturnQuery.OrderID + ",'TRSINV')");
             _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransId + ",'" + saleReturnQuery.date.ToString("yyyy-MM-dd") + "','Sales',4400001,'" + saleReturnQuery.total + "',0," + saleReturnQuery.OrderID + ",'TRSINV')");
-            _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransId + ",'" + saleReturnQuery.date.ToString("yyyy-MM-dd") + "','Advance tax payable',2100005,'" + saleReturnQuery.wht + "',0," + saleReturnQuery.OrderID + ",'TRSINV')");
-            _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransId + ",'" + saleReturnQuery.date.ToString("yyyy-MM-dd") + "','Sales tax payable',2100004,'" + saleReturnQuery.gst + "',0," + saleReturnQuery.OrderID + ",'TRSINV')");
+            _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransId + ",'" + saleReturnQuery.date.ToString("yyyy-MM-dd") + "','Sales tax payable',2100005,'" + saleReturnQuery.gst + "',0," + saleReturnQuery.OrderID + ",'TRSINV')");
+            _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransId + ",'" + saleReturnQuery.date.ToString("yyyy-MM-dd") + "','Advance tax payable',2100004,'" + saleReturnQuery.wht + "',0," + saleReturnQuery.OrderID + ",'TRSINV')");
 
 
             return RedirectToAction("Index");
@@ -243,10 +260,11 @@ namespace WebApplication1.Controllers
 
             //var Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers where discount =0").ToList();
             var pro_listsss = _context.Database.SqlQuery<Products>("select ProductName,ProductID,UnitPrice,ReorderLevel,vattax,CategoryID,[desc],Active from Product where CategoryID in (select CategoryID from Categories where RawProductCheck=0) ").ToList();
-
+            var Branch = _context.Database.SqlQuery<Branch>("SELECT id,name from Branch").ToList();
             var Region = _context.Database.SqlQuery<Region>("SELECT * from Region").ToList();
             var SaleInvVM = new SaleInvVM
             {
+                Branch_list = Branch,
                 Region_list = Region,
                 saleReturnQuery = saleReturnQuery,
                 saleReturnQueryDetail = saleReturnQueryDetail,
@@ -267,16 +285,16 @@ namespace WebApplication1.Controllers
                     "VALUES (" + tax_val[i] + ",0," + tax_amount[i] + ",0," + wht[i] + ",'TSRINV'," + i + "," + id[i] + ",'" + item_name[i] + "'," + sp[i] + "," + n_total[i] + "," + qty[i] + "," + disc_val[i] + "," + disc_value[i] + "," + saleReturnQuery.OrderID + ",'" + packing[i] + "'," + net[i] + "," + disc_amount[i] + ")");
             }
             saleReturnQuery.custname = _context.Database.SqlQuery<string>("select name from customers where customerid=" + saleReturnQuery.custid + "").FirstOrDefault();
-            _context.Database.ExecuteSqlCommand("INSERT INTO srsm (RegionId,gst,OrderID,empname,cargoid,custid,date,total,discount,wht,cargocharges,ntotal,custname,bal,note,pono,custntn,custst,title,time,req_status) " +
-                "VALUES (" + saleReturnQuery.RegionId + "," + saleReturnQuery.gst + "," + saleReturnQuery.OrderID + ",'0'," + saleReturnQuery.inctax + "," + saleReturnQuery.custid + ",'" + saleReturnQuery.date + "'," + saleReturnQuery.total + "," + saleReturnQuery.discount + "," + saleReturnQuery.wht + "," + saleReturnQuery.afterdisc + "," + saleReturnQuery.ntotal + ",'" + saleReturnQuery.custname + "',0,'" + saleReturnQuery.note + "','',0,0,'TSRINV',0,'Request')");
+            _context.Database.ExecuteSqlCommand("INSERT INTO srsm (BranchId,RegionId,gst,OrderID,empname,cargoid,custid,date,total,discount,wht,cargocharges,ntotal,custname,bal,note,pono,custntn,custst,title,time,req_status,cargo) " +
+                "VALUES (" + saleReturnQuery.BranchId + "," + saleReturnQuery.RegionId + "," + saleReturnQuery.gst + "," + saleReturnQuery.OrderID + ",'0'," + saleReturnQuery.inctax + "," + saleReturnQuery.custid + ",'" + saleReturnQuery.date + "'," + saleReturnQuery.total + "," + saleReturnQuery.discount + "," + saleReturnQuery.wht + "," + saleReturnQuery.afterdisc + "," + saleReturnQuery.ntotal + ",'" + saleReturnQuery.custname + "',0,'" + saleReturnQuery.note + "','',0,0,'TSRINV',0,'Request',0)");
 
             decimal accountno = _context.Database.SqlQuery<decimal>("select Top(1) accno from customers where customerid=" + saleReturnQuery.custid + "").FirstOrDefault();
             int TransId = _context.Database.SqlQuery<int>("select ISNULL(Max(TransId),0)+1 from TransactionDetails").FirstOrDefault();
             _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransId + ",'" + saleReturnQuery.date.ToString("yyyy-MM-dd") + "','Supplier'," + accountno + ",0,'" + saleReturnQuery.ntotal + "'," + saleReturnQuery.OrderID + ",'TRSINV')");
             _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransId + ",'" + saleReturnQuery.date.ToString("yyyy-MM-dd") + "','Sales discount',5500003,0,'" + saleReturnQuery.discount + "'," + saleReturnQuery.OrderID + ",'TRSINV')");
             _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransId + ",'" + saleReturnQuery.date.ToString("yyyy-MM-dd") + "','Sales',4400001,'" + saleReturnQuery.total + "',0," + saleReturnQuery.OrderID + ",'TRSINV')");
-            _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransId + ",'" + saleReturnQuery.date.ToString("yyyy-MM-dd") + "','Advance tax payable',2100005,'" + saleReturnQuery.wht + "',0," + saleReturnQuery.OrderID + ",'TRSINV')");
-            _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransId + ",'" + saleReturnQuery.date.ToString("yyyy-MM-dd") + "','Sales tax payable',2100004,'" + saleReturnQuery.gst + "',0," + saleReturnQuery.OrderID + ",'TRSINV')");
+            _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransId + ",'" + saleReturnQuery.date.ToString("yyyy-MM-dd") + "','Sales tax payable',2100005,'" + saleReturnQuery.gst + "',0," + saleReturnQuery.OrderID + ",'TRSINV')");
+            _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransId + ",'" + saleReturnQuery.date.ToString("yyyy-MM-dd") + "','Advance tax payable',2100004,'" + saleReturnQuery.wht + "',0," + saleReturnQuery.OrderID + ",'TRSINV')");
 
 
 

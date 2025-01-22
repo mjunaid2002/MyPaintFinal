@@ -38,7 +38,7 @@ namespace WebApplication2.Controllers
         public ActionResult Index()
         {
             return View();
-           }
+        }
             public ActionResult Index1(BusinessUnit BusinessUnits)
         {
             var Bunit = Convert.ToString(Session["BusinessUnit"]);

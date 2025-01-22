@@ -1,0 +1,175 @@
+﻿@model WebApplication1.QueryViewModel.SchemeVM
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    hr {
+        height: 1px;
+        background: black;
+        border: none;
+        outline: none;
+        margin: 3em 3em 5em;
+        position: relative;
+    }
+
+
+        hr#eight {
+            background: transparent;
+            border-bottom: 2px dashed #189279;
+            width: 100%;
+            margin: 0 auto;
+            &:before
+
+    {
+        top: 3px;
+        left: 0;
+        padding-right: 2em;
+    }
+    }
+</style>
+<script>
+    function add() {
+        
+        
+        var selObj = document.getElementById("Category");
+        var Category_id = selObj.options[selObj.selectedIndex].value;
+        var Category_name = selObj.options[selObj.selectedIndex].text;
+       
+
+        //alert(account_name);
+        if (Category_id == "" || Category_id == 0 || Category_id == "Select Category") {
+            alert("Please Select Category");
+        }
+        
+        else {
+            var htmlRows = '';
+            htmlRows += '<tr>';
+            //htmlRows += '<td style="width:80px !important"><a class="badge badge-xs x-danger b-rounded" onclick="return deleteRow(this)" ><i class="fa fa-trash-o"></i></a><a class="badge badge-xs x-warning b-rounded" onclick="return ShowEditModal(this)" ><i class="fa fa-pencil"></i></a></td>';
+            htmlRows += '<td style="width:80px !important"><a class="badge badge-xs x-danger b-rounded" onclick="return deleteRow(this)" ><i class="fa fa-trash-o"></i></a></td>';
+            htmlRows += '<td><input type="text"  name="Categoryname"  value="' + Category_name + '" readonly class="form-control" autocomplete="off"></td>';
+            htmlRows += '<td hidden><input type="text"   name="Categoryid"  value="' + Category_id + '" readonly class="form-control" autocomplete="off"></td>';
+          
+            $('#invoiceItem').append(htmlRows);
+
+
+            $('#Category').val('');
+            
+           
+           
+        }
+    }
+    function deleteRow(btn) {
+        if (confirm("Are you sure want to delete the row?"))
+            $(btn).closest("tr").remove();
+
+    }
+</script>
+
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i>New Scheme</a></li>
+
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b>New Scheme Register</b></h4>
+
+            <a href="@Url.Action("Index", "Scheme")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>   Scheme List</a>
+            <div class="panel">
+
+                <form asp-action="Create" method="post" enctype="multipart/form-data" onsubmit="return confirm('Are you sure you want to Continue ?');">
+                    <div class="panel-content">
+                        <div class="row">
+                            <div class="form-group col-sm-2">
+                                <label>Date</label>
+                                @Html.TextBoxFor(m => m.Scheme.date, new { @class = "form-control input-xs", id = "date", type = "Date", @Value = Model.Scheme.date.ToString("yyyy-MM-dd") })
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label>Name</label>
+                                @Html.TextBoxFor(m => m.Scheme.Name, new { @class = "form-control input-xs",@required= "Required" })
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label>Start Date</label>
+                                @Html.TextBoxFor(m => m.Scheme.startdate, new { @class = "form-control input-xs", id = "startdate", type = "Date", @Value = Model.Scheme.startdate.ToString("yyyy-MM-dd") })
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label>End Date</label>
+                                @Html.TextBoxFor(m => m.Scheme.enddate, new { @class = "form-control input-xs", id = "enddate", type = "Date", @Value = Model.Scheme.enddate.ToString("yyyy-MM-dd") })
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label>Active</label>
+                                
+                                <select class="chosen-select form-control" name="Scheme.status">
+                                    <option value="Active">Active</option>
+                                    <option value="Not Active">Not Active</option>
+                                </select>
+                              @*  @Html.TextBoxFor(m => m.Scheme.status, new { @class = "form-control input-xs", type = "checkbox" })*@
+
+                            </div>
+                           
+                           
+                        </div>
+
+                        <hr id="eight" data-symbol="✂" style="margin-top:5px"><br />
+                        <div clas="row" >
+                            <div clas="col-md-12">
+
+                                <div class="form-group col-sm-3" style="margin-left:-20px">
+                                    <label>Category </label>
+                                    <select class="chosen-select form-control" id="Category">
+                                        <option value=""> Select Category</option>
+                                        @foreach (var item in Model.Categorylist)
+                                        {
+                                            <option value="@item.CategoryID"> @item.CategoryName</option>
+                                        }
+                                    </select>
+                                   
+                                </div>
+                                <div form-group col-sm-3>
+                                    <a class="btn btn-wide btn-warning pull-left" onclick='return add()' style="width:25px;margin-top:25px;margin-left:25px"> <i class="fa fa-plus"></i> Add</a> &nbsp;&nbsp;
+
+                                </div>
+
+                              
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12" style="margin-top:15px">
+                                <div class="table-responsive">
+                                    <table id="invoiceItem" class="table table-bordered table-hover table-striped table-success">
+                                        <thead class="bordered-darkorange">
+                                            <tr style="background-color:#189279;color:white">
+                                                <th>Action</th>
+                                                <th>Catrgory</th>
+                                               
+
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            
+                            <div class="col-sm-12">
+                                <button type="submit" class="btn btn-primary col-sm-4 col-sm-offset-4" style="margin-top:10px"><i class="fa fa-save"></i> &nbsp; Save</button>
+                            </div>
+                        
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</div>

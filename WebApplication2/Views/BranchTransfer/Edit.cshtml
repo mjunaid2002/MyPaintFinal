@@ -1,0 +1,308 @@
+﻿@model WebApplication1.ViewModels.SaleInvVM
+@{
+    ViewData["Title"] = "Create";
+    var sr = 0;
+    var tot1 = 0;
+    var tot = 0;
+}
+
+<script>
+    function date() {
+        var d = new Date();
+
+        function twoDigitDate(d) {
+            return ((d.getDate()).toString().length == 1) ? "0" + (d.getDate()).toString() : (d.getDate()).toString();
+        };
+
+        function twoDigitMonth(d) {
+            return ((d.getMonth() + 1).toString().length == 1) ? "0" + (d.getMonth() + 1).toString() : (d.getMonth() + 1).toString();
+        };
+
+        var today_ISO_date = d.getFullYear() + "-" + twoDigitMonth(d) + "-" + twoDigitDate(d); // in yyyy-mm-dd format
+        document.getElementById('date').setAttribute("value", today_ISO_date);
+
+    }
+
+
+    $(document).ready(function () {
+        $("#searchable").on("click", ".btnSelect", function () {
+            var currentRow = $(this).closest("tr");
+
+            document.getElementById("id").value = currentRow.find("td:eq(0)").html();
+            document.getElementById("item_name").value = currentRow.find("td:eq(1)").html();
+        });
+    });
+    function add() {
+        //  alert("das");
+        var id = document.getElementById("id").value;
+        /*  var ToStore = document.getElementById("ToStore").value;*/
+        var item_name = document.getElementById("item_name").value;
+        var qty = document.getElementById("ctn").value;
+        var packing = document.getElementById("packing").value;
+
+
+        // alert(id);
+
+        if (id == "" || id == 0) {
+            //  alert("Please Select Item");
+        }
+        else if (qty == "" || qty == 0) {
+
+            // alert("Please Enter Quantity");
+        }
+        else {
+            var htmlRows = '';
+            htmlRows += '<tr>';
+            htmlRows += '<td style="width:80px !important"><a class="badge badge-xs x-danger b-rounded" onclick="return deleteRow(this)" ><i class="fa fa-trash-o"></i></a></td>';
+            htmlRows += '<td><input type="text"  name="id[]"  value="' + id + '" required class="form-control" readonly autocomplete="off"></td>';
+            htmlRows += '<td><input type="text"  name="item_name[]"  value="' + item_name + '" readonly class="form-control" autocomplete="off"></td>';
+            htmlRows += '<td><input type="text"  name="size[]"  value="' + packing + '"  readonly class="form-control" autocomplete="off"></td>';
+            htmlRows += '<td><input type="text"  name="qty[]"  value="' + qty + '"  readonly class="form-control" autocomplete="off"></td>';
+            htmlRows += '<td style="display:none">' + id + '</td>';
+            htmlRows += '<td style="display:none">' + item_name + '</td>';
+            htmlRows += '<td style="display:none">' + packing + '</td>';
+            htmlRows += '<td style="display:none">' + qty + '</td>';
+
+
+            $('#invoiceItem').append(htmlRows);
+
+            $('#id').val('');
+            $('#item_name').val('');
+            $('#ctn').val('0');
+            $('#packing').val('-Select Packing-');
+
+        }
+    }
+    function deleteRow(btn) {
+        if (confirm("Are you sure want to delete the row?"))
+            $(btn).closest("tr").remove();
+    }
+
+</script>
+
+
+<style>
+    hr {
+        height: 1px;
+        background: black;
+        border: none;
+        outline: none;
+        margin: 3em 3em 5em;
+        position: relative;
+    }
+
+
+        hr#eight {
+            background: transparent;
+            border-bottom: 2px dashed #189279;
+            width: 100%;
+            margin: 0 auto;
+            &:before
+
+    {
+        top: 3px;
+        left: 0;
+        padding-right: 2em;
+    }
+    }
+</style>
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-print" aria-hidden="true"></i>Branch Transfer</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="section-subtitle"><b>Branch Transfer</b></h4>
+
+            <a href="@Url.Action("Index", "BranchTransfer")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  List</a>
+            <div class="panel">
+                @*<form asp-action="Create" id="invoice-form" method="post" enctype="multipart/form-data" onsubmit="return confirm('Are you sure you want to Continue ?');">*@
+                @using (Html.BeginForm("Update", "BranchTransfer", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <div class="panel-content">
+                        <div class="row">
+                            <div class="form-group col-sm-2">
+                                <label>INVID</label>
+                                @Html.TextBoxFor(m => m.BranchTransfer.invid, new { @class = "form-control input-xs", @readonly = "readonly" })
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label>Date</label>
+                                @Html.TextBoxFor(m => m.BranchTransfer.date, new { @class = "form-control input-xs", id = "date", type = "Date", @Value = DateTime.Now.ToString("yyyy-MM-dd"), @readonly = "readonly" })
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label>From </label>
+                                @Html.DropDownListFor(m => m.BranchTransfer.Frombranch, new SelectList(Model.Branch_list, "id", "name"), "Select Branch", htmlAttributes: new { @class = "chosen-select form-control", @required = "true" })
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label>TO</label>
+                                @Html.DropDownListFor(m => m.BranchTransfer.Tobranch, new SelectList(Model.Branch_list, "id", "name"), "Select Branch", htmlAttributes: new { @class = "chosen-select form-control", @required = "true" })
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label>Status</label>
+                                <select id="staus" name="BranchTransfer.status" class="form-control">
+                                     <option value="Pending" @(Model.BranchTransfer.status == "Pending" ? "selected" : "")>Pending</option>
+                                     <option value="Received" @(Model.BranchTransfer.status == "Received" ? "selected" : "")>Received</option>
+                                </select>
+                            </div>
+                        
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-8">
+                                <label>Detail</label>
+                                @Html.TextAreaFor(m => m.BranchTransfer.note, new { @class = "form-control input-xs", style = " rows=2, columns=40", id = "Address" })
+                            </div>
+                        </div>
+                        <hr id="eight" data-symbol="✂" style="margin-top:5px"><br />
+                        <div clas="row" style="margin-top:10px;">
+                            <div clas="col-md-12">
+                                <div class="form-group col-sm-1">
+                                    <a class="btn  btn-info pull-right" data-toggle="modal" data-target="#lg-modal" style="margin-top:25px;"><i class="fa fa-search-plus"></i></a>
+                                </div>
+
+                                <div class="form-group col-sm-1">
+                                    <label>ID</label>
+                                    <input type="text" id="id" readonly class="form-control" />
+                                </div>
+                                <div class="form-group col-sm-2" style="margin-left:-20px">
+                                    <label>Item Name</label>
+                                    <input type="text" id="item_name" readonly class="form-control" />
+                                </div>
+                                <div class="form-group col-sm-1" style="margin-left:-20px;width:150px">
+                                    <label>Packing</label>
+                                    <select id="packing" class="form-control">
+                                        <option>-Select Packing-</option>
+                                        <option value="Dubbi">Dubbi</option>
+                                        <option value="Quarter">Quarter</option>
+                                        <option value="Drum">Drum</option>
+                                        <option value="Gallon">Gallon</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-sm-1" style="margin-left:-20px;width:180px">
+                                    <label>Qty</label>
+                                    <input type="number" id="ctn" value="0" class="form-control" />
+                                </div>
+
+
+                                <div class="form-group col-sm-1" style="margin-top:10px">
+                                    <br />
+                                    <br />
+                                    <a class="btn btn-warning pull-left" onclick='return add()' style="margin-right:-130px;width:15px;margin-top:-32px;min-width:70px"> <i class="fa fa-plus"></i> Add</a> &nbsp;&nbsp;
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12" style="margin-top:-15px">
+                                <div class="table-responsive">
+                                    <table id="invoiceItem" class="table table-bordered table-hover table-striped table-success">
+                                        <thead class="bordered-darkorange">
+                                            <tr style="background-color: #3498DB; color: white;border:1px solid white">
+                                                <th>Action</th>
+
+                                                <th>ID</th>
+                                                <th>Product Name</th>
+
+                                                <th>Packing</th>
+                                                <th>Qty</th>
+                                                <th>Received-Qty</th>
+
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (Model.BranchTransferDetailList.Any() == null)
+                                            {
+
+                                            }
+                                            else
+                                            {
+                                                foreach (var list in Model.BranchTransferDetailList)
+                                                {
+                                                    <tr>
+                                                        <td style="width:80px !important"><a class="badge badge-xs x-danger b-rounded" onclick="return deleteRow(this)"><i class="fa fa-trash-o"></i></a></td>
+                                                        <td><input type="text" name="id[]" value="@list.pid" required class="form-control" readonly autocomplete="off"></td>
+                                                        <td><input type="text" name="item_name[]" value="@list.pname" readonly class="form-control" autocomplete="off"></td>
+                                                        <td><input type="text" name="size[]" value="@list.size" readonly class="form-control" autocomplete="off"></td>
+                                                        <td><input type="text" name="qty[]" value="@list.qty" readonly class="form-control" autocomplete="off"></td>
+                                                        <td><input type="text" name="rqty[]" value="@list.rqty"  class="form-control" autocomplete="off"></td>
+                                                        <td style="display:none">@list.pid</td>
+                                                        <td style="display:none">@list.pname</td>
+                                                        <td style="display:none">@list.size</td>
+                                                        <td style="display:none">@list.qty</td>
+                                                        <td style="display:none">@list.rqty</td>
+
+                                                    </tr>
+                                                }
+
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <button type="submit" class="btn btn-primary col-sm-4 col-sm-offset-4" style="margin-top: 10px; background-color: #3498DB !important; border: 1px solid #3498DB "><i class="fa fa-save"></i> &nbsp; Update </button>
+                            </div>
+                            @if (Session["SubFinishedTransferU"].ToString() != "0")
+                            {
+
+                            }
+                        </div>
+
+                    </div>
+                }
+                @*</form>*@
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="lg-modal" aria-labelledby="modal-large-label" style="margin-top:-180px">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header state modal-primary" style="background-color: #3498DB !important">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modal-large-label">Product Details</h4>
+                </div>
+                <div class="modal-body">
+                    <div style="width: 100%; height:480px;overflow-y: scroll;">
+                        <table class="table table-bordered table-hover table-striped table-success" id="searchable">
+                            <thead class="bordered-darkorange">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Product Name</th>
+                                    <th>Action</th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody class="abc" id="myTable">
+                                @foreach (var item in Model.pro_listsss)
+                                {
+                                    <tr>
+                                        <td>@item.ProductID</td>
+                                        <td>@item.ProductName</td>
+                                        <td><button class="btnSelect btn btn-danger" data-dismiss="modal"><i class="fa fa-check"></i></button></td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th style="width:60px"><input type="text" placeholder="Search Here" name="search_browser" class="form-control input-sm" style="width:80px"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm" style="width:100px"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                </tr>
+                            </tfoot>
+                        </table>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

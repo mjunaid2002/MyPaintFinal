@@ -8,10 +8,18 @@ namespace WebApplication1.ViewModels
 {
     public class SaleInvVM
     {
+        public IEnumerable<Scheme> Scheme_list { get; set; }
+        public OpeningStockBranch OpeningStockBranch { get; set; }
+        public IEnumerable<OpeningStockBranch> OpeningStockBranchList { get; set; }
         public IEnumerable<Region> Region_list { get; set; }
+        public IEnumerable<Branch> Branch_list { get; set; }
         public IEnumerable<ProductionOrder> ProductionOrderlist { get; set; }
         public IEnumerable<FinishTransferM> FinishTransferlist { get; set; }
         public IEnumerable<FinishTransferDetail> FinishTransferDetailList { get; set; }
+        public BranchTransferM BranchTransfer { get; set; }
+        public IEnumerable<BranchTransferM> BranchTransferList { get; set; }
+        public BranchTransferDetail BranchTransferDetail { get; set; }
+        public IEnumerable<BranchTransferDetail> BranchTransferDetailList { get; set; }
         public ProductionOrder ProductionOrder { get; set; }
         public FinishTransferM FinishTransfer { get; set; }
         public FinishTransferDetail FinishTransferDetail { get; set; }

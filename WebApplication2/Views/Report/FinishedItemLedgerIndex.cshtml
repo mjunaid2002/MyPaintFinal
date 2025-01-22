@@ -4,6 +4,7 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var regions = ViewBag.Region as List<WebApplication1.QueryViewModel.Region>;
+    var Branch = ViewBag.Branch as List<WebApplication1.QueryViewModel.Branch>;
 }
 <div class="content">
     <div class="content-header">
@@ -18,7 +19,7 @@
     {
         <div class="panel">
             <div class="panel-content">
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label>Select Item</label>
                     <select name="item" class="chosen-select form-control" required>
                         <option value="">Select Item</option>
@@ -28,7 +29,7 @@
                         }
                     </select>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label>Size</label>
                     <select name="itemsize" class="chosen-select form-control" required>
                         <option value="">Select Size</option>
@@ -40,9 +41,20 @@
                 </div>
                 <div class="form-group col-sm-2">
                     <label>Select Region</label>
-                    <select name="region" class="form-control">
-                        <option value="0">Select Region</option>
+                    <select name="region" class="form-control" required>
+                        <option value="">Select Region</option>
                         @foreach (var list in regions)
+                        {
+
+                            <option value="@list.id">@list.name</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group col-sm-2">
+                    <label>Select Branch</label>
+                    <select name="branch" class="form-control" required>
+                        <option value="">Select Branch</option>
+                        @foreach (var list in Branch)
                         {
 
                             <option value="@list.id">@list.name</option>

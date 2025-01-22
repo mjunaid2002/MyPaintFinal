@@ -117,6 +117,14 @@
                             ]
                         },
                         {
+                            id: 1011, text: "Region", spriteCssClass: "html", items: [
+                                { id: 1011001, text: "Add", spriteCssClass: "html" },
+                                { id: 1011002, text: "Delete", spriteCssClass: "html" },
+                                { id: 1011003, text: "View", spriteCssClass: "html" },
+                                { id: 1011004, text: "Update", spriteCssClass: "html" }
+                            ]
+                        },
+                        {
                             id: 1004, text: "Raw Product", spriteCssClass: "html", items: [
                                 { id: 1004001, text: "Add", spriteCssClass: "html" },
                                 { id: 1004002, text: "Delete", spriteCssClass: "html" },
@@ -130,6 +138,22 @@
                                 { id: 1005002, text: "Delete", spriteCssClass: "html" },
                                 { id: 1005003, text: "View", spriteCssClass: "html" },
                                 { id: 1005004, text: "Update", spriteCssClass: "html" }
+                            ]
+                        },
+                        {
+                            id: 1012, text: "Finished Transfer", spriteCssClass: "html", items: [
+                                { id: 1012001, text: "Add", spriteCssClass: "html" },
+                                { id: 1012002, text: "Delete", spriteCssClass: "html" },
+                                { id: 1012003, text: "View", spriteCssClass: "html" },
+                                { id: 1012004, text: "Update", spriteCssClass: "html" }
+                            ]
+                        },
+                        {
+                            id: 1013, text: "Employee Department", spriteCssClass: "html", items: [
+                                { id: 1013001, text: "Add", spriteCssClass: "html" },
+                                { id: 1013002, text: "Delete", spriteCssClass: "html" },
+                                { id: 1013003, text: "View", spriteCssClass: "html" },
+                                { id: 1013004, text: "Update", spriteCssClass: "html" }
                             ]
                         },
                         {
@@ -172,6 +196,22 @@
                                 { id: 1009002, text: "Delete", spriteCssClass: "html" },
                                 { id: 1009003, text: "View", spriteCssClass: "html" },
                                 { id: 1009004, text: "Update", spriteCssClass: "html" }
+                            ]
+                        },
+                        {
+                            id: 1014, text: "Product Pricing Region", spriteCssClass: "html", items: [
+                                { id: 1014001, text: "Add", spriteCssClass: "html" },
+                                { id: 1014002, text: "Delete", spriteCssClass: "html" },
+                                { id: 1014003, text: "View", spriteCssClass: "html" },
+                                { id: 1014004, text: "Update", spriteCssClass: "html" }
+                            ]
+                        },
+                        {
+                            id: 1015, text: "Product Finished Region", spriteCssClass: "html", items: [
+                                { id: 1015001, text: "Add", spriteCssClass: "html" },
+                                { id: 1015002, text: "Delete", spriteCssClass: "html" },
+                                { id: 1015003, text: "View", spriteCssClass: "html" },
+                                { id: 1015004, text: "Update", spriteCssClass: "html" }
                             ]
                         }
                     ]
@@ -392,12 +432,48 @@
                     id: 9, text: "Customer Item Discount", expanded: true, spriteCssClass: "html"
                 },
                 {
+                    id: 14, text: "Production Order", expanded: true, spriteCssClass: "folder", items: [
+                        {
+                            id: 1401, text: "Production Order", spriteCssClass: "html", items: [
+                                { id: 1401001, text: "Add", spriteCssClass: "html" },
+                                { id: 1401002, text: "Delete", spriteCssClass: "html" },
+                                { id: 1401003, text: "View", spriteCssClass: "html" },
+                                { id: 1401004, text: "Update", spriteCssClass: "html" },
+                                { id: 1401005, text: "Dispatch", spriteCssClass: "html" },
+                                { id: 1401006, text: "Production", spriteCssClass: "html" }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    id: 15, text: "Stock Distribution", expanded: true, spriteCssClass: "folder", items: [
+                        {
+                            id: 1501, text: "Stock Distribution", spriteCssClass: "html", items: [
+                                { id: 1501001, text: "Add", spriteCssClass: "html" },
+                                { id: 1501002, text: "Delete", spriteCssClass: "html" },
+                                { id: 1501003, text: "View", spriteCssClass: "html" },
+                                { id: 1501004, text: "Update", spriteCssClass: "html" }
+                            ]
+                        }
+                    ]
+                },
+                {
                     id: 10, text: "Reports", expanded: true, spriteCssClass: "folder", items: [
                         {
-                            id: 10001, text: "Raw Material", spriteCssClass: "html"
+                            id: 10001, text: "Raw Material", spriteCssClass: "html", items: [
+                                { id: 10001001, text: "Item Ledger", spriteCssClass: "html" },
+                                { id: 10001002, text: "Stock Report", spriteCssClass: "html" },
+                                { id: 10001003, text: "Purchase Order", spriteCssClass: "html" }
+                            ]
                         },
                         {
-                            id: 10002, text: "Finished Items", spriteCssClass: "html"
+                            id: 10002, text: "Finished Items", spriteCssClass: "html", items: [
+                                { id: 10002001, text: "Packing Item Ledger", spriteCssClass: "html" },
+                                { id: 10002002, text: "Finished Item Ledger", spriteCssClass: "html" },
+                                { id: 10002003, text: "Finished Goods Report", spriteCssClass: "html" },
+                                { id: 10002004, text: "Goods Production Order", spriteCssClass: "html" },
+                                { id: 10002005, text: "Filling Complete Report", spriteCssClass: "html" }
+                            ]
                         },
                         {
                             id: 10003, text: "Batch Balance", spriteCssClass: "html"
@@ -412,8 +488,15 @@
                             id: 10006, text: "Batch Sheet Summery", spriteCssClass: "html"
                         },
                         {
+                            id: 10008, text: "Batch Sheet Summery Cost Visible", spriteCssClass: "html"
+                        },
+                        {
                             id: 10007, text: "Lab Sheet Summery", spriteCssClass: "html"
+                        },
+                        {
+                            id: 10009, text: "Filling Report", spriteCssClass: "html"
                         }
+
                     ]
                 }
                 ,

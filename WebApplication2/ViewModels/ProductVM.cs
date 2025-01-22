@@ -10,7 +10,7 @@ namespace WebApplication1.ViewModels
     public class ProductVM
     {
         public Product Product { get; set; }
-        public Products products  { get; set; }
+         public Products products  { get; set; }
         public Categories categories { get; set; }
         public Attendance attendance { get; set; }
         public IEnumerable<Products> pro_list { get; set; }
@@ -30,6 +30,7 @@ namespace WebApplication1.ViewModels
         public ProductFinishedRegion ProductFinishedRegion { get; set; }
         public ProductPricingRegion ProductPricingRegion { get; set; }
         public IEnumerable<QueryViewModel.Region> Region_list { get; set; }
+        public IEnumerable<QueryViewModel.Branch> branch_list { get; set; }
         public IEnumerable<ProductPricingRegion> ProductPricingRegion_list { get; set; }
     
     }

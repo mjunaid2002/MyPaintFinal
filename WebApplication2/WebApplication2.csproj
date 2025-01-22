@@ -225,6 +225,9 @@
     <Compile Include="Controllers\BankPaymentController.cs" />
     <Compile Include="Controllers\BankReceiptController.cs" />
     <Compile Include="Controllers\BatchMasterController.cs" />
+    <Compile Include="Controllers\BeltAreaController.cs" />
+    <Compile Include="Controllers\BranchController.cs" />
+    <Compile Include="Controllers\BranchTransferController.cs" />
     <Compile Include="Controllers\Emp_DepartmentController.cs" />
     <Compile Include="Controllers\FinishTransferController.cs" />
     <Compile Include="Controllers\LabEntries.cs" />
@@ -240,6 +243,7 @@
     <Compile Include="Controllers\RegionController.cs" />
     <Compile Include="Controllers\ReportDocument.cs" />
     <Compile Include="Controllers\SaleInvoiceNew.cs" />
+    <Compile Include="Controllers\SchemeController.cs" />
     <Compile Include="Controllers\StockDistributionController.cs" />
     <Compile Include="Controllers\StockInwardController.cs" />
     <Compile Include="Controllers\WHTSaleInvoice.cs" />
@@ -3970,6 +3974,25 @@
     <Content Include="Views\ProductionOrder\reportproduction.cshtml" />
     <Content Include="Views\LabEntries\GetLabCount.cshtml" />
     <Content Include="Views\LabEntries\Indexstatus.cshtml" />
+    <Content Include="Views\CustomerDiscount\CreateBulk.cshtml" />
+    <Content Include="Views\BeltArea\Index.cshtml" />
+    <Content Include="Views\BeltArea\Create.cshtml" />
+    <Content Include="Views\BeltArea\Edit.cshtml" />
+    <Content Include="Views\Scheme\Index.cshtml" />
+    <Content Include="Views\Scheme\Create.cshtml" />
+    <Content Include="Views\Scheme\Edit.cshtml" />
+    <Content Include="Views\Report\SaleCommIndex.cshtml" />
+    <Content Include="Views\Report\SaleCommSearch.cshtml" />
+    <Content Include="Views\Branch\Index.cshtml" />
+    <Content Include="Views\Branch\Create.cshtml" />
+    <Content Include="Views\Branch\Edit.cshtml" />
+    <Content Include="Views\BranchTransfer\Index.cshtml" />
+    <Content Include="Views\BranchTransfer\Create.cshtml" />
+    <Content Include="Views\BranchTransfer\Edit.cshtml" />
+    <Content Include="Views\BranchTransfer\PrintInvoice.cshtml" />
+    <Content Include="Views\BranchTransfer\BranchStockIndex.cshtml" />
+    <Content Include="Views\BranchTransfer\BranchStockCreate1.cshtml" />
+    <Content Include="Views\BranchTransfer\BranchOpeningStockCreate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

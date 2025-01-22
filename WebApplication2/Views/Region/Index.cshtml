@@ -20,7 +20,10 @@
     <div class="row">
         <div class="col-sm-12">
             <h4 class="section-subtitle"><b> Region List</b></h4>
-            <a href="@Url.Action("Create", "Region")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  Creat New</a>
+            @if (Session["SubRegionA"].ToString() != "0")
+            {
+                <a href="@Url.Action("Create", "Region")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  Creat New</a>
+            }
             <div class="panel">
                 <div class="panel-content">
                     <div class="table-responsive">
@@ -41,8 +44,14 @@
                                         <td>@item.name</td>
 
                                         <td>
-                                            <a href="@Url.Action("Edit", new { ID= item.id } )" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="btn btn-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
-                                            <a href="@Url.Action("Delete", new { ID= item.id } )" new { onclick="return confirm('Are you sure you want to delete this record?');" class="btn btn-danger shiny input-xs"><i class="fa fa-trash-o"></i></a>
+                                            @if (Session["SubRegionU"].ToString() != "0")
+                                            {
+                                                <a href="@Url.Action("Edit", new { ID = item.id })" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="btn btn-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
+                                            }
+                                            @if (Session["SubRegionD"].ToString() != "0")
+                                            {
+                                                <a href="@Url.Action("Delete", new { ID = item.id })" new { onclick="return confirm('Are you sure you want to delete this record?');" class="btn btn-danger shiny input-xs"><i class="fa fa-trash-o"></i></a>
+                                            }
                                         </td>
                                     </tr>
                                 }

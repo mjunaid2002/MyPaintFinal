@@ -34,7 +34,10 @@
                                     </div>
                                     
                                     <div class="col-sm-12">
-                                        <button type="submit" class="btn btn-primary" style="margin-top:10px"><i class="fa fa-save"></i> Save</button>
+                                        @if (Session["SubEmployeeDepartmentA"].ToString() != "0")
+                                        {
+                                            <button type="submit" class="btn btn-primary" style="margin-top:10px"><i class="fa fa-save"></i> Save</button>
+                                        }
                                     </div>
                                 </div>
                             </form>

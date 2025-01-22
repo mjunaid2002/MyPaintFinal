@@ -31,7 +31,7 @@
                         <label>End Date </label>
                         <input type="date" name="e_date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <label>Select Customer</label>
                         <select name="cus_id" class="chosen-select form-control">
                             <option value="0">Select Customer</option>
@@ -41,13 +41,23 @@
                             }
                         </select>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-2">
                         <label>Select Region</label>
                         <select name="reg_id" class="chosen-select form-control">
                             <option value="0">Select Region</option>
                             @foreach (var item in Model.Region_list)
                             {
                                 <option value="@item.id">@item.name</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-2">
+                        <label>Select Branch</label>
+                        <select id="branchid" name="branchid" class="form-control">
+                            <option value="0">Select Branch</option>
+                            @foreach (var branch in Model.Branch_list)
+                            {
+                                <option value="@branch.id">@branch.name</option>
                             }
                         </select>
                     </div>

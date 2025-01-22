@@ -30,12 +30,25 @@ namespace WebApplication1.Controllers
         // GET: SaleWctn
         public ActionResult Index()
         {
-            string strquery = " AND date ='" + DateTime.Now.ToString("yyyy-MM-dd") + "' order by OrderID";
+            string strquery = " AND date ='" + DateTime.Now.ToString("yyyy-MM-dd") + "' ";
             var StartDate = Convert.ToDateTime(Request["s_date"]).ToString("yyyy-MM-dd");
             var Enddate = Convert.ToDateTime(Request["e_date"]).ToString("yyyy-MM-dd");
             if (StartDate != null && Enddate != null && StartDate != "0001-01-01" && Enddate != "0001-01-01")
-                strquery = " AND date between '" + StartDate + "' and '" + Enddate + "' order by OrderID ";
-
+                strquery = " AND date between '" + StartDate + "' and '" + Enddate + "' ";
+            var branchid = Request["branchid"];
+            var branch = Session["Branch"] as List<string>;
+            if (branchid == null && !branch.Contains("All"))
+            {
+                var branchids = Session["BranchId"] as List<int>;
+               strquery += " AND branchid IN (" + string.Join(",", branchids) + ")";
+            }
+            else if (!string.IsNullOrEmpty(branchid))
+            {
+                strquery += " and branchid = " + branchid;
+            }
+            strquery += " order by OrderID";
+            var Branch = _context.Database.SqlQuery<Branch>("SELECT id,name from Branch").ToList();
+            ViewBag.BranchList = Branch;
             var list = _context.Database.SqlQuery<SaleReturnQuery>("SELECT OrderID,date,custname,title,total,req_status  from srsm where title='SRINV'" + strquery).ToList();
             return View(list);
         }
@@ -168,9 +181,11 @@ namespace WebApplication1.Controllers
             //var Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers where discount =0").ToList();
             var pro_listsss = _context.Database.SqlQuery<Products>("select ProductName,ProductID,UnitPrice,ReorderLevel,vattax,CategoryID,[desc],Active from Product where CategoryID in (select CategoryID from Categories) ").ToList();
             var Region = _context.Database.SqlQuery<Region>("SELECT * from Region").ToList();
+            var Branch = _context.Database.SqlQuery<Branch>("SELECT id,name from Branch").ToList();
 
             var SaleInvVM = new SaleInvVM
             {
+                Branch_list = Branch,
                 Region_list = Region,
                 saleReturnQuery = saleReturnQuery,
                 pro_listsss = pro_listsss,
@@ -190,8 +205,8 @@ namespace WebApplication1.Controllers
                     "VALUES ("+ disc_amount[i] + ",0,0,0,0,0,'SRINV'," + i + "," + id[i] + ",'" + item_name[i] + "',"+sp[i]+","+ n_total[i] + ","+qty[i]+","+disc_val[i]+","+ total_after[i]+","+ saleReturnQuery.OrderID+",'"+ packing[i] + "'," + n_total[i] + ")");
             }
             saleReturnQuery.custname = _context.Database.SqlQuery<string>("select name from customers where customerid="+ saleReturnQuery.custid+"").FirstOrDefault();
-            _context.Database.ExecuteSqlCommand("INSERT INTO srsm (RegionId,OrderID,empname,cargoid,custid,date,total,gst,discount,wht,cargocharges,ntotal,custname,bal,note,pono,custntn,custst,title,time,req_status) " +
-                "VALUES (" + saleReturnQuery.RegionId + "," + saleReturnQuery.OrderID + ",'0','" + saleReturnQuery.cargoid + "'," + saleReturnQuery.custid + ",'" + saleReturnQuery.date + "'," + saleReturnQuery.total+",0,"+ saleReturnQuery.discount+",0,0,"+ saleReturnQuery.ntotal + ",'"+ saleReturnQuery.custname + "',0,'"+ saleReturnQuery.note + "','',0,0,'SRINV',0,'Request')");
+            _context.Database.ExecuteSqlCommand("INSERT INTO srsm (BranchId,RegionId,OrderID,empname,cargoid,custid,date,total,gst,discount,wht,cargocharges,ntotal,custname,bal,note,pono,custntn,custst,title,time,req_status) " +
+                "VALUES (" + saleReturnQuery.BranchId + "," + saleReturnQuery.RegionId + "," + saleReturnQuery.OrderID + ",'0','" + saleReturnQuery.cargoid + "'," + saleReturnQuery.custid + ",'" + saleReturnQuery.date + "'," + saleReturnQuery.total+",0,"+ saleReturnQuery.discount+",0,0,"+ saleReturnQuery.ntotal + ",'"+ saleReturnQuery.custname + "',0,'"+ saleReturnQuery.note + "','',0,0,'SRINV',0,'Request')");
 
             decimal accountno = _context.Database.SqlQuery<decimal>("select Top(1) accno from customers where customerid=" + saleReturnQuery.custid + "").FirstOrDefault();
             int TransId = _context.Database.SqlQuery<int>("select ISNULL(Max(TransId),0)+1 from TransactionDetails").FirstOrDefault();
@@ -234,16 +249,18 @@ namespace WebApplication1.Controllers
 
         public ActionResult Edit(int? ID)
         {
-            var saleReturnQuery = _context.Database.SqlQuery<SaleReturnQuery>("select * from srsm where OrderID =" + ID + " and title='SRINV'").SingleOrDefault();
+            var saleReturnQuery = _context.Database.SqlQuery<SaleReturnQuery>("select OrderID,custid, date,BranchId,RegionId, total, gst, discount, wht,ntotal,note,req_status from srsm where OrderID =" + ID + " and title='SRINV'").SingleOrDefault();
             var saleReturnQueryDetail = _context.Database.SqlQuery<SaleReturnDetailQuery>("select * from srsdetail where OrderID =" + ID + " and Status='SRINV'").ToList();
             var Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers ").ToList();
 
             //var Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers where discount =0").ToList();
             var pro_listsss = _context.Database.SqlQuery<Products>("select ProductName,ProductID,UnitPrice,ReorderLevel,vattax,CategoryID,[desc],Active from Product where CategoryID in (select CategoryID from Categories)").ToList();
             var Region = _context.Database.SqlQuery<Region>("SELECT * from Region").ToList();
+            var Branch = _context.Database.SqlQuery<Branch>("SELECT id,name from Branch").ToList();
 
             var SaleInvVM = new SaleInvVM
             {
+                Branch_list = Branch,
                 Region_list = Region,
                 saleReturnQuery = saleReturnQuery,
                 saleReturnQueryDetail = saleReturnQueryDetail,
@@ -264,8 +281,8 @@ namespace WebApplication1.Controllers
                     "VALUES (" + disc_amount[i] + ",0,0,0,0,0,'SRINV'," + i + "," + id[i] + ",'" + item_name[i] + "'," + sp[i] + "," + n_total[i] + "," + qty[i] + "," + disc_val[i] + "," + total_after[i] + "," + saleReturnQuery.OrderID + ",'" + packing[i] + "'," + n_total[i] + ")");
             }
             saleReturnQuery.custname = _context.Database.SqlQuery<string>("select name from customers where customerid=" + saleReturnQuery.custid + "").FirstOrDefault();
-            _context.Database.ExecuteSqlCommand("INSERT INTO srsm (RegionId,OrderID,empname,cargoid,custid,date,total,gst,discount,wht,cargocharges,ntotal,custname,bal,note,pono,custntn,custst,title,time,req_status) " +
-                "VALUES (" + saleReturnQuery.RegionId + "," + saleReturnQuery.OrderID + ",'0',0," + saleReturnQuery.custid + ",'" + saleReturnQuery.date + "'," + saleReturnQuery.total + ",0," + saleReturnQuery.discount + ",0,0," + saleReturnQuery.ntotal + ",'" + saleReturnQuery.custname + "',0,'" + saleReturnQuery.note + "','',0,0,'SRINV',0,'Request')");
+            _context.Database.ExecuteSqlCommand("INSERT INTO srsm (BranchId,RegionId,OrderID,empname,cargoid,custid,date,total,gst,discount,wht,cargocharges,ntotal,custname,bal,note,pono,custntn,custst,title,time,req_status) " +
+                "VALUES (" + saleReturnQuery.BranchId + "," + saleReturnQuery.RegionId + "," + saleReturnQuery.OrderID + ",'0',0," + saleReturnQuery.custid + ",'" + saleReturnQuery.date + "'," + saleReturnQuery.total + ",0," + saleReturnQuery.discount + ",0,0," + saleReturnQuery.ntotal + ",'" + saleReturnQuery.custname + "',0,'" + saleReturnQuery.note + "','',0,0,'SRINV',0,'Request')");
 
             decimal accountno = _context.Database.SqlQuery<decimal>("select Top(1) accno from customers where customerid=" + saleReturnQuery.custid + "").FirstOrDefault();
             int TransId = _context.Database.SqlQuery<int>("select ISNULL(Max(TransId),0)+1 from TransactionDetails").FirstOrDefault();

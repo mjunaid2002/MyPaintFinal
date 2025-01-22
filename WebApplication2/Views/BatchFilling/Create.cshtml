@@ -1,7 +1,7 @@
 ﻿@model WebApplication1.ViewModels.SaleInvVM
 @{
     ViewBag.Title = "Index";
-    var costVisible = Session["SubBatchFillingCostvisible"]?.ToString();
+    var costVisible = Session["SubRptBatchSheetSummeryCostVisible"]?.ToString();
     var isHidden = costVisible == "0" ? "hidden" : "";
 }
 <style>
@@ -539,6 +539,10 @@
                                 <label>Select Region</label>
                                 @Html.DropDownListFor(m => m.batchFillingMasterQUery.RegionId, new SelectList(Model.Region_list, "Id", "Name"), "Select Region", htmlAttributes: new { @class = "chosen-select form-control", @required = "true" })
                             </div>
+                            @*<div class="form-group col-sm-2">
+                                <label>Select Branch</label>
+                                @Html.DropDownListFor(m => m.batchFillingMasterQUery.BranchId, new SelectList(Model.Branch_list, "id", "name"), "Select Branch", htmlAttributes: new { @class = "form-control", required = "required", id = "branchid" })
+                            </div>*@
                             <div class="col-sm-12 col-md-12">
                                 <div class="tabs mt-none">
                                     <!-- Tabs Header -->
@@ -625,9 +629,9 @@
                                                         <input type="text" id="weight2" onKeyUp="tota1(); " class="form-control" />
                                                     </div>
                                                     @*<div class="form-group col-sm-2" style="margin-left:-20px;width:150px">
-                                                            <label>Rate</label>
-                                                            <input type="text" id="rate1" onKeyUp="tota1(); " class="form-control" />
-                                                        </div>*@
+                                    <label>Rate</label>
+                                    <input type="text" id="rate1" onKeyUp="tota1(); " class="form-control" />
+                                </div>*@
                                                     <div class="form-group col-sm-2" style="margin-left:-20px;width:150px">
                                                         <label>Total</label>
                                                         <input type="text" id="cost2" readonly class="form-control" />

@@ -13,7 +13,7 @@
     <div class="row ">
         <div class="col-sm-12 col-md-12">
             <h4 class="section-subtitle"><b>Register Region</b></h4>
-            <a href="@Url.Action("Index","Region")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-list"></i> Cargo List</a>
+            <a href="@Url.Action("Index","Region")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-list"></i> Region List</a>
             @if (Convert.ToString(TempData["succ"]) != "")
             {
                 <p class="alert alert-success" style="width:400px;height:50px"><b>@TempData["succ"]</b></p>
@@ -36,12 +36,17 @@
                                     <div class="col-sm-12">
                                         @if (Model.id == 0)
                                         {
-                                            <button type="submit" class="btn btn-primary" style="margin-top:10px"><i class="fa fa-save"></i> Save</button>
+                                            if (Session["SubRegionA"].ToString() != "0")
+                                            {
+                                                <button type="submit" class="btn btn-primary" style="margin-top:10px"><i class="fa fa-save"></i> Save</button>
+                                            }
                                         }
                                         else
                                         {
-                                            <button type="submit" class="btn btn-primary" style="margin-top:10px"><i class="fa fa-save"></i> Update</button>
-
+                                            if (Session["SubRegionU"].ToString() != "0")
+                                            {
+                                                <button type="submit" class="btn btn-primary" style="margin-top:10px"><i class="fa fa-save"></i> Update</button>
+                                            }
                                         }
                                     </div>
                                 </div>

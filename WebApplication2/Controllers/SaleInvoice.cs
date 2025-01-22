@@ -162,11 +162,13 @@ namespace WebApplication1.Controllers
         {
             orderMasterQuery.OrderID = _context.Database.SqlQuery<decimal>("select ISNULL(Max(OrderID),0)+1 from Order_Master").FirstOrDefault();
             var Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers ").ToList();
+            var Branch = _context.Database.SqlQuery<Branch>("SELECT id,name from Branch").ToList();
 
             //var Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers where discount =0").ToList();
             var pro_listsss = _context.Database.SqlQuery<Products>("select ProductName,ProductID,UnitPrice,ReorderLevel,vattax,CategoryID,[desc],Active from Product where CategoryID in (select CategoryID from Categories where  RawProductCheck=1)").ToList();
             var SaleInvVM = new SaleInvVM
             {
+                Branch_list = Branch,
                 orderMasterQuery = orderMasterQuery,
                 pro_listsss = pro_listsss,
                 Cus_list = Cus_list,
@@ -228,11 +230,13 @@ namespace WebApplication1.Controllers
             var orderMasterQuery = _context.Database.SqlQuery<OrderMasterQuery>("select discount,ntotal,OrderID,date,custname,total,note,custid,req_status from Order_Master where OrderID =" + ID + " ").SingleOrDefault();
             var OrderDetailQuery = _context.Database.SqlQuery<OrderDetailQuery>("select * from Order_detail where OrderID =" + ID + "").ToList();
             var Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers ").ToList();
+            var Branch = _context.Database.SqlQuery<Branch>("SELECT id,name from Branch").ToList();
 
             //var Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers where discount =0").ToList();
             var pro_listsss = _context.Database.SqlQuery<Products>("select ProductName,ProductID,UnitPrice,ReorderLevel,vattax,CategoryID,[desc],Active from Product where CategoryID in (select CategoryID from Categories where RawProductCheck=1)").ToList();
             var SaleInvVM = new SaleInvVM
             {
+                Branch_list = Branch,
                 OrderDetailQuery = OrderDetailQuery,
                 orderMasterQuery = orderMasterQuery,
                 pro_listsss = pro_listsss,

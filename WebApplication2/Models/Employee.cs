@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using WebApplication1.QueryViewModel;
 
 namespace CRM.Models
 {
@@ -24,10 +25,16 @@ namespace CRM.Models
         public decimal mon_insentive { get; set; }
         public decimal dep_id { get; set; }
         public decimal emp_id { get; set; }
+        public int branch_id { get; set; }
         [NotMapped]
         public List<Emp_Department> departmentlist { get; set; }
         [NotMapped]
         public List<Employee> Employeelist { get; set; }
+        [NotMapped]
+        public List<Branch> Branchlist { get; set; }
+        
+        [NotMapped]
+        public List<int> Branchid_list { get; set; }
 
     }
 

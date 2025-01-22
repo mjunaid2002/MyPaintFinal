@@ -12,19 +12,29 @@
     string PINV = "PINV";
     string SINV = "SINV";
 
+    decimal SumOfInvoice0_30 = Model.SumOfInvoice0_30;
+    decimal SumOfInvoice31_60 = Model.SumOfInvoice_31_60;
+    decimal SumOfInvoice61_90 = Model.SumOfInvoice_61_90;
+
+    decimal SumOfInvoice0_30_1 = Model.SumOfInvoice0_30_1;
+    decimal SumOfInvoice31_60_1 = Model.SumOfInvoice_31_60_1;
+    decimal SumOfInvoice61_90_1 = Model.SumOfInvoice_61_90_1;
+
+    decimal balamount = 0, finalamount = Model.finaltotal, sec1 = 0, sec2 = 0, sec3 = 0, sec4 = 0;
+
 }
 @*<style>
-            tbody > tr > td {
-                padding: 0 !important;
-            }
-</style>*@
+                tbody > tr > td {
+                    padding: 0 !important;
+                }
+    </style>*@
 <script type="text/javascript">
     function printDiv(divName) {
         var printContents = document.getElementById(divName).innerHTML;
         var originalContents = document.body.innerHTML;
 
         document.body.innerHTML = printContents;
-          
+
         window.print();
 
         document.body.innerHTML = originalContents;
@@ -111,44 +121,44 @@
                                 <span style="color:white"></span>
                                 @foreach (var item in Model.trans_list)
                                 {
-                                // position = 0;
-                                sum_cr += Convert.ToInt32(item.Cr);
-                                sum_dr += Convert.ToInt32(item.Dr);
-                                if (item.AccountHeadId == 1 || item.AccountHeadId == 5)
-                                {
-                                bal = (bal + (Convert.ToInt32(item.Dr - item.Cr)));
-                                }
-                                else
-                                {
-                                bal = (bal + (Convert.ToInt32(item.Cr - item.Dr)));
-                                }
-                                DateTime edate = Convert.ToDateTime(item.TransDate);
-                                <tr>
-                                    <td style=" padding: 0 ">@item.TransId</td>
-                                    <td style="width: 12%; padding: 0">@edate.ToString("dd-MM-yyyy")</td>
-                                    <td style=" padding: 0 ">
-                                        @if (item.Vtype == "PINVWOCTN" || item.Vtype == "PINVWCTN")
-                                        {
-                                            @PINV
-                                        }
-                                        else if (item.Vtype == "SINVWOCTN" || item.Vtype == "SINVWCTN")
-                                        {
-                                            @SINV
-                                        }
-                                        else
-                                        {
-                                            @item.Vtype
-                                        }
-                                    </td>
+                                    // position = 0;
+                                    sum_cr += Convert.ToInt32(item.Cr);
+                                    sum_dr += Convert.ToInt32(item.Dr);
+                                    if (item.AccountHeadId == 1 || item.AccountHeadId == 5)
+                                    {
+                                        bal = (bal + (Convert.ToInt32(item.Dr - item.Cr)));
+                                    }
+                                    else
+                                    {
+                                        bal = (bal + (Convert.ToInt32(item.Cr - item.Dr)));
+                                    }
+                                    DateTime edate = Convert.ToDateTime(item.TransDate);
+                                    <tr>
+                                        <td style=" padding: 0 ">@item.TransId</td>
+                                        <td style="width: 12%; padding: 0">@edate.ToString("dd-MM-yyyy")</td>
+                                        <td style=" padding: 0 ">
+                                            @if (item.Vtype == "PINVWOCTN" || item.Vtype == "PINVWCTN")
+                                            {
+                                                @PINV
+                                            }
+                                            else if (item.Vtype == "SINVWOCTN" || item.Vtype == "SINVWCTN")
+                                            {
+                                                @SINV
+                                            }
+                                            else
+                                            {
+                                                @item.Vtype
+                                            }
+                                        </td>
 
-                                    <td style=" padding: 0 ">@item.InvId</td>
-                                    <td style="font-size: 10px; padding: 0"> @item.TransDes </td>
-                                    <td style=" padding: 0 ">@String.Format("{0:N}", item.Dr)</td>
-                                    <td style=" padding: 0 ">@String.Format("{0:N}", item.Cr)</td>
-                                    <td style=" padding: 0 ">@String.Format("{0:N}", bal)</td>
-                                </tr>
+                                        <td style=" padding: 0 ">@item.InvId</td>
+                                        <td style="font-size: 10px; padding: 0"> @item.TransDes </td>
+                                        <td style=" padding: 0 ">@String.Format("{0:N}", item.Dr)</td>
+                                        <td style=" padding: 0 ">@String.Format("{0:N}", item.Cr)</td>
+                                        <td style=" padding: 0 ">@String.Format("{0:N}", bal)</td>
+                                    </tr>
 
-                                position++;
+                                    position++;
                                 }
                             </tbody>
                             <tfoot>
@@ -162,7 +172,194 @@
                                     <th>@String.Format("{0:N}", sum_cr)</th>
                                     <th>@String.Format("{0:N}", bal)</th>
                                 </tr>
+                                @{
+
+                                    //decimal sum = SumOfInvoice0_30 + SumOfInvoice31_60 + SumOfInvoice61_90;
+                                    //if (sum<balamount) {
+                                    // sec4= balamount - sum;
+
+                                    // }
+                                    //balamount = bal;
+                                    //if (balamount < SumOfInvoice0_30)
+                                    //{
+                                    //    sec1 = bal;
+                                    //}
+                                    //else
+                                    //{
+                                    //    sec1 = SumOfInvoice0_30;
+                                    //    balamount = balamount - SumOfInvoice0_30;
+
+                                    //    if (balamount < SumOfInvoice31_60)
+                                    //    {
+
+                                    //        sec2 = balamount;
+
+                                    //    }
+                                    //    else
+                                    //    {
+                                    //        sec2 = SumOfInvoice31_60;
+                                    //        balamount = balamount - SumOfInvoice31_60;
+
+                                    //    }
+                                    //    if (balamount < SumOfInvoice61_90)
+                                    //    {
+                                    //        sec3 = balamount;
+
+                                    //    }
+                                    //    else
+                                    //    {
+                                    //        sec3 = SumOfInvoice61_90;
+                                    //        balamount = balamount - SumOfInvoice61_90;
+
+                                    //    }
+
+                                    //    if (balamount > 0)
+                                    //    {
+                                    //        sec4 = balamount;
+
+                                    //    }
+                                    //}
+
+                                    balamount = finalamount;
+
+                                    // Section 1
+                                    if (balamount > 0)
+                                    {
+                                        if (balamount < SumOfInvoice0_30)
+                                        {
+                                            sec1 = balamount;
+                                            balamount = 0; // Remaining balance becomes 0
+                                        }
+                                        else
+                                        {
+                                            sec1 = SumOfInvoice0_30;
+                                            balamount -= SumOfInvoice0_30;
+                                        }
+                                    }
+
+                                    // Section 2
+                                    if (balamount > 0) // Only execute if balance is still greater than 0
+                                    {
+                                        if (balamount < SumOfInvoice31_60)
+                                        {
+                                            sec2 = balamount;
+                                            balamount = 0; // Remaining balance becomes 0
+                                        }
+                                        else
+                                        {
+                                            sec2 = SumOfInvoice31_60;
+                                            balamount -= SumOfInvoice31_60;
+                                        }
+                                    }
+
+                                    // Section 3
+                                    if (balamount > 0) // Only execute if balance is still greater than 0
+                                    {
+                                        if (balamount < SumOfInvoice61_90)
+                                        {
+                                            sec3 = balamount;
+                                            balamount = 0; // Remaining balance becomes 0
+                                        }
+                                        else
+                                        {
+                                            sec3 = SumOfInvoice61_90;
+                                            balamount -= SumOfInvoice61_90;
+                                        }
+                                    }
+
+                                    // Section 4 (Remaining balance)
+                                    if (balamount > 0) // Only execute if balance is still greater than 0
+                                    {
+                                        sec4 = balamount;
+                                    }
+                                }
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th>Aging  [0 to 30] <br> @sec1 </th>
+                                    <th>[31 to 60]  <br> @sec2</th>
+                                    <th>[61 to 90] <br> @sec3</th>
+                                    <th>[above 90] <br> @sec4</th>
+
+
+                                </tr>
+
+                                @{
+
+                                    sec1 = 0; sec2 = 0; sec3 = 0; sec4 = 0;
+
+                                    balamount = bal;
+
+                                    // Section 1
+                                    if (balamount > 0)
+                                    {
+                                        if (balamount < SumOfInvoice0_30_1)
+                                        {
+                                            sec1 = balamount;
+                                            balamount = 0; // Remaining balance becomes 0
+                                        }
+                                        else
+                                        {
+                                            sec1 = SumOfInvoice0_30_1;
+                                            balamount -= SumOfInvoice0_30_1;
+                                        }
+                                    }
+
+                                    // Section 2
+                                    if (balamount > 0) // Only execute if balance is still greater than 0
+                                    {
+                                        if (balamount < SumOfInvoice31_60_1)
+                                        {
+                                            sec2 = balamount;
+                                            balamount = 0; // Remaining balance becomes 0
+                                        }
+                                        else
+                                        {
+                                            sec2 = SumOfInvoice31_60_1;
+                                            balamount -= SumOfInvoice31_60_1;
+                                        }
+                                    }
+
+                                    // Section 3
+                                    if (balamount > 0) // Only execute if balance is still greater than 0
+                                    {
+                                        if (balamount < SumOfInvoice61_90_1)
+                                        {
+                                            sec3 = balamount;
+                                            balamount = 0; // Remaining balance becomes 0
+                                        }
+                                        else
+                                        {
+                                            sec3 = SumOfInvoice61_90_1;
+                                            balamount -= SumOfInvoice61_90_1;
+                                        }
+                                    }
+
+                                    // Section 4 (Remaining balance)
+                                    if (balamount > 0) // Only execute if balance is still greater than 0
+                                    {
+                                        sec4 = balamount;
+                                    }
+                                }
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th>Aging  [0 to 30] <br> @sec1 </th>
+                                    <th>[31 to 60]  <br> @sec2</th>
+                                    <th>[61 to 90] <br> @sec3</th>
+                                    <th>[above 90] <br> @sec4</th>
+
+
+                                </tr>
+
+
                             </tfoot>
+
+
                         </table>
                     </div>
                 </div>

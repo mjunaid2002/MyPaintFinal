@@ -95,25 +95,25 @@
                             <tr>
                                 <td>@item.ProductName</td>
 
-                                <td>@String.Format("{0:N}", item.StkOpenDubbi)</td>
-                                <td>@String.Format("{0:N}", item.StkOpenQuarter)</td>
-                                <td>@String.Format("{0:N}", item.StkOpenGallon)</td>
-                                <td>@String.Format("{0:N}", item.StkOpenDrum)</td>
+                                <td style="background-color:aquamarine">@String.Format("{0:N}", item.StkOpenDubbi)</td>
+                                <td style="background-color:aquamarine">@String.Format("{0:N}", item.StkOpenQuarter)</td>
+                                <td style="background-color:aquamarine">@String.Format("{0:N}", item.StkOpenGallon)</td>
+                                <td style="background-color:aquamarine">@String.Format("{0:N}", item.StkOpenDrum)</td>
 
-                                <td>@String.Format("{0:N}", item.StkInDubbi)</td>
-                                <td>@String.Format("{0:N}", item.StkInQuarter)</td>
-                                <td>@String.Format("{0:N}", item.StkInGallon)</td>
-                                <td>@String.Format("{0:N}", item.StkInDrum)</td>
-
-                                <td>@String.Format("{0:N}", item.StkOutDubbi)</td>
-                                <td>@String.Format("{0:N}", item.StkOutQuarter)</td>
-                                <td>@String.Format("{0:N}", item.StkOutGallon)</td>
-                                <td>@String.Format("{0:N}", item.StkOutDrum)</td>
-
-                                <td>@String.Format("{0:N}", item.StkDubbi)</td>
-                                <td>@String.Format("{0:N}", item.StkQuarter)</td>
-                                <td>@String.Format("{0:N}", item.StkGallon)</td>
-                                <td>@String.Format("{0:N}", item.StkDrum)</td>
+                                <td style="background-color:lightgreen">@String.Format("{0:N}", item.StkInDubbi)</td>
+                                <td style="background-color:lightgreen">@String.Format("{0:N}", item.StkInQuarter)</td>
+                                <td style="background-color:lightgreen">@String.Format("{0:N}", item.StkInGallon)</td>
+                                <td style="background-color:lightgreen">@String.Format("{0:N}", item.StkInDrum)</td>
+                                    
+                                <td style="background-color:lightcoral">@String.Format("{0:N}", item.StkOutDubbi)</td>
+                                <td style="background-color:lightcoral">@String.Format("{0:N}", item.StkOutQuarter)</td>
+                                <td style="background-color:lightcoral">@String.Format("{0:N}", item.StkOutGallon)</td>
+                                <td style="background-color:lightcoral">@String.Format("{0:N}", item.StkOutDrum)</td>
+                                 
+                                <td style="background-color:lightgray">@String.Format("{0:N}", item.StkDubbi)</td>
+                                <td style="background-color: lightgray">@String.Format("{0:N}", item.StkQuarter)</td>
+                                <td style="background-color: lightgray">@String.Format("{0:N}", item.StkGallon)</td>
+                                <td style="background-color: lightgray">@String.Format("{0:N}", item.StkDrum)</td>
 
                                 @*<td>@String.Format("{0:N}", (item.StkOpenDubbi + item.StkInDubbi - item.StkOutDubbi))</td>
         <td>@String.Format("{0:N}", (item.StkOpenQuarter + item.StkInQuarter - item.StkOutQuarter))</td>
@@ -128,30 +128,30 @@
                                     {
 
 
-                                        <td>@String.Format("{0:N}", item1.dubbi)</td>
-                                        <td>@String.Format("{0:N}", item1.Quarter)</td>
-                                        <td>@String.Format("{0:N}", item1.Gallon)</td>
-                                        <td>@String.Format("{0:N}", item1.Drum)</td>
-
-                                        <td>@String.Format("{0:N}", item1.dubbi * item.StkDubbi)</td>
-                                        <td>@String.Format("{0:N}", item1.Quarter * item.StkQuarter)</td>
-                                        <td>@String.Format("{0:N}", item1.Gallon * item.StkGallon)</td>
-                                        <td>@String.Format("{0:N}", item1.Drum * item.StkDrum)</td>
+                                        <td style="background-color: lightcyan">@String.Format("{0:N}", item1.dubbi)</td>
+                                        <td style="background-color: lightcyan">@String.Format("{0:N}", item1.Quarter)</td>
+                                        <td style="background-color: lightcyan">@String.Format("{0:N}", item1.Gallon)</td>
+                                        <td style="background-color: lightcyan">@String.Format("{0:N}", item1.Drum)</td>
+                                           
+                                        <td style="background-color: lightslategray">@String.Format("{0:N}", item1.dubbi * item.StkDubbi)</td>
+                                        <td style="background-color: lightslategray">@String.Format("{0:N}", item1.Quarter * item.StkQuarter)</td>
+                                        <td style="background-color: lightslategray">@String.Format("{0:N}", item1.Gallon * item.StkGallon)</td>
+                                        <td style="background-color: lightslategray">@String.Format("{0:N}", item1.Drum * item.StkDrum)</td>
 
 
                                     }
                                 }
                                 else
                                 {
-                                    <td>@String.Format("{0:N}",0)</td>
-                                    <td>@String.Format("{0:N}", 0)</td>
-                                    <td>@String.Format("{0:N}", 0)</td>
-                                    <td>@String.Format("{0:N}", 0)</td>
-
-                                    <td>@String.Format("{0:N}", 0)</td>
-                                    <td>@String.Format("{0:N}",0)</td>
-                                    <td>@String.Format("{0:N}", 0)</td>
-                                    <td>@String.Format("{0:N}", 0)</td>
+                                    <td style="background-color: lightcyan">@String.Format("{0:N}",0)</td>
+                                    <td style="background-color: lightcyan">@String.Format("{0:N}", 0)</td>
+                                    <td style="background-color: lightcyan">@String.Format("{0:N}", 0)</td>
+                                    <td style="background-color: lightcyan">@String.Format("{0:N}", 0)</td>
+                                       
+                                    <td style="background-color: lightslategray">@String.Format("{0:N}", 0)</td>
+                                    <td style="background-color: lightslategray">@String.Format("{0:N}",0)</td>
+                                    <td style="background-color: lightslategray">@String.Format("{0:N}", 0)</td>
+                                    <td style="background-color: lightslategray">@String.Format("{0:N}", 0)</td>
                                 }
 
                             </tr>

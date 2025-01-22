@@ -1,6 +1,7 @@
 ﻿@model WebApplication1.QueryViewModel.Customers
 @{
     ViewBag.Title = "Creat";
+    
 }
 
 <div class="content">
@@ -31,6 +32,17 @@
                                         @Html.TextBoxFor(m => m.customerid, new { @class = "form-control input-xs", @readonly = "readonly", @required = "required" })
                                     </div>
                                     <div class="form-group col-sm-4">
+                                        <label>Belt Area</label>
+                                        @Html.DropDownListFor(m => m.BeltArea, new SelectList(ViewBag.BeltArea as List<WebApplication1.QueryViewModel.BeltArea>, "Id", "Name"), "Select Belt Area", htmlAttributes: new { @class = "chosen-select form-control", required = "required" })
+
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        <label>Employer</label>
+                                        @Html.DropDownListFor(m => m.employer, new SelectList(ViewBag.employee as List<WebApplication1.QueryViewModel.Acc_Empolyee>, "ID", "Name"), "Select Employee", htmlAttributes: new { @class = "chosen-select form-control", required = "required" })
+
+                                    </div>
+
+                                    <div class="form-group col-sm-4">
                                         <label> Name</label>
                                         @Html.TextBoxFor(m => m.Name, new { @class = "form-control input-xs", @required = "required" })
                                     </div>
@@ -50,13 +62,21 @@
                                         <label>Email</label>
                                         @Html.TextBoxFor(m => m.email, new { @class = "form-control input-xs" })
                                     </div>
-                                  <div class="form-group col-sm-2">
+                                    <div class="form-group col-sm-2">
                                         <label>WHT %</label>
                                         @Html.TextBoxFor(m => m.partywht, new { @class = "form-control input-xs" })
                                     </div>
                                     <div class="form-group col-sm-2">
                                         <label>NTN</label>
                                         @Html.TextBoxFor(m => m.NTN, new { @class = "form-control input-xs" })
+                                    </div>
+                                    <div class="form-group col-sm-2">
+                                        <label>Credit Limit Amount</label>
+                                        @Html.TextBoxFor(m => m.creditlimitamount, new { @class = "form-control input-xs" })
+                                    </div>
+                                    <div class="form-group col-sm-2">
+                                        <label>Credit Limit Days</label>
+                                        @Html.TextBoxFor(m => m.creditlimitdays, new { @class = "form-control input-xs" })
                                     </div>
                                     <div class="col-sm-12">
                                         <button type="submit" class="btn btn-primary" style="margin-top:10px"><i class="fa fa-save"></i> Save</button>

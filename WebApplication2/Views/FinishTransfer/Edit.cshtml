@@ -243,10 +243,14 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-sm-12">
-                                <button type="submit" class="btn btn-primary col-sm-4 col-sm-offset-4" style="margin-top: 10px; background-color: #3498DB !important; border: 1px solid #3498DB "><i class="fa fa-save"></i> &nbsp; Save Invoice</button>
+                            @if (Session["SubFinishedTransferU"].ToString() != "0")
+                            {
+                                <div class="col-sm-12">
+                                    <button type="submit" class="btn btn-primary col-sm-4 col-sm-offset-4" style="margin-top: 10px; background-color: #3498DB !important; border: 1px solid #3498DB "><i class="fa fa-save"></i> &nbsp; Update Invoice</button>
+                                </div>
+                            }
                             </div>
-                        </div>
+                           
                     </div>
                 }
                 @*</form>*@

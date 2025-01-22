@@ -1,0 +1,49 @@
+﻿@model WebApplication1.QueryViewModel.BeltArea
+@{
+    ViewBag.Title = "Creat";
+}
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Registration</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-sm-12 col-md-12">
+            <h4 class="section-subtitle"><b>Register Cargo</b></h4>
+            <a href="@Url.Action("Index","BeltArea")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-list"></i> Belt Area List</a>
+            @if (Convert.ToString(TempData["succ"]) != "")
+            {
+                <p class="alert alert-success" style="width:400px;height:50px"><b>@TempData["succ"]</b></p>
+            }
+            <div class="panel">
+                <div class="panel-content">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <form action="Create" method="post" enctype="multipart/form-data" onsubmit="return confirm('Are you sure you want to Register ?');">
+                                <div class="row">
+                                    <div class="form-group col-sm-1" style="display:none">
+                                        <label> ID</label>
+                                        @Html.TextBoxFor(m => m.Id, new { @class = "form-control input-xs", @readonly = "readonly", @required = "required" })
+                                    </div>
+                                    <div class="form-group col-sm-3">
+                                        <label> Name</label>
+                                        @Html.TextBoxFor(m => m.Name, new { @class = "form-control input-xs", @required = "required" })
+                                    </div>
+                                  
+                                    <div class="col-sm-12">
+                                        <button type="submit" class="btn btn-primary" style="margin-top:10px"><i class="fa fa-save"></i> Save</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

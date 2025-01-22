@@ -108,6 +108,20 @@
             }
     </style>
 </head>
+@{
+
+    @*var branchnames= @Session["Branch"] as List<string>
+        ;
+
+        var name=string.Join(",", branchnames);*@
+var branchNames = Session["Branch"] as List<string>;
+var branchNamesString = string.Join(",", branchNames ?? new List<string>());
+if (branchNames != null && branchNames.Contains("All"))
+{
+    branchNamesString = "All";  // If "All" is selected, display "All"
+}
+
+}
 <body>
     <div class="wrap">
         <div class="page-header" style="background-color: #3498DB">
@@ -128,11 +142,32 @@
 
             <div class="rightside-header">
                 <div class="header-middle"></div>
+
                 <div class="header-section" id="search-headerbox">
-                    <h5 class="pull-right"><b> Admin</b></h5>
+                    @if (!string.IsNullOrEmpty(branchNamesString))
+                    {
+                <h5 class="pull-right"><b>| Branch : @branchNamesString |</b></h5> }
+                            @*@if (Session["Branch"] != null && !string.IsNullOrEmpty(Session["Branch"].ToString()))
+                {
+                    <h5 class="pull-right"><b>| Branch : @Session["Branch"].ToString() |</b></h5>
+
+                }*@
+                            @*@if (branchNames != null && !string.IsNullOrEmpty(branchNames.ToString()))
+                {
+                    <h5 class="pull-right"><b>| Branch : @branchNamesString |</b></h5>}*@
+
+                    @if (Session["CurrentUserName"] != null && !string.IsNullOrEmpty(Session["CurrentUserName"].ToString()))
+                    {
+                        <h5 class="pull-right"><b>| User : @Session["CurrentUserName"].ToString() |</b></h5>
+
+                    }
+                    @*<h5 class="pull-right"><b> Admin</b></h5>*@
+
                     <input type="text" name="search" id="search" placeholder="Search...">
                     <i class="fa fa-search search" id="search-icon" aria-hidden="true"></i>
                     <div class="header-separator"></div>
+
+
                 </div>
                 <div class="header-section">
                     <a href="@Url.Action("Logout", "Home")" data-toggle="tooltip" data-placement="left" title="Logout"><i class="fa fa-sign-out log-out" aria-hidden="true"></i></a>
@@ -169,7 +204,13 @@
                                             {
                                                 <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "QualityCategory")"> Quality Category</a></li>
                                             }
-                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "Region")"> Region</a></li>
+                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "Scheme")">Scheme</a></li>
+
+                                            @if (Session["SubRegion"].ToString() != "0")
+                                            {
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "Region")"> Region</a></li>
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "Branch")"> Branch </a></li>
+                                            }
                                             @if (Session["SubRawProduct"].ToString() != "0")
                                             {
                                                 <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "RawProducts")"> Raw Product</a></li>
@@ -177,15 +218,25 @@
                                             @if (Session["SubFinishedProduct"].ToString() != "0")
                                             {
                                                 <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "FinishedProducts")"> Finished Product</a></li>
+                                            }
+                                            @if (Session["SubFinishedTransfer"].ToString() != "0")
+                                            {
                                                 <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "FinishTransfer")"> Finished Transfer</a></li>
+                                                @*<li style="background-color: #2C3E50 !important;"><a href="@Url.Action("BranchStockIndex", "BranchTransfer")"> Branch Opening Stock</a></li>*@
+                                            }
+                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "BranchTransfer")"> Branch Transfer</a></li>
+
+                                            @if (Session["SubEmployeeDepartment"].ToString() != "0")
+                                            {
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "Emp_Department")"> Emp_Department</a></li>
                                             }
                                             @if (Session["SubEmployee"].ToString() != "0")
                                             {
-                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "Emp_Department")"> Emp_Department</a></li>
                                                 <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "Employee")"> Employee</a></li>
                                             }
                                             @if (Session["SubCustomers"].ToString() != "0")
                                             {
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "BeltArea")"> Belt Area</a></li>
                                                 <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "Customer")"> Customers</a></li>
                                             }
                                             @if (Session["SubSuppliers"].ToString() != "0")
@@ -199,17 +250,25 @@
                                             @if (Session["SubProductPricing"].ToString() != "0")
                                             {
                                                 <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "ProductPricing")"> Product Pricing</a></li>
+                                            }
+                                            @if (Session["SubProductPricingRegion"].ToString() != "0")
+                                            {
                                                 <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("IndexRegion", "ProductPricing")"> Product Pricing Region</a></li>
+
+                                            }
+                                            @if (Session["SubProductFinishedRegion"].ToString() != "0")
+                                            {
                                                 <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("IndexFinishRegion", "ProductPricing")"> Finished Product Region</a></li>
+
                                             }
                                         </ul>
                                     </li>
                                 }
                                 @*@if (Session["CurrentUserName"].ToString() == "Super Admin")
-        {
-            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Indexstatus", "Batch")"><i class="fa fa-list"></i> &nbsp; <span style="color:white">Batch Status</span></a></li>
+                                    {
+                                        <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Indexstatus", "Batch")"><i class="fa fa-list"></i> &nbsp; <span style="color:white">Batch Status</span></a></li>
 
-        }*@
+                                    }*@
                                 @Html.Action("GetBatchCount", "Batch")
                                 @Html.Action("GetFillingBatchCount", "BatchFilling")
                                 @Html.Action("GetSaleCount", "StockInward")
@@ -536,9 +595,18 @@
                                 @if (Session["MenuCustomerItemDiscount"].ToString() != "0")
                                 {
                                     <li style="border: 1px solid #2C3E50; background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "CustomerDiscount")"><i class="fa fa-list"></i> &nbsp; <span style="color:white">Customer Item Discount</span></a></li>
-                                    <li style="border: 1px solid #2C3E50; background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "ProductionOrder")"><i class="fa fa-list"></i> &nbsp; <span style="color:white">Production Order</span></a></li>
-                                    <li style="border: 1px solid #2C3E50; background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "StockDistribution")"><i class="fa fa-list"></i> &nbsp; <span style="color:white">Stock Distribution</span></a></li>
                                 }
+                                @if (Session["MenuProductionOrder"].ToString() != "0")
+                                {
+                                    <li style="border: 1px solid #2C3E50; background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "ProductionOrder")"><i class="fa fa-list"></i> &nbsp; <span style="color:white">Production Order</span></a></li>
+
+                                }
+                                @if (Session["MenuStockDistribution"].ToString() != "0")
+                                {
+                                    <li style="border: 1px solid #2C3E50; background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "StockDistribution")"><i class="fa fa-list"></i> &nbsp; <span style="color:white">Stock Distribution</span></a></li>
+
+                                }
+
                                 @if (Session["MenuReports"].ToString() != "0")
                                 {
                                     <li class="has-child-item close-item" style="border:1px solid #2C3E50">
@@ -549,9 +617,18 @@
                                                 <li class="has-child-item close-item" style="background-color: #2C3E50 !important;">
                                                     <a>Raw Material</a>
                                                     <ul class="nav child-nav level-2" style="background-color: #2C3E50 !important;">
-                                                        <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("ItemLedgerIndex", "Report")">Item Ledger</a></li>
-                                                        <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("RawMaterialIndex", "Report")">Stock Report</a></li>
-                                                        <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("PurchaseORderReport", "Report")">Purchase Order</a></li>
+                                                        @if (Session["SubRptRawMaterialItemLedger"].ToString() != "0")
+                                                        {
+                                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("ItemLedgerIndex", "Report")">Item Ledger</a></li>
+                                                        }
+                                                        @if (Session["SubRptRawMaterialStockReport"].ToString() != "0")
+                                                        {
+                                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("RawMaterialIndex", "Report")">Stock Report</a></li>
+                                                        }
+                                                        @if (Session["SubRptRawMaterialPurchaseOrder"].ToString() != "0")
+                                                        {
+                                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("PurchaseORderReport", "Report")">Purchase Order</a></li>
+                                                        }
                                                     </ul>
                                                 </li>
                                             }
@@ -560,11 +637,27 @@
                                                 <li class="has-child-item close-item" style="background-color: #2C3E50 !important;">
                                                     <a>Finished Items</a>
                                                     <ul class="nav child-nav level-2" style="background-color: #2C3E50 !important;">
-                                                        <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("PackingItemLedgerIndex", "Report")">Pkg Item Ledger  </a></li>
-                                                        <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("FinishedItemLedgerIndex", "Report")">Fd Item Ledger  </a></li>
-                                                        <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("FinishedGoodsIndex", "Report")">Fd Goods Report  </a></li>
-                                                        <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("FinishedGoodsPO", "Report")">Fd Goods PO Report  </a></li>
-                                                        <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("FillingIndex", "Report")">Filling Complete Report  </a></li>
+                                                        @if (Session["SubRptFinishedItemsPackingItemLedger"].ToString() != "0")
+                                                        {
+                                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("PackingItemLedgerIndex", "Report")">Pkg Item Ledger  </a></li>
+                                                        }
+                                                        @if (Session["SubRptFinishedItemsFinishedItemLedger"].ToString() != "0")
+                                                        {
+                                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("FinishedItemLedgerIndex", "Report")">Fd Item Ledger  </a></li>
+                                                        }
+                                                        @if (Session["SubRptFinishedItemsFinishedGoodsReport"].ToString() != "0")
+                                                        {
+                                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("FinishedGoodsIndex", "Report")">Fd Goods Report  </a></li>
+
+                                                        }
+                                                        @if (Session["SubRptFinishedItemsGoodsProductionOrder"].ToString() != "0")
+                                                        {
+                                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("FinishedGoodsPO", "Report")">Fd Goods PO Report  </a></li>
+                                                        }
+                                                        @if (Session["SubRptFinishedItemsFillingCompleteReport"].ToString() != "0")
+                                                        {
+                                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("FillingIndex", "Report")">Filling Complete Report  </a></li>
+                                                        }
                                                     </ul>
                                                 </li>
                                             }
@@ -579,6 +672,7 @@
                                             @if (Session["SubRptSaleReport"].ToString() != "0")
                                             {
                                                 <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("SaleIndex", "Report")">Sale Report</a></li>
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("SaleCommIndex", "Report")">Sale Comm. Report</a></li>
                                             }
                                             @if (Session["SubRptBatchSheetSummery"].ToString() != "0")
                                             {
@@ -588,7 +682,10 @@
                                             {
                                                 <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("LabSheetSummary", "Report")">Lab Sheet Summary </a></li>
                                             }
-                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("FillingReport", "Report")">Filling Report </a></li>
+                                            @if (Session["SubRptFillingReportSummery"].ToString() != "0")
+                                            {
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("FillingReport", "Report")">Filling Report </a></li>
+                                            }
                                         </ul>
                                     </li>
                                 }
@@ -623,45 +720,185 @@
             <a href="#" class="scroll-to-top"><i class="fa fa-angle-double-up"></i></a>
         </div>
     </div>
-                                <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
-                                <script src="~/Content/js/ckeditor/ckeditor.js"></script>
-                                <script src="~/Content/choosen/jquery-3.2.1.min.js" type="text/javascript"></script>
-                                <script src="~/Content/choosen/chosen.jquery.js" type="text/javascript"></script>
-                                <script src="~/Content/choosen/prism.js" type="text/javascript" charset="utf-8"></script>
-                                <script src="~/Content/choosen/init.js" type="text/javascript" charset="utf-8"></script>
-                                <script src="~/Content/vendor/jquery/jquery-1.12.3.min.js"></script>
-                                <script src="~/Content/vendor/bootstrap/js/bootstrap.min.js"></script>
-                                <script src="~/Content/vendor/nano-scroller/nano-scroller.js"></script>
-                                <script src="~/Content/javascripts/template-script.min.js"></script>
-                                <script src="~/Content/javascripts/template-init.min.js"></script>
-                                <script src="~/Content/vendor/data-table/media/js/jquery.dataTables.min.js"></script>
-                                <script src="~/Content/vendor/data-table/media/js/dataTables.bootstrap.min.js"></script>
-                                <script src="~/Content/javascripts/examples/tables/data-tables.js"></script>
-                                <script src="~/Content/javascripts/examples/ui-elements/buttons.js"></script>
-                                @*<script src="~/Content/Datatable/jquery.min.js"></script>
+
+
+
+    @*<script>
+            debugger
+            // Retrieve the session branch name from the server-side
+            var sessionBranch = '@Session["Branch"]'; // Get the branch name from session
+            sessionBranch = sessionBranch.trim();
+
+                const branchDropdown = document.getElementById('branchid');
+
+                if (sessionBranch !== 'All') {
+                    // Set the selected branch
+                    for (let i = 0; i < branchDropdown.options.length; i++) {
+                        if (branchDropdown.options[i].text === sessionBranch) {
+                            branchDropdown.selectedIndex = i;
+                            break;
+                        }
+                    }
+
+                    // Make the dropdown readonly
+                    branchDropdown.disabled = true;
+                }
+
+        </script>*@
+
+
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+    <script src="~/Content/js/ckeditor/ckeditor.js"></script>
+    <script src="~/Content/choosen/jquery-3.2.1.min.js" type="text/javascript"></script>
+    <script src="~/Content/choosen/chosen.jquery.js" type="text/javascript"></script>
+    <script src="~/Content/choosen/prism.js" type="text/javascript" charset="utf-8"></script>
+    <script src="~/Content/choosen/init.js" type="text/javascript" charset="utf-8"></script>
+    <script src="~/Content/vendor/jquery/jquery-1.12.3.min.js"></script>
+    <script src="~/Content/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="~/Content/vendor/nano-scroller/nano-scroller.js"></script>
+    <script src="~/Content/javascripts/template-script.min.js"></script>
+    <script src="~/Content/javascripts/template-init.min.js"></script>
+    <script src="~/Content/vendor/data-table/media/js/jquery.dataTables.min.js"></script>
+    <script src="~/Content/vendor/data-table/media/js/dataTables.bootstrap.min.js"></script>
+    <script src="~/Content/javascripts/examples/tables/data-tables.js"></script>
+    <script src="~/Content/javascripts/examples/ui-elements/buttons.js"></script>
+    @*<script src="~/Content/Datatable/jquery.min.js"></script>
         <script src="~/Content/Datatable/jquery.dataTables.min.js"></script>
         <script src="~/Content/Datatable/dataTables.tableTools.min.js"></script>
         <script src="~/Content/Datatable/dataTables.bootstrap.min.js"></script>
         <script src="~/Content/Datatable/datatables-init.js"></script>*@
-                                <script src="~/Content/Datatable1/js/jquery.dataTables.min.js"></script>
-                                <script src="~/Content/Datatable1/js/dataTables.buttons.min.js"></script>
-                                <script src="~/Content/Datatable1/js/jszip.min.js"></script>
-                                <script src="~/Content/Datatable1/js/pdfmake.min.js"></script>
-                                <script src="~/Content/Datatable1/js/vfs_fonts.js"></script>
-                                <script src="~/Content/Datatable1/js/buttons.print.min.js"></script>
-                                <script src="~/Content/Datatable1/js/buttons.html5.min.js"></script>
-                                <script src="~/Content/Datatable1/js/dataTables.bootstrap4.min.js"></script>
-                                <script src="~/Content/Datatable1/js/dataTables.responsive.min.js"></script>
-                                <script src="~/Content/Datatable1/js/responsive.bootstrap4.min.js"></script>
-                                <script src="~/Content/Datatable1/js/data-table.js"></script>
+    <script src="~/Content/Datatable1/js/jquery.dataTables.min.js"></script>
+    <script src="~/Content/Datatable1/js/dataTables.buttons.min.js"></script>
+    <script src="~/Content/Datatable1/js/jszip.min.js"></script>
+    <script src="~/Content/Datatable1/js/pdfmake.min.js"></script>
+    <script src="~/Content/Datatable1/js/vfs_fonts.js"></script>
+    <script src="~/Content/Datatable1/js/buttons.print.min.js"></script>
+    <script src="~/Content/Datatable1/js/buttons.html5.min.js"></script>
+    <script src="~/Content/Datatable1/js/dataTables.bootstrap4.min.js"></script>
+    <script src="~/Content/Datatable1/js/dataTables.responsive.min.js"></script>
+    <script src="~/Content/Datatable1/js/responsive.bootstrap4.min.js"></script>
+    <script src="~/Content/Datatable1/js/data-table.js"></script>
 
-                                <script src="~/Content/javascripts/examples/ui-elements/alerts.js"></script>
-                                <script>
-                                    InitiateSimpleDataTable.init();
-                                    InitiateEditableDataTable.init();
-                                    InitiateExpandableDataTable.init();
-                                    InitiateSearchableDataTable.init();
-                                </script>
+    <script src="~/Content/javascripts/examples/ui-elements/alerts.js"></script>
+    <script>
+        InitiateSimpleDataTable.init();
+        InitiateEditableDataTable.init();
+        InitiateExpandableDataTable.init();
+        InitiateSearchableDataTable.init();
+    </script>
+    @{ 
+        var branchNames1 = Session["Branch"] as List<string>;
+        var BranchNames1 = branchNames1 != null ? string.Join(",", branchNames1) : "";
+    }
+<script>
+    @*var sessionBranches = '@BranchNames1'.split(',');*@
 
+     var sessionBranches = '@BranchNames1'.split(',').map(function(branch) {
+        return branch.trim();  // Remove any leading or trailing spaces
+    });
+    // Log the array to the console
+    //console.log(sessionBranches);
+
+    const branchDropdown = document.getElementById('branchid');
+    if (branchDropdown) {
+        
+        if (!sessionBranches.includes('All')) {
+          
+            // If the session branch is not 'All', filter the dropdown options
+            for (let i = branchDropdown.options.length - 1; i >= 0; i--) {
+                let option = branchDropdown.options[i];
+                if (!sessionBranches.includes(option.text.trim())) {
+                    option.remove();  // Remove options that don't match the session branches
+                }
+            }
+
+            // Optionally, set the selected branch (if desired)
+            //for (let i = 0; i < branchDropdown.options.length; i++) {
+            //    if (sessionBranches.includes(branchDropdown.options[i].text.trim())) {
+            //        branchDropdown.options[i].selected = true;  // Set the selected index to match the session value
+            //    }
+            //}
+        } else {
+           // alert("all");
+           //  If the session branch is 'All', ensure all options are visible (no filtering)
+            //for (let i = 0; i < branchDropdown.options.length; i++) {
+            //    branchDropdown.options[i].selected = true;  // Select all options if "All"
+            //}
+        }
+    }
+
+    //    if (branchDropdown) {
+    //        // Loop through the options and remove all except the ones matching the session branch names
+    //        for (let i = branchDropdown.options.length - 1; i >= 0; i--) {
+    //            let option = branchDropdown.options[i];
+    //            if (!sessionBranches.includes(option.text.trim())) {
+    //                option.remove();  // Remove options that don't match the session branch
+    //            }
+    //        }
+    //        // Optionally, set the selected branch (if desired)
+    //        for (let i = 0; i < branchDropdown.options.length; i++) {
+    //            if (sessionBranches.includes(branchDropdown.options[i].text.trim())) {
+    //                branchDropdown.options[i].selected = true;  // Set the selected index to match the session value
+    //            }
+    //        }
+    //        //// Optionally, set the selected branch (if desired)
+    //        //for (let i = 0; i < branchDropdown.options.length; i++) {
+    //        //    if (sessionBranches.includes(branchDropdown.options[i].text.trim())) {
+    //        //        branchDropdown.selectedIndex = i;  // Set the index to match the session value
+    //        //        break;
+    //        //    }
+    //        //}
+
+    //    // Check if the sessionBranches array is not empty and 'All' is not in the list
+    //    //if (sessionBranches.length > 0 && !sessionBranches.includes('All')) {
+    //    //    // Loop through the options and remove all except the ones matching the session branch names
+    //    //    for (let i = branchDropdown.options.length - 1; i >= 0; i--) {
+    //    //        let option = branchDropdown.options[i];
+    //    //        // Remove options that don't match the session branch name
+    //    //        if (!sessionBranches.includes(option.text.trim())) {
+    //    //            option.remove();
+    //    //        }
+    //    //    }
+
+    //    //    // Optionally, set the selected branch
+    //    //    for (let i = 0; i < branchDropdown.options.length; i++) {
+    //    //        if (sessionBranches.includes(branchDropdown.options[i].text.trim())) {
+    //    //            branchDropdown.selectedIndex = i; // Set the index to match the session value
+    //    //            break;
+    //    //        }
+    //    //    }
+    //    //}
+    //}
+</script>
+
+    @*<script>
+
+        // Retrieve the session branch name from the server-side
+        var sessionBranch = '@Session["Branch"]'; // Get the branch name from session
+        sessionBranch = sessionBranch.trim();
+
+        const branchDropdown = document.getElementById('branchid');
+
+            if (branchDropdown) {
+                if (sessionBranch !== 'All') {
+                    // Loop through the options and remove all except the one matching the session branch
+                    for (let i = branchDropdown.options.length - 1; i >= 0; i--) {
+                        let option = branchDropdown.options[i];
+                        if (option.text.trim() !== sessionBranch) {
+                            option.remove();  // Remove options that don't match the session branch
+                        }
+                    }
+
+                    // Set the selected branch (it will already be the only option left)
+                    for (let i = 0; i < branchDropdown.options.length; i++) {
+                        if (branchDropdown.options[i].text.trim() === sessionBranch) {
+                            branchDropdown.selectedIndex = i;
+                            break;
+                        }
+                    }
+                }
+            }
+
+        </script>*@
 </body>
 </html>

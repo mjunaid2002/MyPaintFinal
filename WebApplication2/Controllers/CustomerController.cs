@@ -32,6 +32,11 @@ namespace WebApplication1.Controllers
         public ActionResult Create(Customers customers)
         {
             customers.customerid = _context.Database.SqlQuery<decimal>("select ISNULL(Max(customerid),0)+1 from customers").FirstOrDefault();
+            //var list = _context.Database.SqlQuery<Employee>("select * from  Employees").ToList();
+            var list = _context.Database.SqlQuery<Acc_Empolyee>("select AccountNo as ID,AccountTitleName as Name  from  AccountTitles").ToList();
+            var BeltArea = _context.Database.SqlQuery<BeltArea>("select  * from  BeltArea").ToList();
+            ViewBag.employee = list;
+            ViewBag.BeltArea = BeltArea;
             return View(customers);
         }
         [HttpPost, ActionName("Create")]
@@ -62,19 +67,25 @@ namespace WebApplication1.Controllers
                 account_no1 = Convert.ToInt32(customers.accno + 1);
             }
             _context.Database.ExecuteSqlCommand("insert into AccountTitles (b_unit,AccountNo,AccMain,AccountHeadId,AccountTitleName,AccountType,cr,dr,Secondlevel) values('0'," + account_no1 + ",1001,1,N'" + customers.Name + "','Customer',0,0,'1000001')");
-            _context.Database.ExecuteSqlCommand("insert into customers (NTN,partywht,customerid,Name,address,Cityid,sectorid,Phone,mobile,email,discount,accno) values('" + customers.NTN + "'," + customers.partywht + "," + customers.customerid + ",N'" + customers.Name + "',N'" + customers.Address + "',1,1,N'" + customers.Phone + "',N'" + customers.mobile + "',N'" + customers.email + "',0," + account_no1 + ")");
+            _context.Database.ExecuteSqlCommand("insert into customers (NTN,partywht,customerid,Name,address,Cityid,sectorid,Phone,mobile,email,discount,accno, BeltArea, employer,creditlimitamount,creditlimitdays) values('" + customers.NTN + "'," + customers.partywht + "," + customers.customerid + ",N'" + customers.Name + "',N'" + customers.Address + "',1,1,N'" + customers.Phone + "',N'" + customers.mobile + "',N'" + customers.email + "',0," + account_no1 + "," + customers.BeltArea + "," + customers.employer + "," + customers.creditlimitamount + "," + customers.creditlimitdays + ")");
 
             return RedirectToAction("Index");
         }
         public ActionResult Edit(int? ID)
         {
             var cargo = _context.Database.SqlQuery<Customers>("select * from customers where customerid =" + ID + "").SingleOrDefault();
+            //var list = _context.Database.SqlQuery<Employee>("select * from  Employees").ToList();
+            var list = _context.Database.SqlQuery<Acc_Empolyee>("select AccountNo as ID,AccountTitleName as Name  from  AccountTitles").ToList();
+
+            var BeltArea = _context.Database.SqlQuery<BeltArea>("select * from  BeltArea").ToList();
+            ViewBag.employee = list;
+            ViewBag.BeltArea = BeltArea;
             return View(cargo);
         }
         [HttpPost]
         public ActionResult Edit(Customers customers)
         {
-            _context.Database.ExecuteSqlCommand("UPDATE  customers set NTN='" + customers.NTN + "',partywht=" + customers.partywht + ", Name='" + customers.Name + "',address='" + customers.Address + "',Phone='" + customers.Phone + "',email='" + customers.email + "',mobile='" + customers.mobile + "'  where customerid = " + customers.customerid + "");
+            _context.Database.ExecuteSqlCommand("UPDATE  customers set NTN='" + customers.NTN + "',partywht=" + customers.partywht + ", Name='" + customers.Name + "',address='" + customers.Address + "',Phone='" + customers.Phone + "',email='" + customers.email + "',mobile='" + customers.mobile + "',BeltArea=" + customers.BeltArea + ",employer=" + customers.employer + "  ,creditlimitamount=" + customers.creditlimitamount + "  ,creditlimitdays=" + customers.creditlimitdays + "  where customerid = " + customers.customerid + "");
             _context.Database.ExecuteSqlCommand("UPDATE AccountTitles set AccountTitleName = N'" + customers.Name + "' where AccountNo = " + customers.accno + "");
             return RedirectToAction("Index");
         }
