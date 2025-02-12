@@ -114,12 +114,12 @@
         ;
 
         var name=string.Join(",", branchnames);*@
-var branchNames = Session["Branch"] as List<string>;
-var branchNamesString = string.Join(",", branchNames ?? new List<string>());
-if (branchNames != null && branchNames.Contains("All"))
-{
-    branchNamesString = "All";  // If "All" is selected, display "All"
-}
+    var branchNames = Session["Branch"] as List<string>;
+    var branchNamesString = string.Join(",", branchNames ?? new List<string>());
+    if (branchNames != null && branchNames.Contains("All"))
+    {
+        branchNamesString = "All";  // If "All" is selected, display "All"
+    }
 
 }
 <body>
@@ -146,15 +146,15 @@ if (branchNames != null && branchNames.Contains("All"))
                 <div class="header-section" id="search-headerbox">
                     @if (!string.IsNullOrEmpty(branchNamesString))
                     {
-                <h5 class="pull-right"><b>| Branch : @branchNamesString |</b></h5> }
-                            @*@if (Session["Branch"] != null && !string.IsNullOrEmpty(Session["Branch"].ToString()))
-                {
-                    <h5 class="pull-right"><b>| Branch : @Session["Branch"].ToString() |</b></h5>
+                        <h5 class="pull-right"><b>| Branch : @branchNamesString |</b></h5> }
+                    @*@if (Session["Branch"] != null && !string.IsNullOrEmpty(Session["Branch"].ToString()))
+                        {
+                            <h5 class="pull-right"><b>| Branch : @Session["Branch"].ToString() |</b></h5>
 
-                }*@
-                            @*@if (branchNames != null && !string.IsNullOrEmpty(branchNames.ToString()))
-                {
-                    <h5 class="pull-right"><b>| Branch : @branchNamesString |</b></h5>}*@
+                        }*@
+                    @*@if (branchNames != null && !string.IsNullOrEmpty(branchNames.ToString()))
+                        {
+                            <h5 class="pull-right"><b>| Branch : @branchNamesString |</b></h5>}*@
 
                     @if (Session["CurrentUserName"] != null && !string.IsNullOrEmpty(Session["CurrentUserName"].ToString()))
                     {
@@ -204,12 +204,18 @@ if (branchNames != null && branchNames.Contains("All"))
                                             {
                                                 <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "QualityCategory")"> Quality Category</a></li>
                                             }
-                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "Scheme")">Scheme</a></li>
-
+                                            @if (Session["SubScheme"].ToString() != "0")
+                                            {
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "Scheme")">Scheme</a></li>
+                                            }
                                             @if (Session["SubRegion"].ToString() != "0")
                                             {
                                                 <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "Region")"> Region</a></li>
+                                            }
+                                            @if (Session["SubBranch"].ToString() != "0")
+                                            {
                                                 <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "Branch")"> Branch </a></li>
+
                                             }
                                             @if (Session["SubRawProduct"].ToString() != "0")
                                             {
@@ -224,8 +230,12 @@ if (branchNames != null && branchNames.Contains("All"))
                                                 <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "FinishTransfer")"> Finished Transfer</a></li>
                                                 @*<li style="background-color: #2C3E50 !important;"><a href="@Url.Action("BranchStockIndex", "BranchTransfer")"> Branch Opening Stock</a></li>*@
                                             }
-                                            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "BranchTransfer")"> Branch Transfer</a></li>
 
+
+                                            @if (Session["SubBranchTransfer"].ToString() != "0")
+                                            {
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "BranchTransfer")"> Branch Transfer</a></li>
+                                            }
                                             @if (Session["SubEmployeeDepartment"].ToString() != "0")
                                             {
                                                 <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "Emp_Department")"> Emp_Department</a></li>
@@ -234,9 +244,13 @@ if (branchNames != null && branchNames.Contains("All"))
                                             {
                                                 <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "Employee")"> Employee</a></li>
                                             }
-                                            @if (Session["SubCustomers"].ToString() != "0")
+                                            @if (Session["SubBeltArea"].ToString() != "0")
                                             {
                                                 <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "BeltArea")"> Belt Area</a></li>
+
+                                            }
+                                            @if (Session["SubCustomers"].ToString() != "0")
+                                            {
                                                 <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Index", "Customer")"> Customers</a></li>
                                             }
                                             @if (Session["SubSuppliers"].ToString() != "0")
@@ -786,11 +800,11 @@ if (branchNames != null && branchNames.Contains("All"))
         InitiateExpandableDataTable.init();
         InitiateSearchableDataTable.init();
     </script>
-    @{ 
+    @{
         var branchNames1 = Session["Branch"] as List<string>;
         var BranchNames1 = branchNames1 != null ? string.Join(",", branchNames1) : "";
     }
-<script>
+    <script>
     @*var sessionBranches = '@BranchNames1'.split(',');*@
 
      var sessionBranches = '@BranchNames1'.split(',').map(function(branch) {
@@ -801,9 +815,9 @@ if (branchNames != null && branchNames.Contains("All"))
 
     const branchDropdown = document.getElementById('branchid');
     if (branchDropdown) {
-        
+
         if (!sessionBranches.includes('All')) {
-          
+
             // If the session branch is not 'All', filter the dropdown options
             for (let i = branchDropdown.options.length - 1; i >= 0; i--) {
                 let option = branchDropdown.options[i];
@@ -869,7 +883,7 @@ if (branchNames != null && branchNames.Contains("All"))
     //    //    }
     //    //}
     //}
-</script>
+    </script>
 
     @*<script>
 

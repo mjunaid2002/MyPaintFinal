@@ -37,12 +37,18 @@ namespace WebApplication1.Controllers
                 strquery = " AND date between '" + StartDate + "' and '" + Enddate + "'  ";
          
             var branchid = Request["branchid"];
-            var branch = Session["Branch"];
-            if (branchid == null && branch != "All")
+            //var branch = Session["Branch"];
+            //if (branchid == null && branch != "All")
+            //{
+            //    branchid = Session["BranchId"].ToString();
+            //}
+            var branch = Session["Branch"] as List<string>;
+            if (branchid == null && !branch.Contains("All"))
             {
-                branchid = Session["BranchId"].ToString();
+                var branchids = Session["BranchId"] as List<int>;
+                strquery += " AND branchid IN (" + string.Join(",", branchids) + ")";
             }
-            if (!string.IsNullOrEmpty(branchid))
+            else if (!string.IsNullOrEmpty(branchid))
             {
                 strquery += " and branchid = " + branchid;
             }

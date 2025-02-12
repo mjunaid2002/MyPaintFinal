@@ -224,13 +224,17 @@
      function Action1(code) {
 
         var item = document.getElementById("id").value;
-        var regionid = document.getElementById("regionid").value;
+         var regionid = document.getElementById("regionid").value;
+         var branchid = document.getElementById("branchid").value;
+
         $.ajax({
             /**/
             url: '@Url.Action("ActionRate1", "SaleInvoiceNew")',
             /**/
             type: "POST",
-            data: { "code": code, "code1": item, "regionid": regionid },
+            data: { "code": code, "code1": item, "regionid": regionid, "branchid": branchid },
+
+            //data: { "code": code, "code1": item, "regionid": regionid },
             "success": function (data) {
                 //if (data != null) {
                 //    var vdata = data;

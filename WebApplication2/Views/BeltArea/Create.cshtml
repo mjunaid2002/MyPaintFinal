@@ -32,11 +32,13 @@
                                         <label> Name</label>
                                         @Html.TextBoxFor(m => m.Name, new { @class = "form-control input-xs", @required = "required" })
                                     </div>
-                                  
-                                    <div class="col-sm-12">
-                                        <button type="submit" class="btn btn-primary" style="margin-top:10px"><i class="fa fa-save"></i> Save</button>
+                                    @if (Session["SubBeltAreaA"].ToString() != "0")
+                                    {
+                                        <div class="col-sm-12">
+                                            <button type="submit" class="btn btn-primary" style="margin-top:10px"><i class="fa fa-save"></i> Save</button>
+                                        </div>
+                                    }
                                     </div>
-                                </div>
                             </form>
                         </div>
                     </div>

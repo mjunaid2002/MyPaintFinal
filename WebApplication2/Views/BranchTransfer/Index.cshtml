@@ -48,10 +48,11 @@
                 <button type="submit" name="submit" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Search &nbsp;&nbsp;</button>
             </div>
         }
-        <a href="@Url.Action("Create", "BranchTransfer")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  Create New</a>
 
-        @if (Session["SubFinishedTransferA"].ToString() != "0")
+        @if (Session["SubBranchTransferA"].ToString() != "0")
         {
+            <a href="@Url.Action("Create", "BranchTransfer")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  Create New</a>
+
         }
     </div>
 
@@ -84,21 +85,23 @@
                                         <td>@item.Toname</td>
                                         <td>@item.status</td>
                                         <td>
-                                            <a href="@Url.Action("Edit", new { ID = item.invid })" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="label label-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
 
 
-                                            <a href="@Url.Action("PrintInvoice", new { ID = item.invid })" class="label label-success shiny input-xs" target="_blank"><i class="fa fa-print"></i></a>
 
-                                            @if (Session["SubFinishedTransferU"].ToString() != "0")
+                                            @if (Session["SubBranchTransferU"].ToString() != "0")
                                             {
+                                                <a href="@Url.Action("Edit", new { ID = item.invid })" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="label label-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
+
                                             }
                                             @*@if (Session["SubFinishedTransferD"].ToString() != "0")
-                                            {
-                                                <a href="@Url.Action("Delete", new { ID = item.invid })" new { onclick="return confirm('Are you sure you want to Delete this record?');" class="label label-danger shiny input-xs"><i class="fa fa-trash"></i></a>
+                                                {
+                                                    <a href="@Url.Action("Delete", new { ID = item.invid })" new { onclick="return confirm('Are you sure you want to Delete this record?');" class="label label-danger shiny input-xs"><i class="fa fa-trash"></i></a>
 
-                                            }*@
-                                            @if (Session["SubFinishedTransferV"].ToString() != "0")
+                                                }*@
+                                            @if (Session["SubBranchTransferV"].ToString() != "0")
                                             {
+                                                <a href="@Url.Action("PrintInvoice", new { ID = item.invid })" class="label label-success shiny input-xs" target="_blank"><i class="fa fa-print"></i></a>
+
                                             }
                                         </td>
                                     </tr>

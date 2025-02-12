@@ -48,14 +48,14 @@
                                     <div class="col-sm-12">
                                         @if (Model.id == 0)
                                         {
-                                            if (Session["SubRegionA"].ToString() != "0")
+                                            if (Session["SubBranchA"].ToString() != "0")
                                             {
                                                 <button type="submit" class="btn btn-primary" style="margin-top:10px"><i class="fa fa-save"></i> Save</button>
                                             }
                                         }
                                         else
                                         {
-                                            if (Session["SubRegionU"].ToString() != "0")
+                                            if (Session["SubBranchU"].ToString() != "0")
                                             {
                                                 <button type="submit" class="btn btn-primary" style="margin-top:10px"><i class="fa fa-save"> </i> Update</button>
                                             }
