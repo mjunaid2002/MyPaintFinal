@@ -3993,6 +3993,11 @@
     <Content Include="Views\BranchTransfer\BranchStockIndex.cshtml" />
     <Content Include="Views\BranchTransfer\BranchStockCreate1.cshtml" />
     <Content Include="Views\BranchTransfer\BranchOpeningStockCreate.cshtml" />
+    <Content Include="Views\Report\Sale_recoveryIndex.cshtml" />
+    <Content Include="Views\Report\Sale_recoverySearch.cshtml" />
+    <Content Include="Views\FinishedWastage\IndexWastage.cshtml" />
+    <Content Include="Views\FinishedWastage\CreateWastage.cshtml" />
+    <Content Include="Views\FinishedWastage\EditWastage.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

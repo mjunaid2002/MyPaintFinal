@@ -37,6 +37,7 @@
             var id = document.getElementById("id").value;
           /*  var ToStore = document.getElementById("ToStore").value;*/
             var item_name = document.getElementById("item_name").value;
+            var stock = document.getElementById("stock").value;
             var qty = document.getElementById("ctn").value;
             var packing = document.getElementById("packing").value;
 
@@ -45,6 +46,9 @@
 
             if (id == "" || id == 0) {
                 //  alert("Please Select Item");
+            }
+            else if (parseInt(qty) > parseInt(stock)) {
+                alert("Stock is Not Available");
             }
             else if (qty == "" || qty == 0) {
 
@@ -69,6 +73,7 @@
                 $('#id').val('');
                 $('#item_name').val('');
                 $('#ctn').val('0');
+                $('#stock').val('0');
                 $('#packing').val('-Select Packing-');
 
             }
@@ -76,7 +81,34 @@
         function deleteRow(btn) {
             if (confirm("Are you sure want to delete the row?"))
                 $(btn).closest("tr").remove();
-        }
+    }
+
+     function Action1(code) {
+        var item = document.getElementById("id").value;
+       
+         var branchid = document.getElementById("frombranch").value;
+        $.ajax({
+            /**/
+            url: '@Url.Action("ActionRate1", "SaleInvoiceNew")',
+            /**/
+            type: "POST",
+            data: { "code": code, "code1": item, "regionid": 0, "branchid": branchid },
+            "success": function (data) {
+                //if (data != null) {
+                //    var vdata = data;
+                //    //  alert(vdata);
+                //    $("#sp").val(vdata[0].sp);
+                //}
+                if (data != null) {
+                    var stock = data.stock;
+                    var vdata = data.getgrosspackage;
+                    //  alert(vdata);
+                    //$("#sp").val(vdata[0].sp);
+                    $("#stock").val(stock);
+                }
+            }
+        });
+    }
 
 </script>
 
@@ -135,11 +167,11 @@
                             </div>
                             <div class="form-group col-sm-2">
                                 <label>From </label>
-                                @Html.DropDownListFor(m => m.BranchTransfer.Frombranch, new SelectList(Model.Branch_list, "id", "name"), "Select Branch", htmlAttributes: new { @class = "chosen-select form-control", @required = "true" })
+                                @Html.DropDownListFor(m => m.BranchTransfer.Frombranch, new SelectList(Model.Branch_list, "id", "name"), "Select Branch", htmlAttributes: new { @class = "chosen-select form-control", @required = "true",id="frombranch" })
                             </div>
                             <div class="form-group col-sm-2">
                                 <label>TO</label>
-                                @Html.DropDownListFor(m => m.BranchTransfer.Tobranch, new SelectList(Model.Branch_list, "id", "name"), "Select Branch", htmlAttributes: new { @class = "chosen-select form-control", @required = "true" })
+                                @Html.DropDownListFor(m => m.BranchTransfer.Tobranch, new SelectList(Model.Branch_list, "id", "name"), "Select Branch", htmlAttributes: new { @class = "chosen-select form-control", @required = "true", id = "tobranch" })
                             </div>
                             <div class="form-group col-sm-3">
                                     <label>Status</label>
@@ -172,7 +204,7 @@
                                 </div>
                                 <div class="form-group col-sm-1" style="margin-left:-20px;width:150px">
                                     <label>Packing</label>
-                                    <select id="packing" class="form-control">
+                                    <select id="packing" class="form-control"  onChange="Action1(this.value)">
                                         <option>-Select Packing-</option>
                                         <option value="Dubbi">Dubbi</option>
                                         <option value="Quarter">Quarter</option>
@@ -180,6 +212,11 @@
                                         <option value="Gallon">Gallon</option>
                                     </select>
                                 </div>
+                                <div class="form-group col-sm-1" style="margin-left:-20px;width:180px">
+                                    <label>Stock</label>
+                                    <input type="number" id="stock" value="0" class="form-control" readonly/>
+                                </div>
+                                
                                 <div class="form-group col-sm-1" style="margin-left:-20px;width:180px">
                                     <label>Qty</label>
                                     <input type="number" id="ctn" value="0" class="form-control" />

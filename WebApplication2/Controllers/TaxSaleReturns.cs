@@ -102,6 +102,10 @@ namespace WebApplication1.Controllers
             var list = _context.Database.SqlQuery<SaleReturnDetailQuery>("select  packing,prname,qty,sp,total,dsicval,totalafterdisc,gst  from srsdetail where OrderID =" + ID + " and Status='TSRINV'").ToList();
             var date = _context.Database.SqlQuery<DateTime>("SELECT Date FROM srsm where OrderID =" + ID + " and title='TSRINV'").FirstOrDefault();
             var grandtotal = _context.Database.SqlQuery<decimal>("SELECT total FROM srsm where OrderID =" + ID + " and title='TSRINV'").FirstOrDefault();
+            var Regionid = _context.Database.SqlQuery<decimal>("SELECT ISNULL(RegionId,0) FROM srsm where OrderID =" + ID + " and title='TSRINV'").FirstOrDefault();
+            var region = _context.Database.SqlQuery<string>("SELECT Name FROM Region where id=" + Regionid + "").FirstOrDefault();
+            var branchid = _context.Database.SqlQuery<int>("SELECT ISNULL(branchid,0) FROM srsm where OrderID =" + ID + " and title='TSRINV'").FirstOrDefault();
+            var branch = _context.Database.SqlQuery<string>("SELECT name FROM Branch where id=" + branchid + "").FirstOrDefault();
 
             //var CompanyName = _context.Database.SqlQuery<String>("SELECT CompanyName FROM Settings ").FirstOrDefault();
             //var Email = _context.Database.SqlQuery<String>("SELECT Email FROM Settings ").FirstOrDefault();
@@ -153,6 +157,8 @@ namespace WebApplication1.Controllers
                 ViewData["date"] = date.ToString("dd-MMM-yyyy");
 
                 ViewData["OrderId"] = ID;
+                ViewData["Region"] = region;
+                ViewData["Branch"] = branch;
                 ViewData["customername"] = customer;
                 ViewData["cusemail"] = cusemail;
                 ViewData["cusphone"] = cusphone;

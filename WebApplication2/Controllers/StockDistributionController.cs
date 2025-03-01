@@ -161,7 +161,7 @@ namespace WebApplication2.Controllers
 
                 for (int i = 0; i < item_name.Count(); i++)
                 {
-                    _context.Database.ExecuteSqlCommand("INSERT INTO StockDistributionDetail(sr, pid, pname, qty, invid, FromBranchId, ToBranchId, FromStore, ToStore, date,price,total)  VALUES (" + i + "," + id[i] + ",'" + item_name[i] + "'," + qty[i] + "," + distribution.invid + ",'" + distribution.FromBranchId + "','" + distribution.ToBranchId + "','" + distribution.FromStore + "','" + ToStore[i] + "','" + DateTime.Today + "','"+price[i]+"','"+total[i]+"')");
+                    _context.Database.ExecuteSqlCommand("INSERT INTO StockDistributionDetail(sr, pid, pname, qty, invid, FromBranchId, ToBranchId, FromStore, ToStore, date,price,total)  VALUES (" + i + "," + id[i] + ",'" + item_name[i] + "'," + qty[i] + "," + distribution.invid + ",'" + distribution.FromBranchId + "','" + distribution.ToBranchId + "','" + distribution.FromStore + "','" + ToStore[i] + "','" + distribution.date + "','"+price[i]+"','"+total[i]+"')");
                 }
 
                 if (item_name3 != null)
@@ -169,7 +169,7 @@ namespace WebApplication2.Controllers
 
                     for (int i = 0; i < item_name3.Count(); i++)
                     {
-                        _context.Database.ExecuteSqlCommand("INSERT INTO StockDistributionDetail1(sr,invid, pid, pname, qty, packing,date)  VALUES (" + i + "," + distribution.invid + "," + id3[i] + ",'" + item_name3[i] + "','" + qty3[i] + "','" + packing3[i] + "','" + DateTime.Today + "')");
+                        _context.Database.ExecuteSqlCommand("INSERT INTO StockDistributionDetail1(sr,invid, pid, pname, qty, packing,date)  VALUES (" + i + "," + distribution.invid + "," + id3[i] + ",'" + item_name3[i] + "','" + qty3[i] + "','" + packing3[i] + "','" + distribution.date + "')");
                     }
                 }
             }

@@ -99,10 +99,13 @@ namespace WebApplication1.Controllers
             //var list = _context.Database.SqlQuery<SaleReturnDetailQuery>("select  prname, packing, sp, qty, total, gst, totalgst, dsicval, totalafterdisc, disc_amount, wht, ntotal, (SELECT Categories.CategoryName AS productname FROM Product INNER JOIN Categories ON Product.CategoryID = Categories.CategoryID WHERE (Product.ProductID = srsdetail.prid)) AS catagoryname   from srsdetail where OrderID =" + ID + " and Status='WTSINV'").ToList();
             var list = _context.Database.SqlQuery<SaleReturnDetailQuery>("SELECT prid, prname, packing, sp, qty, total, gst, totalgst, dsicval, totalafterdisc, disc_amount, wht, ntotal, (SELECT Categories.CategoryName AS productname FROM Product INNER JOIN Categories ON Product.CategoryID = Categories.CategoryID WHERE (Product.ProductID = srsdetail.prid)) AS catagoryname, (SELECT CapDubbi FROM Product AS Product_1 WHERE (ProductID = srsdetail.prid)) AS CapDubbi, (SELECT CapQuarter FROM Product AS Product_1 WHERE (ProductID = srsdetail.prid)) AS CapQuarter, (SELECT CapGallon FROM Product AS Product_1 WHERE (ProductID = srsdetail.prid)) AS CapGallon, (SELECT CapDrum FROM Product AS Product_1 WHERE (ProductID = srsdetail.prid)) AS CapDrum FROM srsdetail  where OrderID =" + ID + " and Status='WTSINV'").ToList();
             var date = _context.Database.SqlQuery<DateTime>("SELECT Date FROM srsm where OrderID =" + ID + " and title='WTSINV'").FirstOrDefault();
-             var grandtotal = _context.Database.SqlQuery<decimal>("SELECT ntotal FROM srsm where OrderID =" + ID + " and title='WTSINV'").FirstOrDefault();
+            var grandtotal = _context.Database.SqlQuery<decimal>("SELECT ntotal FROM srsm where OrderID =" + ID + " and title='WTSINV'").FirstOrDefault();
+            var invno = _context.Database.SqlQuery<decimal>("SELECT orderid FROM srsm where OrderID =" + ID + " and title='WTSINV'").FirstOrDefault();
             var Regionid = _context.Database.SqlQuery<decimal>("SELECT ISNULL(RegionId,0) FROM srsm where OrderID =" + ID + " and title='WTSINV'").FirstOrDefault();
-            var invno = _context.Database.SqlQuery<string>("SELECT custntn FROM srsm where OrderID =" + ID + " and title='WTSINV'").FirstOrDefault();
             var region = _context.Database.SqlQuery<string>("SELECT Name FROM Region where id=" + Regionid + "").FirstOrDefault();
+            var branchid = _context.Database.SqlQuery<int>("SELECT ISNULL(branchid,0) FROM srsm where OrderID =" + ID + " and title='WTSINV'").FirstOrDefault();
+            var branch = _context.Database.SqlQuery<string>("SELECT name FROM Branch where id=" + branchid + "").FirstOrDefault();
+
 
             var CompanyName = _context.Database.SqlQuery<string>("SELECT company FROM   tbl_setting ").FirstOrDefault();
             var Email = _context.Database.SqlQuery<string>("SELECT email FROM   tbl_setting ").FirstOrDefault();
@@ -161,6 +164,7 @@ namespace WebApplication1.Controllers
                 ViewData["OrderId"] = ID;
                 ViewData["invno"] = invno;
                 ViewData["Region"] = region;
+                ViewData["branch"] = branch;
                 ViewData["customername"] = customer;
                 ViewData["customeraccno"] = customeraccno;
                 ViewData["cusemail"] = cusemail;

@@ -459,6 +459,8 @@ namespace WebApplication1.Controllers
                 Session["SubRptBatchBalance"] = "1";
                 Session["SubRptPurchaseReport"] = "1";
                 Session["SubRptSaleReport"] = "1";
+                Session["SubRptSaleRecoveryReport"] = "1";
+                Session["SubRptSaleCommReport"] = "1";
                 Session["SubRptBatchSheetSummery"] = "1";
                 Session["SubRptBatchSheetSummeryCostVisible"] = "1";
                 Session["SubRptLabSheetSummery"] = "1";
@@ -1146,11 +1148,13 @@ namespace WebApplication1.Controllers
                     Session["SubRptBatchBalance"] = GetFormStatus(Session["UserID"].ToString(), 10003, 2);
                     Session["SubRptPurchaseReport"] = GetFormStatus(Session["UserID"].ToString(), 10004, 2);
                     Session["SubRptSaleReport"] = GetFormStatus(Session["UserID"].ToString(), 10005, 2);
+                    Session["SubRptSaleRecoveryReport"] = GetFormStatus(Session["UserID"].ToString(), 10011, 2);
+                    Session["SubRptSaleCommReport"] = GetFormStatus(Session["UserID"].ToString(), 10010, 2);
                     Session["SubRptBatchSheetSummery"] = GetFormStatus(Session["UserID"].ToString(), 10006, 2);
                     Session["SubRptBatchSheetSummeryCostVisible"] = GetFormStatus(Session["UserID"].ToString(), 10008, 2);
                     Session["SubRptLabSheetSummery"] = GetFormStatus(Session["UserID"].ToString(), 10007, 2);
                     Session["SubRptFillingReportSummery"] = GetFormStatus(Session["UserID"].ToString(), 10009, 2);
-                    if (Session["SubRptRawMaterial"].ToString() != "0" ||Session["SubRptFillingReportSummery"].ToString() != "0" || Session["SubRptFinishedItems"].ToString() != "0" || Session["SubRptBatchBalance"].ToString() != "0" || Session["SubRptPurchaseReport"].ToString() != "0" || Session["SubRptSaleReport"].ToString() != "0" || Session["SubRptBatchSheetSummery"].ToString() != "0"  || Session["SubRptBatchSheetSummeryCostVisible"].ToString() != "0" || Session["SubRptLabSheetSummery"].ToString() != "0")
+                    if (Session["SubRptRawMaterial"].ToString() != "0" ||Session["SubRptFillingReportSummery"].ToString() != "0" || Session["SubRptFinishedItems"].ToString() != "0" || Session["SubRptBatchBalance"].ToString() != "0" || Session["SubRptPurchaseReport"].ToString() != "0" || Session["SubRptSaleReport"].ToString() != "0" || Session["SubRptSaleRecoveryReport"].ToString() != "0" || Session["SubRptSaleCommReport"].ToString() != "0" || Session["SubRptBatchSheetSummery"].ToString() != "0"  || Session["SubRptBatchSheetSummeryCostVisible"].ToString() != "0" || Session["SubRptLabSheetSummery"].ToString() != "0")
                         Session["MenuReports"] = 2;
                     else
                         Session["MenuReports"] = GetFormStatus(Session["UserID"].ToString(), 10, 1);

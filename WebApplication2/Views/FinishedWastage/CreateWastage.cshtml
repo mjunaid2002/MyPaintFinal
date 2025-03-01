@@ -245,18 +245,18 @@
         <div class="col-sm-12">
             <h4 class="section-subtitle"><b> For Finished</b></h4>
 
-            <a href="@Url.Action("Index", "FinishedWastage")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  List</a>
+            <a href="@Url.Action("IndexWastage", "FinishedWastage")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  List</a>
             <div class="panel">
-                <form asp-action="Create" id="invoice-form" method="post" enctype="multipart/form-data" onsubmit="return confirm('Are you sure you want to Continue ?');">
+                <form asp-action="Createwastage" id="invoice-form" method="post" enctype="multipart/form-data" onsubmit="return confirm('Are you sure you want to Continue ?');">
                     <div class="panel-content">
                         <div class="row">
                             <div class="form-group col-sm-2">
                                 <label>INVID</label>
-                                @Html.TextBoxFor(m => m.samplem.invid, new { @class = "form-control input-xs", @readonly = "readonly" })
+                                @Html.TextBoxFor(m => m.StockdamageM.invid, new { @class = "form-control input-xs", @readonly = "readonly" })
                             </div>
                             <div class="form-group col-sm-2">
                                 <label>Date</label>
-                                @Html.TextBoxFor(m => m.samplem.date, new { @class = "form-control input-xs", id = "date", type = "Date", @Value = DateTime.Now.ToString("yyyy-MM-dd") })
+                                @Html.TextBoxFor(m => m.StockdamageM.date, new { @class = "form-control input-xs", id = "date", type = "Date", @Value = DateTime.Now.ToString("yyyy-MM-dd") })
                             </div>
                             <div class="form-group col-sm-2">
                                 <label>Type</label>
@@ -265,17 +265,17 @@
                                     <option value="Damage">Damage</option>
                                 </select>
                             </div>
-                         
-                                <div class="form-group col-sm-2">
-                                    <label>Select Region</label>
-                                    @Html.DropDownListFor(m => m.samplem.regionid, new SelectList(Model.Region_list, "Id", "Name"), "Select Region", htmlAttributes: new { @class = "chosen-select form-control", @required = "true" })
-                                </div>
-                         
 
-                           
+                            <div class="form-group col-sm-2">
+                                <label>Select Branch</label>
+                                @Html.DropDownListFor(m => m.StockdamageM.branchid, new SelectList(Model.Branch_list, "id", "name"), "Select Branch", htmlAttributes: new { @class = "chosen-select form-control", @required = "true" })
+                            </div>
+
+
+
                             <div class="form-group col-sm-4">
                                 <label>Invoice Note</label>
-                                @Html.TextAreaFor(m => m.samplem.note, new { @class = "form-control input-xs", style = " rows=2, columns=40", id = "Address" })
+                                @Html.TextAreaFor(m => m.StockdamageM.note, new { @class = "form-control input-xs", style = " rows=2, columns=40", id = "Address" })
                             </div>
                             <div class="form-group col-sm-2">
                                 <a class="btn btn-wide btn-info pull-right" data-toggle="modal" data-target="#lg-modal" style="margin-top:25px;margin-left:-40px"><i class="fa fa-search-plus"></i>  Search Items</a>
@@ -294,7 +294,7 @@
                                 </div>
                                 <div class="form-group col-sm-1" style="margin-left:-20px;width:150px">
                                     <label>Packing</label>
-                                    <select id="packing" class="form-control" onChange="Action1(this.value)"> 
+                                    <select id="packing" class="form-control" onChange="Action1(this.value)">
                                         <option>-Select Packing-</option>
                                         <option value="Dubbi">Dubbi</option>
                                         <option value="Quarter">Quarter</option>
@@ -349,13 +349,13 @@
                             <div class="col-12">
                                 <div class="form-group col-sm-3">
                                     <label>Total</label>
-                                    @Html.TextBoxFor(m => m.samplem.total, new { @class = "form-control input-xs", type = "number", value = "0", id = "net_final", @readonly = "readonly" })
+                                    @Html.TextBoxFor(m => m.StockdamageM.total, new { @class = "form-control input-xs", type = "number", value = "0", id = "net_final", @readonly = "readonly" })
                                 </div>
                             </div>
                             <div class="col-sm-12">
                                 @if (Session["SubForFinishedA"].ToString() != "0")
                                 {
-                                    <button type="submit" onclick="return check_total()" class="btn btn-primary col-sm-4 col-sm-offset-4" style="margin-top: 10px; background-color: #3498DB !important; border: 1px solid #3498DB "><i class="fa fa-save"></i> &nbsp; Save</button>
+                                    <button type="submit" onclick="return check_total()" class="btn btn-primary col-sm-4 col-sm-offset-4" style="margin-top: 10px; background-color: #3498DB !important; border: 1px solid #3498DB "><i class="fa fa-save"></i> &nbsp; Save </button>
                                 }
                             </div>
                         </div>

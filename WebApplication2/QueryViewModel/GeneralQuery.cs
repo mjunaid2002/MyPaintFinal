@@ -517,6 +517,7 @@ namespace WebApplication1.QueryViewModel
         public string ext5 { get; set; }
         public string ext6 { get; set; }  
         public string maincataname { get; set; }
+        public decimal maincataid { get; set; }
         public DateTime date { get; set; }
 
     }
@@ -639,6 +640,18 @@ namespace WebApplication1.QueryViewModel
         public string regionname { get; set; }
 
     }
+    public class StockdamageM
+    {
+        public decimal invid { get; set; }
+        public int branchid { get; set; }
+        public decimal total { get; set; }
+        public string note { get; set; }
+        public string status { get; set; }
+        public string date { get; set; }
+        [NotMapped]
+        public string branchname { get; set; }
+
+    }
     public class PoMaster
     {
         public decimal invid { get; set; }
@@ -660,6 +673,20 @@ namespace WebApplication1.QueryViewModel
         public string note { get; set; }
     }
     public class sampledetail
+    {
+        public decimal sr { get; set; }
+        public string packing { get; set; }
+        public string pname { get; set; }
+        public decimal pid { get; set; }
+        public decimal cp { get; set; }
+        public decimal qty { get; set; }
+        public decimal total { get; set; }
+        public decimal invid { get; set; }
+        public DateTime date { get; set; }
+
+    }
+    
+    public class StockdamageDetail
     {
         public decimal sr { get; set; }
         public string packing { get; set; }
@@ -968,6 +995,15 @@ namespace WebApplication1.QueryViewModel
         public string idnit { get; set; }
         public string packing { get; set; }
 
+    }
+    public class SaleRecoveryReport
+    {
+        public decimal custid { get; set; }
+        public decimal sales { get; set; }
+        public string custname { get; set; }
+        public decimal recovery { get; set; }
+        public decimal opening_balance { get; set; }
+        public decimal closingBalance { get; set; }
     }
     public class QuotationQuery
     {

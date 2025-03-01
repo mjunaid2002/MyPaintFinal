@@ -26,6 +26,7 @@
         //  $("#account_name").val('200001');
         var v_type = document.getElementById("v_type").value;
         var selObj = document.getElementById("account_name");
+        var cash_account = document.getElementById("cash_account").value;
         var account_name = selObj.options[selObj.selectedIndex].text;
         var selObj = document.getElementById("account_name");
         var account_no = selObj.options[selObj.selectedIndex].value;
@@ -33,8 +34,11 @@
         var cr = document.getElementById("cr").value;
         var narr = document.getElementById("narr").value;
 
-        // alert(id);
-        if(account_name == "" || account_name == 0 || account_name == "Select Account") {
+        //alert(cash_account);
+        if (cash_account == "" || cash_account == 0 || cash_account == "Select Account") {
+            alert("Please Select Received  Account");
+        }
+        else if (account_name == "" || account_name == 0 || account_name == "Select Account") {
             alert("Please Select Account");
         }
         else if (cr == "" || cr == 0) {
@@ -218,7 +222,7 @@
                             </div>
                             <div class="form-group col-sm-3" >
                                 <label>Received IN Account</label>
-                                <select name="cash_account" class="chosen-select form-control">
+                                <select name="cash_account" class="chosen-select form-control" id="cash_account">
                                     <option value=""> Select Account</option>
                                     @foreach (var item in Model.Acc_List_cash)
                                     {

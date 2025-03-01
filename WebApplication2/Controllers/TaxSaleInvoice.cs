@@ -104,8 +104,10 @@ namespace WebApplication1.Controllers
             var date = _context.Database.SqlQuery<DateTime>("SELECT Date FROM srsm where OrderID =" + ID + " and title='TSINV'").FirstOrDefault();
             var Regionid = _context.Database.SqlQuery<decimal>("SELECT RegionId FROM srsm where OrderID =" + ID + " and title='TSINV'").FirstOrDefault();
             var region = _context.Database.SqlQuery<string>("SELECT Name FROM Region where id=" + Regionid + "").FirstOrDefault();
-            
-            
+            var branchid = _context.Database.SqlQuery<int>("SELECT ISNULL(branchid,0) FROM srsm where OrderID =" + ID + " and title='TSINV'").FirstOrDefault();
+            var branch = _context.Database.SqlQuery<string>("SELECT name FROM Branch where id=" + branchid + "").FirstOrDefault();
+
+
             var cargoid = _context.Database.SqlQuery<decimal>("SELECT cargo FROM srsm where OrderID =" + ID + " and title='TSINV'").FirstOrDefault();
             var cargo = _context.Database.SqlQuery<string>("SELECT Name FROM cargo where id=" + cargoid + "").FirstOrDefault();
             
@@ -165,6 +167,7 @@ namespace WebApplication1.Controllers
                 ViewData["OrderId"] = ID;
                
                 ViewData["Region"] = region;
+                ViewData["Branch"] = branch;
                 ViewData["cargo"] = cargo;
                 ViewData["customername"] = customer;
                 ViewData["cusemail"] = cusemail;

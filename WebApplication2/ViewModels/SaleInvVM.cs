@@ -17,6 +17,7 @@ namespace WebApplication1.ViewModels
         public IEnumerable<FinishTransferM> FinishTransferlist { get; set; }
         public IEnumerable<FinishTransferDetail> FinishTransferDetailList { get; set; }
         public BranchTransferM BranchTransfer { get; set; }
+        public StockdamageM StockdamageM { get; set; }
         public IEnumerable<BranchTransferM> BranchTransferList { get; set; }
         public BranchTransferDetail BranchTransferDetail { get; set; }
         public IEnumerable<BranchTransferDetail> BranchTransferDetailList { get; set; }
@@ -31,6 +32,7 @@ namespace WebApplication1.ViewModels
         public IEnumerable<DistributionMasterDetail> distributionDetailList { get; set; }
         public IEnumerable<DistributionMasterDetail1> distributionDetail1list { get; set; }
         public IEnumerable<sampledetail> sampledetail { get; set; }
+        public IEnumerable<StockdamageDetail> StockdamageDetail { get; set; }
          public IEnumerable<BatchFillingBatches> BatchFillingBatches { get; set; }
          public IEnumerable<BatchFillingDetailQUery> batchfillingdetail { get; set; }
          public IEnumerable<SaleReturnDetailQuery> saleReturnQueryDetail { get; set; }

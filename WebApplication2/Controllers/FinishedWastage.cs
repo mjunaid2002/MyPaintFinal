@@ -101,7 +101,7 @@ namespace WebApplication1.Controllers
             rd.SetDataSource(list);
             rd.SetParameterValue("date", date);
             rd.SetParameterValue("status", status);
-           
+
 
             Response.Buffer = false;
             Response.ClearContent();
@@ -118,7 +118,7 @@ namespace WebApplication1.Controllers
             var region = _context.Database.SqlQuery<Region>("Select * from Region").ToList();
             var SaleInvVM = new SaleInvVM
             {
-                Region_list= region,
+                Region_list = region,
                 samplem = samplem,
                 pro_listsss = pro_listsss,
             };
@@ -129,9 +129,9 @@ namespace WebApplication1.Controllers
         {
             for (int i = 0; i < item_name.Count(); i++)
             {
-                _context.Database.ExecuteSqlCommand("INSERT INTO sampledetail2 (packing,sr,pid,pname,cp,qty,total,invid,date ) VALUES ('"+ packing[i] + "'," + i + 1 + "," + id[i] + ",'" + item_name[i] + "'," + sp[i] + "," + qty[i] + "," + n_total[i] + "," + samplem.invid + ",'" + samplem.date + "')");
+                _context.Database.ExecuteSqlCommand("INSERT INTO sampledetail2 (packing,sr,pid,pname,cp,qty,total,invid,date ) VALUES ('" + packing[i] + "'," + i + 1 + "," + id[i] + ",'" + item_name[i] + "'," + sp[i] + "," + qty[i] + "," + n_total[i] + "," + samplem.invid + ",'" + samplem.date + "')");
             }
-            _context.Database.ExecuteSqlCommand("INSERT INTO samplem2 (invid,date,total,note,status,regionid) VALUES (" + samplem.invid + ",'" + samplem.date + "'," + samplem.total + ",'" + samplem.note + "','" + Request["status"] + "',"+samplem.regionid+")");
+            _context.Database.ExecuteSqlCommand("INSERT INTO samplem2 (invid,date,total,note,status,regionid) VALUES (" + samplem.invid + ",'" + samplem.date + "'," + samplem.total + ",'" + samplem.note + "','" + Request["status"] + "'," + samplem.regionid + ")");
             return RedirectToAction("Index");
         }
         public ActionResult SINVWCTNReport(int? ID, SaleMaster SaleMaster, TransactionDetail TransactionDetail)
@@ -262,5 +262,121 @@ namespace WebApplication1.Controllers
             return new_word;
         }
 
+        //Crud for Branch Wastage 
+        public ActionResult IndexWastage()
+        {
+            string strquery = " where date ='" + DateTime.Now.ToString("yyyy-MM-dd") + "' ";
+            var StartDate = Convert.ToDateTime(Request["s_date"]).ToString("yyyy-MM-dd");
+            var Enddate = Convert.ToDateTime(Request["e_date"]).ToString("yyyy-MM-dd");
+            if (StartDate != null && Enddate != null && StartDate != "0001-01-01" && Enddate != "0001-01-01")
+                strquery = " where date between '" + StartDate + "' and '" + Enddate + "'  ";
+
+            var list = _context.Database.SqlQuery<StockdamageM>("SELECT StockdamageM.invid, StockdamageM.date, StockdamageM.total, StockdamageM.note, StockdamageM.status, Branch.name AS branchname FROM StockdamageM INNER JOIN Branch ON StockdamageM.branchid = Branch.id" + strquery).ToList();
+            return View(list);
+        }
+        public ActionResult CreateWastage(StockdamageM StockdamageM)
+        {
+            StockdamageM.invid = _context.Database.SqlQuery<decimal>("select ISNULL(Max(invid),0)+1 from StockdamageM").FirstOrDefault();
+            var pro_listsss = _context.Database.SqlQuery<Products>("select ProductName,ProductID,UnitPrice,ReorderLevel,vattax,CategoryID,[desc],Active from Product where CategoryID in (select CategoryID from Categories where RawProductCheck=0)").ToList();
+            var branch = _context.Database.SqlQuery<Branch>("Select * from Branch").ToList();
+            var SaleInvVM = new SaleInvVM
+            {
+                Branch_list = branch,
+                StockdamageM = StockdamageM,
+                pro_listsss = pro_listsss,
+            };
+            return View(SaleInvVM);
+        }
+
+        [HttpPost, ActionName("Createwastage")]
+        public ActionResult Savewastage(string[] packing, string[] item_name, int[] id, decimal[] sp, string[] qty, string[] n_total, StockdamageM StockdamageM)
+        {
+            StockdamageM.invid = _context.Database.SqlQuery<decimal>("select ISNULL(Max(invid),0)+1 from StockdamageM").FirstOrDefault();
+            if (item_name.Count()>0)
+            {
+                for (int i = 0; i < item_name.Count(); i++)
+                {
+                    _context.Database.ExecuteSqlCommand("INSERT INTO StockdamageDetail (packing,sr,pid,pname,cp,qty,total,invid,date ) VALUES ('" + packing[i] + "'," + i + 1 + "," + id[i] + ",'" + item_name[i] + "'," + sp[i] + "," + qty[i] + "," + n_total[i] + "," + StockdamageM.invid + ",'" + StockdamageM.date + "')");
+                }
+                _context.Database.ExecuteSqlCommand("INSERT INTO StockdamageM (invid,date,total,note,status,branchid) VALUES (" + StockdamageM.invid + ",'" + StockdamageM.date + "'," + StockdamageM.total + ",'" + StockdamageM.note + "','" + Request["status"] + "'," + StockdamageM.branchid + ")");
+
+            }
+            return RedirectToAction("IndexWastage");
+        }
+        public ActionResult EditWastage(int? ID)
+        {
+            if (ID !=null) {
+                var StockdamageM = _context.Database.SqlQuery<StockdamageM>("select * from StockdamageM where invid =" + ID + "").SingleOrDefault();
+                var StockdamageDetail = _context.Database.SqlQuery<StockdamageDetail>("select * from StockdamageDetail where invid =" + ID + "").ToList();
+                var pro_listsss = _context.Database.SqlQuery<Products>("select ProductName,ProductID,UnitPrice,ReorderLevel,vattax,CategoryID,[desc],Active from Product where CategoryID in (select CategoryID from Categories where RawProductCheck=0)").ToList();
+                var branch = _context.Database.SqlQuery<Branch>("Select * from Branch").ToList();
+
+                var SaleInvVM = new SaleInvVM
+                {
+                    Branch_list = branch,
+
+                    StockdamageM = StockdamageM,
+                    StockdamageDetail = StockdamageDetail,
+                    pro_listsss = pro_listsss,
+                };
+                return View(SaleInvVM);
+            }
+            return RedirectToAction("IndexWastage");
+        }
+        [HttpPost]
+        public ActionResult UpdateWastage(string[] packing, string[] item_name, int[] id, decimal[] sp, string[] qty, string[] n_total, StockdamageM StockdamageM)
+        {
+            if (item_name.Count()>0) {
+                _context.Database.ExecuteSqlCommand("Delete From StockdamageDetail where InvId =" + StockdamageM.invid + " ");
+                _context.Database.ExecuteSqlCommand("Delete From StockdamageM where InvId =" + StockdamageM.invid + "");
+                for (int i = 0; i < item_name.Count(); i++)
+                {
+                    _context.Database.ExecuteSqlCommand("INSERT INTO StockdamageDetail (packing,sr,pid,pname,cp,qty,total,invid,date ) VALUES ('" + packing[i] + "'," + i + 1 + "," + id[i] + ",'" + item_name[i] + "'," + sp[i] + "," + qty[i] + "," + n_total[i] + "," + StockdamageM.invid + ",'" + StockdamageM.date + "')");
+                }
+                _context.Database.ExecuteSqlCommand("INSERT INTO StockdamageM (invid,date,total,note,status,branchid) VALUES (" + StockdamageM.invid + ",'" + StockdamageM.date + "'," + StockdamageM.total + ",'" + StockdamageM.note + "','" + Request["status"] + "'," + StockdamageM.branchid + ")");
+            }
+                return RedirectToAction("IndexWastage");
+        }
+        public ActionResult DeleteWastage(int? ID)
+        {
+            if (ID == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            _context.Database.ExecuteSqlCommand("Delete From StockdamageDetail where InvId =" + ID + " ");
+            _context.Database.ExecuteSqlCommand("Delete From StockdamageM where InvId =" + ID + "");
+
+            return RedirectToAction("IndexWastage");
+        }
+        public ActionResult InvoiceReportWastage(int ID)
+        {
+            var list = _context.Database.SqlQuery<sampledetail>("select * from StockdamageDetail where invid =" + ID + "").ToList();
+            var date = _context.Database.SqlQuery<string>("SELECT Date FROM StockdamageM where InvID =" + ID + " ").FirstOrDefault();
+            var status = _context.Database.SqlQuery<string>("SELECT status FROM StockdamageM where InvID =" + ID + " ").FirstOrDefault();
+            //var grandtotal = _context.Database.SqlQuery<decimal>("SELECT total FROM purchasem where InvID =" + ID + " and status='PINV'").FirstOrDefault();
+
+            //var CompanyName = _context.Database.SqlQuery<String>("SELECT CompanyName FROM Settings ").FirstOrDefault();
+            //var Email = _context.Database.SqlQuery<String>("SELECT Email FROM Settings ").FirstOrDefault();
+            //var Phone = _context.Database.SqlQuery<String>("SELECT Phone FROM Settings ").FirstOrDefault();
+            //var Image = _context.Database.SqlQuery<String>("SELECT MImage FROM Settings ").FirstOrDefault();
+            //var Address = _context.Database.SqlQuery<String>("SELECT Address FROM Settings ").FirstOrDefault();
+
+            ReportDocument rd = new ReportDocument();
+
+            rd.Load(Path.Combine(Server.MapPath("~/Report"), "rptrawwastage.rpt"));
+
+            rd.SetDataSource(list);
+            rd.SetParameterValue("date", date);
+            rd.SetParameterValue("status", status);
+
+
+            Response.Buffer = false;
+            Response.ClearContent();
+            Response.ClearHeaders();
+
+            Stream stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            stream.Seek(0, SeekOrigin.Begin);
+            return File(stream, "application/pdf", "WastageReport.pdf");
+        }
     }
 }

@@ -1,0 +1,72 @@
+﻿@model WebApplication1.ViewModels.SaleInvVM
+@{
+
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+
+}
+<div class="content">
+    <div class="content-header">
+        <div class="leftside-content-header">
+            <ul class="breadcrumbs">
+                <li><a><i class="fa fa-cubes" aria-hidden="true"></i> Sale & Recovery Report</a></li>
+            </ul>
+        </div>
+    </div>
+    <h4 class="section-subtitle"><b>Sale & Recovery Report </b></h4>
+    @using (Html.BeginForm("Sale_recoverySearch", "Report", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="panel">
+            <div class="panel-content">
+                <div class="form-group col-sm-3">
+                    <label>Start Date</label>
+                    <input type="date" name="s_date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
+                </div>
+                <div class="form-group col-sm-3">
+                    <label>End Date </label>
+                    <input type="date" name="e_date" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" required />
+                </div>
+                <div class="col-md-2">
+                    <label>Select Customer</label>
+                    <select name="cus_id" class="chosen-select form-control">
+                        <option value="0">Select Customer</option>
+                        @foreach (var item in Model.Cus_list)
+                        {
+                            <option value="@item.customerid">@item.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group col-sm-2">
+                    <label>Select Region</label>
+                    <select name="reg_id" class="form-control" >
+                        <option value="0">Select Region</option>
+                        @foreach (var list in Model.Region_list)
+                        {
+
+                            <option value="@list.id">@list.name</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group col-sm-2">
+                    <label>Select Branch</label>
+                    <select name="branchid" class="form-control" >
+                        <option value="0">Select Branch</option>
+                        @foreach (var list in Model.Branch_list)
+                        {
+
+                            <option value="@list.id">@list.name</option>
+                        }
+                    </select>
+                </div>
+                <br /><br />
+                <br />
+                <div class="col-sm-12">
+                    <button type="submit" name="submit" class="btn btn-success" style="margin-top:25px"> &nbsp;&nbsp; Search &nbsp;&nbsp;</button>
+                </div>
+            </div>
+            <br /><br /><br />
+        </div>
+
+    }
+</div>
