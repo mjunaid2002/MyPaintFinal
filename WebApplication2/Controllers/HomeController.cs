@@ -88,7 +88,7 @@ namespace WebApplication1.Controllers
             if ("Super Admin"==username && "#=&paint" == pass)
             {
                 //var superadmin = _context.Database.SqlQuery<string>("Select top(1) admin From  UserLogins where username='" + Request["u_name"] + "' and password ='" + Request["pass"] + "'").FirstOrDefault();
-                Session["CurrentUserName"] = Request["u_name"];
+                Session["CurrentUserName"] = username;
                 var empid= _context.Database.SqlQuery<decimal>("Select top(1) empid From  UserLogins where username='" + Request["u_name"] + "' ").FirstOrDefault();
 
                 Session["UserID"] = empid;

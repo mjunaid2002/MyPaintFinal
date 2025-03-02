@@ -443,7 +443,14 @@
                             </div>
                             <div class="form-group col-sm-2">
                                 <label>Date</label>
-                                @Html.TextBoxFor(m => m.saleReturnQuery.date, new { @class = "form-control input-xs", id = "date", type = "Date", @Value = Model.saleReturnQuery.date.ToString("yyyy-MM-dd"), @readonly = "readonly" })
+                                @if (Session["CurrentUserName"].ToString() == "Super Admin")
+                                {
+                                    @Html.TextBoxFor(m => m.saleReturnQuery.date, new { @class = "form-control input-xs", id = "date", type = "Date", @Value = Model.saleReturnQuery.date.ToString("yyyy-MM-dd")})
+                                }
+                                else
+                                {
+                                    @Html.TextBoxFor(m => m.saleReturnQuery.date, new { @class = "form-control input-xs", id = "date", type = "Date", @Value = Model.saleReturnQuery.date.ToString("yyyy-MM-dd"), @readonly = "readonly" })
+                                }
                             </div>
                             <div class="form-group col-sm-2">
                                 <label>Select Customer</label>
