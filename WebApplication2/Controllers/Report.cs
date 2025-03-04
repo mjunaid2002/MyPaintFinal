@@ -719,7 +719,12 @@ namespace WebApplication1.Controllers
                 rd.Load(Path.Combine(Server.MapPath("~/Report"), "rptSRINV.rpt"));
                 rd.SetDataSource(list_sale);
             }
-
+            else if (type == 4 && optt == 2)
+            {
+                list_sale = _context.Database.SqlQuery<SaleReportQuery>("select date,Order_Master.OrderID,custname,prname,packing,qty,sp,total_after, (SELECT DISTINCT c.CategoryName FROM Categories AS c INNER JOIN Product AS p ON p.CategoryID = c.CategoryID WHERE (p.ProductID = Order_detail.prid)) AS maincataname, (SELECT DISTINCT c.CategoryID FROM Categories AS c INNER JOIN Product AS p ON p.CategoryID = c.CategoryID WHERE (p.ProductID = Order_detail.prid)) AS maincataid from Order_Master inner join Order_detail on Order_Master.OrderID = Order_detail.OrderID where Order_Master.date between '" + Request["s_date"] + "' and '" + Request["e_date"] + "' " + concat1 + "  ").ToList();
+                rd.Load(Path.Combine(Server.MapPath("~/Report"), "rptSRINV.rpt"));
+                rd.SetDataSource(list_sale);
+            }
             var StartDate = Convert.ToDateTime(Request["s_date"]).ToString("dd-MM-yyyy");
             var Enddate = Convert.ToDateTime(Request["e_date"]).ToString("dd-MM-yyyy");
             if (submit1 == "pdf")

@@ -81,11 +81,11 @@ namespace WebApplication2.Controllers
 
             for (int i = 0; i < account_name.Count(); i++)
             {
-                _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('" + TransactionDetail.TransId + "'," + TransactionDetail.TransId + ",'" + Voucher.Date + "',N'" + narr[i] + "'," + account_no[i] + "," + dr[i] + ",0,'" + Voucher.Id + "','" + Vtype + "')");
-                _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('" + TransactionDetail.TransId + "'," + TransactionDetail.TransId + ",'" + Voucher.Date + "',N'" + narr[i] + "','" + Request["cash_account"] + "',0," + dr[i] + "," + Voucher.Id + ",'" + Vtype + "')");
-                _context.Database.ExecuteSqlCommand("INSERT INTO Vouchers (b_unit,AccountName,TID,Account_Id,Dr,Cr,Narr,Vtype,Bank_Account) VALUES ('" + TransactionDetail.TransId + "',N'" + account_name[i]+"'," + TransactionDetail.TransId + "," + account_no[i] + "," + dr[i] + "," + cr[i] + ",'" + narr[i] + "','" + Vtype + "',0)");
+                _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('" + TransactionDetail.TransId + "'," + TransactionDetail.TransId + ",'" + Voucher.Date + "',N'" + narr[i].Replace("'", "''") + "'," + account_no[i] + "," + dr[i] + ",0,'" + Voucher.Id + "','" + Vtype + "')");
+                _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('" + TransactionDetail.TransId + "'," + TransactionDetail.TransId + ",'" + Voucher.Date + "',N'" + narr[i].Replace("'", "''") + "','" + Request["cash_account"] + "',0," + dr[i] + "," + Voucher.Id + ",'" + Vtype + "')");
+                _context.Database.ExecuteSqlCommand("INSERT INTO Vouchers (b_unit,AccountName,TID,Account_Id,Dr,Cr,Narr,Vtype,Bank_Account) VALUES ('" + TransactionDetail.TransId + "',N'" + account_name[i]+"'," + TransactionDetail.TransId + "," + account_no[i] + "," + dr[i] + "," + cr[i] + ",'" + narr[i].Replace("'", "''") + "','" + Vtype + "',0)");
             }
-            _context.Database.ExecuteSqlCommand("INSERT INTO VoucherMasters (Account,b_unit,TID,Date,TDr,TCr,Remarks,VType,invid) VALUES (" + Request["cash_account"] + ",'0'," + TransactionDetail.TransId + ",'" + Voucher.Date + "'," + TransactionDetail.Dr + "," + TransactionDetail.Cr + ",N'" + narr[0] + "','" + Vtype + "'," + Voucher.Id + ")");
+            _context.Database.ExecuteSqlCommand("INSERT INTO VoucherMasters (Account,b_unit,TID,Date,TDr,TCr,Remarks,VType,invid) VALUES (" + Request["cash_account"] + ",'0'," + TransactionDetail.TransId + ",'" + Voucher.Date + "'," + TransactionDetail.Dr + "," + TransactionDetail.Cr + ",N'" + narr[0].Replace("'", "''") + "','" + Vtype + "'," + Voucher.Id + ")");
 
             for (int i = 0; i < file.Count(); i++)
             {
@@ -188,11 +188,11 @@ namespace WebApplication2.Controllers
 
             for (int i = 0; i < account_name.Count(); i++)
             {
-                _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('" + TransactionDetail.TransId + "'," + TransactionDetail.TransId + ",'" + Voucher.Date + "',N'" + narr[i] + "'," + account_no[i] + "," + dr[i] + ",0,'" + Voucher.Id + "','" + Vtype + "')");
-                _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('" + TransactionDetail.TransId + "'," + TransactionDetail.TransId + ",'" + Voucher.Date + "',N'" + narr[i] + "','" + Request["cash_account"] + "',0," + dr[i] + "," + Voucher.Id + ",'" + Vtype + "')");
-                _context.Database.ExecuteSqlCommand("INSERT INTO Vouchers (b_unit,AccountName,TID,Account_Id,Dr,Cr,Narr,Vtype,Bank_Account) VALUES ('" + TransactionDetail.TransId + "',N'" + account_name[i] + "'," + TransactionDetail.TransId + "," + account_no[i] + "," + dr[i] + "," + cr[i] + ",'" + narr[i] + "','" + Vtype + "',0)");
+                _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('" + TransactionDetail.TransId + "'," + TransactionDetail.TransId + ",'" + Voucher.Date + "',N'" + narr[i].Replace("'", "''") + "'," + account_no[i] + "," + dr[i] + ",0,'" + Voucher.Id + "','" + Vtype + "')");
+                _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('" + TransactionDetail.TransId + "'," + TransactionDetail.TransId + ",'" + Voucher.Date + "',N'" + narr[i].Replace("'", "''") + "','" + Request["cash_account"] + "',0," + dr[i] + "," + Voucher.Id + ",'" + Vtype + "')");
+                _context.Database.ExecuteSqlCommand("INSERT INTO Vouchers (b_unit,AccountName,TID,Account_Id,Dr,Cr,Narr,Vtype,Bank_Account) VALUES ('" + TransactionDetail.TransId + "',N'" + account_name[i] + "'," + TransactionDetail.TransId + "," + account_no[i] + "," + dr[i] + "," + cr[i] + ",'" + narr[i].Replace("'", "''") + "','" + Vtype + "',0)");
             }
-            _context.Database.ExecuteSqlCommand("INSERT INTO VoucherMasters (Account,b_unit,TID,Date,TDr,TCr,Remarks,VType,invid) VALUES (" + Request["cash_account"] + ",'0'," + TransactionDetail.TransId + ",'" + Voucher.Date + "'," + TransactionDetail.Dr + "," + TransactionDetail.Cr + ",N'" + narr[0] + "','" + Vtype + "'," + Voucher.Id + ")");
+            _context.Database.ExecuteSqlCommand("INSERT INTO VoucherMasters (Account,b_unit,TID,Date,TDr,TCr,Remarks,VType,invid) VALUES (" + Request["cash_account"] + ",'0'," + TransactionDetail.TransId + ",'" + Voucher.Date + "'," + TransactionDetail.Dr + "," + TransactionDetail.Cr + ",N'" + narr[0].Replace("'", "''") + "','" + Vtype + "'," + Voucher.Id + ")");
 
             return RedirectToAction("Index");
         }
