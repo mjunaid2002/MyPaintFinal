@@ -29,19 +29,22 @@ namespace WebApplication2.Controllers
         // GET: JournalVoucher
         public ActionResult Index()
         {
-            string strquery = " AND TransDate ='" + DateTime.Now.ToString("yyyy-MM-dd") + "' ";
+            string strquery = " AND date ='" + DateTime.Now.ToString("yyyy-MM-dd") + "' ";
             var StartDate = Convert.ToDateTime(Request["s_date"]).ToString("yyyy-MM-dd");
             var Enddate = Convert.ToDateTime(Request["e_date"]).ToString("yyyy-MM-dd");
             if (StartDate != null && Enddate != null && StartDate != "0001-01-01" && Enddate != "0001-01-01")
-                strquery = " AND TransDate between '" + StartDate + "' and '" + Enddate + "'  ";
+                strquery = " AND date between '" + StartDate + "' and '" + Enddate + "'  ";
 
             _context.Database.ExecuteSqlCommand("update VoucherMasters set Account=10000001 WHERE     (Account IS NULL)");
 
-            var vou_list = _context.Database.SqlQuery<VoucherMasterQuery>("SELECT TransId, TransDate, ISNULL(SUM(Dr), 0) AS Dr FROM TransactionDetails WHERE (Vtype = 'JV') AND (Dr > 0)  "+ strquery + " GROUP BY TransId, TransDate  ORDER BY TransId DESC").ToList();
+            //var vou_list = _context.Database.SqlQuery<VoucherMasterQuery>("SELECT TransId, TransDate, ISNULL(SUM(Dr), 0) AS Dr FROM TransactionDetails WHERE (Vtype = 'JV') AND (Dr > 0)  "+ strquery + " GROUP BY TransId, TransDate  ORDER BY TransId DESC").ToList();
+            var vou_list = _context.Database.SqlQuery<VoucherMaster>("SELECT * FROM VoucherMasters where VType = 'JV' " + strquery + " ORDER BY TID DESC").ToList();
+
             var img_list = _context.Database.SqlQuery<VoucherImagesquery>("SELECT * from VoucherImages where VType = 'JV' ").ToList();
             var PurInvoiceVM = new PurInvoiceVM
             {   
-                vou_lists = vou_list,
+                //vou_lists = vou_list,
+                vou_list = vou_list,
                 img_list = img_list,
 
             };
@@ -141,7 +144,7 @@ namespace WebApplication2.Controllers
                 if (dr[i] != 0)
                 {
 
-                    _context.Database.ExecuteSqlCommand("INSERT INTO VoucherMasters (Account,b_unit,TID,Date,TDr,TCr,Remarks,VType,invid) VALUES (" + to_no[i] + ",'0'," + TransactionDetail.TransId + ",'" + Voucher.Date + "'," + dr[i] + "," + cr[i] + ",N'" + TransactionDetail.TransDes + "','" + Vtype + "'," + Voucher.Id + ")");
+                    _context.Database.ExecuteSqlCommand("INSERT INTO VoucherMasters (Account,b_unit,TID,Date,TDr,TCr,Remarks,VType,invid,req_status) VALUES (" + to_no[i] + ",'0'," + TransactionDetail.TransId + ",'" + Voucher.Date + "'," + dr[i] + "," + cr[i] + ",N'" + TransactionDetail.TransDes + "','" + Vtype + "'," + Voucher.Id + ",'Request')");
                 }
             }
             //_context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Cr,Dr,InvId,Vtype) VALUES ('0'," + TransactionDetail.TransId + ",'" + Voucher.Date + "',N'" + narr[0] + "','" + Request["from_acc"] + "',0," + TransactionDetail.Dr + "," + Voucher.Id + ",'" + Vtype + "')");
@@ -246,7 +249,7 @@ namespace WebApplication2.Controllers
                 _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype,Rinvid) VALUES ('0'," + TransactionDetail.TransId + ",'" + Voucher.Date + "',N'" + narr[i].Replace("'", "''") + "','" + to_no[i] + "'," + dr[i] + "," + cr[i] + ",'" + Voucher.Id + "','" + Vtype + "','0')");
                 if (dr[i] != 0)
                 {
-                     _context.Database.ExecuteSqlCommand("INSERT INTO VoucherMasters (Account,b_unit,TID,Date,TDr,TCr,Remarks,VType,invid) VALUES (" + to_no[i] + ",'0'," + TransactionDetail.TransId + ",'" + Voucher.Date + "'," + dr[i] + "," + cr[i] + ",N'" + TransactionDetail.TransDes.Replace("'", "''") + "','" + Vtype + "'," + Voucher.Id + ")");
+                     _context.Database.ExecuteSqlCommand("INSERT INTO VoucherMasters (Account,b_unit,TID,Date,TDr,TCr,Remarks,VType,invid,req_status) VALUES (" + to_no[i] + ",'0'," + TransactionDetail.TransId + ",'" + Voucher.Date + "'," + dr[i] + "," + cr[i] + ",N'" + TransactionDetail.TransDes.Replace("'", "''") + "','" + Vtype + "'," + Voucher.Id + ",'Request')");
                 }
             }
 

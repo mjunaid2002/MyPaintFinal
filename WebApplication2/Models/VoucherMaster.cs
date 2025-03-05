@@ -17,12 +17,15 @@ namespace CRM.Models
         public string Remarks { get; set; }
         public string VType { get; set; }
         public string b_unit { get; set; }
+        public string req_status { get; set; }
         
     }
     public class VoucherMasterQuery
     {
         public int TransId { get; set; }
+        public int ID { get; set; }
         public string TransDate { get; set; }
+        public string req_status { get; set; }
         public decimal Dr { get; set; }
     }
 }

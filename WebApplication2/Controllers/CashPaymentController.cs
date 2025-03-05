@@ -85,7 +85,7 @@ namespace WebApplication2.Controllers
                 _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('" + TransactionDetail.TransId + "'," + TransactionDetail.TransId + ",'" + Voucher.Date + "',N'" + narr[i].Replace("'", "''") + "','" + Request["cash_account"] + "',0," + dr[i] + "," + Voucher.Id + ",'" + Vtype + "')");
                 _context.Database.ExecuteSqlCommand("INSERT INTO Vouchers (b_unit,AccountName,TID,Account_Id,Dr,Cr,Narr,Vtype,Bank_Account) VALUES ('" + TransactionDetail.TransId + "',N'" + account_name[i]+"'," + TransactionDetail.TransId + "," + account_no[i] + "," + dr[i] + "," + cr[i] + ",'" + narr[i].Replace("'", "''") + "','" + Vtype + "',0)");
             }
-            _context.Database.ExecuteSqlCommand("INSERT INTO VoucherMasters (Account,b_unit,TID,Date,TDr,TCr,Remarks,VType,invid) VALUES (" + Request["cash_account"] + ",'0'," + TransactionDetail.TransId + ",'" + Voucher.Date + "'," + TransactionDetail.Dr + "," + TransactionDetail.Cr + ",N'" + narr[0].Replace("'", "''") + "','" + Vtype + "'," + Voucher.Id + ")");
+            _context.Database.ExecuteSqlCommand("INSERT INTO VoucherMasters (Account,b_unit,TID,Date,TDr,TCr,Remarks,VType,invid,req_status) VALUES (" + Request["cash_account"] + ",'0'," + TransactionDetail.TransId + ",'" + Voucher.Date + "'," + TransactionDetail.Dr + "," + TransactionDetail.Cr + ",N'" + narr[0].Replace("'", "''") + "','" + Vtype + "'," + Voucher.Id + ",'Request')");
 
             for (int i = 0; i < file.Count(); i++)
             {
@@ -192,7 +192,7 @@ namespace WebApplication2.Controllers
                 _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('" + TransactionDetail.TransId + "'," + TransactionDetail.TransId + ",'" + Voucher.Date + "',N'" + narr[i].Replace("'", "''") + "','" + Request["cash_account"] + "',0," + dr[i] + "," + Voucher.Id + ",'" + Vtype + "')");
                 _context.Database.ExecuteSqlCommand("INSERT INTO Vouchers (b_unit,AccountName,TID,Account_Id,Dr,Cr,Narr,Vtype,Bank_Account) VALUES ('" + TransactionDetail.TransId + "',N'" + account_name[i] + "'," + TransactionDetail.TransId + "," + account_no[i] + "," + dr[i] + "," + cr[i] + ",'" + narr[i].Replace("'", "''") + "','" + Vtype + "',0)");
             }
-            _context.Database.ExecuteSqlCommand("INSERT INTO VoucherMasters (Account,b_unit,TID,Date,TDr,TCr,Remarks,VType,invid) VALUES (" + Request["cash_account"] + ",'0'," + TransactionDetail.TransId + ",'" + Voucher.Date + "'," + TransactionDetail.Dr + "," + TransactionDetail.Cr + ",N'" + narr[0].Replace("'", "''") + "','" + Vtype + "'," + Voucher.Id + ")");
+            _context.Database.ExecuteSqlCommand("INSERT INTO VoucherMasters (Account,b_unit,TID,Date,TDr,TCr,Remarks,VType,invid,req_status) VALUES (" + Request["cash_account"] + ",'0'," + TransactionDetail.TransId + ",'" + Voucher.Date + "'," + TransactionDetail.Dr + "," + TransactionDetail.Cr + ",N'" + narr[0].Replace("'", "''") + "','" + Vtype + "'," + Voucher.Id + ",'Request')");
 
             return RedirectToAction("Index");
         }
@@ -261,6 +261,62 @@ namespace WebApplication2.Controllers
                 _context.Database.ExecuteSqlCommand("Delete From TransactionDetails where TransId =" + ID + " and Vtype='" + Vtype + "'");
             }
             return RedirectToAction("Index");
+        }
+
+
+        [HttpGet]
+        public JsonResult GetAccountCountJson()
+        {
+            int batchCount = _context.tbl_BatchRequest.Where(x => x.status == "Requested" && x.department == "Accounts").Count();
+            return Json(new { batchCount }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Indexstatus()
+        {
+            if (Session["CurrentUserName"].ToString() == "Super Admin")
+            {
+                var list = _context.Database.SqlQuery<tbl_BatchRequest>("SELECT *  from tbl_BatchRequest where (tbl_BatchRequest.status = 'Requested') AND department='Accounts'").ToList();
+                return View(list);
+
+            }
+            return RedirectToAction("Login", "Home");
+        }
+
+        public ActionResult statusrequest(int? ID,string type)
+        {
+
+            if (ID == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            //_context.Database.ExecuteSqlCommand("Delete From TransactionDetails where InvId =" + ID + " and Vtype = 'SINVWCTN'");
+            _context.Database.ExecuteSqlCommand("UPDATE  VoucherMasters SET  req_status ='Pending'  where TID=" + ID);
+            _context.Database.ExecuteSqlCommand("INSERT INTO tbl_BatchRequest(orderid, userid, username, status,batchno,department) " +
+                       " VALUES('" + ID + "','" + Session["UserID"].ToString() + "','" + Session["CurrentUserName"].ToString() + "','Requested','" + type + "','Accounts')");
+
+            type = type.Replace(" ","");
+            return RedirectToAction("Index", type);
+        }
+        public ActionResult Updatestatus(int ID, string status, int userid,string type)
+        {
+            if (Session["CurrentUserName"].ToString() == "Super Admin")
+            {
+                if (status == "Approved")
+                {
+                    _context.Database.ExecuteSqlCommand("UPDATE  VoucherMasters SET req_status = 'Complete' where TID =" + ID);
+
+                    _context.Database.ExecuteSqlCommand("UPDATE  tbl_BatchRequest SET status = 'Approved' where department='Accounts' AND batchno='"+ type +"' AND  userid='" + userid + "' AND  orderid =" + ID);
+                }
+                else
+                {
+                    _context.Database.ExecuteSqlCommand("UPDATE  VoucherMasters SET req_status = 'Request' where   TID =" + ID);
+                    _context.Database.ExecuteSqlCommand("UPDATE  tbl_BatchRequest SET status = 'DisApproved' where department='Accounts' AND batchno='" + type +"' AND userid='" + userid + "' AND  orderid =" + ID);
+                }
+
+
+                return RedirectToAction("Indexstatus");
+            }
+            return RedirectToAction("Login", "Home");
         }
     }
 }

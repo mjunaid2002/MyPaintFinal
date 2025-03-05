@@ -279,10 +279,10 @@
                                     </li>
                                 }
                                 @*@if (Session["CurrentUserName"].ToString() == "Super Admin")
-                                    {
-                                        <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Indexstatus", "Batch")"><i class="fa fa-list"></i> &nbsp; <span style="color:white">Batch Status</span></a></li>
+        {
+            <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Indexstatus", "Batch")"><i class="fa fa-list"></i> &nbsp; <span style="color:white">Batch Status</span></a></li>
 
-                                    }*@
+        }*@
                                 @Html.Action("GetBatchCount", "Batch")
                                 @Html.Action("GetFillingBatchCount", "BatchFilling")
                                 @Html.Action("GetSaleCount", "StockInward")
@@ -383,6 +383,38 @@
 
                                         // Set interval to update batch count every 5 minutes (300000 milliseconds)
                                         setInterval(updateSaleCount1, 300000);
+                                 });
+                                </script>
+
+
+                                @if (Session["CurrentUserName"]?.ToString() == "Super Admin")
+                                {
+                                    <li style="background-color: #2C3E50 !important;" id="Lab-status">
+                                        <a href="@Url.Action("Indexstatus", "CashPayment")">
+                                            <i class="fa fa-list"></i> &nbsp;
+                                            <span style="color:white">Accounts Requests</span>
+                                            <span class="badge badge-light" id="AccountCount">0</span>
+                                        </a>
+                                    </li>
+                                }
+
+                                <script type="text/javascript">
+                                    $(document).ready(function () {
+                                        function updateAccountCount() {
+                                         $.ajax({
+                                                   url: '@Url.Action("GetAccountCountJson", "CashPayment")',
+                                                   type: 'GET',
+                                                   success: function (data) {
+                                                       $('#AccountCount').text(data.batchCount);
+                                                  }
+                                                });
+                                        }
+
+                                     // Initial call to set the batch count
+                                        updateAccountCount();
+
+                                        // Set interval to update batch count every 5 minutes (300000 milliseconds)
+                                        setInterval(updateAccountCount, 300000);
                                  });
                                 </script>
                                 @if (Session["MenuAccounts"].ToString() != "0")
@@ -687,14 +719,14 @@
                                             @if (Session["SubRptSaleReport"].ToString() != "0")
                                             {
                                                 <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("SaleIndex", "Report")">Sale Report</a></li>
-                                             }
+                                            }
                                             @if (Session["SubRptSaleCommReport"].ToString() != "0")
                                             {
-                                               <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("SaleCommIndex", "Report")">Sale Comm. Report</a></li>
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("SaleCommIndex", "Report")">Sale Comm. Report</a></li>
                                             }
                                             @if (Session["SubRptSaleRecoveryReport"].ToString() != "0")
                                             {
-                                               <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Sale_recoveryIndex", "Report")">Sale & Recovery Report</a></li>
+                                                <li style="background-color: #2C3E50 !important;"><a href="@Url.Action("Sale_recoveryIndex", "Report")">Sale & Recovery Report</a></li>
                                             }
                                             @if (Session["SubRptBatchSheetSummery"].ToString() != "0")
                                             {

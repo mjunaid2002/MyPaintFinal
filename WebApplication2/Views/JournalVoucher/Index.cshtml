@@ -56,23 +56,46 @@
                                 </tr>
                             </thead>
                             <tbody class="abc">
-                                @foreach (var item in Model.vou_lists)
+                                @*@foreach (var item in Model.vou_lists)*@
+                                @foreach (var item in Model.vou_list)
                                 {
                                     <tr>
-                                        <td>@item.TransId</td>
+                                        <td>@item.TID</td>
                                         <td>JV</td>
-                                        <td>@Convert.ToDateTime(item.TransDate).ToString("dd-MM-yyyy")</td>
+                                        @*<td>@Convert.ToDateTime(item.TransDate).ToString("dd-MM-yyyy")</td>*@
+                                    <td>@Convert.ToDateTime(item.Date).ToString("dd-MM-yyyy")</td>
 
-                                        <td>@item.Dr</td>
+                                        <td>@item.TDr</td>
                                         <td>
 
                                             @*<a href="@Url.Action("Delete", new { ID= item.TID,Vtype=item.VType } )" new { onclick="return confirm('Are you sure you want to delete this record?');" class="badge badge-xs x-danger b-rounded"><i class="fa fa-trash-o"></i></a>*@
-                                            <a href="@Url.Action("Edit1", new { ID= item.TransId } )" class="badge badge-xs x-primary b-rounded"><i class="fa fa-pencil"></i></a>
-                                            <a href="@Url.Action("JournalReport", new { ID= item.TransId} )" target="_blank" class="badge badge-xs x-warning b-rounded"><i class="fa fa-print"></i></a>
+                                            @*<a href="@Url.Action("Edit1", new { ID= item.TransId } )" class="badge badge-xs x-primary b-rounded"><i class="fa fa-pencil"></i></a>*@
+                                            @if (Session["CurrentUserName"].ToString() == "Super Admin")
+                                            {
+                                                <a href="@Url.Action("Edit1", new { ID= item.TID } )" class="badge badge-xs x-primary b-rounded"><i class="fa fa-pencil"></i></a>
+
+                                            }
+                                            else
+                                            {
+                                                if (item.req_status == "Request")
+                                                {
+                                                    <a href="@Url.Action("statusrequest","CashPayment", new { ID = item.TID, type = "Journal Voucher" })" new { onclick="return confirm('Are you sure you want to Send Edit Request for this Journal Voucher?');" class="label label-default shiny input-xs"><i class="fa fa-key"></i></a>
+                                                }
+                                                else if (item.req_status == "Pending")
+                                                {
+                                                    <a new { onclick="return confirm('your already Send Edit Request for this Journal Voucher?');" class="label label-warning shiny input-xs"><i class="fa fa-key"></i></a>
+
+                                                }
+                                                else
+                                                {
+                                                    <a href="@Url.Action("Edit1", new { ID= item.TID } )" class="badge badge-xs x-primary b-rounded"><i class="fa fa-pencil"></i></a>
+                                                }
+                                            }
+                                            <a href="@Url.Action("JournalReport", new { ID= item.TID} )" target="_blank" class="badge badge-xs x-warning b-rounded"><i class="fa fa-print"></i></a>
 
                                         </td>
                                     </tr>
-                                    <div class="modal fade" id="@item.TransId" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="margin-top:-200px">
+                                    <div class="modal fade" id="@item.TID" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="margin-top:-200px">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
@@ -83,7 +106,7 @@
                                                 </div>
                                                 <div class="modal-body" style="height:300px">
                                                     <div class="col-md-12">
-                                                        @foreach (var item1 in Model.img_list.Where(z => z.Tid == item.TransId))
+                                                        @foreach (var item1 in Model.img_list.Where(z => z.Tid == item.TID))
                                                         {
                                                             <div class="col-md-4">
                                                                 <img src="~/Uploads/@item1.Images" width="120px" />
