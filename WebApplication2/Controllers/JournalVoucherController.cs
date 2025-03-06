@@ -232,7 +232,7 @@ namespace WebApplication2.Controllers
                 return RedirectToAction("Index"); // Redirect to the index page if the id exists in the restricted list
             }
             var Bunit = Convert.ToString(Session["BusinessUnit"]);
-
+            Voucher.Date = TransactionDetail.TransDate;
             _context.Database.ExecuteSqlCommand("Delete From Vouchers where TID =" + id + " and Vtype='" + Vtype + "'   ");
             _context.Database.ExecuteSqlCommand("Delete From VoucherMasters where TID =" + id + " and Vtype='" + Vtype + "'  ");
             _context.Database.ExecuteSqlCommand("Delete From TransactionDetails where TransId =" + id + " and Vtype='" + Vtype + "'  ");

@@ -184,7 +184,14 @@
                          </div>
                          <div class="form-group col-sm-4">
                              <label>Date</label>
-                             @Html.TextBoxFor(m => m.TransactionDetail.TransDate, new { @class = "form-control input-xs", id = "date", type = "Date", @required = "required" })
+                              @if (Session["CurrentUserName"].ToString() == "Super Admin")
+                             {
+                                 @Html.TextBoxFor(m => m.TransactionDetail.TransDate, new { @class = "form-control input-xs", id = "date", type = "Date", @required = "required" })
+                             }
+                             else
+                             {
+                                 @Html.TextBoxFor(m => m.TransactionDetail.TransDate, new { @class = "form-control input-xs", id = "date", type = "Date", @required = "required", @readonly = "readonly" })
+                             }
                          </div>
                          <div class="form-group col-sm-5" style="display:none">
                              <label>Remarks</label>
