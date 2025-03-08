@@ -734,6 +734,7 @@ namespace WebApplication1.QueryViewModel
         public decimal customerid { get; set; }
         public decimal partywht { get; set; }
         public int? BeltArea { get; set; }
+        public int? Branchid { get; set; }
         public int? employer { get; set; }
         public int? creditlimitdays { get; set; }
         public int? creditlimitamount { get; set; }

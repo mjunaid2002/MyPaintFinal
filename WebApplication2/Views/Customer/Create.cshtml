@@ -32,6 +32,11 @@
                                         @Html.TextBoxFor(m => m.customerid, new { @class = "form-control input-xs", @readonly = "readonly", @required = "required" })
                                     </div>
                                     <div class="form-group col-sm-4">
+                                        <label>Branch</label>
+                                        @Html.DropDownListFor(m => m.Branchid, new SelectList(ViewBag.Branch as List<WebApplication1.QueryViewModel.Branch>, "Id", "Name"), "Select Branch", htmlAttributes: new { @class = "chosen-select form-control", required = "required" })
+
+                                    </div>
+                                    <div class="form-group col-sm-4">
                                         <label>Belt Area</label>
                                         @Html.DropDownListFor(m => m.BeltArea, new SelectList(ViewBag.BeltArea as List<WebApplication1.QueryViewModel.BeltArea>, "Id", "Name"), "Select Belt Area", htmlAttributes: new { @class = "chosen-select form-control", required = "required" })
 

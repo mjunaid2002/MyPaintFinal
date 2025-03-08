@@ -73,7 +73,7 @@
                             </thead>
                             <tbody>
                                 <span style="color:white"></span>
-                                @foreach (var item in Model)
+                                @foreach (var item in Model.Where(x=>x.closingBalance!=0))
                                 {
                                     <tr>
                                         <td>@item.custid</td>

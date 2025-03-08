@@ -108,7 +108,7 @@ namespace WebApplication2.Controllers
             for (int i = 0; i < to_no.Count(); i++)
             {
                // _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransactionDetail.TransId + ",'" + Voucher.Date + "',N'" + narr[0] + "','" + to_no[i] + "'," + amount[i] + ",0," + Voucher.Id + ",'" + Vtype + "')");
-                  _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransactionDetail.TransId + ",'" + Voucher.Date + "',N'" + narr[0].Replace("'", "''") + "',"+ to_no[i] + ",0," + amount[i] + "," + Voucher.Id + ",'" + Vtype + "')");
+                  _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransactionDetail.TransId + ",'" + Voucher.Date + "',N'" + narr[i].Replace("'", "''") + "',"+ to_no[i] + ",0," + amount[i] + "," + Voucher.Id + ",'" + Vtype + "')");
 
             }
 
@@ -163,7 +163,7 @@ namespace WebApplication2.Controllers
 
             for (int i = 0; i < to_no.Count(); i++)
             {
-                _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransactionDetail.TransId + ",'" + TransactionDetail.TransDate + "',N'" + narr[0].Replace("'", "''") + "'," + to_no[i] + ",0," + amount[i] + "," + Voucher.Id + ",'" + Vtype + "')");
+                _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransactionDetail.TransId + ",'" + TransactionDetail.TransDate + "',N'" + narr[i].Replace("'", "''") + "'," + to_no[i] + ",0," + amount[i] + "," + Voucher.Id + ",'" + Vtype + "')");
 
               //_context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransactionDetail.TransId + ",'" + TransactionDetail.TransDate + "',N'" + TransactionDetail.TransDes + "','" + to_no[i] + "'," + amount[i] + ",0," + Voucher.Id + ",'" + Vtype + "')");
             }
