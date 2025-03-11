@@ -178,7 +178,15 @@
                             </div>
                             <div class="form-group col-sm-4">
                                 <label>Date</label>
-                                @Html.TextBoxFor(m => m.Voucher.Date, new { @class = "form-control input-xs", id = "date", type = "Date", @Value = DateTime.Now.ToString("yyyy-MM-dd"), @required = "required", @readonly = "readonly" })
+                              @*  @Html.TextBoxFor(m => m.Voucher.Date, new { @class = "form-control input-xs", id = "date", type = "Date", @Value = DateTime.Now.ToString("yyyy-MM-dd"), @required = "required", @readonly = "readonly" })*@
+                                @if (Session["CurrentUserName"].ToString() == "Super Admin")
+                                {
+                                    @Html.TextBoxFor(m => m.Voucher.Date, new { @class = "form-control input-xs", id = "date", type = "Date", @Value = DateTime.Now.ToString("yyyy-MM-dd"), @required = "required" })
+                                }
+                                else
+                                {
+                                    @Html.TextBoxFor(m => m.Voucher.Date, new { @class = "form-control input-xs", id = "date", type = "Date", @Value = DateTime.Now.ToString("yyyy-MM-dd"), @required = "required", @readonly = "readonly" })
+                                }
                             </div>
                             <div class="form-group col-sm-5" style="display:none">
                                 <label>Remarks</label>

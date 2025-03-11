@@ -3999,6 +3999,7 @@
     <Content Include="Views\FinishedWastage\CreateWastage.cshtml" />
     <Content Include="Views\FinishedWastage\EditWastage.cshtml" />
     <Content Include="Views\CashPayment\Indexstatus.cshtml" />
+    <Content Include="Views\OpeningBalance\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

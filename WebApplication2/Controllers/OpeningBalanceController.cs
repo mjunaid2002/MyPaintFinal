@@ -27,7 +27,7 @@ namespace WebApplication2.Controllers
         {
             var Bunit = Convert.ToString(Session["BusinessUnit"]);
             var third_level = _context.Database.SqlQuery<AccountTitle>("SELECT * FROM AccountTitles ").ToList();
-             var Chart_of_account_Vm = new ChartofaccountVm
+            var Chart_of_account_Vm = new ChartofaccountVm
             {
                 third_level = third_level,
                 openingBalance = openingBalance,
@@ -35,7 +35,7 @@ namespace WebApplication2.Controllers
             return View(Chart_of_account_Vm);
         }
         [HttpGet]
-        public ActionResult ShowData(int message,int message1)
+        public ActionResult ShowData(int message, int message1)
         {
             var lst = _context.Database.SqlQuery<OpeningBalance>("Select * From OpeningBalance where Session_id =" + message + " and AccountNo = " + message1 + "").ToList();
             return Json(lst, JsonRequestBehavior.AllowGet);
@@ -44,9 +44,31 @@ namespace WebApplication2.Controllers
         public ActionResult OpeningBalanceSubmit(OpeningBalance openingBalance)
         {
             _context.Database.ExecuteSqlCommand("Delete From OpeningBalance where AccountNo = " + openingBalance.AccountNo + "");
-            _context.Database.ExecuteSqlCommand("insert into OpeningBalance (AccountNo,Cr,Dr,date,narration) values(" + openingBalance .AccountNo+ "," + openingBalance.Cr+ ","+ openingBalance.Dr+ ",'" + openingBalance.date + "','" + openingBalance.narration + "')");
-            _context.Database.ExecuteSqlCommand("UPDATE AccountTitles set dr="+ openingBalance.Dr + " , cr = "+ openingBalance.Cr + " where AccountNo = "+ openingBalance.AccountNo + "");
+            _context.Database.ExecuteSqlCommand("insert into OpeningBalance (AccountNo,Cr,Dr,date,narration) values(" + openingBalance.AccountNo + "," + openingBalance.Cr + "," + openingBalance.Dr + ",'" + openingBalance.date + "','" + openingBalance.narration + "')");
+            _context.Database.ExecuteSqlCommand("UPDATE AccountTitles set dr=" + openingBalance.Dr + " , cr = " + openingBalance.Cr + " where AccountNo = " + openingBalance.AccountNo + "");
             return RedirectToAction("List");
         }
-        }
+
+
+        //public ActionResult Edit(int ID)
+        //{
+        //    var Bunit = Convert.ToString(Session["BusinessUnit"]);
+        //    var third_level = _context.Database.SqlQuery<AccountTitle>("SELECT * FROM AccountTitles").ToList();
+        //    var openingBalance = _context.Database.SqlQuery<OpeningBalance>("SELECT * FROM OpeningBalance where id=" + ID).FirstOrDefault();
+        //    var Chart_of_account_Vm = new ChartofaccountVm
+        //    {
+        //        third_level = third_level,
+        //        openingBalance = openingBalance,
+        //    };
+        //    return View(Chart_of_account_Vm);
+        //}
+        //[HttpPost]
+        //public ActionResult OpeningBalanceUpdate(OpeningBalance openingBalance)
+        //{
+        //    //_context.Database.ExecuteSqlCommand("Delete From OpeningBalance where AccountNo = " + openingBalance.AccountNo + "");
+        //    _context.Database.ExecuteSqlCommand("Update  OpeningBalance set AccountNo='" + openingBalance.AccountNo + "',Cr='" + openingBalance.Cr + "',Dr='" + openingBalance.Dr + "',date='" + openingBalance.date + "',narration='" + openingBalance.narration + "'  where AccountNo=" + openingBalance.AccountNo);
+        //    _context.Database.ExecuteSqlCommand("UPDATE AccountTitles set dr=" + openingBalance.Dr + " , cr = " + openingBalance.Cr + " where AccountNo = " + openingBalance.AccountNo + "");
+        //    return RedirectToAction("List");
+        //}
+    }
 }

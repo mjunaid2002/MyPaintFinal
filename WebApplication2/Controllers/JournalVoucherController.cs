@@ -117,6 +117,9 @@ namespace WebApplication2.Controllers
         {
             Random r = new Random();
             int num = r.Next();
+            TransactionDetail.TransId = _context.Database.SqlQuery<int>("select ISNULL(Max(TransId),0)+1 from TransactionDetails").FirstOrDefault();
+            Voucher.Id = _context.Database.SqlQuery<int>("select ISNULL(Max(invid),0)+1 from VoucherMasters where Month(date)=Month(GETDATE()) and Year(date)= Year(GETDATE()) and VType = 'JV' ").FirstOrDefault();
+
             string ImageName = "";
             string physicalPath;
             string img;
