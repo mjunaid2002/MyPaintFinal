@@ -151,11 +151,11 @@
 
         var table = document.getElementById("invoiceItem"), sumVal = 0;
         for (var i = 1; i < table.rows.length; i++) {
-            sumVal = sumVal + parseInt(table.rows[i].cells[10].innerHTML);
+            sumVal = sumVal + parseInt(table.rows[i].cells[11].innerHTML);
         }
         var table = document.getElementById("invoiceItem"), sumVale = 0;
         for (var i = 1; i < table.rows.length; i++) {
-            sumVale = sumVale + parseInt(table.rows[i].cells[11].innerHTML);
+            sumVale = sumVale + parseInt(table.rows[i].cells[12].innerHTML);
         }
         document.getElementById("t_debit").value = sumVal;
         document.getElementById("t_credit").value = sumVale;

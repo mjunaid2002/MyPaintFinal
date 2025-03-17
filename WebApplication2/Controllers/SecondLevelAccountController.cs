@@ -139,12 +139,21 @@ namespace WebApplication2.Controllers
         public ActionResult Edit(int? ID)
         {
             var data = _context.Ac_second.SingleOrDefault(c => c.ID == ID);
-            return View(data);
+            //return View(data);
+            var Ac_head_list = _context.Ac_head.ToList();
+            var Ac_main1 = _context.Ac_main.Where(x=>x.a_head==data.head_id).ToList();
+            var Account_headVm = new Account_headVm
+            {
+                ac_Second = data,
+                Ac_head_list = Ac_head_list,
+                Ac_main_list =  Ac_main1,
+            };
+            return View(Account_headVm);
         }
         [HttpPost]
         public ActionResult Edit(int ID, Ac_second ac_Second )
         {
-            _context.Database.ExecuteSqlCommand("Update ac_Second set a_title  = N'" + ac_Second.a_title + "' where Id = " + ID + "");
+            _context.Database.ExecuteSqlCommand("Update ac_Second set head_id='"+ ac_Second.head_id + "',ac_main='" + ac_Second.ac_main + "', a_title  = N'" + ac_Second.a_title + "' where Id = " + ID + "");
             return RedirectToAction("Index");
         }
     }

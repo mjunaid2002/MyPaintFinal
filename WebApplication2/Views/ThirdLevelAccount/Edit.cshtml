@@ -1,7 +1,40 @@
-﻿@model CRM.Models.AccountTitle
+﻿@*@model CRM.Models.AccountTitle*@
+@model WebApplication1.ViewModels.Account_headVm
 @{
     ViewBag.Title = "Create";
 }
+<script>
+    function Action(code) {
+        //alert(code);
+        $.ajax({
+            type: "GET",
+            url: "/ThirdLevelAccount/ShowData?message=" + code,
+            data: "{}",
+            success: function (data) {
+                var s = '<option value="-1">Select First Level Account</option>';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].a_main_id + '">' + data[i].a_title + '</option>';
+                }
+                $('#a').html(s);
+            }
+        });
+    }
+    function Second(code) {
+        // alert(code);
+        $.ajax({
+            type: "GET",
+            url: "/ThirdLevelAccount/GetThirdData?message=" + code,
+            data: "{}",
+            success: function (data) {
+                var s = '<option value="-1">Select Second Level Account</option>';
+                for (var i = 0; i < data.length; i++) {
+                    s += '<option value="' + data[i].account_no + '">' + data[i].a_title + '</option>';
+                }
+                $('#b').html(s);
+            }
+        });
+    }
+</script>
 <div class="content">
     <div class="content-header">
         <div class="leftside-content-header">
@@ -19,9 +52,32 @@
                         <div class="col-md-12">
                             @using (Html.BeginForm("Edit", "ThirdLevelAccount", FormMethod.Post, new { enctype = "multipart/form-data" }))
                             {<div class="row">
+                                    <div class="form-group col-sm-4">
+                                        <label>Select Account Head</label>
+                                        @Html.DropDownListFor(m => m.accountTitle.AccountHeadId, new SelectList(Model.Ac_head_list, "ac_h_id", "ac_h_name"), "Select Account Head", htmlAttributes: new { @class = "chosen-select form-control", onChange = "Action(this.value)" })
+
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        <label>Select First Level Account</label>
+                                        <select id="a" name="accountTitle.AccMain" class="form-control" onChange="Second(this.value)">
+                                            @foreach (var item in Model.Ac_main_list)
+                                            {
+                                                <option value="@item.account_no" @(item.account_no == Model.accountTitle.AccMain ? "selected" : "")>@item.a_title</option>
+                                            }
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-sm-4">
+                                        <label>Select Second Level Account</label>
+                                        <select id="b" name="accountTitle.SecondLevel" class="form-control">
+                                            @foreach (var item in Model.Ac_second_list)
+                                            {
+                                                <option value="@item.account_no" @(item.account_no == Model.accountTitle.SecondLevel ? "selected" : "")>@item.a_title</option>
+                                            }
+                                        </select>
+                                    </div>
                                     <div class="form-group col-sm-5">
                                         <label>Account Name</label>
-                                        @Html.TextBoxFor(m => m.AccountTitleName, new { @class = "form-control input-xs" })
+                                        @Html.TextBoxFor(m => m.accountTitle.AccountTitleName, new { @class = "form-control input-xs" })
                                     </div>
                                     <div class="col-sm-12">
                                         <button type="submit" class="btn btn-primary" style="margin-top:10px"><i class="fa fa-check"></i> Save</button>

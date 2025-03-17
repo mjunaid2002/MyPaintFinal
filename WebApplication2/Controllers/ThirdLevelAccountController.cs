@@ -146,12 +146,23 @@ namespace WebApplication2.Controllers
         public ActionResult Edit(int? ID)
         {
             var data = _context.AccountTitle.SingleOrDefault(c => c.Id == ID);
-            return View(data);
+            //return View(data);
+            var Ac_head_list = _context.Ac_head.ToList();
+            var Ac_main = _context.Ac_main.Where(x => x.a_head==data.AccountHeadId).ToList();
+            var Ac_second = _context.Ac_second.Where(x => x.account_no == data.SecondLevel).ToList();
+            var Account_headVm = new Account_headVm
+            {
+                accountTitle = data,
+                Ac_head_list = Ac_head_list,
+                Ac_main_list = Ac_main,
+                Ac_second_list = Ac_second
+            };
+            return View(Account_headVm);
         }
         [HttpPost]
         public ActionResult Edit(int ID, AccountTitle accountTitle)
         {
-            _context.Database.ExecuteSqlCommand("Update AccountTitles set AccountTitleName  = N'" + accountTitle.AccountTitleName + "' where Id = " + ID + "");
+            _context.Database.ExecuteSqlCommand("Update AccountTitles set  AccountHeadId='" + accountTitle.AccountHeadId + "',AccMain='"+ accountTitle.AccMain + "',SecondLevel='" + accountTitle.SecondLevel + "', AccountTitleName  = N'" + accountTitle.AccountTitleName + "' where Id = " + ID + "");
             return RedirectToAction("Index");
         }
         public ActionResult Delete(int? ID)

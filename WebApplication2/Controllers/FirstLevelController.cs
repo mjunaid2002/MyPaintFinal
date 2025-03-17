@@ -135,12 +135,20 @@ namespace WebApplication1.Controllers
         public ActionResult Edit(int? ID)
         {
             var data = _context.Ac_main.SingleOrDefault(c => c.ID == ID);
-            return View(data);
+            //return View(data);
+            var Ac_head_list = _context.Ac_head.ToList();
+            var Account_headVm = new Account_headVm
+            {
+                Ac_head_list = Ac_head_list,
+                Ac_main = data
+            };
+            return View(Account_headVm);
+
         }
         [HttpPost]
         public ActionResult Edit(int ID, Ac_main ac_Main)
         {
-            _context.Database.ExecuteSqlCommand("Update Ac_main set a_title  = N'" + ac_Main.a_title + "' where Id = " + ID + "");
+            _context.Database.ExecuteSqlCommand("Update Ac_main set  a_head='" + ac_Main.a_head + "',a_title  = N'" + ac_Main.a_title + "' where Id = " + ID + "");
             return RedirectToAction("Index");
         }
     }

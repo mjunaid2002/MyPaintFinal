@@ -43,15 +43,18 @@
                                         <td>@item.AccountNo</td>
                                         <td>
 
-                                            @if (item.AccountNo == 5500003 ||item.AccountNo == 5500014 || item.AccountNo == 5500050 || item.AccountNo == 5500010 || item.AccountNo == 10000069 || item.AccountNo == 2100004 || item.AccountNo == 2100005 || item.AccountNo == 2100001 || item.AccountNo == 3100001 || item.AccountNo == 2100003 || item.AccountNo == 10000003 || item.AccountNo == 4400001 || item.AccountNo == 5500001 || item.AccountNo == 10000002 || item.AccountNo == 10000001)
+                                            @if (item.AccountNo == 5500003 || item.AccountNo == 5500014 || item.AccountNo == 5500050 || item.AccountNo == 5500010 || item.AccountNo == 10000069 || item.AccountNo == 2100004 || item.AccountNo == 2100005 || item.AccountNo == 2100001 || item.AccountNo == 3100001 || item.AccountNo == 2100003 || item.AccountNo == 10000003 || item.AccountNo == 4400001 || item.AccountNo == 5500001 || item.AccountNo == 10000002 || item.AccountNo == 10000001)
                                             {
 
                                             }
                                             else
                                             {
-                                                <a href="@Url.Action("Edit", new { ID= item.ID } )" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="btn btn-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
+                                                if (Session["CurrentUserName"].ToString() == "Super Admin")
+                                                {
+                                                    <a href="@Url.Action("Edit", new { ID= item.ID } )" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="btn btn-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
 
-                                                <a href="@Url.Action("Delete", new { ID= item.AccountNo } )" new { onclick="return confirm('Are you sure you want to Delete this record?');" class="btn btn-danger shiny input-xs"><i class="fa fa-trash-o"></i></a>
+                                                    <a href="@Url.Action("Delete", new { ID= item.AccountNo } )" new { onclick="return confirm('Are you sure you want to Delete this record?');" class="btn btn-danger shiny input-xs"><i class="fa fa-trash-o"></i></a>
+                                                }
                                             }
                                         </td>
                                     </tr>
