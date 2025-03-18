@@ -133,7 +133,22 @@ namespace WebApplication1.Controllers
         //Delete From PurDetails
         //Delete From TransactionDetails
         //Delete From AccountTitles
+        [HttpPost]
+        public JsonResult GetRegionAndBranch(int customerId)
+        {
+            //var customer = _context.Customer.FirstOrDefault(c => c.customerid == customerId);
+            var customer = _context.Database.SqlQuery<int>("SELECT branchid From Customers where customerid=" + customerId).FirstOrDefault();
 
+            if (customer != null)
+            {
+                var branchid = customer;
+                var regionId = _context.Database.SqlQuery<int>("SELECT regionid From Branch where id="+ branchid).FirstOrDefault();
+                
+
+                return Json(new { regionId, branchid }, JsonRequestBehavior.AllowGet);
+            }
+            return Json(null, JsonRequestBehavior.AllowGet);
+        }
 
     }
 }

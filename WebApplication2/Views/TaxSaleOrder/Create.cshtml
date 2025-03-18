@@ -37,7 +37,7 @@
             var data = col1 + "\n" + col2 + "\n" + col3;
             //alert(col6);
             //  document.getElementById("unit").value = col6;
-         
+
             var supid = document.getElementById("supp").value;
             //alert(supid);
             if (supid == "" || supid == 0) {
@@ -273,7 +273,7 @@
         var item = document.getElementById("id").value;
         var regionid = document.getElementById("regionid").value;
         var branchid = document.getElementById("branchid").value;
-        
+
             $.ajax({
                 /**/
                 url: '@Url.Action("ActionRate1", "SaleInvoiceNew")',
@@ -319,7 +319,46 @@
             //var rem_stock = $("#rem_stock").val();
             //var rem_saleorder = $("#rem_saleorder").val();
             //$("#bal_qty").val(rem_stock - rem_saleorder);
+
+    }
+    function getbranch(code) {
+       // alert(code);
+        $.ajax({
+             /**/
+             url: '@Url.Action("Action", "SaleWctn")',
+            /**/
+            type: "POST",
+            data: { "code": code },
         
+            "success": function (data) {
+                if (data != null) {
+                    var vdata = data;
+                  //  alert(vdata);
+                    $("#Address").val(vdata[0].Address);
+                    $("#Phone").val(vdata[0].Phone);
+        
+                }
+            }
+        });
+        $.ajax({
+
+            url: '@Url.Action("GetRegionAndBranch", "Customer")',
+            type: "POST",
+            data: { "customerId" : code},
+            "success": function (data) {
+                if (data != null) {
+                    $("#regionid").val(data.regionId).trigger("change");
+                    $("#branchid").val(data.branchid).trigger("change");
+                    $("#region").val(data.regionId);
+                    $("#branch").val(data.branchid)
+
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error("Error fetching data:", error);
+            }
+        });
+
     }
 </script>
 <style>
@@ -374,8 +413,12 @@
                             </div>
                             <div class="form-group col-sm-2">
                                 <label>Select Customer</label>
-                                @Html.DropDownListFor(m => m.poMaster.supid, new SelectList(Model.Cus_list, "customerid", "Name"), "Select Customer", htmlAttributes: new { @class = "chosen-select form-control", onChange = "Action(this.value)", required = "required", id = "supp" })
+                                @Html.DropDownListFor(m => m.poMaster.supid, new SelectList(Model.Cus_list, "customerid", "Name"), "Select Customer", htmlAttributes: new { @class = "chosen-select form-control", onChange = "getbranch(this.value)", required = "required", id = "supp" })
                             </div>
+                            @*<div class="form-group col-sm-2">
+                                    <label>Select Customer</label>
+                                    @Html.DropDownListFor(m => m.poMaster.supid, new SelectList(Model.Cus_list, "customerid", "Name"), "Select Customer", htmlAttributes: new { @class = "chosen-select form-control", onChange = "Action(this.value)", required = "required", id = "supp" })
+                                </div>*@
 
                             <div class="form-group col-sm-2">
                                 <label>Status</label>
@@ -389,14 +432,25 @@
                                     htmlAttributes: new { @class = "chosen-select form-control", required = "required" }
                                 )
                             </div>
+
                             <div class="form-group col-sm-2">
                                 <label>Select Region</label>
-                                @Html.DropDownListFor(m => m.poMaster.RegionId, new SelectList(Model.Region_list, "id", "Name"), htmlAttributes: new { @class = "chosen-select form-control", required = "required", id = "regionid" })
+                                @Html.DropDownListFor(m => m.poMaster.RegionId, new SelectList(Model.Region_list, "id", "Name"), "Select Region", htmlAttributes: new { @class = "form-control", required = "required", id = "regionid", @disabled = "disabled" })
+                                @Html.HiddenFor(m => m.poMaster.RegionId, htmlAttributes: new { id = "region" })
                             </div>
                             <div class="form-group col-sm-2">
                                 <label>Select Branch</label>
-                                @Html.DropDownListFor(m => m.poMaster.BranchId, new SelectList(Model.Branch_list, "id", "name"), "Select Branch", htmlAttributes: new { @class = "form-control", required = "required", id = "branchid" })
+                                @Html.DropDownListFor(m => m.poMaster.BranchId, new SelectList(Model.Branch_list, "id", "name"), "Select Branch", htmlAttributes: new { @class = "form-control", required = "required", id = "branchid", @disabled = "disabled" })
+                                @Html.HiddenFor(m => m.poMaster.BranchId, htmlAttributes: new { id = "branch" })
                             </div>
+                            @*<div class="form-group col-sm-2">
+                                    <label>Select Region</label>
+                                    @Html.DropDownListFor(m => m.poMaster.RegionId, new SelectList(Model.Region_list, "id", "Name"), htmlAttributes: new { @class = "chosen-select form-control", required = "required", id = "regionid" })
+                                </div>
+                                <div class="form-group col-sm-2">
+                                    <label>Select Branch</label>
+                                    @Html.DropDownListFor(m => m.poMaster.BranchId, new SelectList(Model.Branch_list, "id", "name"), "Select Branch", htmlAttributes: new { @class = "form-control", required = "required", id = "branchid" })
+                                </div>*@
                         </div>
                         <div class="row">
                             <div class="form-group col-sm-4">

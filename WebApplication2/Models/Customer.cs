@@ -34,6 +34,7 @@ namespace CRM.Models
         public int Dsr { get; set; }
         public int longi { get; set; }
         public int lati { get; set; }
+        public int branchid { get; set; }
         public bool comp_check { get; set; }
         public bool cus_check { get; set; }
 
