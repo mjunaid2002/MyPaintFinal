@@ -25,7 +25,7 @@ namespace WebApplication2.Controllers
         // GET: Ledger
         public ActionResult Index(AccountTitle accountTitle)
         {
-            var third_level = _context.Database.SqlQuery<AccountTitle>("SELECT * FROM AccountTitles").ToList();
+            var third_level = _context.Database.SqlQuery<AccountTitle>("SELECT * FROM AccountTitles where AccountType Not IN ('Employees') ").ToList();
             //DateTime startdate = _context.Database.SqlQuery<DateTime>("select StartDate from Sessions where year(StartDate)=YEAR(GETDATE()) and b_unit='" + Bunit + "'").FirstOrDefault();
             //ViewBag.StartDate = Convert.ToDateTime(startdate).ToString("yyyy-MM-dd");
             var Chart_of_account_Vm = new ChartofaccountVm

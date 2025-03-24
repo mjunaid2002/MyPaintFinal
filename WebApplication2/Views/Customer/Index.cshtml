@@ -29,10 +29,16 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Account no</th>
+                                    <th> Branch</th>
+                                    <th> BeltArea</th>
                                     <th> Name</th>
                                     <th>Address</th>
                                     <th>Phone</th>
                                     <th>Email</th>
+                                    <th>WHT</th>
+                                    <th>NTN</th>
+                                    <th>Acc Limit</th>
+                                    <th>Day Limit</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -43,10 +49,16 @@
                                     <tr>
                                         <td>@item.customerid</td>
                                         <td>@item.accno</td>
+                                        <td>@item.BranchName</td>
+                                        <td>@item.BeltAreaName</td>
                                         <td>@item.Name</td>
                                         <td>@item.Address</td>
                                         <td>@item.Phone</td>
                                         <td>@item.email</td>
+                                        <td>@item.partywht</td>
+                                        <td>@item.NTN</td>
+                                        <td>@item.creditlimitamount</td>
+                                        <td>@item.creditlimitdays</td>
                                         <td>
                                             <a href="@Url.Action("Edit", new { ID= item.customerid } )" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="btn btn-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
                                             <a href="@Url.Action("Delete", new { ID= item.customerid } )" new { onclick="return confirm('Are you sure you want to delete this record?');" class="btn btn-danger shiny input-xs"><i class="fa fa-trash-o"></i></a>
@@ -56,6 +68,12 @@
                             </tbody>
                             <tfoot>
                                 <tr>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
                                     <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
                                     <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
                                     <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>

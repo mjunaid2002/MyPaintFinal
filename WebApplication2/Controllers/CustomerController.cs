@@ -26,7 +26,8 @@ namespace WebApplication1.Controllers
         // GET: Customer
         public ActionResult Index()
         {
-            var list = _context.Database.SqlQuery<Customers>("select * from  customers where discount =0 ").ToList();
+            //var list = _context.Database.SqlQuery<Customers>("select * from  customers where discount =0 ").ToList();
+            var list = _context.Database.SqlQuery<Customers>("select B.name AS BranchName,BA.Name AS BeltAreaName, C.* from  customers C left join BeltArea BA on BA.Id = C.BeltArea left join Branch B on B.Id = C.branchid where discount = 0 ").ToList();
             return View(list);
         }
         public ActionResult Create(Customers customers)

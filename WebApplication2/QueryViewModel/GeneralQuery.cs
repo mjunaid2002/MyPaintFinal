@@ -746,6 +746,8 @@ namespace WebApplication1.QueryViewModel
         public string Phone { get; set; }
         public string mobile { get; set; }
         public string email { get; set; }
+        public string BeltAreaName { get; set; }
+        public string BranchName { get; set; }
 
 
     }
