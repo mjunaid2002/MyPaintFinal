@@ -242,6 +242,7 @@
     <Compile Include="Controllers\RawWastage.cs" />
     <Compile Include="Controllers\RegionController.cs" />
     <Compile Include="Controllers\ReportDocument.cs" />
+    <Compile Include="Controllers\SaleHierarchyController.cs" />
     <Compile Include="Controllers\SaleInvoiceNew.cs" />
     <Compile Include="Controllers\SchemeController.cs" />
     <Compile Include="Controllers\StockDistributionController.cs" />
@@ -4000,6 +4001,9 @@
     <Content Include="Views\FinishedWastage\EditWastage.cshtml" />
     <Content Include="Views\CashPayment\Indexstatus.cshtml" />
     <Content Include="Views\OpeningBalance\Edit.cshtml" />
+    <Content Include="Views\SaleHierarchy\Index.cshtml" />
+    <Content Include="Views\SaleHierarchy\Create.cshtml" />
+    <Content Include="Views\SaleHierarchy\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

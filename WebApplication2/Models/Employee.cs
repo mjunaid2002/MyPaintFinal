@@ -26,6 +26,7 @@ namespace CRM.Models
         public decimal dep_id { get; set; }
         public decimal emp_id { get; set; }
         public int branch_id { get; set; }
+        public int SaleHierarchy_id { get; set; }
         [NotMapped]
         public List<Emp_Department> departmentlist { get; set; }
         [NotMapped]
@@ -35,6 +36,8 @@ namespace CRM.Models
         
         [NotMapped]
         public List<int> Branchid_list { get; set; }
+        [NotMapped]
+        public List<SaleHierarchy> SaleHierarchy_list { get; set; }
 
     }
 

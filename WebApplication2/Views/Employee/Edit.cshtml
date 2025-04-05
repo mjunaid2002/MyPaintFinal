@@ -36,6 +36,11 @@
                                         @Html.TextBoxFor(m => m.ID, new { @class = "form-control input-xs", @readonly = "readonly" })
                                     </div>
                                     <div class="form-group col-sm-3">
+                                        <label>SaleHierarchy</label>
+                                        @Html.DropDownListFor(m => m.SaleHierarchy_id, new SelectList(Model.SaleHierarchy_list, "id", "name"), "Select SaleHierarchy", htmlAttributes: new { @class = "chosen-select form-control", required = "required" })
+
+                                    </div>
+                                    <div class="form-group col-sm-3">
                                         <label>Branch</label>
                                         @* @Html.DropDownListFor(m => m.Branchid_list, new SelectList(Model.Branchlist, "id", "name"), "Select Branch", htmlAttributes: new { @class = "chosen-select form-control", multiple = "multiple" , required = "required" })*@
                                         @Html.ListBoxFor(m => m.Branchid_list, new SelectList(Model.Branchlist, "id", "name", Model.Branchid_list),
