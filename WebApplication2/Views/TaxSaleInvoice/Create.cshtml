@@ -367,11 +367,50 @@
 });
     }
     function check_total() {
-        var da = document.getElementById("net_final").value;
+        
+         var da = document.getElementById("net_final").value;
         if (da == 0) {
             alert("Please Enter Items");
             return false;
         }
+        var regionid = document.getElementById("regionid").value;
+    var branchid = document.getElementById("branchid").value;
+    var isValid = true;
+
+        var rows = document.querySelectorAll("#invoiceItem tbody tr");
+
+    for (var i = 0; i < rows.length; i++) {
+        var row = rows[i];
+
+        var itemId = row.querySelector('input[name="id"]').value;
+        var itemName = row.querySelector('input[name="item_name[]"]').value;
+        var qty = parseFloat(row.querySelector('input[name="qty[]"]').value) || 0;
+        var packing = row.querySelector('input[name="packing[]"]').value;
+
+        $.ajax({
+            url: '@Url.Action("ActionRate1", "SaleInvoiceNew")',
+            type: "POST",
+            data: {
+                code: packing,
+                code1: itemId,
+                regionid: regionid,
+                branchid: branchid
+            },
+            async: false, // Ensures validation completes before submission
+            success: function (data) {
+                var availableStock = parseFloat(data.stock) || 0;
+                if (qty > availableStock) {
+                    alert("Stock is not available for item : " + itemName + " (only " + availableStock + " in stock)");
+                    isValid = false;
+                }
+            }
+        });
+
+        if (!isValid) break;
+    }
+
+    return isValid;
+       
     }
     @*function Action1(code) {
         var item = document.getElementById("id").value;
@@ -437,9 +476,9 @@
 
     function getbranch(code) {
        // alert(code);
-     
+
         $.ajax({
-           
+
             url: '@Url.Action("GetRegionAndBranch", "Customer")',
             type: "POST",
             data: { "customerId" : code},
@@ -449,7 +488,7 @@
                     $("#branchid").val(data.branchid).trigger("change");
                     $("#region").val(data.regionId);
                     $("#branch").val(data.branchid)
-                   
+
                 }
             },
             error: function (xhr, status, error) {
