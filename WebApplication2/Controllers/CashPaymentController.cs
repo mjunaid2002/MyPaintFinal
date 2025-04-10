@@ -155,7 +155,7 @@ namespace WebApplication2.Controllers
             var Acc_List_cash = _context.AccountTitle.Where(z => z.SecondLevel == 1000005).ToList();
             var vou_list = _context.Database.SqlQuery<VoucherMaster>("SELECT * FROM VoucherMasters where VType = 'CPV' and TID = " + id + "").ToList();
             var vou_det = _context.Database.SqlQuery<Voucher>("SELECT * FROM Vouchers where VType = 'CPV' and TID = " + id + "").ToList();
-            var Vouchers = _context.VoucherMaster.SingleOrDefault(c => c.TID == id);
+            var Vouchers = _context.VoucherMaster.SingleOrDefault(c => c.TID == id & c.VType == "CPV");
             ViewBag.AmountWords = NumberToWords(Decimal.ToInt32(Vouchers.TDr));
             var Settings = _context.BusinessUnits.SingleOrDefault();
 
