@@ -55,9 +55,9 @@ namespace WebApplication2.Controllers
             //  TransactionDetail.TransId = _context.Database.SqlQuery<int>("select ISNULL(Max(TransId),0)+1 from TransactionDetails  where VType = 'BPV'").FirstOrDefault();
             TransactionDetail.TransId = _context.Database.SqlQuery<int>("select ISNULL(Max(TransId),0)+1 from TransactionDetails").FirstOrDefault();
             Voucher.Id = _context.Database.SqlQuery<int>("select ISNULL(Max(invid),0)+1 from VoucherMasters where Month(date)=Month(GETDATE()) and Year(date)= Year(GETDATE()) and VType = 'BPV' ").FirstOrDefault();
-            var Acc_List = _context.AccountTitle.ToList();
-           // var cus_list = _context.Customer.ToList();
-            var ac_list = _context.AccountTitle.ToList();
+            var Acc_List = _context.AccountTitle.Where(x => x.AccountType != "Employees").ToList();
+            // var cus_list = _context.Customer.ToList();
+            var ac_list = _context.AccountTitle.Where(x=>x.AccountType != "Employees").ToList();
             var vou_list = _context.Database.SqlQuery<VoucherMaster>("SELECT * FROM VoucherMasters where VType = 'BPV'   ORDER BY TID DESC").ToList();
             var VoucherVM = new VoucherVM
             {
@@ -123,7 +123,7 @@ namespace WebApplication2.Controllers
             TransactionDetail.Cr = _context.Database.SqlQuery<decimal>("select Cr from TransactionDetails  where VType = 'BPV' and TransId = " + id + "  ").FirstOrDefault();
             TransactionDetail.TransDes = _context.Database.SqlQuery<string>("select TransDes from TransactionDetails  where VType = 'BPV' and TransId = " + id + "  ").FirstOrDefault();
             TransactionDetail.TransDate = _context.Database.SqlQuery<string>("select TransDate from TransactionDetails  where VType = 'BPV' and TransId = " + id + "  ").FirstOrDefault();
-            var Acc_List = _context.AccountTitle.ToList();
+            var Acc_List = _context.AccountTitle.Where(x => x.AccountType != "Employees").ToList();
            // var cus_list = _context.Customer.ToList();
             var Acc_List_cash = _context.AccountTitle.Where(z => z.SecondLevel == 1000005).ToList();
             var vou_list = _context.Database.SqlQuery<VoucherMaster>("SELECT * FROM VoucherMasters where VType = 'BPV' and TID = " + id + "").ToList();

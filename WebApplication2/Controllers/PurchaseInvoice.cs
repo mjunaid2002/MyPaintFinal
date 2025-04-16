@@ -83,6 +83,7 @@ namespace WebApplication1.Controllers
         {
             var list = _context.Database.SqlQuery<PoDetail>("select * from purchasedetail where invid =" + ID + " and Stauts='PINV'").ToList();
             var date = _context.Database.SqlQuery<DateTime>("SELECT Date FROM purchasem where InvID =" + ID + " and status='PINV'").FirstOrDefault();
+            var note = _context.Database.SqlQuery<string>("SELECT note FROM purchasem where InvID =" + ID + " and status='PINV'").FirstOrDefault();
             var grandtotal = _context.Database.SqlQuery<decimal>("SELECT total FROM purchasem where InvID =" + ID + " and status='PINV'").FirstOrDefault();
 
             var customer = _context.Database.SqlQuery<string>("SELECT (Select name From Customers where customerid=purchasem.supid  ) as CustomerName  FROM purchasem where InvID =" + ID + " and status='PINV'").FirstOrDefault();
@@ -122,6 +123,7 @@ namespace WebApplication1.Controllers
                 ViewData["date"] = date.ToString("dd-MMM-yyyy");
 
                 ViewData["OrderId"] = ID;
+                ViewData["note"] = note;
                 ViewData["customername"] = customer;
                 ViewData["cusemail"] = cusemail;
                 ViewData["cusphone"] = cusphone;

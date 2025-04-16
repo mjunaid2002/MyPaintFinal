@@ -39,7 +39,7 @@
                 </div>
                 <div class="form-group col-sm-2" hidden>
                     <label>Select Region</label>
-                    <select name="reg_id" class="form-control" >
+                    <select name="reg_id" class="form-control">
                         <option value="0">Select Region</option>
                         @foreach (var list in Model.Region_list)
                         {
@@ -50,12 +50,32 @@
                 </div>
                 <div class="form-group col-sm-2">
                     <label>Select Branch</label>
-                    <select name="branchid" class="form-control" >
+                    <select name="branchid" class="form-control">
                         <option value="0">Select Branch</option>
                         @foreach (var list in Model.Branch_list)
                         {
 
                             <option value="@list.id">@list.name</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group col-sm-2">
+                    <label>Select TM</label>
+                    <select id="TMid" name="TMid" class="form-control">
+                        <option value="0">Select TM</option>
+                        @foreach (var list in Model.SaleHierarchy_list)
+                        {
+                            <option value="@list.Id">@list.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group col-sm-2">
+                    <label>Select SO</label>
+                    <select id="SOid" name="SOid" class="form-control">
+                        <option value="0">Select SO</option>
+                        @foreach (var list in Model.SaleHierarchy_list)
+                        {
+                            <option value="@list.Id">@list.Name</option>
                         }
                     </select>
                 </div>

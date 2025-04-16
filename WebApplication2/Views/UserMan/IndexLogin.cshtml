@@ -33,19 +33,43 @@
                             <tbody class="abc">
                                 @foreach (var item in Model.Userlogin_list)
                                 {
-                                    <tr>
-                                        <td>@item.EmpId</td>
-                                        <td>@item.dep_id</td>
-                                        <td>   @item.teamlead_id  </td>
+                                    if (item.UserName == "Super Admin" && item.admin == "Super Admin")
+                                    {
+                                        if (Session["CurrentUserName"].ToString() == "Super Admin") // adjust to your actual logic
+                                        {
+                                        <tr>
+                                            <td>@item.EmpId</td>
+                                            <td>@item.dep_id</td>
+                                            <td>   @item.teamlead_id  </td>
 
-                                        <td>@item.EmployeeName</td>
-                                        <td>@item.role</td>
-                                        <td>@item.UserName</td>
-                                        <td>@item.Password</td>
-                                        <td>
-                                            <a href="@Url.Action("EditAssignRole", new { ID= item.id } )" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="btn btn-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
-                                        </td>
-                                    </tr>
+                                            <td>@item.EmployeeName</td>
+                                            <td>@item.role</td>
+                                            <td>@item.UserName</td>
+                                            <td>@item.Password</td>
+                                            <td>
+                                                <a href="@Url.Action("EditAssignRole", new { ID = item.id })" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="btn btn-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
+                                            </td>
+                                        </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+
+                                        <tr>
+                                            <td>@item.EmpId</td>
+                                            <td>@item.dep_id</td>
+                                            <td>   @item.teamlead_id  </td>
+
+                                            <td>@item.EmployeeName</td>
+                                            <td>@item.role</td>
+                                            <td>@item.UserName</td>
+                                            <td>@item.Password</td>
+                                            <td>
+                                                <a href="@Url.Action("EditAssignRole", new { ID = item.id })" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="btn btn-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
+                                            </td>
+                                        </tr>
+                                    }
+
                                 }
                             </tbody>
                             <tfoot>

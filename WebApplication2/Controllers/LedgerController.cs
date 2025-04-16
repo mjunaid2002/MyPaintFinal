@@ -142,7 +142,8 @@ namespace WebApplication2.Controllers
 
                     else if (@item.Vtype == "PINV" || @item.Vtype == "PTINV")
                     {
-                        @item.TransDes = _context.Database.SqlQuery<string>("SELECT STUFF(( SELECT ', ' + pname + ' - ' + CAST(ROUND(qty,   1) AS VARCHAR) + ' * ' + CAST( ROUND(cp, 1) AS VARCHAR) + ' = ' + CAST(ROUND(total,2) AS VARCHAR) FROM purchasedetail WHERE invid = '" + item.InvId + "' FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS desp").FirstOrDefault();
+                    //    @item.TransDes = _context.Database.SqlQuery<string>("SELECT STUFF(( SELECT ', ' + pname + ' - ' + CAST(ROUND(qty,   1) AS VARCHAR) + ' * ' + CAST( ROUND(cp, 1) AS VARCHAR) + ' = ' + CAST(ROUND(total,2) AS VARCHAR) FROM purchasedetail WHERE invid = '" + item.InvId + "' FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') AS desp").FirstOrDefault();
+                        @item.TransDes = _context.Database.SqlQuery<string>("SELECT STUFF(( SELECT ', ' + pd.pname + ' - ' + CAST(ROUND(pd.qty, 1) AS VARCHAR) + ' * ' + CAST(ROUND(pd.cp, 1) AS VARCHAR) + ' = ' + CAST(ROUND(pd.total, 2) AS VARCHAR) FROM purchasedetail pd WHERE pd.invid = '" + item.InvId + "' FOR XML PATH(''), TYPE ).value('.', 'NVARCHAR(MAX)'), 1, 2, '') + ' (' + ISNULL(pm.note, '') + ')' AS des FROM purchasem pm WHERE pm.invid = '" + item.InvId + "';").FirstOrDefault();
                     }
 
                     else if (@item.Vtype == "PRINV" || @item.Vtype == "TPRINV")
@@ -151,7 +152,7 @@ namespace WebApplication2.Controllers
                     }
                 }
                 _context.Database.ExecuteSqlCommand("INSERT  INTO TempTransDetails(userid,TransId, TransDes, TransDate, AccountId, Dr, Cr, InvId, Vtype, b_unit, Rinvid, AccountNo, AccMain, AccountHeadId, SecondLevel, AccountTitleName, AccountType)  " +
-                       "VALUES('" + Session["UserID"].ToString() + "','" + @item.TransId + "','" + @item.TransDes + "','" + @item.TransDate + "','" + @item.AccountId + "','" + @item.Dr + "','" + @item.Cr + "','" + @item.InvId + "','" + @item.Vtype + "','" + @item.AccountType + "','" + @item.Rinvid + "','" + @item.AccountNo + "','" + @item.AccMain + "','" + @item.AccountHeadId + "','" + @item.SecondLevel + "','" + @item.AccountTitleName + "','" + @item.AccountType + "') ");
+                       "VALUES('" + Session["UserID"].ToString() + "','" + @item.TransId + "','" + @item.TransDes.Replace("'", "") + "','" + @item.TransDate + "','" + @item.AccountId + "','" + @item.Dr + "','" + @item.Cr + "','" + @item.InvId + "','" + @item.Vtype + "','" + @item.AccountType + "','" + @item.Rinvid + "','" + @item.AccountNo + "','" + @item.AccMain + "','" + @item.AccountHeadId + "','" + @item.SecondLevel + "','" + @item.AccountTitleName + "','" + @item.AccountType + "') ");
 
             }
 

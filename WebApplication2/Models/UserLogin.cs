@@ -31,6 +31,7 @@ namespace CRM.Models
         public decimal EmpId { get; set; }
         public string EmployeeName { get; set; }
         public string UserName { get; set; }
+        public string admin { get; set; }
         public string Password { get; set; }
         public string role { get; set; }
 

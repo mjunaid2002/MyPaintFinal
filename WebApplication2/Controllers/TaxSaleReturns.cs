@@ -99,7 +99,7 @@ namespace WebApplication1.Controllers
         }
         public ActionResult InvoiceReport(int ID, string type)
         {
-            var list = _context.Database.SqlQuery<SaleReturnDetailQuery>("select  packing,prname,qty,sp,total,dsicval,totalafterdisc,gst  from srsdetail where OrderID =" + ID + " and Status='TSRINV'").ToList();
+            var list = _context.Database.SqlQuery<SaleReturnDetailQuery>("select  packing,prname,qty,sp,total,dsicval,totalafterdisc,gst,ntotal  from srsdetail where OrderID =" + ID + " and Status='TSRINV'").ToList();
             var date = _context.Database.SqlQuery<DateTime>("SELECT Date FROM srsm where OrderID =" + ID + " and title='TSRINV'").FirstOrDefault();
             var grandtotal = _context.Database.SqlQuery<decimal>("SELECT total FROM srsm where OrderID =" + ID + " and title='TSRINV'").FirstOrDefault();
             var Regionid = _context.Database.SqlQuery<decimal>("SELECT ISNULL(RegionId,0) FROM srsm where OrderID =" + ID + " and title='TSRINV'").FirstOrDefault();

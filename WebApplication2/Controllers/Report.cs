@@ -626,13 +626,14 @@ namespace WebApplication1.Controllers
             var SaleInvVM = new SaleInvVM
             {
                 Branch_list = _context.Database.SqlQuery<Branch>("SELECT id,name from Branch ").ToList(),
+                SaleHierarchy_list = _context.Database.SqlQuery<SaleHierarchy>("SELECT id,name from SaleHierarchy ").ToList(),
                 Region_list = _context.Database.SqlQuery<Region>("SELECT * from Region ").ToList(),
                 quality = _context.Database.SqlQuery<MianCategories>("SELECT * from MianCategories order by MainCategoryName").ToList(),
                 Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers where discount =0").ToList(),
             };
             return View(SaleInvVM);
         }
-        public ActionResult SaleSearch(int type, int optt, int cus_id, int reg_id, int branchid, string submit1)
+        public ActionResult SaleSearch(int type, int optt, int cus_id, int reg_id, int branchid,int SOid, int TMid, string submit1)
         {
             //var list = _context.Database.SqlQuery<RawMaterialReportQuery>("SELECT CategoryID, CategoryName, ProductID, pname, vattax, cost, AdjQTY, QTYin, QTYLabin, QTYrtnIn, qtyoutprd, qtyout, qtyoutlab, QTYSaleOut, qtyoutwast, Qtybal, total as ext1 FROM(SELECT TOP (100) PERCENT CategoryID, (SELECT CategoryName FROM Categories WHERE (CategoryID = derivedtbl_2.CategoryID)) AS CategoryName, ProductID, ProductName AS pname, vattax, UnitPrice AS cost, AdjQTY, QTYin, QTYLabin, QTYrtnIn, qtyoutprd, qtyout, qtyoutlab, QTYSaleOut, qtyoutwast, AdjQTY + QTYin + QTYLabin + QTYrtnIn - qtyoutprd - qtyout - qtyoutlab - QTYSaleOut - qtyoutwast AS Qtybal, (AdjQTY + QTYin + QTYLabin + QTYrtnIn - qtyoutprd - qtyout - qtyoutlab - QTYSaleOut - qtyoutwast) * UnitPrice AS total FROM (SELECT CategoryID, ProductID, ProductName, vattax, UnitPrice, vattax + PurchaseOpenIn + labOpenIn + SalesReturnOpenIn - purchasereturnOpenOut - LabStkOpenout - LabStkOpenout2 - labOPout - SalesOpenOut - DmgStkOpenOut AS AdjQTY, PurchasebetweenIn AS QTYin, labBetweenIn AS QTYLabin, SalesReturnBetweenIn AS QTYrtnIn, purchasereturnBetweenOut AS qtyoutprd, LabStkBetwout + LabStkBetwout2 AS qtyout, labBTout AS qtyoutlab, SalesBetwOut AS QTYSaleOut, DmgStkBetwOut AS qtyoutwast, PurchaseOpenIn, PurchasebetweenIn, labOpenIn, labBetweenIn, SalesReturnOpenIn, SalesReturnBetweenIn, purchasereturnOpenOut, purchasereturnBetweenOut, LabStkOpenout, LabStkBetwout, LabStkOpenout2, LabStkBetwout2, labOPout, labBTout, SalesOpenOut, SalesBetwOut, DmgStkOpenOut, DmgStkBetwOut FROM (SELECT CAST(CategoryID AS decimal) AS CategoryID, CAST(ProductID AS decimal) AS ProductID, CAST(ProductName AS varchar(500)) AS ProductName, CAST(vattax AS float) AS vattax, CAST(UnitPrice AS float) AS UnitPrice, (SELECT ISNULL(SUM(purchasedetail.qty), 0) AS Expr1 FROM purchasedetail INNER JOIN purchasem ON purchasedetail.invid = purchasem.invid WHERE (purchasedetail.pid = PRD.ProductID) AND (purchasem.date < '" + Request["s_date"] + "')) AS PurchaseOpenIn, (SELECT ISNULL(SUM(purchasedetail_1.qty), 0) AS Expr1 FROM purchasedetail AS purchasedetail_1 INNER JOIN purchasem AS purchasem_1 ON purchasedetail_1.invid = purchasem_1.invid WHERE (purchasedetail_1.pid = PRD.ProductID) AND (purchasem_1.date BETWEEN '" + Request["s_date"] + "' AND '" + Request["e_date"] + "')) AS PurchasebetweenIn, (SELECT ISNULL(SUM(whc), 0) AS Expr1 FROM labm WHERE (pid = PRD.ProductID) AND (Date < '" + Request["s_date"] + "')) AS labOpenIn, (SELECT ISNULL(SUM(whc), 0) AS Expr1 FROM labm AS labm_1 WHERE (pid = PRD.ProductID) AND (Date BETWEEN '" + Request["s_date"] + "' AND '" + Request["e_date"] + "')) AS labBetweenIn, (SELECT ISNULL(SUM(srsdetail.qty), 0) AS Expr1 FROM srsdetail INNER JOIN srsm ON srsdetail.OrderID = srsm.OrderID WHERE (srsdetail.prid = PRD.ProductID) AND (srsm.date < '" + Request["s_date"] + "')) AS SalesReturnOpenIn, (SELECT ISNULL(SUM(srsdetail_1.qty), 0) AS Expr1 FROM srsdetail AS srsdetail_1 INNER JOIN srsm AS srsm_1 ON srsdetail_1.OrderID = srsm_1.OrderID WHERE (srsdetail_1.prid = PRD.ProductID) AND (srsm_1.date BETWEEN '" + Request["s_date"] + "' AND '" + Request["e_date"] + "')) AS SalesReturnBetweenIn, (SELECT ISNULL(SUM(srpdetail.qty), 0) AS Expr1 FROM srpdetail INNER JOIN srpm ON srpdetail.invid = srpm.invid WHERE (srpdetail.pid = PRD.ProductID) AND (srpm.date < '" + Request["s_date"] + "')) AS purchasereturnOpenOut, (SELECT ISNULL(SUM(srpdetail_1.qty), 0) AS Expr1 FROM srpdetail AS srpdetail_1 INNER JOIN srpm AS srpm_1 ON srpdetail_1.invid = srpm_1.invid WHERE (srpdetail_1.pid = PRD.ProductID) AND (srpm_1.date BETWEEN '" + Request["s_date"] + "' AND '" + Request["e_date"] + "')) AS purchasereturnBetweenOut, (SELECT ISNULL(SUM(weight), 0) AS Expr1 FROM ProductIngrDetail WHERE (ItemId = PRD.ProductID) AND (Date < '" + Request["s_date"] + "')) AS LabStkOpenout, (SELECT ISNULL(SUM(weight), 0) AS Expr1 FROM ProductIngrDetail AS ProductIngrDetail_1 WHERE (ItemId = PRD.ProductID) AND (Date BETWEEN '" + Request["s_date"] + "' AND '" + Request["e_date"] + "')) AS LabStkBetwout, (SELECT ISNULL(SUM(qty), 0) AS Expr1 FROM ProductIngrDetail1 WHERE (ItemId = PRD.ProductID) AND (Date < '" + Request["s_date"] + "')) AS LabStkOpenout2, (SELECT ISNULL(SUM(qty), 0) AS Expr1 FROM ProductIngrDetail1 AS ProductIngrDetail1_1 WHERE (ItemId = PRD.ProductID) AND (Date BETWEEN '" + Request["s_date"] + "' AND '" + Request["e_date"] + "')) AS LabStkBetwout2, (SELECT ISNULL(SUM(weight), 0) AS Expr1 FROM labdetail WHERE (ItemId = PRD.ProductID) AND (Date < '" + Request["s_date"] + "')) AS labOPout, (SELECT ISNULL(SUM(weight), 0) AS Expr1 FROM labdetail AS labdetail_1 WHERE (ItemId = PRD.ProductID) AND (Date BETWEEN '" + Request["s_date"] + "' AND '" + Request["e_date"] + "')) AS labBTout, (SELECT ISNULL(SUM(Product.prdunit * Order_detail.ctn + Order_detail.qty), 0) AS Expr1 FROM Order_detail INNER JOIN Order_Master ON Order_detail.OrderID = Order_Master.OrderID INNER JOIN Product ON Order_detail.prid = Product.ProductID WHERE (Order_detail.prid = PRD.ProductID) AND (Order_Master.date < '" + Request["s_date"] + "')) AS SalesOpenOut, (SELECT ISNULL(SUM(Product_1.prdunit * Order_detail_1.ctn + Order_detail_1.qty), 0) AS Expr1 FROM Order_detail AS Order_detail_1 INNER JOIN Order_Master AS Order_Master_1 ON Order_detail_1.OrderID = Order_Master_1.OrderID INNER JOIN Product AS Product_1 ON Order_detail_1.prid = Product_1.ProductID WHERE (Order_detail_1.prid = PRD.ProductID) AND (Order_Master_1.date BETWEEN '" + Request["s_date"] + "' AND '" + Request["e_date"] + "')) AS SalesBetwOut, (SELECT ISNULL(SUM(qty), 0) AS Expr1 FROM sampledetail WHERE (pid = PRD.ProductID) AND (date < '" + Request["s_date"] + "')) AS DmgStkOpenOut, (SELECT ISNULL(SUM(qty), 0) AS Expr1 FROM sampledetail AS sampledetail_1 WHERE (pid = PRD.ProductID) AND (date BETWEEN '" + Request["s_date"] + "' AND '" + Request["e_date"] + "')) AS DmgStkBetwOut FROM Product AS PRD WHERE (CategoryID IN (1, 38, 43)) AND (LEN(ProductName) > 3)) AS derivedtbl_1) AS derivedtbl_2 ORDER BY CategoryID, pname) AS derivedtbl_3 ORDER BY pname").ToList();
             int opt = Convert.ToInt32(Request["opt"]);
@@ -672,6 +673,16 @@ namespace WebApplication1.Controllers
             {
                 Region = Region + " and branchid = " + branchid + " ";
             }
+
+            if (TMid != 0)
+            {
+                concat = "and supid = " + TMid + "";
+            }
+            if (SOid != 0)
+            {
+                concat = "and supid = " + SOid + "";
+            }
+          
 
             ReportDocument rd = new ReportDocument();
             if (type == 1 && optt == 1)
@@ -758,6 +769,7 @@ namespace WebApplication1.Controllers
             {
                 Branch_list = _context.Database.SqlQuery<Branch>("SELECT id,name from Branch ").ToList(),
                 Region_list = _context.Database.SqlQuery<Region>("SELECT * from Region ").ToList(),
+                SaleHierarchy_list = _context.Database.SqlQuery<SaleHierarchy>("SELECT id,name from SaleHierarchy ").ToList(),
                 Scheme_list = _context.Database.SqlQuery<Scheme>("SELECT * from Scheme order by date desc").ToList(),
                 quality = _context.Database.SqlQuery<MianCategories>("SELECT * from MianCategories order by MainCategoryName").ToList(),
                 Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers where discount =0").ToList(),
@@ -2906,6 +2918,7 @@ namespace WebApplication1.Controllers
             {
                 Branch_list = _context.Database.SqlQuery<Branch>("SELECT id,name from Branch ").ToList(),
                 Region_list = _context.Database.SqlQuery<Region>("SELECT * from Region ").ToList(),
+                SaleHierarchy_list = _context.Database.SqlQuery<SaleHierarchy>("SELECT id,name from SaleHierarchy ").ToList(),
                 quality = _context.Database.SqlQuery<MianCategories>("SELECT * from MianCategories order by MainCategoryName").ToList(),
                 Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers where discount =0").ToList(),
             };

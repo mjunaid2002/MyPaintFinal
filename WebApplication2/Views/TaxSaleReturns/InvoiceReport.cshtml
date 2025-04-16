@@ -6,6 +6,8 @@
     var totalsp = Model.Sum(x => x.sp);
     var ttotal = Model.Sum(x => x.total);
     var totalgst = Model.Sum(x => x.gst);
+    var totalafterdisc = Model.Sum(x => x.totalafterdisc);
+    var ntotal = Model.Sum(x => x.ntotal);
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -73,8 +75,9 @@
 
                     <th>Net Total </th>
                     <th>Disc% </th>
-                    <th>Tax </th>
-                    <th> Total After Dis</th>
+                    <th>Tax </th>   
+                    <th> Dis Amt</th>
+                    <th> Total </th>
                 </tr>
             </thead>
             <tbody>
@@ -97,6 +100,7 @@
                             <td>@lst.dsicval</td>
                             <td>@lst.gst</td>
                             <td>@lst.totalafterdisc</td>
+                            <td>@lst.ntotal</td>
 
                         </tr>
 
@@ -111,7 +115,9 @@
                     <td></td>
 
                     <td><b>@totalgst</b></td>
-                    <td><b>@total</b></td>
+                    <td><b>@totalafterdisc</b></td>
+                    @*<td><b>@total</b></td>*@
+                    <td><b>@ntotal</b></td>
 
                 </tr>
 
@@ -120,7 +126,8 @@
 
         </table>
 
-        <div style="text-align:right;font-weight:bold">Total : @total</div>
+        @*<div style="text-align:right;font-weight:bold">Total : @total</div>*@
+        <div style="text-align:right;font-weight:bold">Total : @ntotal</div>
 
     </div>
 

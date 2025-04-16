@@ -48,7 +48,15 @@
                                     </div>
                                     <div class="form-group col-sm-4">
                                         <label>User Name</label>
-                                        @Html.TextBoxFor(m => m.UserLogin.UserName, new { @class = "form-control input-xs", id = "username" })
+                                        @if (Model.UserLogin.UserName == "Super Admin")
+                                        {
+                                            @Html.TextBoxFor(m => m.UserLogin.UserName, new { @class = "form-control input-xs", id = "username" ,@readonly="readonly"})
+                                        }
+                                        else
+                                        {
+                                            @Html.TextBoxFor(m => m.UserLogin.UserName, new { @class = "form-control input-xs", id = "username" })
+
+                                        }
                                     </div>
                                     <div class="form-group col-sm-3">
                                         <label>Password</label>

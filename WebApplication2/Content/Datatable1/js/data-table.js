@@ -3,11 +3,13 @@ $(document).ready(function() {
       var simple = $('#simpletable').DataTable();
 
       var advance = $('#searchable').DataTable( {
-      dom: 'Bfrtip',
+          dom: 'Blfrtip',
       buttons: [
         'copy', 'csv', 'excel', 'pdf', 'print'
           ],
-          "paging": false,
+          "paging": true,
+          pageLength: 10,   
+          lengthChange: true
     } );
 
 
@@ -32,3 +34,15 @@ $(document).ready(function() {
     
 
     } );
+
+
+//$(document).ready(function () {
+//    var simple = $('#simpletable').DataTable();
+
+//    var advance = $('#searchable').DataTable({
+//        dom: 'Bfrtip',
+//        buttons: [
+//            'copy', 'csv', 'excel', 'pdf', 'print'
+//        ],
+//        "paging": true,
+//    });

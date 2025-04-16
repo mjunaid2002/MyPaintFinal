@@ -70,7 +70,7 @@ namespace WebApplication1.Controllers
                 account_no1 = Convert.ToInt32(customers.accno + 1);
             }
             _context.Database.ExecuteSqlCommand("insert into AccountTitles (b_unit,AccountNo,AccMain,AccountHeadId,AccountTitleName,AccountType,cr,dr,Secondlevel) values('0'," + account_no1 + ",1001,1,N'" + customers.Name + "','Customer',0,0,'1000001')");
-            _context.Database.ExecuteSqlCommand("insert into customers (NTN,partywht,customerid,Name,address,Cityid,sectorid,Phone,mobile,email,discount,accno, BeltArea, employer,creditlimitamount,creditlimitdays,branchid) values('" + customers.NTN + "'," + customers.partywht + "," + customers.customerid + ",N'" + customers.Name + "',N'" + customers.Address + "',1,1,N'" + customers.Phone + "',N'" + customers.mobile + "',N'" + customers.email + "',0," + account_no1 + "," + customers.BeltArea + "," + customers.employer + "," + customers.creditlimitamount + "," + customers.creditlimitdays + "," + customers.Branchid + ")");
+            _context.Database.ExecuteSqlCommand("insert into customers (CNIC,STRN,isFiler,NTN,partywht,customerid,Name,address,Cityid,sectorid,Phone,mobile,email,discount,accno, BeltArea, employer,creditlimitamount,creditlimitdays,branchid) values('" + customers.CNIC + "','" + customers.STRN + "','" + customers.isFiler + "','" + customers.NTN + "'," + customers.partywht + "," + customers.customerid + ",N'" + customers.Name + "',N'" + customers.Address + "',1,1,N'" + customers.Phone + "',N'" + customers.mobile + "',N'" + customers.email + "',0," + account_no1 + "," + customers.BeltArea + "," + customers.employer + "," + customers.creditlimitamount + "," + customers.creditlimitdays + "," + customers.Branchid + ")");
 
             return RedirectToAction("Index");
         }
@@ -90,7 +90,7 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public ActionResult Edit(Customers customers)
         {
-            _context.Database.ExecuteSqlCommand("UPDATE  customers set NTN='" + customers.NTN + "',partywht=" + customers.partywht + ", Name='" + customers.Name + "',address='" + customers.Address + "',Phone='" + customers.Phone + "',email='" + customers.email + "',mobile='" + customers.mobile + "',BeltArea=" + customers.BeltArea + ",employer=" + customers.employer + "  ,creditlimitamount=" + customers.creditlimitamount + "  ,creditlimitdays=" + customers.creditlimitdays + ",branchid=" + customers.Branchid + "  where customerid = " + customers.customerid + "");
+            _context.Database.ExecuteSqlCommand("UPDATE  customers set CNIC='" + customers.CNIC + "',STRN='" + customers.STRN + "',isFiler='" + customers.isFiler + "',NTN='" + customers.NTN + "',partywht=" + customers.partywht + ", Name='" + customers.Name + "',address='" + customers.Address + "',Phone='" + customers.Phone + "',email='" + customers.email + "',mobile='" + customers.mobile + "',BeltArea=" + customers.BeltArea + ",employer=" + customers.employer + "  ,creditlimitamount=" + customers.creditlimitamount + "  ,creditlimitdays=" + customers.creditlimitdays + ",branchid=" + customers.Branchid + "  where customerid = " + customers.customerid + "");
             _context.Database.ExecuteSqlCommand("UPDATE AccountTitles set AccountTitleName = N'" + customers.Name + "' where AccountNo = " + customers.accno + "");
             return RedirectToAction("Index");
         }
@@ -139,6 +139,8 @@ namespace WebApplication1.Controllers
         {
             //var customer = _context.Customer.FirstOrDefault(c => c.customerid == customerId);
             var customer = _context.Database.SqlQuery<int>("SELECT branchid From Customers where customerid=" + customerId).FirstOrDefault();
+            var CNIC = _context.Database.SqlQuery<string>("SELECT CNIC From Customers where customerid=" + customerId).FirstOrDefault();
+            var isFiler = _context.Database.SqlQuery<bool>("SELECT isFiler From Customers where customerid=" + customerId).FirstOrDefault();
 
             if (customer != null)
             {
@@ -146,7 +148,7 @@ namespace WebApplication1.Controllers
                 var regionId = _context.Database.SqlQuery<int>("SELECT regionid From Branch where id="+ branchid).FirstOrDefault();
                 
 
-                return Json(new { regionId, branchid }, JsonRequestBehavior.AllowGet);
+                return Json(new { regionId, branchid, CNIC, isFiler }, JsonRequestBehavior.AllowGet);
             }
             return Json(null, JsonRequestBehavior.AllowGet);
         }

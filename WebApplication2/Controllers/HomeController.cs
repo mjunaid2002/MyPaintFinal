@@ -85,7 +85,10 @@ namespace WebApplication1.Controllers
         {
             var pass = Request["pass"].Trim();
             var username = Request["u_name"].Trim();
-            if ("Super Admin"==username && "#=&paint" == pass)
+            var password = _context.Database.SqlQuery<string>("Select top(1) password From  UserLogins where username='" + Request["u_name"] + "' AND admin='Super Admin' ").FirstOrDefault();
+
+            //if ("Super Admin"==username && "#=&paint" == pass)
+            if ("Super Admin"==username && password == pass)
             {
                 //var superadmin = _context.Database.SqlQuery<string>("Select top(1) admin From  UserLogins where username='" + Request["u_name"] + "' and password ='" + Request["pass"] + "'").FirstOrDefault();
                 Session["CurrentUserName"] = username;

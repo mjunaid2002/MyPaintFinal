@@ -33,7 +33,7 @@ namespace WebApplication2.Controllers
         public ActionResult IndexLogin()
         {
             //var role_list = _context.Database.SqlQuery<UserRoleView>("SELECT ul.id , ul.UserName, ul.EmpId, ul.Password, ur.name AS role, Employees.name AS EmployeeName FROM UserLogins AS ul LEFT OUTER JOIN Employees ON ul.EmpId = Employees.ID LEFT OUTER JOIN UserRoles AS ur ON ul.roleid = ur.Id").ToList();
-            var role_list = _context.Database.SqlQuery<UserRoleView>("SELECT ul.Id, ul.UserName, ul.EmpId, ul.Password, ur.name AS role, Employees.name AS EmployeeName, ISNULL(Emp_Department.Name, '') AS dep_id, ISNULL ((SELECT name AS Expr1 FROM Employees AS E2 WHERE (ID = ul.teamlead_id)), '') AS teamLead_id FROM UserLogins AS ul LEFT OUTER JOIN Emp_Department ON ul.dep_id = Emp_Department.ID LEFT OUTER JOIN Employees ON ul.EmpId = Employees.ID LEFT OUTER JOIN UserRoles AS ur ON ul.roleid = ur.Id").ToList();
+            var role_list = _context.Database.SqlQuery<UserRoleView>("SELECT ul.Id, ul.UserName, ul.EmpId, ul.Password,ul.admin, ur.name AS role, Employees.name AS EmployeeName, ISNULL(Emp_Department.Name, '') AS dep_id, ISNULL ((SELECT name AS Expr1 FROM Employees AS E2 WHERE (ID = ul.teamlead_id)), '') AS teamLead_id FROM UserLogins AS ul LEFT OUTER JOIN Emp_Department ON ul.dep_id = Emp_Department.ID LEFT OUTER JOIN Employees ON ul.EmpId = Employees.ID LEFT OUTER JOIN UserRoles AS ur ON ul.roleid = ur.Id").ToList();
             var UserMan = new UserMan
             {
                 emp_list = _context.Employee.ToList(),

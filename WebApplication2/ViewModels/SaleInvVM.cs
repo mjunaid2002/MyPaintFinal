@@ -9,6 +9,7 @@ namespace WebApplication1.ViewModels
     public class SaleInvVM
     {
         public IEnumerable<Scheme> Scheme_list { get; set; }
+        public IEnumerable<SaleHierarchy> SaleHierarchy_list { get; set; }
         public OpeningStockBranch OpeningStockBranch { get; set; }
         public IEnumerable<OpeningStockBranch> OpeningStockBranchList { get; set; }
         public IEnumerable<Region> Region_list { get; set; }

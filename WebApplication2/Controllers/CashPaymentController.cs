@@ -54,7 +54,7 @@ namespace WebApplication2.Controllers
             var Bunit = Convert.ToString(Session["BusinessUnit"]);
             TransactionDetail.TransId = _context.Database.SqlQuery<int>("select ISNULL(Max(TransId),0)+1 from TransactionDetails").FirstOrDefault();
             Voucher.Id = _context.Database.SqlQuery<int>("select ISNULL(Max(invid),0)+1 from VoucherMasters where Month(date)=Month(GETDATE()) and Year(date)= Year(GETDATE()) and VType = 'CPV'").FirstOrDefault();
-             var Acc_List = _context.AccountTitle.ToList();
+             var Acc_List = _context.AccountTitle.Where(x => x.AccountType != "Employees").ToList();
             var Acc_List_cash = _context.AccountTitle.Where(z => z.SecondLevel == 1000005).ToList();
             var vou_list = _context.Database.SqlQuery<VoucherMaster>("SELECT * FROM VoucherMasters where VType = 'CPV' ORDER BY TID DESC").ToList();
             var VoucherVM = new VoucherVM
@@ -120,7 +120,7 @@ namespace WebApplication2.Controllers
             TransactionDetail.TransDes = _context.Database.SqlQuery<string>("select TransDes from TransactionDetails  where VType = 'CPV' and TransId = " + id + "").FirstOrDefault();
             TransactionDetail.TransDate = _context.Database.SqlQuery<string>("select TransDate from TransactionDetails  where VType = 'CPV' and TransId = " + id + " ").FirstOrDefault();
             TransactionDetail.InvId = _context.Database.SqlQuery<int>("select InvId from TransactionDetails  where VType = 'CPV' and TransId = " + id + "").FirstOrDefault();
-            var Acc_List = _context.AccountTitle.ToList();
+            var Acc_List = _context.AccountTitle.Where(x => x.AccountType != "Employees").ToList();
             var Acc_List_cash = _context.AccountTitle.Where(z => z.SecondLevel == 1000005).ToList();
             var VoucherMaster = _context.Database.SqlQuery<VoucherMaster>("SELECT * FROM VoucherMasters where VType = 'CPV' and TID = " + id + "").SingleOrDefault();
             var vou_det = _context.Database.SqlQuery<Voucher>("SELECT * FROM Vouchers where VType = 'CPV' and TID = " + id + "").ToList();

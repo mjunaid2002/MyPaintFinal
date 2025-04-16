@@ -55,7 +55,7 @@ namespace WebApplication2.Controllers
             //  TransactionDetail.TransId = _context.Database.SqlQuery<int>("select ISNULL(Max(TransId),0)+1 from TransactionDetails  where VType = 'CRV'").FirstOrDefault();
             TransactionDetail.TransId = _context.Database.SqlQuery<int>("select ISNULL(Max(TransId),0)+1 from TransactionDetails").FirstOrDefault();
             Voucher.Id = _context.Database.SqlQuery<int>("select ISNULL(Max(invid),0)+1 from VoucherMasters where Month(date)=Month(GETDATE()) and Year(date)= Year(GETDATE()) and VType = 'CRV' ").FirstOrDefault();
-            var Acc_List = _context.AccountTitle.ToList();
+            var Acc_List = _context.AccountTitle.Where(x => x.AccountType != "Employees").ToList();
             //var cus_list = _context.Customer.ToList();
             var Acc_List_cash = _context.AccountTitle.Where(z => z.SecondLevel == 1000005).ToList();
             var vou_list = _context.Database.SqlQuery<VoucherMaster>("SELECT * FROM VoucherMasters where VType = 'CRV'  ORDER BY TID DESC").ToList();
@@ -121,7 +121,7 @@ namespace WebApplication2.Controllers
             TransactionDetail.Cr = _context.Database.SqlQuery<decimal>("select SUM(Cr) from TransactionDetails  where VType = 'CRV' and TransId = " + id + "  ").FirstOrDefault();
             TransactionDetail.TransDes = _context.Database.SqlQuery<string>("select TransDes from TransactionDetails  where VType = 'CRV' and invid = " + id + "  ").FirstOrDefault();
             TransactionDetail.TransDate = _context.Database.SqlQuery<string>("select TransDate from TransactionDetails  where VType = 'CRV' and TransId = " + id + "  ").FirstOrDefault();
-            var Acc_List = _context.AccountTitle.ToList();
+            var Acc_List = _context.AccountTitle.Where(x => x.AccountType != "Employees").ToList();
             // var cus_list = _context.Customer.ToList();
             var Acc_List_cash = _context.AccountTitle.Where(z => z.SecondLevel == 1000005).ToList();
             var VoucherMaster = _context.Database.SqlQuery<VoucherMaster>("SELECT * FROM VoucherMasters where VType = 'CRV' and tid = " + id + "").SingleOrDefault();
