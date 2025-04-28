@@ -640,6 +640,8 @@ namespace WebApplication1.Controllers
             int product_id = Convert.ToInt32(Request["third_id"]);
             int sale2 = 0;
             string concat = "";
+            string TM = "";
+            string colTM = "";
             string concat1 = "";
             string Region = "";
 
@@ -676,11 +678,14 @@ namespace WebApplication1.Controllers
 
             if (TMid != 0)
             {
-                concat = "and supid = " + TMid + "";
+                concat = concat + " and supid = " + TMid + "";
+                colTM = ",ht.TMName	 ";
+                TM = " 	INNER JOIN dbo.fn_GetHierarchyTree(" + TMid + ") ht ON ht.id = c.SOId  ";
             }
             if (SOid != 0)
             {
-                concat = "and supid = " + SOid + "";
+                concat = concat + " and c.SOId = " + SOid + "";
+                concat1 = concat1 + " and c.SOId = " + SOid + "";
             }
           
 
@@ -699,6 +704,11 @@ namespace WebApplication1.Controllers
             {
                 var str = "select srsdetail.gst as ext1,date,srsm.OrderID,custname,prname,packing,qty,sp,isnull(srsdetail.wht, 0)wht,isnull(srsdetail.ntotal, 0) dsicval,totalafterdisc as total_after from srsm inner join srsdetail on srsm.OrderID = srsdetail.OrderID where (((srsdetail.Status = 'TSINV') AND(srsm.title = 'TSINV') " + Region + ") OR((srsdetail.Status = 'WTSINV') AND(srsm.title = 'WTSINV')  " + Region + ")) and (srsm.date between'" + Request["s_date"] + "' and '" + Request["e_date"] + "' ) " + concat1 + " ";
                 list_sale = _context.Database.SqlQuery<SaleReportQuery>("select srsdetail.gst as ext1,date,srsm.OrderID,custname,prname,packing,qty,sp,isnull(srsdetail.wht,0)wht,isnull(srsdetail.ntotal,0) dsicval,totalafterdisc as total_after,(SELECT DISTINCT  c.CategoryName FROM Categories AS c INNER JOIN Product AS p ON p.CategoryID = c.CategoryID WHERE (p.ProductID = srsdetail.prid)) AS maincataname,(SELECT DISTINCT  c.CategoryID FROM Categories AS c INNER JOIN Product AS p ON p.CategoryID = c.CategoryID WHERE (p.ProductID = srsdetail.prid)) AS maincataid from srsm inner join srsdetail on srsm.OrderID = srsdetail.OrderID where (((srsdetail.Status = 'TSINV') AND (srsm.title = 'TSINV') " + Region + ") OR  ((srsdetail.Status = 'WTSINV') AND (srsm.title = 'WTSINV')  " + Region + " )) and (srsm.date between'" + Request["s_date"] + "' and '" + Request["e_date"] + "') " + concat1 + "").ToList();
+                //var str ="select srsdetail.gst as ext1,date,srsm.OrderID,custname,prname,packing,qty,sp,isnull(srsdetail.wht, 0)wht,isnull(srsdetail.ntotal, 0) dsicval,totalafterdisc as total_after from srsm inner join srsdetail on srsm.OrderID = srsdetail.OrderID where (((srsdetail.Status = 'TSINV') AND(srsm.title = 'TSINV') " + Region + ") OR((srsdetail.Status = 'WTSINV') AND(srsm.title = 'WTSINV')  " + Region + ")) and (srsm.date between'" + Request["s_date"] + "' and '" + Request["e_date"] + "' ) " + concat1 + " ";
+                //var str = "select srsdetail.gst as ext1,date,srsm.OrderID,custname,prname,packing,qty,sp,isnull(srsdetail.wht, 0)wht,isnull(srsdetail.ntotal,0) dsicval,totalafterdisc as total_after,(SELECT DISTINCT  c.CategoryName FROM Categories AS c INNER JOIN Product AS p ON p.CategoryID = c.CategoryID WHERE (p.ProductID = srsdetail.prid)) AS maincataname,(SELECT DISTINCT  c.CategoryID FROM Categories AS c INNER JOIN Product AS p ON p.CategoryID = c.CategoryID WHERE (p.ProductID = srsdetail.prid)) AS maincataid from srsm inner join srsdetail on srsm.OrderID = srsdetail.OrderID where (((srsdetail.Status = 'TSINV') AND (srsm.title = 'TSINV') " + Region + ") OR  ((srsdetail.Status = 'WTSINV') AND (srsm.title = 'WTSINV')  " + Region + " )) and (srsm.date between'" + Request["s_date"] + "' and '" + Request["e_date"] + "') " + concat1 + "";
+                //Add sale Hireracy Filter
+                //var str = "select srsdetail.gst as ext1,date,srsm.OrderID,custname,prname,packing,qty,sp,isnull(srsdetail.wht, 0)wht,isnull(srsdetail.ntotal,0) dsicval,totalafterdisc as total_after,(SELECT DISTINCT  c.CategoryName FROM Categories AS c INNER JOIN Product AS p ON p.CategoryID = c.CategoryID WHERE (p.ProductID = srsdetail.prid)) AS maincataname,(SELECT DISTINCT  c.CategoryID FROM Categories AS c INNER JOIN Product AS p ON p.CategoryID = c.CategoryID WHERE (p.ProductID = srsdetail.prid)) AS maincataid, c.SOName AS SOname "+colTM + " from srsm inner join srsdetail on srsm.OrderID = srsdetail.OrderID LEFT JOIN vw_CustWithSaleHierarchy c ON c.CustomerId=srsm.custid  " + TM + " where (((srsdetail.Status = 'TSINV') AND (srsm.title = 'TSINV') " + Region + ") OR  ((srsdetail.Status = 'WTSINV') AND (srsm.title = 'WTSINV')  " + Region + " )) and (srsm.date between'" + Request["s_date"] + "' and '" + Request["e_date"] + "') " + concat1 + "";
+                //list_sale = _context.Database.SqlQuery<SaleReportQuery>("select srsdetail.gst as ext1,date,srsm.OrderID,custname,prname,packing,qty,sp,isnull(srsdetail.wht, 0)wht,isnull(srsdetail.ntotal,0) dsicval,totalafterdisc as total_after,(SELECT DISTINCT  c.CategoryName FROM Categories AS c INNER JOIN Product AS p ON p.CategoryID = c.CategoryID WHERE (p.ProductID = srsdetail.prid)) AS maincataname,(SELECT DISTINCT  c.CategoryID FROM Categories AS c INNER JOIN Product AS p ON p.CategoryID = c.CategoryID  WHERE (p.ProductID = srsdetail.prid)) AS maincataid, c.SOName AS SOname "+colTM+" from srsm inner join srsdetail on srsm.OrderID = srsdetail.OrderID Left JOIN vw_CustWithSaleHierarchy c ON c.CustomerId=srsm.custid  " + TM + " where (((srsdetail.Status = 'TSINV') AND (srsm.title = 'TSINV') " + Region + ") OR  ((srsdetail.Status = 'WTSINV') AND (srsm.title = 'WTSINV')  " + Region + " )) and (srsm.date between'" + Request["s_date"] + "' and '" + Request["e_date"] + "') " + concat1 + "").ToList();
                 rd.Load(Path.Combine(Server.MapPath("~/Report"), "rptTSINV.rpt"));
                 rd.SetDataSource(list_sale);
                 TempData["Tex"] = "Tex";

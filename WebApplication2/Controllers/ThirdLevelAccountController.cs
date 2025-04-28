@@ -69,7 +69,7 @@ namespace WebApplication2.Controllers
             {
                 if (accountTitle.AccountHeadId == 1)
                 {
-                    ac_Second.account_no = _context.Database.SqlQuery<int>("SELECT ISNULL(MAX(AccountNo), 0) as account_no FROM accounttitles where AccountHeadId = '1'").FirstOrDefault();
+                    ac_Second.account_no = _context.Database.SqlQuery<int>("SELECT ISNULL(MAX(AccountNo), 0) as account_no FROM accounttitles where AccountNo  LIKE '1%'").FirstOrDefault();
                     account_no = ac_Second.account_no;
                     if (account_no == 0)
                     {
@@ -82,7 +82,7 @@ namespace WebApplication2.Controllers
                 }
                 if (accountTitle.AccountHeadId == 2)
                 {
-                    ac_Second.account_no = _context.Database.SqlQuery<int>("SELECT ISNULL(MAX(AccountNo), 0) as account_no FROM accounttitles where AccountHeadId = '2'").FirstOrDefault();
+                    ac_Second.account_no = _context.Database.SqlQuery<int>("SELECT ISNULL(MAX(AccountNo), 0) as account_no FROM accounttitles where AccountNo  LIKE '2%'").FirstOrDefault();
                     account_no = ac_Second.account_no;
                     if (account_no == 0)
                     {
@@ -95,7 +95,7 @@ namespace WebApplication2.Controllers
                 }
                 if (accountTitle.AccountHeadId == 3)
                 {
-                    ac_Second.account_no = _context.Database.SqlQuery<int>("SELECT ISNULL(MAX(AccountNo), 0) as account_no FROM accounttitles where AccountHeadId = '3'").FirstOrDefault();
+                    ac_Second.account_no = _context.Database.SqlQuery<int>("SELECT ISNULL(MAX(AccountNo), 0) as account_no FROM accounttitles where AccountNo  LIKE '3%'").FirstOrDefault();
                     account_no = ac_Second.account_no;
                     if (account_no == 0)
                     {
@@ -108,7 +108,7 @@ namespace WebApplication2.Controllers
                 }
                 if (accountTitle.AccountHeadId == 4)
                 {
-                    ac_Second.account_no = _context.Database.SqlQuery<int>("SELECT ISNULL(MAX(AccountNo), 0) as account_no FROM accounttitles where AccountHeadId = '4'").FirstOrDefault();
+                    ac_Second.account_no = _context.Database.SqlQuery<int>("SELECT ISNULL(MAX(AccountNo), 0) as account_no FROM accounttitles where AccountNo  LIKE '4%'").FirstOrDefault();
                     account_no = ac_Second.account_no;
                     if (account_no == 0)
                     {
@@ -121,7 +121,7 @@ namespace WebApplication2.Controllers
                 }
                 if (accountTitle.AccountHeadId == 5)
                 {
-                    ac_Second.account_no = _context.Database.SqlQuery<int>("SELECT ISNULL(MAX(AccountNo), 0) as account_no FROM accounttitles where AccountHeadId = '5'").FirstOrDefault();
+                    ac_Second.account_no = _context.Database.SqlQuery<int>("SELECT ISNULL(MAX(AccountNo), 0) as account_no FROM accounttitles where AccountNo  LIKE '5%'").FirstOrDefault();
                     account_no = ac_Second.account_no;
                     if (account_no == 0)
                     {
@@ -162,7 +162,7 @@ namespace WebApplication2.Controllers
         [HttpPost]
         public ActionResult Edit(int ID, AccountTitle accountTitle)
         {
-            _context.Database.ExecuteSqlCommand("Update AccountTitles set  AccountHeadId='" + accountTitle.AccountHeadId + "',AccMain='"+ accountTitle.AccMain + "',SecondLevel='" + accountTitle.SecondLevel + "', AccountTitleName  = N'" + accountTitle.AccountTitleName + "' where Id = " + ID + "");
+            _context.Database.ExecuteSqlCommand("Update AccountTitles set  AccountHeadId='" + accountTitle.AccountHeadId + "',AccMain='"+ accountTitle.AccMain + "',SecondLevel='" + accountTitle.SecondLevel + "', AccountTitleName  = N'" + accountTitle.AccountTitleName + "', AccountType  = N'" + accountTitle.AccountType + "' where Id = " + ID + "");
             return RedirectToAction("Index");
         }
         public ActionResult Delete(int? ID)

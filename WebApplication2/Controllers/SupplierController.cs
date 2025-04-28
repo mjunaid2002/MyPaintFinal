@@ -40,7 +40,7 @@ namespace WebApplication1.Controllers
             int account_no1;
             Session["message"] = "";
            
-             customers.accno = _context.Database.SqlQuery<int>("SELECT ISNULL(MAX(AccountNo), 0) as account_no FROM AccountTitles where AccountHeadId = '2'").FirstOrDefault();
+             customers.accno = _context.Database.SqlQuery<int>("SELECT ISNULL(MAX(AccountNo), 0) as account_no FROM AccountTitles where AccountNo  LIKE '2%'").FirstOrDefault();
                 if (customers.accno == 0)
                 {
                     account_no1 = Convert.ToInt32("2100001");
@@ -50,7 +50,7 @@ namespace WebApplication1.Controllers
                     account_no1 = Convert.ToInt32(customers.accno + 1);
                 }
                
-                _context.Database.ExecuteSqlCommand("insert into customers (customerid,Name,address,Cityid,sectorid,Phone,mobile,email,discount,accno,partywht) values(" + customers.customerid + ",N'" + customers.Name + "',N'" + customers.Address + "',1,1,N'" + customers.Phone + "',N'" + customers.mobile + "',N'" + customers.email + "',1," + account_no1 + ",1)");
+                _context.Database.ExecuteSqlCommand("insert into customers (isFiler,customerid,Name,address,Cityid,sectorid,Phone,mobile,email,discount,accno,partywht) values('" + customers.isFiler + "'," + customers.customerid + ",N'" + customers.Name + "',N'" + customers.Address + "',1,1,N'" + customers.Phone + "',N'" + customers.mobile + "',N'" + customers.email + "',1," + account_no1 + ",1)");
                 _context.Database.ExecuteSqlCommand("insert into AccountTitles (b_unit,AccountNo,AccMain,AccountHeadId,AccountTitleName,AccountType,cr,dr,Secondlevel) values('0'," + account_no1 + ",2001,2,N'" + customers.Name + "','Supplier',0,0,'2000001')");
 
                     return RedirectToAction("Index");

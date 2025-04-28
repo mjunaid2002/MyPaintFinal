@@ -517,6 +517,8 @@ namespace WebApplication1.QueryViewModel
         public string ext5 { get; set; }
         public string ext6 { get; set; }  
         public string maincataname { get; set; }
+        public string SOname { get; set; }
+        public string TMName { get; set; }
         public decimal maincataid { get; set; }
         public DateTime date { get; set; }
 

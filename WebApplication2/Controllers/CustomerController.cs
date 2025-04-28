@@ -60,7 +60,8 @@ namespace WebApplication1.Controllers
 
 
             int account_no1;
-            customers.accno = _context.Database.SqlQuery<int>("SELECT ISNULL(MAX(AccountNo), 0) as account_no FROM AccountTitles where AccountHeadId = '1'").FirstOrDefault();
+            customers.customerid = _context.Database.SqlQuery<decimal>("select ISNULL(Max(customerid),0)+1 from customers").FirstOrDefault();
+            customers.accno = _context.Database.SqlQuery<int>("SELECT ISNULL(MAX(AccountNo), 0) as account_no FROM AccountTitles where AccountNo LIKE '1%'").FirstOrDefault();
             if (customers.accno == 0)
             {
                 account_no1 = Convert.ToInt32("10000003");

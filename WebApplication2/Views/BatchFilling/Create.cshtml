@@ -172,8 +172,8 @@
         htmlRows += '<td><input type="text"  name="item_name2[]"  value="' + item_name2 + '" required class="form-control" readonly autocomplete="off"></td>';
         htmlRows += '<td><input type="text"  name="packing[]"  value="' + packing + '" required class="form-control" readonly autocomplete="off"></td>';
         htmlRows += '<td><input type="text"  name="weight2[]"  value="' + weight2 + '" required class="form-control" readonly autocomplete="off"></td>';
-        htmlRows += '<td><input type="text"  name="rate1[]"  value="' + rate1 + '" readonly class="form-control" autocomplete="off"></td>';
-        htmlRows += '<td><input type="text"  name="cost2[]"  value="' + cost2 + ' "   readonly class="form-control" autocomplete="off"></td>';
+        htmlRows += '<td><input type="text"  name="rate1[]"  value="' + rate1 + '" readonly class="form-control @isHidden" autocomplete="off"></td>';
+        htmlRows += '<td><input type="text"  name="cost2[]"  value="' + cost2 + ' "   readonly class="form-control @isHidden" autocomplete="off"></td>';
         htmlRows += '<td style="display:none">' + cost2 + '</td>';
         htmlRows += '<td style="display:none">' + packing + '</td>';
         $('#invoiceItem1').append(htmlRows);
@@ -455,14 +455,18 @@
             data: "{}",
             success: function (data) {
                //alert(data);
-                var s = '<option value="-1">Select Rate</option>';
+                //var s = '<option value="-1">Select Rate</option>';
+                var s = '';
 
                 for (var i = 0; i < data.length; i++) {
                     s += '<option value="' + data[i].cp + '">' + data[i].cp + '</option>';
                 }
                 $('#rate1drop').html(s);
+                Action66(code);
+
             }
         });
+
     }
     function Action6(code) {
           var selObj = document.getElementById("item_name2");
@@ -496,15 +500,21 @@
             type: "POST",
             data: { "itemId": itemId, "itemPacking": itemPacking},
 
-            "success": function (data) {
-                if (data != null) {
+              "success": function (data) {
+                  //alert(data);
+                if (data != null && data.length > 0) {
                     var vdata = data;
-                    
+
                     $("#rem1").val(vdata[0].qty);
-                    
-                    }
+
                 }
-            });
+                else {
+                    $("#rem1").val(0);
+                }
+              }
+
+          });
+        tota1();
     }
 
 </script>
@@ -607,7 +617,7 @@
                                                         @*@Html.DropDownListFor(m => m.productIngrMasterQuery.ColorName, new SelectList(Model.color1, "ProductID", "ProductName"), "Select Product", htmlAttributes: new { @class = "chosen-select form-control", onChange = "Action(this.value)", @style = "margin-left:-20px", id = "item_name2" })*@
                                                         @Html.DropDownListFor(m => m.productIngrMasterQuery.ColorName, new SelectList(Model.color1, "ProductID", "ProductName"), "Select Product", htmlAttributes: new { @class = "chosen-select form-control", onChange = "Action5(this.value)", @style = "margin-left:-20px", id = "item_name2" })
                                                     </div>
-                                                    <div class="form-group col-sm-2" style="margin-left:-20px;width:150px">
+                                                    <div class="form-group col-sm-2" style="margin-left:-20px;width:150px" onChange="Action66(this.value)">
                                                         <label>Packing</label>
                                                         <select id="packing" class="form-control">
                                                             <option>-Select Packing-</option>
@@ -617,11 +627,11 @@
                                                             <option value="Gallon">Gallon</option>
                                                         </select>
                                                     </div>
-                                                    <div class="form-group col-sm-2" style="margin-left:-20px;width:150px">
+                                                    <div class="form-group col-sm-2 @isHidden" style="margin-left:-20px;width:150px">
                                                         <label>Select Rate</label>
                                                         <select id="rate1drop" class="form-control" onChange="Action66(this.value)"></select>
                                                     </div>
-                                                    <div class="form-group col-sm-2" style="margin-left:-20px;width:150px">
+                                                    <div class="form-group col-sm-2 " style="margin-left:-20px;width:150px">
                                                         <label>Rem-Weight</label>
                                                         <input type="text" id="rem1" readonly class="form-control" />
                                                     </div>
@@ -633,7 +643,7 @@
                                     <label>Rate</label>
                                     <input type="text" id="rate1" onKeyUp="tota1(); " class="form-control" />
                                 </div>*@
-                                                    <div class="form-group col-sm-2" style="margin-left:-20px;width:150px">
+                                                    <div class="form-group col-sm-2 @isHidden" style="margin-left:-20px;width:150px">
                                                         <label>Total</label>
                                                         <input type="text" id="cost2" readonly class="form-control" />
                                                     </div>
@@ -654,15 +664,15 @@
                                                                     <th>Product</th>
                                                                     <th>Packing</th>
                                                                     <th>Qty</th>
-                                                                    <th>Rate</th>
-                                                                    <th>Total</th>
+                                                                    <th class="@isHidden">Rate</th>
+                                                                    <th class="@isHidden">Total</th>
                                                                 </tr>
                                                             </thead>
                                                         </table>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group col-sm-4 pull-right">
+                                            <div class="form-group col-sm-4 pull-right @isHidden">
                                                 <label>Total</label>
                                                 <input type="text" id="total_filling_raw" readonly class="form-control" />
                                             </div>
@@ -777,7 +787,7 @@
                                                         </div>
                                                     </center>
                                                 </div>
-                                                <div class="col-md-1" style="margin-left: -10px; width: 90px !important">
+                                                <div class="col-md-1 @isHidden" style="margin-left: -10px; width: 90px !important">
                                                     <center>
                                                         <p style="font-size:11px"><b>Total Packing Cost</b></p>
                                                         <div class="form-group" style="margin-left:-10px;width:70px !important">
@@ -894,7 +904,7 @@
                                                     <label>Batches Per KG Cost</label>
                                                     @Html.TextBoxFor(m => m.batchFillingMasterQUery.batchespercost, new { @class = "form-control input-xs", id = "total_cost" })
                                                 </div>
-                                                <div class="form-group col-sm-3">
+                                                <div class="form-group col-sm-3 @isHidden">
                                                     <label>Total Paking Cost</label>
                                                     @Html.TextBoxFor(m => m.batchFillingMasterQUery.packingcost, new { @class = "form-control input-xs", id = "total_packing_cost" })
                                                 </div>
