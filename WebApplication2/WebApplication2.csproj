@@ -230,6 +230,7 @@
     <Compile Include="Controllers\BranchTransferController.cs" />
     <Compile Include="Controllers\Emp_DepartmentController.cs" />
     <Compile Include="Controllers\FinishTransferController.cs" />
+    <Compile Include="Controllers\GatePassNewController.cs" />
     <Compile Include="Controllers\LabEntries.cs" />
     <Compile Include="Controllers\BatchFilling.cs" />
     <Compile Include="Controllers\BatchReturn.cs" />
@@ -4004,6 +4005,10 @@
     <Content Include="Views\SaleHierarchy\Index.cshtml" />
     <Content Include="Views\SaleHierarchy\Create.cshtml" />
     <Content Include="Views\SaleHierarchy\Edit.cshtml" />
+    <Content Include="Views\GatePassNew\Index.cshtml" />
+    <Content Include="Views\GatePassNew\Create.cshtml" />
+    <Content Include="Views\GatePassNew\Edit.cshtml" />
+    <Content Include="Views\GatePassNew\Print.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

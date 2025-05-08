@@ -380,6 +380,33 @@
             alert("Please Enter Items");
             return false;
         }
+
+        var isValid = true;
+        var custid = document.getElementById("supp").value;
+        var total = document.getElementById("net_final").value;
+
+
+         $.ajax({
+            url: '@Url.Action("CheckCrAmountLimite", "WHTSaleInvoice")',
+            type: "POST",
+            data: {
+                accountid: custid,
+                total: total
+            },
+            async: false,
+            success: function (data) {
+                if (data != "Success") {
+                    alert("Customer has exceeded their credit limit. Please review.");
+                    isValid = false;
+                }
+
+
+            }
+        });
+
+
+
+    return isValid;
     }
     @*function Action1(code) {
         var item = document.getElementById("id").value;

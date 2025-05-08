@@ -1,7 +1,12 @@
 ﻿@model WebApplication1.QueryViewModel.Customers
 @{
     ViewBag.Title = "Creat";
-    
+    var ishidden = "hidden";
+    if (Session["CurrentUserName"]?.ToString() == "Super Admin")
+    {
+        ishidden = "";
+
+    }
 }
 
 <div class="content">
@@ -79,7 +84,7 @@
                                         <label>CNIC</label>
                                         @Html.TextBoxFor(m => m.CNIC, new { @class = "form-control input-xs" })
                                     </div>
-                                    <div class="form-group col-sm-2">
+                                    <div class="form-group col-sm-1">
                                         <label>STRN</label>
                                         @Html.TextBoxFor(m => m.STRN, new { @class = "form-control input-xs" })
                                     </div>
@@ -91,9 +96,20 @@
                                         <label>Credit Limit Amount</label>
                                         @Html.TextBoxFor(m => m.creditlimitamount, new { @class = "form-control input-xs" })
                                     </div>
+
+                                    <div class="form-group col-sm-2 @ishidden">
+                                        <label>Not check Credit Limit </label>
+                                        @Html.CheckBoxFor(m => m.iscreditlimitcheck, new { @class = "form-control input-xs" })
+                                    </div>
+
                                     <div class="form-group col-sm-2">
                                         <label>Credit Limit Days</label>
                                         @Html.TextBoxFor(m => m.creditlimitdays, new { @class = "form-control input-xs" })
+                                    </div>
+
+                                    <div class="form-group col-sm-2">
+                                        <label>Booking Details</label>
+                                        @Html.TextBoxFor(m => m.BookingDetail, new { @class = "form-control input-xs" })
                                     </div>
                                     <div class="col-sm-12">
                                         <button type="submit" class="btn btn-primary" style="margin-top:10px"><i class="fa fa-save"></i> Save</button>

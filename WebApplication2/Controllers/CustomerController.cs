@@ -71,7 +71,7 @@ namespace WebApplication1.Controllers
                 account_no1 = Convert.ToInt32(customers.accno + 1);
             }
             _context.Database.ExecuteSqlCommand("insert into AccountTitles (b_unit,AccountNo,AccMain,AccountHeadId,AccountTitleName,AccountType,cr,dr,Secondlevel) values('0'," + account_no1 + ",1001,1,N'" + customers.Name + "','Customer',0,0,'1000001')");
-            _context.Database.ExecuteSqlCommand("insert into customers (CNIC,STRN,isFiler,NTN,partywht,customerid,Name,address,Cityid,sectorid,Phone,mobile,email,discount,accno, BeltArea, employer,creditlimitamount,creditlimitdays,branchid) values('" + customers.CNIC + "','" + customers.STRN + "','" + customers.isFiler + "','" + customers.NTN + "'," + customers.partywht + "," + customers.customerid + ",N'" + customers.Name + "',N'" + customers.Address + "',1,1,N'" + customers.Phone + "',N'" + customers.mobile + "',N'" + customers.email + "',0," + account_no1 + "," + customers.BeltArea + "," + customers.employer + "," + customers.creditlimitamount + "," + customers.creditlimitdays + "," + customers.Branchid + ")");
+            _context.Database.ExecuteSqlCommand("insert into customers (CNIC,STRN,isFiler,NTN,partywht,customerid,Name,address,Cityid,sectorid,Phone,mobile,email,discount,accno, BeltArea, employer,creditlimitamount,creditlimitdays,branchid,bookingdetail,iscreditlimitcheck) values('" + customers.CNIC + "','" + customers.STRN + "','" + customers.isFiler + "','" + customers.NTN + "'," + customers.partywht + "," + customers.customerid + ",N'" + customers.Name + "',N'" + customers.Address + "',1,1,N'" + customers.Phone + "',N'" + customers.mobile + "',N'" + customers.email + "',0," + account_no1 + "," + customers.BeltArea + "," + customers.employer + "," + customers.creditlimitamount + "," + customers.creditlimitdays + "," + customers.Branchid + ",'" + customers.BookingDetail + "','" + customers.iscreditlimitcheck + "')");
 
             return RedirectToAction("Index");
         }
@@ -91,13 +91,27 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public ActionResult Edit(Customers customers)
         {
-            _context.Database.ExecuteSqlCommand("UPDATE  customers set CNIC='" + customers.CNIC + "',STRN='" + customers.STRN + "',isFiler='" + customers.isFiler + "',NTN='" + customers.NTN + "',partywht=" + customers.partywht + ", Name='" + customers.Name + "',address='" + customers.Address + "',Phone='" + customers.Phone + "',email='" + customers.email + "',mobile='" + customers.mobile + "',BeltArea=" + customers.BeltArea + ",employer=" + customers.employer + "  ,creditlimitamount=" + customers.creditlimitamount + "  ,creditlimitdays=" + customers.creditlimitdays + ",branchid=" + customers.Branchid + "  where customerid = " + customers.customerid + "");
+            _context.Database.ExecuteSqlCommand("UPDATE  customers set CNIC='" + customers.CNIC + "',bookingdetail='" + customers.BookingDetail + "',STRN='" + customers.STRN + "',isFiler='" + customers.isFiler + "',NTN='" + customers.NTN + "',partywht=" + customers.partywht + ", Name='" + customers.Name + "',address='" + customers.Address + "',Phone='" + customers.Phone + "',email='" + customers.email + "',mobile='" + customers.mobile + "',BeltArea=" + customers.BeltArea + ",employer=" + customers.employer + "  ,creditlimitamount=" + customers.creditlimitamount + "  ,creditlimitdays=" + customers.creditlimitdays + ",branchid=" + customers.Branchid + ",iscreditlimitcheck='" + customers.iscreditlimitcheck + "'  where customerid = " + customers.customerid + "");
             _context.Database.ExecuteSqlCommand("UPDATE AccountTitles set AccountTitleName = N'" + customers.Name + "' where AccountNo = " + customers.accno + "");
             return RedirectToAction("Index");
         }
         public ActionResult Delete(int? ID)
         {
             _context.Database.ExecuteSqlCommand("Delete From customers where customerid =" + ID + "");
+            return RedirectToAction("Index");
+        }
+        public ActionResult iscreditlimitcheck(int? ID, bool check)
+        {
+            if (check)
+            {
+                _context.Database.ExecuteSqlCommand("UPDATE Customers SET iscreditlimitcheck = 0 where customerid = " + ID + "");
+            }
+            else { 
+              
+                _context.Database.ExecuteSqlCommand("UPDATE Customers SET iscreditlimitcheck = 1 where customerid = " + ID + "");
+
+            }
+
             return RedirectToAction("Index");
         }
         [HttpPost]

@@ -309,7 +309,8 @@ namespace WebApplication1.Controllers
             _context.Database.ExecuteSqlCommand("INSERT INTO srsm (BranchId,RegionId,gst,OrderID,empname,cargoid,custid,date,total,discount,wht,cargocharges,ntotal,custname,bal,note,pono,custntn,custst,title,time,req_status) " +
                 "VALUES (" + saleReturnQuery.BranchId + "," + saleReturnQuery.RegionId + "," + saleReturnQuery.gst + "," + saleReturnQuery.OrderID + ",'0'," + saleReturnQuery.inctax + "," + saleReturnQuery.custid + ",'" + saleReturnQuery.date + "'," + saleReturnQuery.total + "," + saleReturnQuery.discount + "," + saleReturnQuery.wht + "," + saleReturnQuery.afterdisc + "," + saleReturnQuery.ntotal + ",'" + saleReturnQuery.custname + "',0,'" + saleReturnQuery.note + "','','" + saleReturnQuery.invno + "',0,'WTSINV',0,'Request')");
 
-
+            _context.Database.ExecuteSqlCommand("UPDATE Customers SET iscreditlimitcheck = 0 where customerid = " + saleReturnQuery.custid + "");
+            
             decimal accountno = _context.Database.SqlQuery<decimal>("select Top(1) accno from customers where customerid=" + saleReturnQuery.custid + "").FirstOrDefault();
             int TransId = _context.Database.SqlQuery<int>("select ISNULL(Max(TransId),0)+1 from TransactionDetails").FirstOrDefault();
             _context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransId + ",'" + saleReturnQuery.date.ToString("yyyy-MM-dd") + "','Supplier'," + accountno + ",'" + saleReturnQuery.ntotal + "',0," + saleReturnQuery.OrderID + ",'WTSINV')");
@@ -424,6 +425,63 @@ namespace WebApplication1.Controllers
                 return RedirectToAction("Indexstatus", "SaleInvoiceNew");
             }
             return RedirectToAction("Login", "Home");
+        }
+
+        [HttpPost]
+        public ActionResult CheckCrAmountLimite(int accountid, decimal total)   
+        {
+             accountid = _context.Database.SqlQuery<int>("SELECT CAST(accno AS INT) from  Customers where customerid=" + accountid + "").FirstOrDefault();
+
+            var crAmount = _context.Database.SqlQuery<int>("SELECT  creditlimitamount FROM  Customers where accno='" + accountid + "'").FirstOrDefault();
+            var iscreditlimitcheck = _context.Database.SqlQuery<bool>("SELECT  iscreditlimitcheck FROM  Customers where accno='" + accountid + "'").FirstOrDefault();
+
+            if (crAmount == 0)
+            {
+                return Json("Success", JsonRequestBehavior.AllowGet);
+            }
+            else if(iscreditlimitcheck == true)
+            {
+                return Json("Success", JsonRequestBehavior.AllowGet);
+            }
+
+            else {
+
+                DateTime today = DateTime.Now;
+                string date = today.ToString("yyyy-MM-dd");
+
+                int dr = _context.Database.SqlQuery<int>("SELECT  isnull(SUM (Dr),0) as Dr FROM   OpeningBalance where AccountNo = " + accountid).FirstOrDefault();
+                int cr = _context.Database.SqlQuery<int>("SELECT  isnull(SUM (Cr),0) as Cr FROM   OpeningBalance where AccountNo = " + accountid).FirstOrDefault();
+
+                decimal op = 0;
+                int headid = _context.Database.SqlQuery<int>("SELECT AccountHeadId from  AccountTitles where accountno='" + accountid + "'").FirstOrDefault();
+                int accountBal = 0;
+
+                if (headid == 1 || headid == 5)
+                {
+                    op = _context.Database.SqlQuery<decimal>("SELECT   isnull(SUM (dr-cr),0) as Cr FROM   TransactionDetails  where TransDate <= '" + date + "'  and AccountId = " + accountid + "").FirstOrDefault();
+                    accountBal = dr - cr;
+                }
+                else if (headid == 2 || headid == 4)
+                {
+                    op = _context.Database.SqlQuery<decimal>("SELECT   isnull(SUM (cr-dr),0) as Cr FROM   TransactionDetails  where TransDate <= '" + date + "'  and AccountId = " + accountid + " ").FirstOrDefault();
+                    accountBal = cr - dr;
+                }
+
+                accountBal = accountBal + Convert.ToInt32(op);
+                var totalSaleAmount = accountBal + total;
+
+                if (crAmount >= totalSaleAmount)
+                {
+                    return Json("Success", JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json("Fail", JsonRequestBehavior.AllowGet);
+
+                }
+            }
+            //var getgrosspackage = _context.Database.SqlQuery<PoDetail>("select TOP(1) isnull(cp,0) as cp from srpdetail inner join srpm ON srpdetail.invid = srpm.invid where supid=" + code1 + " and pid=" + code + " and  srpm.status='PRINV' order by srpm.invid desc").ToList();
+            //return Json(getgrosspackage, JsonRequestBehavior.AllowGet);
         }
     }
 }

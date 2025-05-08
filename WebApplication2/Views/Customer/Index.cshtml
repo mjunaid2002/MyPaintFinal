@@ -1,6 +1,12 @@
 ﻿@model IEnumerable<WebApplication1.QueryViewModel.Customers>
 @{
     ViewBag.Title = "Index";
+    var ishidden = "hidden";
+    if (Session["CurrentUserName"]?.ToString() == "Super Admin")
+    {
+        ishidden = "";
+
+    }
 }
 <script>
     $('#searchable').DataTable({
@@ -41,7 +47,9 @@
                                     <th>STRN</th>
                                     <th>IsFiler</th>
                                     <th>Acc Limit</th>
+                                    <th class="@ishidden">IsLimitCheck</th>
                                     <th>Day Limit</th>
+                                    <th>Booking Detail</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -64,7 +72,15 @@
                                         <td>@item.STRN</td>
                                         <td>@item.isFiler</td>
                                         <td>@item.creditlimitamount</td>
+                                        <td class="@ishidden">
+                                            
+                                            @item.iscreditlimitcheck
+                                            
+                                            <a href="@Url.Action("iscreditlimitcheck", new { ID= item.customerid,check = @item.iscreditlimitcheck} )" new { onclick="return confirm('Are you sure you want to change the credit limit check?');" class="btn btn-info btn-sm shiny input-xs"><i class="fa fa-check"></i></a>
+
+                                                                            </td>
                                         <td>@item.creditlimitdays</td>
+                                        <td>@item.BookingDetail</td>
                                         <td>
                                             <a href="@Url.Action("Edit", new { ID= item.customerid } )" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="btn btn-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
                                             <a href="@Url.Action("Delete", new { ID= item.customerid } )" new { onclick="return confirm('Are you sure you want to delete this record?');" class="btn btn-danger shiny input-xs"><i class="fa fa-trash-o"></i></a>
@@ -88,6 +104,8 @@
                                     <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
                                     <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
                                     <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th  class="@ishidden"><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
                                     <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
                                     <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
                                 </tr>

@@ -748,11 +748,13 @@ namespace WebApplication1.QueryViewModel
         public string CNIC { get; set; }
         public string STRN { get; set; }
         public bool isFiler { get; set; }
+        public bool iscreditlimitcheck { get; set; }
         public string Phone { get; set; }
         public string mobile { get; set; }
         public string email { get; set; }
         public string BeltAreaName { get; set; }
         public string BranchName { get; set; }
+        public string BookingDetail { get; set; }
 
 
     }
@@ -793,14 +795,30 @@ namespace WebApplication1.QueryViewModel
         public int ID { get; set; }
         public string Name { get; set; }
     }
-    
+
     public class BeltArea
     {
-       
+
         public int Id { get; set; }
         public string Name { get; set; }
     }
-    
+
+    public class GatePass
+    {
+        public int Id { get; set; }
+        public DateTime Date { get; set; }
+        public string DoNo { get; set; }
+        public string CustomerName { get; set; }
+        public string MaterialDetail { get; set; }
+        public string DriverName { get; set; }
+        public string ContactNumber { get; set; }
+        public string VehicleNo { get; set; }
+        public string ShippingDetail { get; set; }
+        public string Timeout { get; set; }
+        public string EstimateDeliveryTime { get; set; }
+        public bool Isdublicate { get; set; }
+    }
+
     public class SaleHierarchy
     {
        

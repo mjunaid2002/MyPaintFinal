@@ -1,0 +1,152 @@
+﻿@model WebApplication1.QueryViewModel.GatePass
+@{
+    Layout = null;
+}
+
+<style>
+    @@media print {
+        #printBtn {
+            display: none;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .gate-pass {
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 10mm;
+            box-sizing: border-box;
+        }
+
+    }
+
+    .gate-pass {
+        border: 1px solid #000;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        width: 100%;
+        max-width: 800px;
+        margin: auto;
+    }
+
+    .title {
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .duplicate {
+        font-size: 16px;
+        color: red;
+        margin-left: 10px;
+    }
+
+    .row {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        margin-bottom: 8px;
+    }
+
+    .field {
+        flex: 1;
+        min-width: 220px;
+        margin-bottom: 6px;
+    }
+
+    .signature-row {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 40px;
+        text-align: center;
+    }
+
+    .signature {
+        flex: 1;
+        padding: 0 10px;
+    }
+
+    .signature-line {
+        display: inline-block;
+        border-top: 1px solid #000;
+        width: 150px;
+        margin-top: 10px;
+    }
+
+    .center {
+        text-align: center;
+        margin-top: 20px;
+    }
+</style>
+
+<div class="gate-pass">
+
+    <div class="row">
+        <div class="field"><strong>Date:</strong> @Model.Date.ToString("dd-MM-yyyy")</div>
+        <div class="field" style="text-align: right;"><strong>Do. No.:</strong> @Model.DoNo</div>
+    </div>
+
+    <div class="title">
+        Gate Pass
+        @if (Model.Isdublicate)
+        {
+            <span class="duplicate">(Duplicate)</span>
+        }
+    </div>
+
+    <br />
+
+    <div class="field"><strong>Customer Name:</strong> @Model.CustomerName</div>
+    <br />
+    <div class="field"><strong>Material Details (Quantity):</strong> @Model.MaterialDetail</div>
+    <br />
+    <div class="row">
+        <div class="field"><strong>Driver Name (Signature):</strong> @Model.DriverName</div>
+    </div>
+    <div class="row">
+        <div class="field"><strong>Contact No:</strong> @Model.ContactNumber</div>
+        <div class="field"><strong>Vehicle No:</strong> @Model.VehicleNo</div>
+    </div>
+    <br />
+    <div class="field"><strong>Shipping Details:</strong> @Model.ShippingDetail</div>
+    <br />
+    <div class="row">
+        <div class="field"><strong>Time Out:</strong> @Model.Timeout</div>
+        <div class="field"><strong>Estimate Delivery Time:</strong> @Model.EstimateDeliveryTime</div>
+    </div>
+    <br />
+    <div class="signature-row">
+        <div class="signature">
+            Prepared By:<br /><span class="signature-line"></span>
+        </div>
+        <div class="signature">
+            Dispatch Head:<br /><span class="signature-line"></span>
+        </div>
+        <div class="signature">
+            Checked By Security:<br /><span class="signature-line"></span>
+        </div>
+    </div>
+</div>
+
+<div class="center">
+    <button id="printBtn" onclick="printAndMarkDuplicate(@Model.Id)">Print Gate Pass</button>
+</div>
+
+<script>
+    function printAndMarkDuplicate(id) {
+        document.getElementById('printBtn').style.display = 'none';
+
+       
+        window.print();
+        fetch('/GatePassNew/MarkAsDuplicate?id=' + id, {
+            method: 'POST'
+        });
+
+
+
+    }
+</script>

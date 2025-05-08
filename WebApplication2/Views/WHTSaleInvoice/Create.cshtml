@@ -398,18 +398,19 @@
 });
     }
     function check_total() {
+       
         var da = document.getElementById("net_final").value;
         if (da == 0) {
             alert("Please Enter Items");
             return false;
         }
         var regionid = document.getElementById("regionid").value;
-    var branchid = document.getElementById("branchid").value;
-    var isValid = true;
+        var branchid = document.getElementById("branchid").value;
+        var isValid = true;
 
         var rows = document.querySelectorAll("#invoiceItem tbody tr");
 
-    for (var i = 0; i < rows.length; i++) {
+        for (var i = 0; i < rows.length; i++) {
         var row = rows[i];
 
         var itemId = row.querySelector('input[name="id"]').value;
@@ -436,11 +437,60 @@
             }
         });
 
-        if (!isValid) break;
-    }
+        if (!isValid) return false;
+        /*if (!isValid) break;*/
+        }
+       
+        var custid = document.getElementById("supp").value;
+        var total = document.getElementById("net_final").value;
+       
+
+         $.ajax({
+            url: '@Url.Action("CheckCrAmountLimite", "WHTSaleInvoice")',
+            type: "POST",
+            data: {
+                accountid: custid,
+                total: total
+            },
+            async: false, 
+            success: function (data) {
+                if (data != "Success") {
+                    alert("Customer has exceeded their credit limit. Please review.");
+                    isValid = false;
+                }
+                
+                
+            }
+        });
+      
+      
 
     return isValid;
     }
+
+
+    @*function CheckCrAmountLimite() {
+
+        var custid = document.getElementById("supp").value;
+        var total = document.getElementById("net_final").value;
+        $.ajax({
+            /**/
+            url: '@Url.Action("CheckCrAmountLimite", "WHTSaleInvoice")',
+            /**/
+            type: "POST",
+            data: { "accountid": custid, "total": total},
+            "success": function (data) {
+                if (data == "Success") {
+                    alert("Customer has exceeded their credit limit. Please review.");
+
+                }
+            },
+            error: function () {
+                console.error("Credit limit check failed.");
+            }
+        });
+    }*@
+
     @*function Action1(code) {
         var item = document.getElementById("id").value;
         $.ajax({
