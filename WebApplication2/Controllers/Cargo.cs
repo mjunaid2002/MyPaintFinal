@@ -37,7 +37,7 @@ namespace WebApplication1.Controllers
         [HttpPost, ActionName("Create")]
         public ActionResult Save(cargo cargo)
         {
-            _context.Database.ExecuteSqlCommand("insert into cargo (id,name,address,cityid,tel,fax,email) values(" + cargo.id + ",N'" + cargo.name + "',N'" + cargo.address + "',N'" + cargo.cityid + "',N'" + cargo.tel + "',N'" + cargo.fax + "',N'" + cargo.email + "')");
+            _context.Database.ExecuteSqlCommand("insert into cargo (id,name,address,cityid,tel,fax,email,VehicleNo) values(" + cargo.id + ",N'" + cargo.name + "',N'" + cargo.address + "',N'" + cargo.cityid + "',N'" + cargo.tel + "',N'" + cargo.fax + "',N'" + cargo.email + "',N'" + cargo.VehicleNo + "')");
             return RedirectToAction("Index");
         }
         public ActionResult Edit(int? ID)
@@ -48,7 +48,7 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public ActionResult Edit(cargo cargo)
         {
-            _context.Database.ExecuteSqlCommand("Update cargo set name  = '" + cargo.name + "',address  = '" + cargo.address + "',cityid  = '" + cargo.cityid + "',tel  = '" + cargo.tel + "',fax  = '" + cargo.fax + "',email  = '" + cargo.email + "' where id = " + cargo.id + "");
+            _context.Database.ExecuteSqlCommand("Update cargo set name  = '" + cargo.name + "',address  = '" + cargo.address + "',cityid  = '" + cargo.cityid + "',tel  = '" + cargo.tel + "',fax  = '" + cargo.fax + "',email  = '" + cargo.email + "',VehicleNo  = '" + cargo.VehicleNo + "' where id = " + cargo.id + "");
             return RedirectToAction("Index");
         }
         public ActionResult Delete(int? ID)

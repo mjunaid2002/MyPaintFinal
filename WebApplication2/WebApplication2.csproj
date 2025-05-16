@@ -4009,6 +4009,8 @@
     <Content Include="Views\GatePassNew\Create.cshtml" />
     <Content Include="Views\GatePassNew\Edit.cshtml" />
     <Content Include="Views\GatePassNew\Print.cshtml" />
+    <Content Include="Views\WHTSaleInvoice\GatepassReport.cshtml" />
+    <Content Include="Views\TaxSaleInvoice\GatepassReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -20,16 +20,17 @@
     <div class="row">
         <div class="col-sm-12">
             <h4 class="section-subtitle"><b> Gate Pass List</b></h4>
-            @if (Session["SubBeltAreaA"].ToString() != "0")
-            {
-                <a href="@Url.Action("Create", "GatePassNew")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  Creat New</a>
+            @*@if (Session["SubBeltAreaA"].ToString() != "0")
+                {*@
+            <a href="@Url.Action("Create", "GatePassNew")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  Creat New</a>
 
-            }<div class="panel">
+            @*}*@<div class="panel">
                 <div class="panel-content">
                     <div class="table-responsive">
                         <table class="table table-bordered table-hover table-striped table-success" id="searchable">
                             <thead class="bordered-darkorange">
                                 <tr>
+                                    <th>Action</th>
                                     <th>ID</th>
                                     <th>Date</th>
                                     <th>DoNo</th>
@@ -42,13 +43,31 @@
                                     <th>Timeout</th>
                                     <th>EstimateDeliveryTime</th>
 
-                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody class="abc">
                                 @foreach (var item in Model)
                                 {
-                                    <tr>
+
+
+<tr>
+                                        <td>
+                                            @*@if (Session["SubBeltAreaU"].ToString() != "0")
+                                                {
+                                                    <a href="@Url.Action("Edit", new { ID = item.Id })" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="btn btn-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
+                                                }
+                                                @if (Session["SubBeltAreaD"].ToString() != "0")
+                                                {
+                                                    <a href="@Url.Action("Delete", new { ID = item.Id })" new { onclick="return confirm('Are you sure you want to delete this record?');" class="btn btn-danger shiny input-xs"><i class="fa fa-trash-o"></i></a>
+                                                }*@
+
+                                            @if(item.status != "Recived") {
+
+                                                 <a href="@Url.Action("SatusUpdate", new { ID = item.Id })" new { onclick="return confirm('Are you sure you want to Change the Status?');" class="btn btn-danger shiny input-xs"><i class="fa fa-check"></i></a>
+                                            }
+                                            <a href="@Url.Action("Print", new { ID = item.Id })" new { onclick="return confirm('Are you sure you want to Print this record?');" class="btn btn-info shiny input-xs"><i class="fa fa-print"></i></a>
+
+                                        </td>
                                         <td>@item.Id</td>
                                         <td>@item.Date.ToString("dd-MM-yyyy")</td>
                                         <td>@item.DoNo</td>
@@ -61,37 +80,24 @@
                                         <td>@item.Timeout</td>
                                         <td>@item.EstimateDeliveryTime</td>
 
-                                        <td>
-                                            @if (Session["SubBeltAreaU"].ToString() != "0")
-                                            {
-                                                <a href="@Url.Action("Edit", new { ID = item.Id })" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="btn btn-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
-                                            }
-                                            @if (Session["SubBeltAreaD"].ToString() != "0")
-                                            {
-                                                <a href="@Url.Action("Delete", new { ID = item.Id })" new { onclick="return confirm('Are you sure you want to delete this record?');" class="btn btn-danger shiny input-xs"><i class="fa fa-trash-o"></i></a>
-                                            }
 
-                                            <a href="@Url.Action("Print", new { ID = item.Id })" new { onclick="return confirm('Are you sure you want to Print this record?');" class="btn btn-info shiny input-xs"><i class="fa fa-print"></i></a>
-
-                                        </td>
                                     </tr>
                                 }
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
-                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
-                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
-                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
-                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
-                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
-                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
-                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
-                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
-                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
-                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
-                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
                                     <th></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
                                 </tr>
                             </tfoot>
                         </table>

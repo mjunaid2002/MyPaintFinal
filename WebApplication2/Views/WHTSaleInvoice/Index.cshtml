@@ -104,23 +104,25 @@
                                             @*<a href="@Url.Action("InvoiceReport", new { ID= item.OrderID } )" class="label label-success shiny input-xs"><i class="fa fa-print"></i></a>*@
                                             @if (Session["SubSaleInvoiceWHTV"].ToString() != "0")
                                             {
-                                                <a href="@Url.Action("InvoiceReport", new { ID = item.OrderID, type = "pdf" })" class="label label-success shiny input-xs"><i class="fa fa-print"></i></a>
+                                                <a href="@Url.Action("InvoiceReport", new { ID = item.OrderID, type = "pdf" })" class="label label-success shiny input-xs" title="Print Pdf Invoice"><i class="fa fa-print"></i></a>
                                                 @*<a href="@Url.Action("InvoiceReport", new { ID = item.OrderID, type = "show" })" class="label label-primary shiny input-xs" target="_blank"><i class="fa fa-print"></i></a>
                                                 <a href="@Url.Action("InvoiceReport", new { ID = item.OrderID, type = "showfull" })" class="label label-info shiny input-xs" target="_blank"><i class="fa fa-print"></i></a>
                                                 <a href="@Url.Action("InvoiceReport", new { ID = item.OrderID, type = "Delivery" })" class="label label-default shiny input-xs" target="_blank"><i class="fa fa-print"></i></a>*@
                                             }
                                             @if (Session["SubSaleInvoiceWHTPrintShow"].ToString() != "0")
                                             {
-                                                <a href="@Url.Action("InvoiceReport", new { ID = item.OrderID, type = "show" })" class="label label-primary shiny input-xs" target="_blank"><i class="fa fa-print"></i></a>
+                                                <a href="@Url.Action("InvoiceReport", new { ID = item.OrderID, type = "show" })" class="label label-primary shiny input-xs" title="Print Invoice" target="_blank"><i class="fa fa-print"></i></a>
                                                  }
                                             @if (Session["SubSaleInvoiceWHTPrintFullShow"].ToString() != "0")
                                             {
-                                                <a href="@Url.Action("InvoiceReport", new { ID = item.OrderID, type = "showfull" })" class="label label-info shiny input-xs" target="_blank"><i class="fa fa-print"></i></a>
+                                                <a href="@Url.Action("InvoiceReport", new { ID = item.OrderID, type = "showfull" })" class="label label-info shiny input-xs" title="Print Full Invoice" target="_blank"><i class="fa fa-print"></i></a>
                                                }
                                             @if (Session["SubSaleInvoiceWHTDeliveryOrder"].ToString() != "0")
                                             {
-                                                 <a href="@Url.Action("InvoiceReport", new { ID = item.OrderID, type = "Delivery" })" class="label label-default shiny input-xs" target="_blank"><i class="fa fa-print"></i></a>
-                                            }
+                                                 <a href="@Url.Action("InvoiceReport", new { ID = item.OrderID, type = "Delivery" })" class="label label-default shiny input-xs"  title="Print Delivery Order Invoice" target="_blank"><i class="fa fa-print"></i></a>
+                                                 @*<a href="@Url.Action("GatepassReport", new { ID = item.OrderID })" class="label  @(item.IsGatepassPrinted ? "label-success" : "label-default")"  shiny input-xs" target="_blank" title="@(item.IsGatepassPrinted ? "Gatepass Printed" : "Print Gatepass")"> <i class="fa fa-print"></i></a>*@
+                                                 
+                                                 }
                                         </td>
                                     </tr>
                                 }

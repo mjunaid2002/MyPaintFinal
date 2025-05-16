@@ -49,7 +49,7 @@ namespace WebApplication1.Controllers
 
             var Branch = _context.Database.SqlQuery<Branch>("SELECT id,name from Branch").ToList();
             ViewBag.BranchList = Branch;
-            var list = _context.Database.SqlQuery<SaleReturnQuery>("SELECT OrderID,date,custname,title,total,req_status  from srsm where title='WTSINV'" + strquery).ToList();
+            var list = _context.Database.SqlQuery<SaleReturnQuery>("SELECT IsGatepassPrinted,OrderID,date,custname,title,total,req_status  from srsm where title='WTSINV'" + strquery).ToList();
             return View(list);
         }
         public ActionResult SaleWctnSS(int ID)
@@ -207,6 +207,7 @@ namespace WebApplication1.Controllers
             //var Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers where discount =0").ToList();
             var pro_listsss = _context.Database.SqlQuery<Products>("select ProductName,ProductID,UnitPrice,ReorderLevel,vattax,CategoryID,[desc],Active from Product where CategoryID in (select CategoryID from Categories where RawProductCheck=0)").ToList();
             var Region = _context.Database.SqlQuery<Region>("SELECT * from Region").ToList();
+            var Cargo_list = _context.Database.SqlQuery<cargo>("SELECT * from Cargo").ToList();
             var SaleInvVM = new SaleInvVM
             {
                 Branch_list = Branch,
@@ -214,6 +215,7 @@ namespace WebApplication1.Controllers
                 saleReturnQuery = saleReturnQuery,
                 pro_listsss = pro_listsss,
                 Cus_list = Cus_list,
+                Cargo_list = Cargo_list
             };
             return View(SaleInvVM);
         }
@@ -228,8 +230,8 @@ namespace WebApplication1.Controllers
                     "VALUES (" + tax_val[i] + ",0," + tax_amount[i] + ",0," + wht[i] + ",'WTSINV'," + i + "," + id[i] + ",'" + item_name[i] + "'," + sp[i] + "," + n_total[i] + "," + qty[i] + "," + disc_val[i] + "," + disc_value[i] + "," + saleReturnQuery.OrderID + ",'" + packing[i] + "'," + net[i] + ","+ disc_amount[i] + ")");
             }
             saleReturnQuery.custname = _context.Database.SqlQuery<string>("select name from customers where customerid=" + saleReturnQuery.custid + "").FirstOrDefault();
-            _context.Database.ExecuteSqlCommand("INSERT INTO srsm (BranchId,RegionId,gst,OrderID,empname,cargoid,custid,date,total,discount,wht,cargocharges,ntotal,custname,bal,note,pono,custntn,custst,title,time,req_status) " +
-                "VALUES (" + saleReturnQuery.BranchId + "," + saleReturnQuery.RegionId + "," + saleReturnQuery.gst + "," + saleReturnQuery.OrderID + ",'0',"+ saleReturnQuery.inctax + "," + saleReturnQuery.custid + ",'" + saleReturnQuery.date + "'," + saleReturnQuery.total + "," + saleReturnQuery.discount + "," + saleReturnQuery.wht + "," + saleReturnQuery.afterdisc + "," + saleReturnQuery.ntotal + ",'" + saleReturnQuery.custname + "',0,'" + saleReturnQuery.note + "','','" + saleReturnQuery.invno + "',0,'WTSINV',0,'Request')");
+            _context.Database.ExecuteSqlCommand("INSERT INTO srsm (BranchId,RegionId,gst,OrderID,empname,cargoid,custid,date,total,discount,wht,cargocharges,ntotal,custname,bal,note,pono,custntn,custst,title,time,req_status,cargo) " +
+                "VALUES (" + saleReturnQuery.BranchId + "," + saleReturnQuery.RegionId + "," + saleReturnQuery.gst + "," + saleReturnQuery.OrderID + ",'0',"+ saleReturnQuery.inctax + "," + saleReturnQuery.custid + ",'" + saleReturnQuery.date + "'," + saleReturnQuery.total + "," + saleReturnQuery.discount + "," + saleReturnQuery.wht + "," + saleReturnQuery.afterdisc + "," + saleReturnQuery.ntotal + ",'" + saleReturnQuery.custname + "',0,'" + saleReturnQuery.note + "','','" + saleReturnQuery.invno + "',0,'WTSINV',0,'Request','" + saleReturnQuery.cargo + "')");
 
 
             decimal accountno = _context.Database.SqlQuery<decimal>("select Top(1) accno from customers where customerid=" + saleReturnQuery.custid + "").FirstOrDefault();
@@ -276,13 +278,14 @@ namespace WebApplication1.Controllers
         }
         public ActionResult Edit(int? ID)
         {
-            var saleReturnQuery = _context.Database.SqlQuery<SaleReturnQuery>("select BranchId,RegionId ,[OrderID] ,[empname] ,[cargoid] as inctax ,[custid] ,[date] ,[total] ,[gst] ,[discount] ,[wht] ,[cargocharges] as afterdisc ,[ntotal] ,[custname] ,[bal] ,[note] ,[pono] ,[custntn] AS invno,[custst] ,[title] ,[time],[req_status] from srsm where OrderID =" + ID + " and title='WTSINV'").SingleOrDefault();
+            var saleReturnQuery = _context.Database.SqlQuery<SaleReturnQuery>("select BranchId,RegionId ,[OrderID] ,[empname] ,[cargoid] as inctax ,[custid] ,[date] ,[total] ,[gst] ,[discount] ,[wht] ,[cargocharges] as afterdisc ,[ntotal] ,[custname] ,[bal] ,[note] ,[pono] ,[custntn] AS invno,[custst] ,[title] ,[time],[req_status],cargo from srsm where OrderID =" + ID + " and title='WTSINV'").SingleOrDefault();
             var saleReturnQueryDetail = _context.Database.SqlQuery<SaleReturnDetailQuery>("select * from srsdetail where OrderID =" + ID + " and Status='WTSINV'").ToList();
             var Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers").ToList();
             var Branch = _context.Database.SqlQuery<Branch>("SELECT id,name from Branch").ToList();
             //var Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers where discount =0").ToList();
             var pro_listsss = _context.Database.SqlQuery<Products>("select ProductName,ProductID,UnitPrice,ReorderLevel,vattax,CategoryID,[desc],Active from Product where CategoryID in (select CategoryID from Categories where RawProductCheck=0)").ToList();
             var Region = _context.Database.SqlQuery<Region>("SELECT * from Region").ToList();
+            var Cargo_list = _context.Database.SqlQuery<cargo>("SELECT * from Cargo").ToList();
             var SaleInvVM = new SaleInvVM
             {
                 Branch_list = Branch,
@@ -291,6 +294,7 @@ namespace WebApplication1.Controllers
                 saleReturnQueryDetail = saleReturnQueryDetail,
                 pro_listsss = pro_listsss,
                 Cus_list = Cus_list,
+                Cargo_list = Cargo_list
             };
             return View(SaleInvVM);
         }
@@ -306,8 +310,8 @@ namespace WebApplication1.Controllers
                     "VALUES (" + tax_val[i] + ",0," + tax_amount[i] + ",0," + wht[i] + ",'WTSINV'," + i + "," + id[i] + ",'" + item_name[i] + "'," + sp[i] + "," + n_total[i] + "," + qty[i] + "," + disc_val[i] + "," + disc_value[i] + "," + saleReturnQuery.OrderID + ",'" + packing[i] + "'," + net[i] + "," + disc_amount[i] + ")");
             }
             saleReturnQuery.custname = _context.Database.SqlQuery<string>("select name from customers where customerid=" + saleReturnQuery.custid + "").FirstOrDefault();
-            _context.Database.ExecuteSqlCommand("INSERT INTO srsm (BranchId,RegionId,gst,OrderID,empname,cargoid,custid,date,total,discount,wht,cargocharges,ntotal,custname,bal,note,pono,custntn,custst,title,time,req_status) " +
-                "VALUES (" + saleReturnQuery.BranchId + "," + saleReturnQuery.RegionId + "," + saleReturnQuery.gst + "," + saleReturnQuery.OrderID + ",'0'," + saleReturnQuery.inctax + "," + saleReturnQuery.custid + ",'" + saleReturnQuery.date + "'," + saleReturnQuery.total + "," + saleReturnQuery.discount + "," + saleReturnQuery.wht + "," + saleReturnQuery.afterdisc + "," + saleReturnQuery.ntotal + ",'" + saleReturnQuery.custname + "',0,'" + saleReturnQuery.note + "','','" + saleReturnQuery.invno + "',0,'WTSINV',0,'Request')");
+            _context.Database.ExecuteSqlCommand("INSERT INTO srsm (BranchId,RegionId,gst,OrderID,empname,cargoid,custid,date,total,discount,wht,cargocharges,ntotal,custname,bal,note,pono,custntn,custst,title,time,req_status,cargo) " +
+                "VALUES (" + saleReturnQuery.BranchId + "," + saleReturnQuery.RegionId + "," + saleReturnQuery.gst + "," + saleReturnQuery.OrderID + ",'0'," + saleReturnQuery.inctax + "," + saleReturnQuery.custid + ",'" + saleReturnQuery.date + "'," + saleReturnQuery.total + "," + saleReturnQuery.discount + "," + saleReturnQuery.wht + "," + saleReturnQuery.afterdisc + "," + saleReturnQuery.ntotal + ",'" + saleReturnQuery.custname + "',0,'" + saleReturnQuery.note + "','','" + saleReturnQuery.invno + "',0,'WTSINV',0,'Request','" + saleReturnQuery.cargo + "')");
 
             _context.Database.ExecuteSqlCommand("UPDATE Customers SET iscreditlimitcheck = 0 where customerid = " + saleReturnQuery.custid + "");
             
@@ -482,6 +486,30 @@ namespace WebApplication1.Controllers
             }
             //var getgrosspackage = _context.Database.SqlQuery<PoDetail>("select TOP(1) isnull(cp,0) as cp from srpdetail inner join srpm ON srpdetail.invid = srpm.invid where supid=" + code1 + " and pid=" + code + " and  srpm.status='PRINV' order by srpm.invid desc").ToList();
             //return Json(getgrosspackage, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GatepassReport(int ID)
+        {
+            var saleReturnQuery = _context.Database.SqlQuery<SaleReturnQuery>("select IsGatepassPrinted ,BranchId,RegionId ,[OrderID] ,[empname] ,[cargoid] as inctax ,[custid] ,[date] ,[total] ,[gst] ,[discount] ,[wht] ,[cargocharges] as afterdisc ,[ntotal] ,[custname] ,[bal] ,[note] ,[pono] ,[custntn] AS invno,[custst] ,[title] ,[time],[req_status],cargo from srsm where OrderID =" + ID + " and title='WTSINV'").SingleOrDefault();
+            saleReturnQuery.total = _context.Database.SqlQuery<decimal>("select SUM(ISNULL(qty,0))  from srsdetail where OrderID =" + ID + " and Status='WTSINV'").SingleOrDefault();
+            var cargo = _context.Database.SqlQuery<cargo>("select name ,tel from Cargo where id =" + saleReturnQuery.cargo + " ").FirstOrDefault();
+            saleReturnQuery.cargoname = cargo.name;
+            saleReturnQuery.cargophone = cargo.tel;
+            saleReturnQuery.shippingdetail = _context.Database.SqlQuery<string>(" SELECT ISNULL(bookingdetail,'') FROM Customers where customerid =" + saleReturnQuery.custid).FirstOrDefault();
+
+            return View(saleReturnQuery);
+        }
+        [HttpPost]
+        public ActionResult MarkAsDuplicate(int id)
+        {
+            var gatePass = _context.Database.SqlQuery<SaleReturnQuery>("select * from srsm where OrderID =" + id + " and title='WTSINV'").SingleOrDefault();
+            if (gatePass != null && !gatePass.IsGatepassPrinted)
+            {
+                _context.Database.ExecuteSqlCommand("UPDATE srsm SET  IsGatepassPrinted = 1 WHERE  title='WTSINV' AND OrderID = " + id);
+
+            }
+
+            return Json(new { success = true }, JsonRequestBehavior.AllowGet);
         }
     }
 }

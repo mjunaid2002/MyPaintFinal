@@ -52,7 +52,7 @@ namespace WebApplication1.Controllers
             var Branch = _context.Database.SqlQuery<Branch>("SELECT id,name from Branch").ToList();
             ViewBag.BranchList = Branch;
 
-            var list = _context.Database.SqlQuery<SaleReturnQuery>("SELECT OrderID,date,custname,title,total,ntotal,req_status  from srsm where title='TSINV'" + strquery).ToList();
+            var list = _context.Database.SqlQuery<SaleReturnQuery>("SELECT IsGatepassPrinted,OrderID,date,custname,title,total,ntotal,req_status  from srsm where title='TSINV'" + strquery).ToList();
             return View(list);
         }
         public ActionResult SaleWctnSS(int ID)
@@ -433,5 +433,28 @@ namespace WebApplication1.Controllers
             return RedirectToAction("Login", "Home");
         }
 
+
+        public ActionResult GatepassReport(int ID)
+        {
+            var saleReturnQuery = _context.Database.SqlQuery<SaleReturnQuery>("select IsGatepassPrinted ,BranchId,RegionId ,[OrderID] ,[empname] ,[cargoid] as inctax ,[custid] ,[date] ,[total] ,[gst] ,[discount] ,[wht] ,[cargocharges] as afterdisc ,[ntotal] ,[custname] ,[bal] ,[note] ,[pono] ,[custntn] AS invno,[custst] ,[title] ,[time],[req_status],cargo from srsm where OrderID =" + ID + " and title='TSINV'").SingleOrDefault();
+            saleReturnQuery.total = _context.Database.SqlQuery<decimal>("select SUM(ISNULL(qty,0))  from srsdetail where OrderID =" + ID + " and Status='TSINV'").SingleOrDefault();
+            var cargo = _context.Database.SqlQuery<cargo>("select name ,tel from Cargo where id =" + saleReturnQuery.cargo + " ").FirstOrDefault();
+            saleReturnQuery.cargoname = cargo.name;
+            saleReturnQuery.cargophone = cargo.tel;
+            saleReturnQuery.shippingdetail = _context.Database.SqlQuery<string>(" SELECT ISNULL(bookingdetail,'') FROM Customers where customerid ="+ saleReturnQuery.custid).FirstOrDefault();
+            return View(saleReturnQuery);
+        }
+        [HttpPost]
+        public ActionResult MarkAsDuplicate(int id)
+        {
+            var gatePass = _context.Database.SqlQuery<SaleReturnQuery>("select * from srsm where OrderID =" + id + " and title='TSINV'").SingleOrDefault();
+            if (gatePass != null && !gatePass.IsGatepassPrinted)
+            {
+                _context.Database.ExecuteSqlCommand("UPDATE srsm SET  IsGatepassPrinted = 1 WHERE  title='TSINV' AND OrderID = " + id);
+
+            }
+
+            return Json(new { success = true }, JsonRequestBehavior.AllowGet);
+        }
     }
 }

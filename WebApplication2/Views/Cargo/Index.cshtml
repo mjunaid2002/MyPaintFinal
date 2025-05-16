@@ -31,6 +31,7 @@
                                     <th> Name</th>
                                     <th>Address</th>
                                     <th>Phone</th>
+                                    <th>VehicleNo</th>
                                     <th>Email</th>
                                     <th>Action</th>
                                 </tr>
@@ -43,6 +44,7 @@
                                         <td>@item.name</td>
                                         <td>@item.address</td>
                                         <td>@item.tel</td>
+                                        <td>@item.VehicleNo</td>
                                         <td>@item.email</td>
                                         <td>
                                             <a href="@Url.Action("Edit", new { ID= item.id } )" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="btn btn-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
@@ -53,6 +55,7 @@
                             </tbody>
                             <tfoot>
                                 <tr>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
                                     <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
                                     <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
                                     <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>

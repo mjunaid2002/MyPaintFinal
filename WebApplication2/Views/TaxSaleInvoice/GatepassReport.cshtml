@@ -1,34 +1,26 @@
-﻿@model WebApplication1.QueryViewModel.GatePass
+﻿@model WebApplication1.QueryViewModel.SaleReturnQuery
 @{
     Layout = null;
 }
 
 <style>
     @@media print {
-
-      /* @@page {
-        size: A4 landscape;
-        margin: 10mm;
-       }*/
         #printBtn {
             display: none;
         }
-      
+
         body {
             margin: 0;
             padding: 0;
-            font-size: 12pt;
         }
 
         .gate-pass {
             width: 100%;
-            max-width: 800px;
-            margin: auto;
+            max-width: 700px;
+            margin: 0 auto;
             padding: 10mm;
             box-sizing: border-box;
-            
         }
-
     }
 
     .gate-pass {
@@ -93,13 +85,13 @@
 <div class="gate-pass">
 
     <div class="row">
-        <div class="field"><strong>Date:</strong> @Model.Date.ToString("dd-MM-yyyy")</div>
-        <div class="field" style="text-align: right;"><strong>Do. No.:</strong> @Model.DoNo</div>
+        <div class="field"><strong>Date:</strong> @Model.date.ToString("dd-MM-yyyy")</div>
+        <div class="field" style="text-align: center;"><strong>Do. No.: @Model.OrderID</strong></div>
     </div>
 
     <div class="title">
         Gate Pass
-        @if (Model.Isdublicate)
+        @if (Model.IsGatepassPrinted)
         {
             <span class="duplicate">(Duplicate)</span>
         }
@@ -107,52 +99,51 @@
 
     <br />
 
-    <div class="field"><strong>Customer Name:</strong> @Model.CustomerName</div>
+    <div class="field"><strong>Customer Name:</strong> @Model.custname</div>
     <br />
-    <div class="field"><strong>Material Details (Quantity):</strong> @Model.MaterialDetail</div>
+    <div class="field"><strong>Material Details (Quantity):</strong> @Model.total</div>
     <br />
     <div class="row">
-        <div class="field"><strong>Driver Name (Signature):</strong> @Model.DriverName</div>
+        <div class="field"><strong>Driver Name (Signature):</strong> @Model.cargoname</div>
+    
+        <div class="field"><strong>Contact No:</strong> @Model.cargophone</div>
+        @*<div class="field"><strong>Vehicle No:</strong> @Model.VehicleNo</div>*@
     </div>
-    <div class="row">
-        <div class="field"><strong>Contact No:</strong> @Model.ContactNumber</div>
-        <div class="field"><strong>Vehicle No:</strong> @Model.VehicleNo</div>
-    </div>
     <br />
-    <div class="field"><strong>Shipping Details:</strong> @Model.ShippingDetail</div>
+    <div class="field"><strong>Shipping Details:</strong>@Model.shippingdetail </div>
     <br />
     <div class="row">
-        <div class="field"><strong>Time Out:</strong> @Model.Timeout</div>
-        <div class="field"><strong>Estimate Delivery Time:</strong> @Model.EstimateDeliveryTime</div>
+        <div class="field"><strong>Time Out:</strong> @DateTime.Now</div>
+        <div class="field"><strong>Estimate Delivery Time:</strong> @*@Model.EstimateDeliveryTime*@</div>
     </div>
     <br />
     <div class="signature-row">
         <div class="signature">
-            Prepared By:<br /> <br>@Model.PreparedBy
+            Prepared By:<br /><span class="signature-line"></span>
         </div>
         <div class="signature">
-            Dispatch Head:<br /> <br><span class="signature-line"></span>
+            Dispatch Head:<br /><span class="signature-line"></span>
         </div>
         <div class="signature">
-            Checked By Security:<br /><br><span class="signature-line"></span>
+            Checked By Security:<br /><span class="signature-line"></span>
         </div>
     </div>
 </div>
 
 <div class="center">
-    <button id="printBtn" onclick="printAndMarkDuplicate(@Model.Id)">Print Gate Pass</button>
+    <button id="printBtn" onclick="printAndMarkDuplicate(@Model.OrderID)">Print Gate Pass</button>
 </div>
 
 <script>
     function printAndMarkDuplicate(id) {
         document.getElementById('printBtn').style.display = 'none';
 
-       
+
         window.print();
-        fetch('/GatePassNew/MarkAsDuplicate?id=' + id, {
+        fetch('/TaxSaleInvoice/MarkAsDuplicate?id=' + id, {
             method: 'POST'
         });
-        //window.location.reload();
+
 
 
     }

@@ -554,6 +554,10 @@
                             @Html.DropDownListFor(m => m.saleReturnQuery.BranchId, new SelectList(Model.Branch_list, "id", "name"), "Select Branch", htmlAttributes: new { @class = "form-control", required = "required", id = "branchid", @disabled = "disabled" })
                             @Html.HiddenFor(m => m.saleReturnQuery.BranchId, htmlAttributes: new { id = "branch" })
                         </div>
+                        <div class="form-group col-sm-2">
+                            <label>Cargo</label>
+                            @Html.DropDownListFor(m => m.saleReturnQuery.cargo, new SelectList(Model.Cargo_list, "id", "Name"), "Select Cargo", htmlAttributes: new { @class = "chosen-select form-control", required = "required", id = "cago" })
+                        </div>
                         @*<div class="form-group col-sm-2">
             <label>Select Customer</label>
             @Html.DropDownListFor(m => m.saleReturnQuery.custid, new SelectList(Model.Cus_list, "customerid", "Name"), "Select Customer", htmlAttributes: new { @class = "chosen-select form-control", required = "required", id = "supp" })

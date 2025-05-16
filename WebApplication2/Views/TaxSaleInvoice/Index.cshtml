@@ -107,25 +107,26 @@
                                             @*<a href="@Url.Action("InvoiceReport", new { ID= item.OrderID } )" class="label label-success shiny input-xs"><i class="fa fa-print"></i></a>*@
                                             @if (Session["SubSaleInvoiceTaxV"].ToString() != "0")
                                             {
-                                                <a href="@Url.Action("InvoiceReport", new { ID = item.OrderID, type = "pdf" })" class="label label-success shiny input-xs"><i class="fa fa-print"></i></a>
+                                                <a href="@Url.Action("InvoiceReport", new { ID = item.OrderID, type = "pdf" })" class="label label-success shiny input-xs" title="Pdf Download"><i class="fa fa-print"></i></a>
                                                 @*<a href="@Url.Action("InvoiceReport", new { ID = item.OrderID, type = "show" })" class="label label-primary shiny input-xs" target="_blank"><i class="fa fa-print"></i></a>
-                                                <a href="@Url.Action("InvoiceReport", new { ID = item.OrderID, type = "Delivery" })" class="label label-default shiny input-xs" target="_blank"><i class="fa fa-print"></i></a>
-                                                <a href="@Url.Action("InvoiceReport", new { ID = item.OrderID, type = "Delivery1" })" class="label label-default shiny input-xs" target="_blank"><i class="fa fa-print"></i></a>*@
+            <a href="@Url.Action("InvoiceReport", new { ID = item.OrderID, type = "Delivery" })" class="label label-default shiny input-xs" target="_blank"><i class="fa fa-print"></i></a>
+            <a href="@Url.Action("InvoiceReport", new { ID = item.OrderID, type = "Delivery1" })" class="label label-default shiny input-xs" target="_blank"><i class="fa fa-print"></i></a>*@
 
                                             }
                                             @if (Session["SubSaleInvoiceTaxPrintShow"].ToString() != "0")
                                             {
-                                                 <a href="@Url.Action("InvoiceReport", new { ID = item.OrderID, type = "show" })" class="label label-primary shiny input-xs" target="_blank"><i class="fa fa-print"></i></a>
-                                             
+                                                <a href="@Url.Action("InvoiceReport", new { ID = item.OrderID, type = "show" })" class="label label-primary shiny input-xs" title="Print Sale Invoice" target="_blank"><i class="fa fa-print"></i></a>
+
                                             }
                                             @if (Session["SubSaleInvoiceTaxPrintFullShow"].ToString() != "0")
                                             {
-                                                <a href="@Url.Action("InvoiceReport", new { ID = item.OrderID, type = "Delivery" })" class="label label-default shiny input-xs" target="_blank"><i class="fa fa-print"></i></a>
+                                                <a href="@Url.Action("InvoiceReport", new { ID = item.OrderID, type = "Delivery" })" class="label label-default shiny input-xs" title="Print Delivery Order Literage /kg" target="_blank"><i class="fa fa-print"></i></a>
 
                                             }
                                             @if (Session["SubSaleInvoiceTaxDeliveryOrder"].ToString() != "0")
                                             {
-                                               <a href="@Url.Action("InvoiceReport", new { ID = item.OrderID, type = "Delivery1" })" class="label label-default shiny input-xs" target="_blank"><i class="fa fa-print"></i></a>
+                                                <a href="@Url.Action("InvoiceReport", new { ID = item.OrderID, type = "Delivery1" })" class="label label-default shiny input-xs" title="Print Delivery Order" target="_blank"><i class="fa fa-print"></i></a>
+                                                @*<a href="@Url.Action("GatepassReport", new { ID = item.OrderID })" class="label  @(item.IsGatepassPrinted ? "label-success" : "label-default")" shiny input-xs" target="_blank" title="@(item.IsGatepassPrinted ? "Gatepass Printed" : "Print Gatepass")"> <i class="fa fa-print"></i></a>*@
 
                                             }
                                         </td>

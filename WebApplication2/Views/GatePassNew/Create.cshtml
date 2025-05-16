@@ -1,9 +1,25 @@
 ﻿@model WebApplication1.QueryViewModel.GatePass
 @{
     ViewBag.Title = "Creat";
+    var index = 0;
 
 }
 
+
+<script>
+        $(document).ready(function () {
+
+            $(document).on('change', '#cargo', function () {
+
+                var selected = $(this).find('option:selected');
+                var contact = selected.data('contact');
+                var vehicle = selected.data('vehicleno');
+
+                $('#contactNumber').val(contact);
+                $('#vehicleNo').val(vehicle);
+            });
+        });
+    </script>
 <div class="content">
     <div class="content-header">
         <div class="leftside-content-header">
@@ -31,7 +47,7 @@
                                         <label> ID</label>
                                         @Html.TextBoxFor(m => m.Id, new { @class = "form-control input-xs", @readonly = "readonly", @required = "required" })
                                     </div>
-                                    <div class="form-group col-sm-4">
+                                    <div class="form-group col-sm-2">
                                         <label>Date</label>
                                         @if (Session["CurrentUserName"].ToString() == "Super Admin")
                                         {
@@ -41,37 +57,99 @@
                                         {
                                             @Html.TextBoxFor(m => m.Date, new { @class = "form-control input-xs", id = "date", type = "Date", @Value = DateTime.Now.ToString("yyyy-MM-dd"), @readonly = "readonly" })
                                         }
+                                    </div>
+
+
+                                    @*<div class="form-group col-sm-4">
+                                            <label>Customer Name</label>
+                                            @Html.DropDownListFor(m => m.CustomerName, new SelectList(ViewBag.Customers as List<WebApplication1.QueryViewModel.Customers>, "Name", "Name"), "Select Customer", htmlAttributes: new { @class = "chosen-select form-control", required = "required" })
+
+                                        </div>*@
+
+                                    @*<div class="form-group col-sm-4">
+                                            <label>DO. No.</label>
+                                            @Html.TextBoxFor(m => m.DoNo, new { @class = "form-control input-xs" })
+                                        </div>*@
+
+                                    <div class="form-group col-sm-4">
+                                            <label>Material Detail</label>
+                                            @Html.TextBoxFor(m => m.MaterialDetail, new { @class = "form-control input-xs" })
                                         </div>
-                                    <div class="form-group col-sm-4">
-                                        <label>Customer Name</label>
-                                        @Html.DropDownListFor(m => m.CustomerName, new SelectList(ViewBag.Customers as List<WebApplication1.QueryViewModel.Customers>, "Name", "Name"), "Select Customer", htmlAttributes: new { @class = "chosen-select form-control", required = "required" })
+                                    @*<div class="form-group col-sm-2">
+                                            <label>Cargo</label>
+                                            @Html.DropDownListFor(m => m.DriverName, new SelectList(ViewBag.cargolist as List<WebApplication1.QueryViewModel.cargo>, "id", "Name"), "Select Cargo", htmlAttributes: new { @class = "chosen-select form-control", required = "required", id = "cago" })
+                                        </div>*@
 
+                                    <div class="form-group col-sm-2">
+                                        <label>Cargo</label>
+                                        <select id="cargo" name="DriverName" class="form-control" required>
+                                            <option value="">Select Cargo</option>
+                                            @foreach (var item in ViewBag.cargolist as List<WebApplication1.QueryViewModel.cargo>)
+                                            {
+                                                <option value="@item.name"
+                                                        data-contact="@item.tel"
+                                                        data-vehicleno="@item.VehicleNo">
+                                                    @item.name
+                                                </option>
+                                            }
+                                        </select>
                                     </div>
-
-                                    <div class="form-group col-sm-4">
-                                        <label>DO. No.</label>
-                                        @Html.TextBoxFor(m => m.DoNo, new { @class = "form-control input-xs" })
-                                    </div>
-
-                                    <div class="form-group col-sm-4">
-                                        <label>Material Detail</label>
-                                        @Html.TextBoxFor(m => m.MaterialDetail, new { @class = "form-control input-xs" })
-                                    </div>
-
-                                    <div class="form-group col-sm-4">
-                                        <label>Driver Name</label>
-                                        @Html.TextBoxFor(m => m.DriverName, new { @class = "form-control input-xs" })
-                                    </div>
-                                    <div class="form-group col-sm-4">
+                                    @*<div class="form-group col-sm-2">
+                                            <label>Driver Name</label>
+                                            @Html.TextBoxFor(m => m.DriverName, new { @class = "form-control input-xs" })
+                                        </div>*@
+                                    <div class="form-group col-sm-2">
                                         <label>Contact Number</label>
-                                        @Html.TextBoxFor(m => m.ContactNumber, new { @class = "form-control input-xs" })
+                                        @Html.TextBoxFor(m => m.ContactNumber, new { @class = "form-control input-xs", id = "contactNumber" })
                                     </div>
 
-                                    <div class="form-group col-sm-4">
+                                    <div class="form-group col-sm-2">
                                         <label>Vehicle No</label>
-                                        @Html.TextBoxFor(m => m.VehicleNo, new { @class = "form-control input-xs" })
+                                        @Html.TextBoxFor(m => m.VehicleNo, new { @class = "form-control input-xs", id = "vehicleNo" })
                                     </div>
-                                    
+
+
+
+                                    <div class="form-group col-sm-12">
+                                        <label>Select Invoice For Gate Pass</label>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered table-striped">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Select</th>
+                                                        <th>Order ID</th>
+                                                        <th>Customer Name</th>
+                                                        <th>Title</th>
+                                                        <th>Net Total</th>
+                                                        <th>Date</th>
+                                                        <th>Total Qty</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var sale in ViewBag.salelist as List<WebApplication1.QueryViewModel.SaleReturnQuery>)
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                <input type="checkbox" name="Sales[@index].IsSelected" value="true" />
+                                                                <input type="hidden" name="Sales[@index].OrderID" value="@sale.OrderID" />
+                                                                <input type="hidden" name="Sales[@index].Title" value="@sale.title" />
+                                                                <input type="hidden" name="Sales[@index].CustomerName" value="@sale.custname" />
+                                                                <input type="hidden" name="Sales[@index].TotalQty" value="@sale.total" />
+                                                            </td>
+                                                            <td>@sale.OrderID</td>
+                                                            <td>@sale.custname</td>
+                                                            <td>@sale.title</td>
+                                                            <td>@sale.ntotal.ToString("N2")</td>
+                                                            <td>@sale.date.ToString("yyyy-MM-dd")</td>
+                                                            <td>@sale.total</td>
+                                                        </tr>
+                                                        index++;
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
                                     <div class="form-group col-sm-4">
                                         <label>Shipping Detail </label>
                                         @Html.TextBoxFor(m => m.ShippingDetail, new { @class = "form-control input-xs" })

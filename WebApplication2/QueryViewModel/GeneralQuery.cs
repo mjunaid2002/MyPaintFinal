@@ -168,6 +168,9 @@ namespace WebApplication1.QueryViewModel
         public DateTime date { get; set; }
         public decimal cargoid { get; set; } = 0;
         public decimal cargo { get; set; } = 0;
+        public string cargoname { get; set; }
+        public string cargophone { get; set; }
+        public string shippingdetail { get; set; }
         public decimal custid { get; set; }
         public string empname { get; set; }
         public decimal discount { get; set; }
@@ -187,8 +190,11 @@ namespace WebApplication1.QueryViewModel
         public string custname { get; set; }
         public string req_status { get; set; }
         public string note { get; set; }
+        public bool IsGatepassPrinted { get; set; }
 
     }
+
+  
     public class OrderDetailQuery
     {
         public string packing { get; set; }
@@ -816,6 +822,8 @@ namespace WebApplication1.QueryViewModel
         public string ShippingDetail { get; set; }
         public string Timeout { get; set; }
         public string EstimateDeliveryTime { get; set; }
+        public string PreparedBy { get; set; }
+        public string status { get; set; }
         public bool Isdublicate { get; set; }
     }
 
@@ -873,6 +881,7 @@ namespace WebApplication1.QueryViewModel
         public string tel { get; set; }
         public string fax { get; set; }
         public string email { get; set; }
+        public string VehicleNo { get; set; }
     }
 
     public class Products
@@ -1768,5 +1777,21 @@ namespace WebApplication1.QueryViewModel
         public string CurrentUser { get; set; }
         public decimal BillNo { get; set; }
         public string detail { get; set; }
+    }
+
+
+    public class SaleSelectionViewModel
+    {
+        public List<SaleSelection> Sales { get; set; }
+        public GatePass GatePass { get; set; } 
+    }
+
+    public class SaleSelection
+    {
+        public bool IsSelected { get; set; }
+        public int OrderID { get; set; }
+        public string Title { get; set; }
+        public string CustomerName { get; set; }
+        public decimal TotalQty { get; set; }
     }
 }
