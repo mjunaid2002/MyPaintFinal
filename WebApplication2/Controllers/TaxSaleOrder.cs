@@ -57,7 +57,7 @@ namespace WebApplication1.Controllers
             var Branch = _context.Database.SqlQuery<Branch>("SELECT id,name from Branch").ToList();
             ViewBag.BranchList = Branch;
 
-            var list = _context.Database.SqlQuery<PoMaster>("SELECT invid,date,total,supname,status,req_status  from qtnm_so where status='TSO'" + strquery).ToList();
+            var list = _context.Database.SqlQuery<PoMaster>("SELECT invid,date,total,supname,status,req_status,makeSaleInvoice  from qtnm_so where status='TSO'" + strquery).ToList();
             return View(list);
         }
         public ActionResult SaleWctnSS(int ID)
@@ -104,7 +104,7 @@ namespace WebApplication1.Controllers
         }
         public ActionResult InvoiceReport(int ID, string type)
         {
-            var list = _context.Database.SqlQuery<PoDetail>("select *,total+tax as inctax from qtndetail_so where invid =" + ID + " and Stauts='TSO'").ToList();
+            var list = _context.Database.SqlQuery<PoDetail>("select *,total+gst as inctax from qtndetail_so where Orderid =" + ID + " and Status='TSO'").ToList();
             var date = _context.Database.SqlQuery<DateTime>("SELECT Date FROM qtnm_so where InvID =" + ID + " and status='TSO'").FirstOrDefault();
             var grandtotal = _context.Database.SqlQuery<decimal>("SELECT total FROM qtnm_so where InvID =" + ID + " and status='TSO'").FirstOrDefault();
 
@@ -193,7 +193,26 @@ namespace WebApplication1.Controllers
 
             var SaleInvVM = new SaleInvVM
             {
-                Region_list= Region,
+                Region_list = Region,
+                Branch_list = Branch,
+                poMaster = poMaster,
+                pro_listsss = pro_listsss,
+                Cus_list = Cus_list,
+            };
+            return View(SaleInvVM);
+        }
+        public ActionResult Create1(PoMaster poMaster)
+        {
+            poMaster.invid = _context.Database.SqlQuery<decimal>("select ISNULL(Max(invid),0)+1 from qtnm_so where status='TSO'").FirstOrDefault();
+            var Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers").ToList();
+            //var Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers where discount =0").ToList();
+            var pro_listsss = _context.Database.SqlQuery<Products>("select ProductName,ProductID,UnitPrice,ReorderLevel,vattax,CategoryID,[desc],Active from Product where CategoryID in (select CategoryID from Categories where RawProductCheck=0)").ToList();
+            var Region = _context.Database.SqlQuery<Region>("SELECT * from Region").ToList();
+            var Branch = _context.Database.SqlQuery<Branch>("SELECT id,name from Branch").ToList();
+
+            var SaleInvVM = new SaleInvVM
+            {
+                Region_list = Region,
                 Branch_list = Branch,
                 poMaster = poMaster,
                 pro_listsss = pro_listsss,
@@ -212,6 +231,20 @@ namespace WebApplication1.Controllers
             }
             poMaster.supname = _context.Database.SqlQuery<string>("select name from customers where customerid=" + poMaster.supid + "").FirstOrDefault();
             _context.Database.ExecuteSqlCommand("INSERT INTO qtnm_so (BranchId,RegionId,Invoicestatus,tax,tax_amount,builty,note,supid,invid,date,total,supname,status,datetime,cargid,cargocharges,othercharges,discount,paid,req_status) VALUES (" + poMaster.BranchId + "," + poMaster.RegionId + ",'" + poMaster.Invoicestatus + "'," + poMaster.tax + "," + poMaster.tax_amount + ",'" + poMaster.builty + "','" + poMaster.note + "'," + poMaster.supid + "," + poMaster.invid + ",'" + poMaster.date + "'," + poMaster.total + ",'" + poMaster.supname + "','TSO','" + DateTime.Now + "',0,0,0,0,0,'Request')");
+            return RedirectToAction("Index");
+        }
+        [HttpPost, ActionName("Create1")]
+        public ActionResult Save1(PoMaster poMaster, string[] packing, string[] item_name, int[] id, decimal[] n_total, decimal[] tax_val, decimal[] tax_amount, decimal[] disc_val, decimal[] disc_value, decimal[] disc_amount, decimal[] wht, decimal[] sp, string[] qty, string[] net)
+        {
+            poMaster.invid = _context.Database.SqlQuery<decimal>("select ISNULL(Max(invid),0)+1 from qtnm_so where status='TSO'").FirstOrDefault();
+
+            for (int i = 0; i < item_name.Count(); i++)
+            {
+                _context.Database.ExecuteSqlCommand("INSERT INTO qtndetail_so (gst,ltrkg,totalgst,peritmdisc,wht,Status,sr,prid,prname,sp,total,qty,dsicval,totalafterdisc,OrderID,packing,ntotal,disc_amount) " +
+                     "VALUES (" + tax_val[i] + ",0," + tax_amount[i] + ",0," + wht[i] + ",'TSO'," + i + "," + id[i] + ",'" + item_name[i] + "'," + sp[i] + "," + n_total[i] + "," + qty[i] + "," + disc_val[i] + "," + disc_value[i] + "," + poMaster.invid + ",'" + packing[i] + "'," + net[i] + "," + disc_amount[i] + ")");
+            }
+            poMaster.supname = _context.Database.SqlQuery<string>("select name from customers where customerid=" + poMaster.supid + "").FirstOrDefault();
+            _context.Database.ExecuteSqlCommand("INSERT INTO qtnm_so (BranchId,RegionId,Invoicestatus,tax,tax_amount,builty,note,supid,invid,date,total,supname,status,datetime,cargid,cargocharges,othercharges,discount,paid,req_status,wht,ntotal,afterdisc) VALUES (" + poMaster.BranchId + "," + poMaster.RegionId + ",'" + poMaster.Invoicestatus + "'," + poMaster.tax + "," + poMaster.tax_amount + ",'" + poMaster.builty + "','" + poMaster.note + "'," + poMaster.supid + "," + poMaster.invid + ",'" + poMaster.date + "'," + poMaster.total + ",'" + poMaster.supname + "','TSO','" + DateTime.Now + "',0,0,0,0,0,'Request','"+poMaster.wht+"','"+poMaster.ntotal+"','"+poMaster.afterdisc+"')");
             return RedirectToAction("Index");
         }
         public ActionResult SINVWCTNReport(int? ID, SaleMaster SaleMaster, TransactionDetail TransactionDetail)
@@ -242,10 +275,32 @@ namespace WebApplication1.Controllers
             };
             return View(SaleInvVM);
         }
-        public ActionResult Edit(int? ID)
+        //public ActionResult Edit(int? ID)
+        //{
+        //    var poMaster = _context.Database.SqlQuery<PoMaster>("select * from qtnm_so where invid =" + ID + " and status='TSO'").SingleOrDefault();
+        //    var poDetail = _context.Database.SqlQuery<PoDetail>("select * from qtndetail_so where OrderID =" + ID + " and Status='TSO'").ToList();
+        //    var Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers").ToList();
+        //    var Branch = _context.Database.SqlQuery<Branch>("SELECT id,name from Branch").ToList();
+
+        //    //var Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers where discount =0").ToList();
+        //    var pro_listsss = _context.Database.SqlQuery<Products>("select ProductName,ProductID,UnitPrice,ReorderLevel,vattax,CategoryID,[desc],Active from Product where CategoryID in (select CategoryID from Categories where RawProductCheck=0)").ToList();
+        //    var Region = _context.Database.SqlQuery<Region>("SELECT * from Region").ToList();
+
+        //    var SaleInvVM = new SaleInvVM
+        //    {
+        //        Branch_list = Branch,
+        //        Region_list = Region,
+        //        poDetail = poDetail,
+        //        poMaster = poMaster,
+        //        pro_listsss = pro_listsss,
+        //        Cus_list = Cus_list,
+        //    };
+        //    return View(SaleInvVM);
+        //}
+        public ActionResult Edit1(int? ID)
         {
             var poMaster = _context.Database.SqlQuery<PoMaster>("select * from qtnm_so where invid =" + ID + " and status='TSO'").SingleOrDefault();
-            var poDetail = _context.Database.SqlQuery<PoDetail>("select * from qtndetail_so where invid =" + ID + " and Stauts='TSO'").ToList();
+            var poDetail = _context.Database.SqlQuery<SaleReturnDetailQuery>("select * from qtndetail_so where OrderID =" + ID + " and Status='TSO'").ToList();
             var Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers").ToList();
             var Branch = _context.Database.SqlQuery<Branch>("SELECT id,name from Branch").ToList();
 
@@ -257,7 +312,7 @@ namespace WebApplication1.Controllers
             {
                 Branch_list = Branch,
                 Region_list = Region,
-                poDetail = poDetail,
+                saleReturnQueryDetail= poDetail,
                 poMaster = poMaster,
                 pro_listsss = pro_listsss,
                 Cus_list = Cus_list,
@@ -265,16 +320,26 @@ namespace WebApplication1.Controllers
             return View(SaleInvVM);
         }
         [HttpPost]
-        public ActionResult Update(decimal[] tax, string[] item_name, int[] id, decimal[] sp, string[] qty, string[] n_total, PoMaster poMaster)
+        //public ActionResult Update(decimal[] tax, string[] item_name, int[] id, decimal[] sp, string[] qty, string[] n_total, PoMaster poMaster)
+        public ActionResult Update(PoMaster poMaster, string[] packing, string[] item_name, int[] id, decimal[] n_total, decimal[] tax_val, decimal[] tax_amount, decimal[] disc_val, decimal[] disc_value, decimal[] disc_amount, decimal[] wht, decimal[] sp, string[] qty, string[] net)
         {
             _context.Database.ExecuteSqlCommand("Delete From qtnm_so where InvId =" + poMaster.invid + " and status='TSO' ");
-            _context.Database.ExecuteSqlCommand("Delete From qtndetail_so where InvId =" + poMaster.invid + "  and Stauts='TSO' ");
+            _context.Database.ExecuteSqlCommand("Delete From qtndetail_so where OrderId =" + poMaster.invid + "  and Status='TSO' ");
+            //for (int i = 0; i < item_name.Count(); i++)
+            //{
+            //    _context.Database.ExecuteSqlCommand("INSERT INTO qtndetail_so (tax,Stauts,sr,pid,pname,cp,cp2,qty,total,invid,box,roll ) VALUES (" + tax[i] + ",'TSO'," + i + "," + id[i] + ",'" + item_name[i] + "'," + sp[i] + ",0," + qty[i] + "," + n_total[i] + "," + poMaster.invid + ",0,0)");
+            //}
+            //poMaster.supname = _context.Database.SqlQuery<string>("select name from customers where customerid=" + poMaster.supid + "").FirstOrDefault();
+            //_context.Database.ExecuteSqlCommand("INSERT INTO qtnm_so (BranchId,RegionId,Invoicestatus,tax,tax_amount,builty,note,supid,invid,date,total,supname,status,datetime,cargid,cargocharges,othercharges,discount,paid,req_status) VALUES (" + poMaster.BranchId + "," + poMaster.RegionId + ",'" + poMaster.Invoicestatus + "'," + poMaster.tax + "," + poMaster.tax_amount + ",'" + poMaster.builty + "','" + poMaster.note + "'," + poMaster.supid + "," + poMaster.invid + ",'" + poMaster.date + "'," + poMaster.total + ",'" + poMaster.supname + "','TSO','" + DateTime.Now + "',0,0,0,0,0,'Request')");
+
             for (int i = 0; i < item_name.Count(); i++)
             {
-                _context.Database.ExecuteSqlCommand("INSERT INTO qtndetail_so (tax,Stauts,sr,pid,pname,cp,cp2,qty,total,invid,box,roll ) VALUES (" + tax[i] + ",'TSO'," + i + "," + id[i] + ",'" + item_name[i] + "'," + sp[i] + ",0," + qty[i] + "," + n_total[i] + "," + poMaster.invid + ",0,0)");
+                _context.Database.ExecuteSqlCommand("INSERT INTO qtndetail_so (gst,ltrkg,totalgst,peritmdisc,wht,Status,sr,prid,prname,sp,total,qty,dsicval,totalafterdisc,OrderID,packing,ntotal,disc_amount) " +
+                     "VALUES (" + tax_val[i] + ",0," + tax_amount[i] + ",0," + wht[i] + ",'TSO'," + i + "," + id[i] + ",'" + item_name[i] + "'," + sp[i] + "," + n_total[i] + "," + qty[i] + "," + disc_val[i] + "," + disc_value[i] + "," + poMaster.invid + ",'" + packing[i] + "'," + net[i] + "," + disc_amount[i] + ")");
             }
             poMaster.supname = _context.Database.SqlQuery<string>("select name from customers where customerid=" + poMaster.supid + "").FirstOrDefault();
-            _context.Database.ExecuteSqlCommand("INSERT INTO qtnm_so (BranchId,RegionId,Invoicestatus,tax,tax_amount,builty,note,supid,invid,date,total,supname,status,datetime,cargid,cargocharges,othercharges,discount,paid,req_status) VALUES (" + poMaster.BranchId + "," + poMaster.RegionId + ",'" + poMaster.Invoicestatus + "'," + poMaster.tax + "," + poMaster.tax_amount + ",'" + poMaster.builty + "','" + poMaster.note + "'," + poMaster.supid + "," + poMaster.invid + ",'" + poMaster.date + "'," + poMaster.total + ",'" + poMaster.supname + "','TSO','" + DateTime.Now + "',0,0,0,0,0,'Request')");
+            _context.Database.ExecuteSqlCommand("INSERT INTO qtnm_so (BranchId,RegionId,Invoicestatus,tax,tax_amount,builty,note,supid,invid,date,total,supname,status,datetime,cargid,cargocharges,othercharges,discount,paid,req_status,wht,ntotal,afterdisc) VALUES (" + poMaster.BranchId + "," + poMaster.RegionId + ",'" + poMaster.Invoicestatus + "'," + poMaster.tax + "," + poMaster.tax_amount + ",'" + poMaster.builty + "','" + poMaster.note + "'," + poMaster.supid + "," + poMaster.invid + ",'" + poMaster.date + "'," + poMaster.total + ",'" + poMaster.supname + "','TSO','" + DateTime.Now + "',0,0,0,0,0,'Request','" + poMaster.wht + "','" + poMaster.ntotal + "','" + poMaster.afterdisc + "')");
+
             return RedirectToAction("Index");
         }
         [HttpPost]
@@ -393,6 +458,113 @@ namespace WebApplication1.Controllers
             
             };
             return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult MakeSaleInvoice(int? ID)
+        {
+            //var poMaster = _context.Database.SqlQuery<PoMaster>("select * from qtnm_so where invid =" + ID + " and status='TSO'").SingleOrDefault();
+            //var poDetail = _context.Database.SqlQuery<SaleReturnDetailQuery>("select * from qtndetail_so where OrderID =" + ID + " and Status='TSO'").ToList();
+
+            //_context.Database.ExecuteSqlCommand("Update qtnm_so Set makeSaleInvoice = 1 where invid =" + ID + " and status='TSO'  ");
+
+            //SaleReturnQuery saleReturnQuery = new SaleReturnQuery();
+            //saleReturnQuery.OrderID = _context.Database.SqlQuery<decimal>("select ISNULL(Max(OrderID),0)+1 from srsm where title='TSINV'").FirstOrDefault();
+            //poMaster.date = DateTime.Today;
+            //foreach (var item in poDetail)
+            //{
+            //    _context.Database.ExecuteSqlCommand("INSERT INTO srsdetail (gst,ltrkg,totalgst,peritmdisc,wht,Status,sr,prid,prname,sp,total,qty,dsicval,totalafterdisc,OrderID,packing,ntotal,disc_amount) " +
+            //  "VALUES (" + item.gst + ",0," + item.totalgst + ",0," + item.wht + ",'TSINV'," + item.sr+ "," + item.prid + ",'" + item.prname + "'," + item.sp + "," + item.total + "," + item.qty + ", " + item.dsicval + "," + item.totalafterdisc + "," + saleReturnQuery.OrderID + ",'" + item.packing + "'," + item.ntotal + ",'" + item.disc_amount + "')");
+
+            //}
+
+
+            // _context.Database.ExecuteSqlCommand("INSERT INTO srsm (BranchId,RegionId,gst,OrderID,empname,cargoid,custid,date,total,discount,wht,cargocharges,ntotal,custname,bal,note,pono,custntn,custst,title,time,req_status,cargo ) " +
+            //    "VALUES ('" + poMaster.BranchId + "','" + poMaster.RegionId + "'," + poMaster.tax + "," + saleReturnQuery.OrderID + ",'0'," + poMaster.tax_amount + "," + poMaster.supid + ",'" + poMaster.date + "'," + poMaster.total + "," + poMaster.discount + "," + poMaster.wht + "," + poMaster.afterdisc + "," + poMaster.ntotal + ",'" + poMaster.supname + "',0,'','',0,0,'TSINV',0,'Request','0')");
+
+
+            //decimal accountno = _context.Database.SqlQuery<decimal>("select Top(1) accno from customers where customerid=" + poMaster.supid + "").FirstOrDefault();
+            //int TransId = _context.Database.SqlQuery<int>("select ISNULL(Max(TransId),0)+1 from TransactionDetails").FirstOrDefault();
+            //_context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransId + ",'" + poMaster.date.ToString("yyyy-MM-dd") + "','Supplier'," + accountno + ",'" + poMaster.ntotal + "',0," + saleReturnQuery.OrderID + ",'TSINV')");
+            //_context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransId + ",'" + poMaster.date.ToString("yyyy-MM-dd") + "','Sales discount',5500003,'" + poMaster.discount + "',0," + saleReturnQuery.OrderID + ",'TSINV')");
+            //_context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransId + ",'" + poMaster.date.ToString("yyyy-MM-dd") + "','Sales',4400001,0,'" + poMaster.total + "'," + saleReturnQuery.OrderID + ",'TSINV')");
+            //_context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransId + ",'" + poMaster.date.ToString("yyyy-MM-dd") + "','Advance tax payable',2100005,0,'" + poMaster.tax + "'," + saleReturnQuery.OrderID + ",'TSINV')");
+            //_context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransId + ",'" + poMaster.date.ToString("yyyy-MM-dd") + "','Sales tax payable',2100004,0,'" + poMaster.wht + "'," + saleReturnQuery.OrderID + ",'TSINV')");
+
+            var saleReturnQuery = _context.Database.SqlQuery<SaleReturnQuery>("select invid as custntn,Cast ([RegionId] AS Decimal) AS RegionId,[BranchId],tax_amount as inctax ,supid as custid ,date ,total ,tax as gst ,discount,wht ,afterdisc ,ntotal,supname as custname,[note],[req_status] from qtnm_so where invid =" + ID + " and status='TSO' ").SingleOrDefault();
+            var saleReturnQueryDetail = _context.Database.SqlQuery<SaleReturnDetailQuery>("select * from qtndetail_so where OrderID =" + ID + " and Status='TSO'").ToList();
+            var Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers").ToList();
+            saleReturnQuery.OrderID = _context.Database.SqlQuery<decimal>("select ISNULL(Max(OrderID),0)+1 from srsm where title='TSINV'").FirstOrDefault();
+            saleReturnQuery.date = DateTime.Today;
+            //var Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers where discount =0").ToList();
+            var Region = _context.Database.SqlQuery<Region>("SELECT * from Region").ToList();
+            var Branch = _context.Database.SqlQuery<Branch>("SELECT id,name from Branch").ToList();
+
+            var pro_listsss = _context.Database.SqlQuery<Products>("select ProductName,ProductID,UnitPrice,ReorderLevel,vattax,CategoryID,[desc],Active from Product where CategoryID in (select CategoryID from Categories where RawProductCheck=0) ").ToList();
+            var Cargo_list = _context.Database.SqlQuery<cargo>("SELECT * from Cargo").ToList();
+            var SaleInvVM = new SaleInvVM
+            {
+                Region_list = Region,
+                Branch_list = Branch,
+                saleReturnQuery = saleReturnQuery,
+                saleReturnQueryDetail = saleReturnQueryDetail,
+                pro_listsss = pro_listsss,
+                Cus_list = Cus_list,
+                Cargo_list = Cargo_list
+            };
+            return View("~/Views/TaxSaleInvoice/Edit.cshtml", SaleInvVM);
+        }
+
+        public ActionResult MakeWHTSaleInvoice(int? ID)
+        {
+            //var poMaster = _context.Database.SqlQuery<PoMaster>("select * from qtnm_so where invid =" + ID + " and status='TSO'").SingleOrDefault();
+            //var poDetail = _context.Database.SqlQuery<SaleReturnDetailQuery>("select * from qtndetail_so where OrderID =" + ID + " and Status='TSO'").ToList();
+
+            //_context.Database.ExecuteSqlCommand("Update qtnm_so Set makeSaleInvoice = 1 where invid =" + ID + " and status='TSO'  ");
+
+            // SaleReturnQuery saleReturnQuery = new SaleReturnQuery();
+            //saleReturnQuery.OrderID = _context.Database.SqlQuery<decimal>("select ISNULL(Max(OrderID),0)+1 from srsm where title='TSINV'").FirstOrDefault();
+            //poMaster.date = DateTime.Today;
+            //foreach (var item in poDetail)
+            //{
+            //    _context.Database.ExecuteSqlCommand("INSERT INTO srsdetail (gst,ltrkg,totalgst,peritmdisc,wht,Status,sr,prid,prname,sp,total,qty,dsicval,totalafterdisc,OrderID,packing,ntotal,disc_amount) " +
+            //  "VALUES (" + item.gst + ",0," + item.totalgst + ",0," + item.wht + ",'WTSINV'," + item.sr + "," + item.prid + ",'" + item.prname + "'," + item.sp + "," + item.total + "," + item.qty + ", " + item.dsicval + "," + item.totalafterdisc + "," + saleReturnQuery.OrderID + ",'" + item.packing + "'," + item.ntotal + ",'" + item.disc_amount + "')");
+
+            //}
+
+
+            //_context.Database.ExecuteSqlCommand("INSERT INTO srsm (BranchId,RegionId,gst,OrderID,empname,cargoid,custid,date,total,discount,wht,cargocharges,ntotal,custname,bal,note,pono,custntn,custst,title,time,req_status,cargo ) " +
+            //   "VALUES ('" + poMaster.BranchId + "','" + poMaster.RegionId + "'," + poMaster.tax + "," + saleReturnQuery.OrderID + ",'0'," + poMaster.tax_amount + "," + poMaster.supid + ",'" + poMaster.date + "'," + poMaster.total + "," + poMaster.discount + "," + poMaster.wht + "," + poMaster.afterdisc + "," + poMaster.ntotal + ",'" + poMaster.supname + "',0,'','',0,0,'WTSINV',0,'Request','0')");
+
+
+            //decimal accountno = _context.Database.SqlQuery<decimal>("select Top(1) accno from customers where customerid=" + poMaster.supid + "").FirstOrDefault();
+            //int TransId = _context.Database.SqlQuery<int>("select ISNULL(Max(TransId),0)+1 from TransactionDetails").FirstOrDefault();
+            //_context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransId + ",'" + poMaster.date.ToString("yyyy-MM-dd") + "','Supplier'," + accountno + ",'" + poMaster.ntotal + "',0," + saleReturnQuery.OrderID + ",'WTSINV')");
+            //_context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransId + ",'" + poMaster.date.ToString("yyyy-MM-dd") + "','Sales discount',5500003,'" + poMaster.discount + "',0," + saleReturnQuery.OrderID + ",'WTSINV')");
+            //_context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransId + ",'" + poMaster.date.ToString("yyyy-MM-dd") + "','Sales',4400001,0,'" + poMaster.total + "'," + saleReturnQuery.OrderID + ",'WTSINV')");
+            //_context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransId + ",'" + poMaster.date.ToString("yyyy-MM-dd") + "','Advance tax payable',2100005,0,'" + poMaster.tax + "'," + saleReturnQuery.OrderID + ",'WTSINV')");
+            //_context.Database.ExecuteSqlCommand("INSERT INTO TransactionDetails (b_unit,TransId,TransDate,TransDes,AccountId,Dr,Cr,InvId,Vtype) VALUES ('0'," + TransId + ",'" + poMaster.date.ToString("yyyy-MM-dd") + "','Sales tax payable',2100004,0,'" + poMaster.wht + "'," + saleReturnQuery.OrderID + ",'WTSINV')");
+
+
+            var saleReturnQuery = _context.Database.SqlQuery<SaleReturnQuery>("select invid as invno,Cast ([RegionId] AS Decimal) AS RegionId,[BranchId],tax_amount as inctax ,supid as custid ,date ,total ,tax as gst ,discount,wht ,afterdisc ,ntotal,supname as custname,[note],[req_status] from qtnm_so where invid =" + ID + " and status='TSO' ").SingleOrDefault();
+            var saleReturnQueryDetail = _context.Database.SqlQuery<SaleReturnDetailQuery>("select * from qtndetail_so where OrderID =" + ID + " and Status='TSO'").ToList();
+            var Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers").ToList();
+            saleReturnQuery.OrderID = _context.Database.SqlQuery<decimal>("select ISNULL(Max(OrderID),0)+1 from srsm where title='TSINV'").FirstOrDefault();
+            saleReturnQuery.date = DateTime.Today;
+             var Region = _context.Database.SqlQuery<Region>("SELECT * from Region").ToList();
+            var Branch = _context.Database.SqlQuery<Branch>("SELECT id,name from Branch").ToList();
+            var pro_listsss = _context.Database.SqlQuery<Products>("select ProductName,ProductID,UnitPrice,ReorderLevel,vattax,CategoryID,[desc],Active from Product where CategoryID in (select CategoryID from Categories where RawProductCheck=0) ").ToList();
+            var Cargo_list = _context.Database.SqlQuery<cargo>("SELECT * from Cargo").ToList();
+            var SaleInvVM = new SaleInvVM
+            {
+                Region_list = Region,
+                Branch_list = Branch,
+                saleReturnQuery = saleReturnQuery,
+                saleReturnQueryDetail = saleReturnQueryDetail,
+                pro_listsss = pro_listsss,
+                Cus_list = Cus_list,
+                Cargo_list = Cargo_list
+            };
+            return View("~/Views/WHTSaleInvoice/Edit.cshtml", SaleInvVM);
         }
     }
 }

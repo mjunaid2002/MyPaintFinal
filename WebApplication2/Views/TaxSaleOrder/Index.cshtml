@@ -48,7 +48,7 @@
 
         @if (Session["SubSaleOrderTaxA"].ToString() != "0")
         {
-            <a href="@Url.Action("Create", "TaxSaleOrder")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  Creat New</a>
+            <a href="@Url.Action("Create1", "TaxSaleOrder")" class="btn btn-wide btn-success pull-right" style="margin-top:-40px"><i class="fa fa-plus"></i>  Creat New</a>
         }
     </div>
     <div class="row">
@@ -80,7 +80,7 @@
                                         <td>
                                             @if (Session["SubSaleOrderTaxU"].ToString() != "0")
                                             {
-                                                <a href="@Url.Action("Edit", new { ID = item.invid })" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="label label-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
+                                                <a href="@Url.Action("Edit1", new { ID = item.invid })" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="label label-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
                                             }
                                             else
                                             {
@@ -95,7 +95,7 @@
                                                 }
                                                 else
                                                 {
-                                                    <a href="@Url.Action("Edit", new { ID = item.invid })" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="label label-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
+                                                    <a href="@Url.Action("Edit1", new { ID = item.invid })" new { onclick="return confirm('Are you sure you want to Edit this record?');" class="label label-warning shiny input-xs"><i class="fa fa-pencil"></i></a>
 
                                                 }
                                             }
@@ -105,6 +105,40 @@
                                             @if (Session["SubSaleOrderTaxV"].ToString() != "0")
                                             {<a href="@Url.Action("InvoiceReport", new { ID = item.invid, type = "pdf" })" class="label label-success shiny input-xs"><i class="fa fa-print"></i></a>
                                                 <a href="@Url.Action("InvoiceReport", new { ID = item.invid, type = "show" })" class="label label-primary shiny input-xs" target="_blank"><i class="fa fa-print"></i></a>
+                                            }
+                                            @if (!item.makeSaleInvoice)
+                                            {
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown">
+                                                        <i class="fa fa-arrow-right"></i> Invoice <span class="caret"></span>
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-menu-right">
+                                                        <li>
+                                                            <a href="@Url.Action("MakeSaleInvoice", new { ID = item.invid })" target="_blank">
+                                                                <i class="fa fa-arrow-right"></i> Make Tax Invoice
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="@Url.Action("MakeWHTSaleInvoice", new { ID = item.invid })" target="_blank">
+                                                                <i class="fa fa-arrow-right"></i> Make WHT Tax Invoice
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                                @*<div class="dropdown">
+                <a class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-arrow-right"></i>Invoice <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a href="@Url.Action("MakeSaleInvoice", new { ID = item.invid })" target="_blank"><i class="fa fa-arrow-right"> Make Tax Invoice</i></a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("MakeWHTSaleInvoice", new { ID = item.invid })" target="_blank"><i class="fa fa-arrow-right"> Make WHT Tax Invoice</i></a>
+
+                    </li>
+                </ul>
+            </div>*@
                                             }
                                         </td>
                                     </tr>

@@ -278,7 +278,7 @@ namespace WebApplication1.Controllers
         }
         public ActionResult Edit(int? ID)
         {
-            var saleReturnQuery = _context.Database.SqlQuery<SaleReturnQuery>("select BranchId,RegionId ,[OrderID] ,[empname] ,[cargoid] as inctax ,[custid] ,[date] ,[total] ,[gst] ,[discount] ,[wht] ,[cargocharges] as afterdisc ,[ntotal] ,[custname] ,[bal] ,[note] ,[pono] ,[custntn] AS invno,[custst] ,[title] ,[time],[req_status],cargo from srsm where OrderID =" + ID + " and title='WTSINV'").SingleOrDefault();
+            var saleReturnQuery = _context.Database.SqlQuery<SaleReturnQuery>("select BranchId,RegionId ,[OrderID] ,[empname] ,[cargoid] as inctax ,[custid] ,[date] ,[total] ,[gst] ,[discount] ,[wht] ,[cargocharges] as afterdisc ,[ntotal] ,[custname] ,[bal] ,[note] ,[pono] ,[custntn] AS invno,[custst] ,[title] ,[time],[req_status],ISNULL(cargo,0) AS cargo from srsm where OrderID =" + ID + " and title='WTSINV'").SingleOrDefault();
             var saleReturnQueryDetail = _context.Database.SqlQuery<SaleReturnDetailQuery>("select * from srsdetail where OrderID =" + ID + " and Status='WTSINV'").ToList();
             var Cus_list = _context.Database.SqlQuery<Customers>("SELECT * from customers").ToList();
             var Branch = _context.Database.SqlQuery<Branch>("SELECT id,name from Branch").ToList();

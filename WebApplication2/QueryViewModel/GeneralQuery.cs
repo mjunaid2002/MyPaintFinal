@@ -185,7 +185,7 @@ namespace WebApplication1.QueryViewModel
         public decimal wht { get; set; }
         public decimal ntotal { get; set; }
         public string title { get; set; }
-        public string invno { get; set; }
+        public decimal invno { get; set; }
         public decimal RegionId { get; set; }
         public string custname { get; set; }
         public string req_status { get; set; }
@@ -673,12 +673,16 @@ namespace WebApplication1.QueryViewModel
         public decimal total { get; set; }
         public decimal tax { get; set; }
         public decimal tax_amount { get; set; }
+        public decimal afterdisc { get; set; }
+        public decimal wht { get; set; }
+        public decimal ntotal { get; set; }
         public decimal supid { get; set; }
         public string supname { get; set; }
         public string status { get; set; }
         public string req_status { get; set; }
         public string builty { get; set; }
         public string note { get; set; }
+        public bool makeSaleInvoice { get; set; }
     }
     public class sampledetail
     {
@@ -723,8 +727,8 @@ namespace WebApplication1.QueryViewModel
         public decimal qtylab { get; set; }
         public decimal qty1 { get; set; }
         public decimal sr { get; set; }
-        public string pname { get; set; }
-        public decimal pid { get; set; }
+        public string prname { get; set; }
+        public decimal prid { get; set; }
         public decimal cp { get; set; }
         public decimal cp2 { get; set; }
         public decimal qty { get; set; }
@@ -734,7 +738,9 @@ namespace WebApplication1.QueryViewModel
         public decimal invid { get; set; }
         public string tax_per { get; set; }
         public string psrn { get; set; }
-
+        public string packing { get; set; }
+        public string pname { get; set; }
+        public decimal pid { get; set; }
 
     }
     public class Customers
