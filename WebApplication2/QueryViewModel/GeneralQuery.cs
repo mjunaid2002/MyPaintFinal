@@ -155,6 +155,8 @@ namespace WebApplication1.QueryViewModel
         public decimal CapQuarter { get; set; }
         public decimal CapGallon { get; set; }
         public decimal CapDrum { get; set; }
+        public decimal stock { get; set; }
+        public decimal bal { get; set; }
         public decimal OrderID { get; set; }
         public string prname { get; set; }
         public string Status { get; set; }
@@ -602,6 +604,8 @@ namespace WebApplication1.QueryViewModel
         public decimal ReorderLevel { get; set; }
         public string SupplierName { get; set; }
         public string QualityCategoriesitem { get; set; }
+        public string StoreName { get; set; }
+
     }
     public class tbl_RawMaterialReportQuery
     {
@@ -909,6 +913,7 @@ namespace WebApplication1.QueryViewModel
         public decimal vattax { get; set; }
         public decimal BrandID { get; set; }
         public decimal CategoryID { get; set; }
+        public int StoreID { get; set; }
         public string quality { get; set; }
         public string BatchNo { get; set; }
         public string ProductName { get; set; }
@@ -946,6 +951,11 @@ namespace WebApplication1.QueryViewModel
         public int regionid { get; set; }
         public string name { get; set; }
         public string region_name { get; set; }
+    }
+    public class StoreNew
+    {
+        public int id { get; set; }
+        public string name { get; set; }
     }
     public class ProductPricingRegion
     {

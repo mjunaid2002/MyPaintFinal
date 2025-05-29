@@ -26,6 +26,7 @@ namespace WebApplication1.ViewModels
         public IEnumerable<Category> cat_list { get; set; }
         public IEnumerable<Brands> br_list { get; set; }
         public IEnumerable<Employee> emp_list { get; set; }
+        public IEnumerable<StoreNew> store_list { get; set; }
         public IEnumerable<ProductFinishedRegion> ProductFinishedRegion_list { get; set; }
         public ProductFinishedRegion ProductFinishedRegion { get; set; }
         public ProductPricingRegion ProductPricingRegion { get; set; }

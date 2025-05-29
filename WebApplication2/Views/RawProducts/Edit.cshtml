@@ -29,6 +29,10 @@
                                         <label>Select Category</label>
                                         @Html.DropDownListFor(m => m.products.CategoryID, new SelectList(Model.Categories_list, "CategoryID", "CategoryName"), "Select Category", htmlAttributes: new { @class = "chosen-select form-control", @required = "required" })
                                     </div>
+                                    <div class="form-group col-sm-3">
+                                        <label>Select Store</label>
+                                        @Html.DropDownListFor(m => m.products.StoreID, new SelectList(Model.store_list, "id", "name"), "Select Store", htmlAttributes: new { @class = "chosen-select form-control", @required = "required" })
+                                    </div>
                                     <div class="form-group col-sm-2">
                                         <label>Quality</label>
                                         @Html.DropDownListFor(m => m.products.iduser, new SelectList(Model.QualityCategories, "ID", "CategoryName"), "Quality", htmlAttributes: new { @class = "chosen-select form-control" })

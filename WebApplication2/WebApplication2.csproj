@@ -248,6 +248,7 @@
     <Compile Include="Controllers\SchemeController.cs" />
     <Compile Include="Controllers\StockDistributionController.cs" />
     <Compile Include="Controllers\StockInwardController.cs" />
+    <Compile Include="Controllers\StoreNewController.cs" />
     <Compile Include="Controllers\WHTSaleInvoice.cs" />
     <Compile Include="Controllers\TaxSaleInvoice.cs" />
     <Compile Include="Controllers\TaxSaleReturns.cs" />
@@ -4013,6 +4014,9 @@
     <Content Include="Views\TaxSaleInvoice\GatepassReport.cshtml" />
     <Content Include="Views\TaxSaleOrder\Create1.cshtml" />
     <Content Include="Views\TaxSaleOrder\Edit1.cshtml" />
+    <Content Include="Views\StoreNew\Index.cshtml" />
+    <Content Include="Views\StoreNew\Create.cshtml" />
+    <Content Include="Views\StoreNew\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

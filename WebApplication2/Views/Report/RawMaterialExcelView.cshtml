@@ -29,6 +29,7 @@
 
 
                                     <th>Category</th>
+                                    <th>Store</th>
                                     <th>Item</th>
                                     <th>Open QTY</th>
                                     <th>Purch QTY</th>
@@ -51,6 +52,7 @@
                                 {
                                 <tr>
                                     <td>@item.CategoryName</td>
+                                    <td>@item.StoreName</td>
                                     <td>@item.pname</td>
                                     <td style="background-color:palegreen">@item.vattax</td>
                                     <td style="background-color:palegreen">@item.QTYin</td>
@@ -69,6 +71,7 @@
                                 </tr>
                                 }
                             <tr>
+                                <th ></th>
                                 <th ></th>
                                 <th >Grand Total</th>
                                 <th>@Model.Sum(x => x.vattax)</th>
@@ -90,6 +93,7 @@
                             </tbody>
                             <tfoot>
                                 <tr>
+                                    <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
                                     <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
                                     <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>
                                     <th><input type="text" name="search_browser" placeholder="Search Here" class="form-control input-sm"></th>

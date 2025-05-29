@@ -4,6 +4,7 @@
     var sr = 0;
     var tot1 = 0;
     var tot = 0;
+    string invoicetype = @ViewBag.invoice as string ?? "";
 }
 <script>
     function date() {
@@ -34,7 +35,7 @@
             //var col4 = currentRow.find("td:eq(4)").html();
             //var col6 = currentRow.find("td:eq(5)").html();
           //  document.getElementById("unit").value = col6;
-            
+
            // document.getElementById("sp").value = col2;
             var regionid = document.getElementById("regionid").value;
             var branchid = document.getElementById("branchid").value;
@@ -116,6 +117,8 @@
 
         var wht_amount = (disc_amount / 100) * wht;
         var wht_net_total = parseFloat(wht_amount) + parseFloat(disc_amount);
+        var bal = parseFloat(stock) - parseFloat(qty);
+        var invoicetype = '@invoicetype';
 
         if (id == "" || id == 0) {
             //  alert("Please Select Item");
@@ -135,7 +138,13 @@
             htmlRows += '<td><input type="text"  name="item_name"  value="' + item_name + '" readonly class="form-control" autocomplete="off"></td>';
             htmlRows += '<td><input type="text"  name="packing[]"  value="' + packing + '" readonly class="form-control" autocomplete="off"></td>';
             htmlRows += '<td><input type="text"  name="sp[]"  value="' + sp + ' "   readonly class="form-control" autocomplete="off"></td>';
+            if (invoicetype == "MakeInvoice") {
+                htmlRows += '<td><input type="text"  name="stock[]"  value="' + stock + '"  readonly class="form-control" autocomplete="off"></td>';
+            }
             htmlRows += '<td><input type="text"  name="qty[]"  value="' + qty + '"  readonly class="form-control" autocomplete="off"></td>';
+            if (invoicetype == "MakeInvoice") {
+                htmlRows += '<td><input type="text"  name="bal[]"  value="' + bal + '"  readonly class="form-control" autocomplete="off"></td>';
+            }
             htmlRows += '<td><input type="text"  name="n_total[]"  value="' + n_total + '"   readonly class="form-control" autocomplete="off"></td>';
             htmlRows += '<td><input type="text"  name="tax_val[]"  value="' + tax_val + '"   readonly class="form-control" autocomplete="off"></td>';
             htmlRows += '<td><input type="text"  name="tax_amount[]"  value="' + tax_amount + '"   readonly class="form-control" autocomplete="off"></td>';
@@ -151,7 +160,9 @@
             htmlRows += '<td style="display:none">' + item_name + '</td>';
             htmlRows += '<td style="display:none">' + packing + '</td>';
             htmlRows += '<td style="display:none">' + sp + '</td>';
+            htmlRows += '<td style="display:none">' + stock + '</td>';
             htmlRows += '<td style="display:none">' + qty + '</td>';
+            htmlRows += '<td style="display:none">' + bal + '</td>';
             htmlRows += '<td style="display:none">' + n_total + '</td>';
             htmlRows += '<td style="display:none">' + tax_val + '</td>';
             htmlRows += '<td style="display:none">' + tax_amount + '</td>';
@@ -173,7 +184,8 @@
             $('#total_after').val('0');
             $('#stock').val('0');
             $('#packing').val('-Select Packing-');
-            addcal();
+            caltotals1();
+            //addcal();
             //var table = document.getElementById("invoiceItem"); var sumVal = 0.000, sumVal1 = 0.000, sumVal2 = 0.000, sumVal3 = 0.000, sumVal4 = 0.000, sumVal5 = 0.000, sumVal6 = 0.000, sumVal7 = 0.000;
             //for (var i = 1; i < table.rows.length; i++) {
             //    sumVal = sumVal + parseFloat(table.rows[i].cells[19].innerHTML);
@@ -238,7 +250,8 @@
     function deleteRow(btn) {
         if (confirm("Are you sure want to delete the row?"))
             $(btn).closest("tr").remove();
-        addcal();
+        caltotals1();
+        //addcal();
         //var table = document.getElementById("invoiceItem"), sumVal = 0, sumVal1 = 0, sumVal2 = 0 ;
         //for (var i = 1; i < table.rows.length; i++) {
         //    sumVal = sumVal + parseInt(table.rows[i].cells[14].innerHTML);
@@ -276,6 +289,7 @@
     }
     function tota1() {
         //  alert("text");
+      
         var n_total = document.getElementById("n_total").value;
         var disc_val = document.getElementById("disc_val").value;
         var tax_per = document.getElementById("tax_per").value;
@@ -306,10 +320,8 @@
         var nnewtotl = (0 * tot) / 100;
         document.getElementById("wht").value = nnewtotl;
 
-
         var net = tot + nnewtotl;
         document.getElementById("net").value = net;
-
 
     }
     function gt() {
@@ -349,6 +361,119 @@
 
         });
     }
+
+    function updateRow(input) {
+
+        var row = input.closest('tr');
+
+        var ctn = row.querySelector('[name="qty[]"]').value;
+        var sp = row.querySelector('[name="sp[]"]').value;
+        var stock = row.querySelector('[name="stock[]"]').value;
+        var n_total_field = row.querySelector('[name="n_total[]"]');
+        var total_after_field = row.querySelector('[name="disc_value[]"]');
+        var bal_field = row.querySelector('[name="bal[]"]');
+        var bal = stock - ctn;
+        var qty_f = parseFloat(ctn) || 0;
+        var sp_f = parseFloat(sp) || 0;
+
+        var totl = qty_f * sp_f;
+
+        // Set color based on balance
+        if (bal < 0) {
+            bal_field.style.backgroundColor = "#f8d7da"; // Light red
+        } else {
+            bal_field.style.backgroundColor = ""; // Reset to default
+        }
+
+        // Default to 0 if empty
+        if (!n_total_field.value) {
+            n_total_field.value = "0";
+        }
+
+        n_total_field.value = totl.toFixed(2);
+        total_after_field.value = totl.toFixed(2);
+        bal_field.value = bal.toFixed(2);
+
+        tota1Row(row); // Call updated per-row discount/tax function if needed
+    }
+    async function tota1Row(row) {
+        
+        var id = row.querySelector('[name="id"]').value;
+        //await ActionTax(id);
+
+        var supid = document.getElementById("supp").value;
+        var wht_per = await fetchWHT(id, supid);
+        var tax_per = document.getElementById("tax_per").value;
+
+        var n_total = parseFloat(row.querySelector('[name="n_total[]"]').value) || 0;
+        var disc_val = parseFloat(row.querySelector('[name="disc_val[]"]').value) || 0;
+        //var tax_per = parseFloat(row.querySelector('[name="tax_val[]"]').value) || 0;
+       // var wht_per = parseFloat(row.querySelector('[name="wht_per[]"]').value) || 0;
+
+        var tax = (n_total * tax_per) / 100;
+        var new_tot = n_total + tax;
+
+        row.querySelector('[name="tax_amount[]"]').value = new_tot.toFixed(2);
+        row.querySelector('[name="tax_val[]"]').value = tax.toFixed(2);
+
+        var totl = (n_total * disc_val) / 100;
+        var after_disc = new_tot - totl;
+
+        row.querySelector('[name="disc_amount[]"]').value = after_disc.toFixed(2);
+        row.querySelector('[name="disc_value[]"]').value = totl.toFixed(2);
+        row.querySelector('[name="disc_amount[]"]').value = after_disc.toFixed(2);
+
+        var wht = (wht_per * after_disc) / 100;
+        row.querySelector('[name="wht[]"]').value = wht.toFixed(2);
+
+        var net = after_disc + wht;
+        row.querySelector('[name="net[]"]').value = net.toFixed(2);
+
+        caltotals1();
+    }
+
+    function caltotals1() {
+        let total = 0.0, gst = 0.0, inc = 0.0, disc = 0.0, afterDisc = 0.0, wht = 0.0, net = 0.0;
+
+        document.querySelectorAll("#invoiceItem tbody tr").forEach(row => {
+            total += parseFloat(row.querySelector("input[name='n_total[]']")?.value || 0);
+            gst += parseFloat(row.querySelector("input[name='tax_amount[]']")?.value || 0);
+            inc += parseFloat(row.querySelector("input[name='tax_val[]']")?.value || 0);
+            disc += parseFloat(row.querySelector("input[name='disc_amount[]']")?.value || 0);
+            afterDisc += parseFloat(row.querySelector("input[name='disc_value[]']")?.value || 0);
+            wht += parseFloat(row.querySelector("input[name='wht[]']")?.value || 0);
+            net += parseFloat(row.querySelector("input[name='net[]']")?.value || 0);
+        });
+
+        document.getElementById("total_final").value = total.toFixed(3);
+        document.getElementById("gst_final").value = inc.toFixed(3);
+        document.getElementById("inc_final").value = gst.toFixed(3);
+        document.getElementById("disc_final").value = afterDisc.toFixed(3);
+        document.getElementById("afterdisc_final").value = disc.toFixed(3);
+        document.getElementById("wht_final").value = wht.toFixed(3);
+        document.getElementById("net_final").value = net.toFixed(3);
+    }
+    function fetchWHT(id, supid) {
+    return new Promise(function (resolve, reject) {
+        $.ajax({
+            url: '@Url.Action("Action21", "SaleInvoice")',
+            type: "POST",
+            data: { "code": id, "code1": supid },
+            success: function (data) {
+                if (data && data[0]) {
+                    let wht = parseFloat(data[0].partywht) || 0;
+                    $("#wht_per").val(wht);
+                    resolve(wht);
+                } else {
+                    resolve(0); // default
+                }
+            },
+            error: function () {
+                reject("Failed to fetch WHT");
+            }
+        });
+    });
+}
 </script>
 
 
@@ -402,8 +527,19 @@
 
 
             }
-        });
+         });
 
+        var balInputs = document.getElementsByName("bal[]");
+        for (var i = 0; i < balInputs.length; i++) {
+            var val = parseFloat(balInputs[i].value);
+            if (!isNaN(val) && val < 0) {
+                alert("Please correct stock/qty them before saving.");
+                balInputs[i].focus(); // focus the first invalid input
+                isValid = false;
+            }
+        }
+
+     /*   return true; // all checks passed*/
 
 
     return isValid;
@@ -660,7 +796,15 @@
                                             <th>Product Name</th>
                                             <th>Packing</th>
                                             <th>Cost Price</th>
+                                            @if (invoicetype == "MakeInvoice")
+                                            {
+                                                <th>Stock</th>
+                                            }
                                             <th>Qty</th>
+                                            @if (invoicetype == "MakeInvoice")
+                                            {
+                                                <th>Bal</th>
+                                            }
                                             <th>Net Total</th>
                                             <th>GST</th>
                                             <th>Inc GST</th>
@@ -674,38 +818,51 @@
                                     <tbody>
                                         @foreach (var item in Model.saleReturnQueryDetail)
                                         {
-                                            <tr>
+                                        <tr>
 
 
-                                                <td style="width:80px !important"><a class="badge badge-xs x-danger b-rounded" onclick="return deleteRow(this)"><i class="fa fa-trash-o"></i></a></td>
-                                                <td><input type="text" name="id" value="@item.prid" required class="form-control" readonly autocomplete="off"></td>
-                                                <td><input type="text" name="item_name" value="@item.prname" readonly class="form-control" autocomplete="off"></td>
-                                                <td><input type="text" name="packing[]" value="@item.packing " onkeyup="qty123();" class="form-control" readonly autocomplete="off"></td>
-                                                <td><input type="text" name="sp[]" value="@item.sp " onkeyup="qty123();" class="form-control" readonly autocomplete="off"></td>
+                                            <td style="width:80px !important"><a class="badge badge-xs x-danger b-rounded" onclick="return deleteRow(this)"><i class="fa fa-trash-o"></i></a></td>
+                                            <td><input type="text" name="id" value="@item.prid" required class="form-control" readonly autocomplete="off"></td>
+                                            <td><input type="text" name="item_name" value="@item.prname" readonly class="form-control" autocomplete="off"></td>
+                                            <td><input type="text" name="packing[]" value="@item.packing " onkeyup="qty123();" class="form-control" readonly autocomplete="off"></td>
+                                            <td><input type="text" name="sp[]" value="@item.sp " onkeyup="qty123();" class="form-control" readonly autocomplete="off"></td>
+                                            @if (invoicetype == "MakeInvoice")
+                                            {
+                                                <td><input type="text" name="stock[]" value="@item.stock " readonly class="form-control" autocomplete="off"></td>
+                                                <td><input type="text" name="qty[]" value="@item.qty " class="form-control" autocomplete="off" onkeyup="updateRow(this)"></td>
+                                                <td><input type="text" name="bal[]" value="@item.bal " readonly class="form-control" autocomplete="off" style="@(item.bal < 0 ? "background-color: #f8d7da;" : "")"></td>
+                                            }
+                                            else
+                                            {
                                                 <td><input type="text" name="qty[]" value="@item.qty " readonly class="form-control" autocomplete="off"></td>
-                                                <td><input type="text" name="n_total[]" value="@item.total " readonly class="form-control" autocomplete="off"></td>
-                                                <td><input type="text" name="tax_val[]" value="@item.gst " readonly class="form-control" autocomplete="off"></td>
-                                                <td><input type="text" name="tax_amount[]" value="@item.totalgst " readonly class="form-control" autocomplete="off"></td>
-                                                <td><input type="text" name="disc_val[]" value="@item.dsicval " readonly class="form-control" autocomplete="off"></td>
-                                                <td><input type="text" name="disc_value[]" value="@item.totalafterdisc " readonly class="form-control" autocomplete="off"></td>
-                                                <td><input type="text" name="disc_amount[]" value="@item.disc_amount " readonly class="form-control" autocomplete="off"></td>
-                                                <td><input type="text" name="wht[]" value="@item.wht " readonly class="form-control" autocomplete="off"></td>
-                                                <td><input type="text" name="net[]" value="@item.ntotal " readonly class="form-control" autocomplete="off"></td>
-                                                <td style="display:none">@item.prid</td>
-                                                <td style="display:none">@item.prname</td>
-                                                <td style="display:none">@item.packing</td>
-                                                <td style="display:none">@item.sp</td>
-                                                <td style="display:none">@item.qty</td>
-                                                <td style="display:none">@item.total</td>
-                                                <td style="display:none">@item.gst</td>
-                                                <td style="display:none">@item.totalgst</td>
-                                                <td style="display:none">@item.dsicval</td>
-                                                <td style="display:none">@item.totalafterdisc</td>
-                                                <td style="display:none">@item.disc_amount</td>
-                                                <td style="display:none">@item.wht</td>
-                                                <td style="display:none">@item.ntotal</td>
 
-                                            </tr>
+                                            }
+                                          @*  <td><input type="text" name="qty[]" value="@item.qty " readonly class="form-control" autocomplete="off"></td>*@
+                                            <td><input type="text" name="n_total[]" value="@item.total " readonly class="form-control" autocomplete="off"></td>
+                                            <td><input type="text" name="tax_val[]" value="@item.gst " readonly class="form-control" autocomplete="off"></td>
+                                            <td><input type="text" name="tax_amount[]" value="@item.totalgst " readonly class="form-control" autocomplete="off"></td>
+                                            <td><input type="text" name="disc_val[]" value="@item.dsicval " readonly class="form-control" autocomplete="off"></td>
+                                            <td><input type="text" name="disc_value[]" value="@item.totalafterdisc " readonly class="form-control" autocomplete="off"></td>
+                                            <td><input type="text" name="disc_amount[]" value="@item.disc_amount " readonly class="form-control" autocomplete="off"></td>
+                                            <td><input type="text" name="wht[]" value="@item.wht " readonly class="form-control" autocomplete="off"></td>
+                                            <td><input type="text" name="net[]" value="@item.ntotal " readonly class="form-control" autocomplete="off"></td>
+                                            <td style="display:none">@item.prid</td>
+                                            <td style="display:none">@item.prname</td>
+                                            <td style="display:none">@item.packing</td>
+                                            <td style="display:none">@item.sp</td>
+                                            <td style="display:none">@item.stock</td>
+                                            <td style="display:none">@item.qty</td>
+                                            <td style="display:none">@item.bal</td>
+                                            <td style="display:none">@item.total</td>
+                                            <td style="display:none">@item.gst</td>
+                                            <td style="display:none">@item.totalgst</td>
+                                            <td style="display:none">@item.dsicval</td>
+                                            <td style="display:none">@item.totalafterdisc</td>
+                                            <td style="display:none">@item.disc_amount</td>
+                                            <td style="display:none">@item.wht</td>
+                                            <td style="display:none">@item.ntotal</td>
+
+                                        </tr>
                                         }
                                     </tbody>
                                 </table>
